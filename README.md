@@ -11,7 +11,7 @@ Once that is done, simply `#include <hashlib.h>` in your project source and you 
 
 This library provides the following implementations tested and working on the TI-84+ CE.  
 
-<> A Secure PRNG with a calculated entropy of ~107.1 bits per 32-bit random number and an evaluated advantage negligibly greater than zero.  
+<> A Secure PRNG with a calculated entropy of ~107.1 bits per 32-bit random number and an evaluated advantage negligibly greater than zero. The statistics included in the repo are for 1 MB of random output.  
 <> A 128, 192, and 256 bit AES implementation, in CBC mode.  
 <> ** Work in Progress ** 1024-bit RSA, encryption-only.  
 <> SHA-1 and SHA-256 cryptographic hashes (these guys are a bit on the slow side).  
