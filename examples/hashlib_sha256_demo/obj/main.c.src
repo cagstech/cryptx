@@ -1,0 +1,177 @@
+	section	.text,"ax",@progbits
+	assume	adl = 1
+	section	.text,"ax",@progbits
+	public	_main
+_main:
+	ld	hl, -155
+	call	__frameset
+	ld	de, _str
+	lea	hl, ix + -114
+	ld	bc, -149
+	lea	iy, ix + 0
+	add	iy, bc
+	ld	(iy + 0), hl
+	ld	bc, -146
+	lea	hl, ix + 0
+	add	hl, bc
+	push	ix
+	ld	bc, -152
+	add	ix, bc
+	ld	(ix + 0), hl
+	pop	ix
+	push	de
+	call	_strlen
+	push	ix
+	ld	bc, -155
+	add	ix, bc
+	ld	(ix + 0), hl
+	pop	ix
+	pop	hl
+	ld	hl, _str
+	push	hl
+	ld	hl, L_.str
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf_
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -155
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, L_.str.1
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf_
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -149
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hashlib_Sha256Init
+	pop	hl
+	or	a, a
+	sbc	hl, hl
+	push	hl
+	ld	bc, -155
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, _str
+	push	hl
+	ld	bc, -149
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hashlib_Sha256Update
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -152
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -149
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hashlib_Sha256Final
+	pop	hl
+	pop	hl
+	ld	hl, 32
+	push	hl
+	ld	hl, _sha256_test
+	push	hl
+	ld	bc, -152
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_memcmp
+	pop	de
+	pop	de
+	pop	de
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jq	nz, BB0_2
+	ld	hl, L_.str.2
+	ld	de, 14
+	jq	BB0_3
+BB0_2:
+	ld	hl, L_.str.3
+	ld	de, 22
+BB0_3:
+	push	de
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, -327680
+	ld.sis	de, 10
+	ld	(hl), e
+	inc	hl
+	ld	(hl), d
+	or	a, a
+	sbc	hl, hl
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.data,"aw",@progbits
+	public	_str
+_str:
+	db	"The lazy fox jumped over the dog!",000o
+
+	section	.data,"aw",@progbits
+	public	_sha256_test
+_sha256_test:
+	db	"b",202o,305o,"c",037o,301o,">MpP",203o,025o,320o,360o,233o,346o,325o,221o,"R",347o,263o,271o,027o,"+",356o,377o,263o,"WS",346o,"w",236o
+
+	section	.rodata,"a",@progbits
+	private	L_.str
+L_.str:
+	db	"The string is '%s'.",012o,000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.1
+L_.str.1:
+	db	"Its size is: %u",012o,000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.2
+L_.str.2:
+	db	"SHA-256 match",000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.3
+L_.str.3:
+	db	"SHA-256 did not match",000o
+
+	ident	"clang version 12.0.0 (https://github.com/jacobly0/llvm-project 170be88120e3aa88c20eea5615ba76b8f1d6c647)"
+	extern	_memcmp
+	extern	__Unwind_SjLj_Register
+	extern	__Unwind_SjLj_Unregister
+	extern	__frameset
+	extern	_sprintf_
+	extern	_hashlib_Sha256Init
+	extern	_hashlib_Sha256Final
+	extern	_hashlib_Sha256Update
+	extern	_memcpy
+	extern	_strlen
