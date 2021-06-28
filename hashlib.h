@@ -11,26 +11,12 @@
 // ## Context Definitions for Hashes and Encryption ##
 // ###################################################
 
-typedef struct _sha1_ctx {
-	uint8_t data[64];
-	uint32_t datalen;
-	uint8_t bitlen[8];
-	uint32_t state[5];
-	uint32_t k[4];
-} sha1_ctx;
-
 typedef struct _sha256_ctx {
 	uint8_t data[64];
 	uint32_t datalen;
 	uint8_t bitlen[8];
 	uint32_t state[8];
 } sha256_ctx;
-
-
-typedef struct {
-   uint32_t p[18];
-   uint32_t s[4][256];
-} blowfish_ctx;
 
 typedef struct {
     uint24_t keysize;
@@ -73,7 +59,17 @@ void hashlib_EraseContext(void *ctx, size_t len);
     <> alg = encryption algorithm to pad for (see enumerations below)
     <> schm = padding scheme to pad with (see enumerations below)
  */
-size_t hashlib_PadInputPlaintext(
+ 
+ #define hashlib_AllocContext(size) malloc((size))
+ 
+size_t hashlib_PadMessage(
+    const uint8_t* plaintext,
+    size_t len,
+    uint8_t* outbuf,
+    uint8_t alg,
+    uint8_t schm);
+    
+size_t hashlib_StripPadding(
     const uint8_t* plaintext,
     size_t len,
     uint8_t* outbuf,
@@ -98,7 +94,7 @@ enum _padding_schemes {
 
 #define hashlib_GetAESPaddedSize(len)  ((((len)%2)==0) ? len + AES_BLOCKSIZE : ((len/AES_BLOCKSIZE) + 1) * AES_BLOCKSIZE)
 
-#define hashlib_GetRSAPaddedSize(len)   ((len)+36)
+#define hashlib_GetRSAPaddedSize(len)   (256)
 
 /*
 #################################################
@@ -166,57 +162,6 @@ uint32_t hashlib_CSPRNGRandom(void);
 bool hashlib_RandomBytes(uint8_t *buffer, size_t size);
 
 
-
-// ##################
-// ### SHA-1 HASH ###
-// ##################
-
-/*
-    Init Context for SHA-1
-        
-    # Inputs #
-    <> ctx = pointer to an SHA1_CTX
-    ** SHA-1 will be invalid if this function is not called before hashing
-    ** contexts are specific to a hash-stream. If there is another block of data you
-        want to hash concurrently, you will need to init a new context
-*/
-void hashlib_Sha1Init(sha1_ctx *ctx);
-
-/*
-    Update Context for SHA-1
-
-    # Inputs #
-    <> ctx = pointer to an SHA1_CTX
-    <> buf = ptr to a block of data to hash
-    <> len = size of the block of data to hash
-    ** Remember, if hashlib_Sha1Init is not called first, your hash will be wrong
-*/
-void hashlib_Sha1Update(sha1_ctx *ctx, const uint8_t *buf, size_t len);
-
-/*
-    Finalize Context and Render Digest for SHA-1
-
-    # Inputs #
-    <> ctx = pointer to an SHA1_CTX
-    <> digest = pointer to buffer to write digest
-*/
-void hashlib_Sha1Final(sha1_ctx *ctx, uint8_t *digest);
-
-/*
-    One-Shot SHA-1 Computation
-
-    # Inputs #
-    <> buf = pointer to data to hash
-    <> len = length of data to hash
-    <> digest = pointer to buffer to write digest
-*/
-static inline void hashlib_SHA1(uint8_t *buf, size_t len, uint8_t *digest) {
-	sha1_ctx ctx;
-	hashlib_sha1init(&ctx);
-	hashlib_sha1update(&ctx, buf, len);
-	hashlib_sha1final(&ctx, digest);
-}
-
 // ####################
 // ### SHA-256 HASH ###
 // ####################
@@ -262,9 +207,9 @@ void hashlib_Sha256Final(sha256_ctx *ctx, uint8_t *digest);
 */
 inline void hashlib_SHA256(uint8_t *buf, size_t len, uint8_t *digest) {
 	sha256_ctx ctx;
-	hashlib_sha256init(&ctx);
-	hashlib_sha256update(&ctx, buf, len);
-	hashlib_sha256final(&ctx, digest);
+	hashlib_Sha256Init(&ctx);
+	hashlib_Sha256Update(&ctx, buf, len);
+	hashlib_Sha256Final(&ctx, digest);
 }
 
 // ##########################################
