@@ -282,7 +282,7 @@ inline void hashlib_SHA256(uint8_t *buf, size_t len, uint8_t *digest) {
     # Inputs #
     <> key = pointer to a 128, 192, or 256 bit key
     <> ks = pointer to an AES key schedule context
-    <> size = size of the key, in bits
+    <> keysize = size of the key, in bits. Valid arguments are: 128, 192, and 256.
      */
 void hashlib_AESLoadKey(const uint8_t* key, aes_ctx* ks, size_t keysize);
 
@@ -317,6 +317,31 @@ size_t hashlib_AESDecrypt(
     aes_ctx* ks,
     const uint8_t* iv);
 
+/*
+    Returns a Message Authentication Code (MAC) for an AES message.
+    This MAC is a tag equal in size to the AES block size computed by passing the plaintext
+        through the AES CBC algorithm for an IV = 0 with a unique key schedule.
+        If you do use a unique key, you must be sure to exchange this second key
+        with the host to be able to verify the message.
+    
+    # Inputs #
+    <> plaintext = pointer to data to encrypt (pass through padding helper func first)
+    <> len = size of data to encrypt
+    <> ciphertext = pointer to buffer to write encrypted output
+    <> ks = pointer to ks schedule initialized with AESLoadKey
+    
+    # NOTICES #
+    ** DO NOT use the same key schedule for hashlib_AESOutputMAC() as you would for
+        hashlib_AESEncrypt(). This exposes your message to attacks. Generate two keys,
+        load them into separate key schedules, and use one for MAC and one for encryption. **
+    ** It is recommended to use SCHM_ISO_M2 to pad the plaintext before passing it
+        to this function. Use hashlib_PadInputPlaintext(). **
+ */
+bool hashlib_AESOutputMAC(
+    const uint8_t* plaintext,
+    size_t len,
+    uint8_t* ciphertext,
+    aes_ctx* ks);
 
 // ###############################
 // #### BASE 64 ENCODE/DECODE ####

@@ -12,7 +12,8 @@ library	"HASHLIB", 3
 	export	hashlib_AESLoadKey ; 30
 	export	hashlib_AESEncrypt ; 33
 	export	hashlib_AESDecrypt ; 36
-	export	hashlib_b64encode ; 39
-	export	hashlib_b64decode ; 42
-	export	hashlib_EraseContext ; 45
-	export	hashlib_PadInputPlaintext ; 48
+	export	hashlib_AESOutputMAC ; 39
+	export	hashlib_b64encode ; 42
+	export	hashlib_b64decode ; 45
+	export	hashlib_EraseContext ; 48
+	export	hashlib_PadInputPlaintext ; 51

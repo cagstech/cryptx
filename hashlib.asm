@@ -24,6 +24,7 @@ library "HASHLIB", 3
     export hashlib_AESLoadKey
     export hashlib_AESEncrypt
     export hashlib_AESDecrypt
+    export hashlib_AESOutputMAC
     
     export hashlib_b64encode
     export hashlib_b64decode
@@ -9824,6 +9825,125 @@ BB28_31:
 	add	hl, de
 	ld	bc, (hl)
 BB28_32:
+	push	bc
+	pop	hl
+	ld	sp, ix
+	pop	ix
+	ret
+ 
+ hashlib_AESOutputMAC:
+	ld	hl, -66
+	call	ti._frameset
+	ld	de, (ix + 9)
+	ld	bc, 0
+	ld	a, e
+	and	a, 15
+	or	a, a
+	jq	nz, BB29_8
+	ld	hl, (ix + 6)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jq	z, BB29_9
+	ld	hl, (ix + 12)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jq	z, BB29_10
+	ld	hl, (ix + 15)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jq	z, BB29_7
+	lea	bc, ix + -16
+	ld	(ix + -51), bc
+	lea	bc, ix + -32
+	ld	(ix + -57), bc
+	lea	iy, ix + -48
+	ld	hl, (hl)
+	ld	(ix + -66), hl
+	ld	c, 4
+	ex	de, hl
+	call	ti._ishru
+	ld	(ix + -54), hl
+	ld	hl, 16
+	push	hl
+	or	a, a
+	sbc	hl, hl
+	push	hl
+	ld	(ix + -60), iy
+	push	iy
+	call	ti._memset
+	ld	de, (ix + -54)
+	ld	iy, (ix + 6)
+	pop	hl
+	pop	hl
+	pop	hl
+BB29_5:
+	push	de
+	pop	hl
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jq	z, BB29_11
+	ld	hl, 16
+	push	hl
+	push	iy
+	ld	hl, (ix + -51)
+	push	hl
+	ld	(ix + -63), iy
+	ld	(ix + -54), de
+	call	ti._memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 16
+	push	hl
+	ld	hl, (ix + -51)
+	push	hl
+	ld	hl, (ix + -60)
+	push	hl
+	call	_xor_buf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix + -66)
+	push	hl
+	ld	iy, (ix + 15)
+	pea	iy + 3
+	ld	hl, (ix + -57)
+	push	hl
+	ld	hl, (ix + -51)
+	push	hl
+	call	_aes_encrypt_block
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 16
+	push	hl
+	ld	hl, (ix + -57)
+	push	hl
+	ld	hl, (ix + -60)
+	push	hl
+	call	ti._memcpy
+	ld	de, (ix + -54)
+	ld	iy, (ix + -63)
+	pop	hl
+	pop	hl
+	pop	hl
+	dec	de
+	lea	iy, iy + 16
+	jq	BB29_5
+BB29_8:
+	jq	BB29_7
+BB29_9:
+	jq	BB29_7
+BB29_10:
+	jq	BB29_7
+BB29_11:
+	ld	bc, 1
+BB29_7:
 	push	bc
 	pop	hl
 	ld	sp, ix
