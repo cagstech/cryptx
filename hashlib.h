@@ -295,7 +295,8 @@ bool hashlib_AESOutputMAC(
     This function expects the IPsec standard for concatenating the ciphertext and the MAC
     
     # Inputs #
-    <> ciphertext = pointer to ciphertext to verify
+    <> ciphertext = pointer to ciphertext to verify. Ciphertext should be formated [IV, encrypted_msg, MAC],
+        where MAC = MAC(IV, encrypted_msg)
     <> len = size of the ciphertext to verify (should be equal to padded message + 1 block for MAC)
     <> ks_mac = the key schedule with which to verify the MAC
     * Compares the CBC encryption of the ciphertext (excluding the last block) over ks_mac with the last block of the ciphertext
