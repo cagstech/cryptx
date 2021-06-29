@@ -92,8 +92,16 @@ enum _padding_schemes {
 
 // Macros to Return Correct Padding Size
 
+// Returns the correct padding size for an AES plaintext.
 #define hashlib_GetAESPaddedSize(len)  ((((len)%2)==0) ? len + AES_BLOCKSIZE : ((len/AES_BLOCKSIZE) + 1) * AES_BLOCKSIZE)
 
+// Return the correct padding size for an AES plaintext with an extra block added for a MAC.
+#define hashlib_GetAESPaddedSizeMAC(len)    (hashlib_GetAESPaddedSize((len)) + AES_BLOCKSIZE)
+
+// Return the correct size for an AES cipher of size len with the IV prepended and a MAC appended
+#define hashlib_GetAESPaddedSizeMACIV(len)  (hashlib_GetAESPaddedSizeMAC((len)) + AES_BLOCKSIZE)
+
+// Returns the correct padding size for RSA under OAEP. This implementation pads the plaintext to 256 bytes.
 #define hashlib_GetRSAPaddedSize(len)   (256)
 
 /*
@@ -205,12 +213,6 @@ void hashlib_Sha256Final(sha256_ctx *ctx, uint8_t *digest);
     <> len = length of data to hash
     <> digest = pointer to buffer to write digest
 */
-inline void hashlib_SHA256(uint8_t *buf, size_t len, uint8_t *digest) {
-	sha256_ctx ctx;
-	hashlib_Sha256Init(&ctx);
-	hashlib_Sha256Update(&ctx, buf, len);
-	hashlib_Sha256Final(&ctx, digest);
-}
 
 // ##########################################
 // ### ADVANCED ENCRYPTION STANDARD (AES) ###
@@ -287,6 +289,49 @@ bool hashlib_AESOutputMAC(
     size_t len,
     uint8_t* ciphertext,
     aes_ctx* ks);
+
+/*
+    This function verifies the MAC for a given ciphertext. Use this function to verify the integrity of the message prior to Decryption
+    This function expects the IPsec standard for concatenating the ciphertext and the MAC
+    
+    # Inputs #
+    <> ciphertext = pointer to ciphertext to verify
+    <> len = size of the ciphertext to verify (should be equal to padded message + 1 block for MAC)
+    <> ks_mac = the key schedule with which to verify the MAC
+    * Compares the CBC encryption of the ciphertext (excluding the last block) over ks_mac with the last block of the ciphertext
+
+ */
+bool hashlib_AESVerifyMAC(uint8_t *ciphertext, size_t len, aes_ctx *ks_mac);
+
+/*
+    A Helper Macro to perform an AES-CBC encryption of a padded plaintext with a MAC added
+    This function follows the IPsec standard for concatenation of ciphertext and MAC
+    
+    # Inputs #
+    <> plaintext = pointer to data to encrypt
+    <> len = size of data to encrypt (this is the ACTUAL size, not padded size)
+    <> ciphertext = pointer to buffer to write encrypted message
+    <> ks_encrypt = pointer to the key schedule to use for encryption
+    <> ks_mac = pointer to the key schedule to use for the MAC  ** MUST BE DIFFERENT THAN KS_ENCRYPT **
+    <> pad_schm = the padding scheme to use for encryption
+    <> iv = the initialization vector (random buffer of size AES_BLOCKSIZE) to use for encryption
+    
+    # Outputs #
+    <> A full ciphertext in ciphertext containing:
+        - 1 block IV
+        - N length encrypted message
+        - 1-block MAC( IV, N, key_mac)
+ */
+#define hashlib_AESEncryptWithMAC(plaintext, len, ciphertext, ks_encrypt, ks_mac, pad_schm, iv) \
+            {   \
+                size_t padded_pt_size = hashlib_GetAESPaddedSize((len)); \
+                uint8_t* padded_pt = hashlib_AllocContext(padded_pt_size); \
+                hashlib_PadMessage((plaintext), padded_pt_size, padded_pt, ALG_AES, (pad_schm)); \
+                hashlib_AESEncrypt(padded_pt, padded_pt_size, (&ciphertext[AES_BLOCKSIZE]), (ks_encrypt), (iv)); \
+                memcpy((ciphertext), (iv), AES_BLOCKSIZE); \
+                hashlib_AESOutputMAC((ciphertext), padded_pt_size+AES_BLOCKSIZE, &ciphertext[padded_pt_size+AES_BLOCKSIZE], (ks_mac)); \
+                free(padded_pt); \
+            }
 
 // ###############################
 // #### BASE 64 ENCODE/DECODE ####

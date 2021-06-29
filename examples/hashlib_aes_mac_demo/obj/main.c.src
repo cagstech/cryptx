@@ -1,188 +1,192 @@
 	section	.text,"ax",@progbits
 	assume	adl = 1
 	section	.text,"ax",@progbits
+	public	_hexdump
+_hexdump:
+	ld	hl, -4
+	call	__frameset
+	ld	hl, -327680
+	ld	de, L_.str
+	push	de
+	push	hl
+	call	_sprintf_
+	ld	hl, (ix + 9)
+	pop	de
+	pop	de
+	ld	de, 0
+BB0_1:
+	ld	a, e
+	inc	a
+	or	a, a
+	sbc	hl, de
+	jq	z, BB0_2
+	ld	hl, (ix + 6)
+	ld	(ix + -3), de
+	add	hl, de
+	ld	(ix + -4), a
+	ld	a, (hl)
+	or	a, a
+	sbc	hl, hl
+	ld	l, a
+	push	hl
+	ld	hl, L_.str.1
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf_
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	a, (ix + -4)
+	and	a, 15
+	or	a, a
+	ld	hl, L_.str
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	z, _sprintf_
+	pop	hl
+	pop	hl
+	ld	de, (ix + -3)
+	inc	de
+	ld	hl, (ix + 9)
+	jq	BB0_1
+BB0_2:
+	ld	hl, L_.str
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf_
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
 	public	_main
 _main:
-	ld	hl, -652
+	ld	hl, -605
 	call	__frameset
-	ld	de, -604
+	ld	bc, -572
 	lea	iy, ix + 0
-	add	iy, de
-	ld	bc, 0
-	ld	de, -249
+	add	iy, bc
+	ld	de, _str
+	ld	bc, -249
 	lea	hl, ix + 0
-	add	hl, de
+	add	hl, bc
 	push	ix
-	ld	de, -631
-	add	ix, de
-	ld	(ix + 0), hl
-	pop	ix
-	lea	hl, iy + 112
-	push	ix
-	ld	de, -628
-	add	ix, de
+	ld	bc, -590
+	add	ix, bc
 	ld	(ix + 0), hl
 	pop	ix
 	lea	hl, iy + 80
 	push	ix
-	ld	de, -643
-	add	ix, de
+	ld	bc, -584
+	add	ix, bc
 	ld	(ix + 0), hl
 	pop	ix
 	lea	hl, iy + 48
 	push	ix
-	ld	de, -646
-	add	ix, de
+	ld	bc, -596
+	add	ix, bc
 	ld	(ix + 0), hl
 	pop	ix
-	lea	hl, iy + 32
-	lea	de, iy + 16
-	ld	(ix + -3), bc
+	lea	hl, iy + 16
 	push	ix
-	ld	bc, -610
+	ld	bc, -599
 	add	ix, bc
-	ld	(ix + 0), de
+	ld	(ix + 0), hl
 	pop	ix
-	lea	de, iy + 0
-	ld	bc, -634
+	lea	hl, iy + 0
+	ld	bc, -581
 	lea	iy, ix + 0
 	add	iy, bc
-	ld	(iy + 0), de
-	ld	de, 16
+	ld	(iy + 0), hl
 	push	de
-	ld	bc, (ix + -3)
-	push	bc
-	push	ix
-	ld	bc, -640
-	add	ix, bc
-	ld	(ix + 0), hl
-	pop	ix
-	push	hl
-	call	_memset
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, 16
-	push	hl
-	or	a, a
-	sbc	hl, hl
-	push	hl
-	ld	bc, -610
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_memset
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, _str
-	push	hl
 	call	_strlen
+	ld	de, 16
 	push	hl
 	pop	iy
 	pop	hl
 	lea	hl, iy + 0
 	ld	bc, 1
 	call	__iand
-	ld	e, 1
 	ld	a, l
-	xor	a, e
-	ld	de, -652
-	lea	hl, ix + 0
-	add	hl, de
-	ld	(hl), iy
-	ld	de, 16
-	add	iy, de
-	lea	hl, iy + 0
-	ld	bc, -16
-	call	__iand
-	bit	0, a
-	jq	nz, BB0_2
-	push	hl
-	pop	iy
-BB0_2:
-	ld	bc, -616
+	xor	a, c
+	ld	(ix + -3), bc
+	ld	bc, -605
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	(hl), iy
-	ld	hl, 16
+	add	iy, de
+	lea	hl, iy + 0
+	ld	bc, (ix + -3)
+	ld	bc, -16
+	call	__iand
+	bit	0, a
+	jq	nz, BB1_2
+	push	hl
+	pop	iy
+BB1_2:
+	lea	hl, iy + 0
+	add	hl, de
+	push	ix
+	ld	bc, -602
+	add	ix, bc
+	ld	(ix + 0), hl
+	pop	ix
+	ld	bc, -587
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	(hl), iy
+	ld	hl, 32
 	ex	de, hl
 	add	iy, de
-	ld	bc, -607
+	ld	bc, -578
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	(hl), iy
 	push	iy
 	call	_malloc
-	ld	bc, -637
+	ld	bc, -575
 	lea	iy, ix + 0
 	add	iy, bc
 	ld	(iy + 0), hl
 	pop	hl
-	ld	bc, -607
+	ld	bc, -578
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
 	call	_malloc
 	push	ix
-	ld	bc, -613
+	ld	bc, -593
 	add	ix, bc
 	ld	(ix + 0), hl
 	pop	ix
 	pop	hl
-	ld	bc, -607
+	ld	bc, -578
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	_malloc
-	push	ix
-	ld	bc, -649
-	add	ix, bc
-	ld	(ix + 0), hl
-	pop	ix
+	ld	bc, -605
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, L_.str.2
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf_
 	pop	hl
-	ld	bc, -607
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_malloc
-	push	ix
-	ld	bc, -619
-	add	ix, bc
-	ld	(ix + 0), hl
-	pop	ix
 	pop	hl
-	ld	bc, -607
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_malloc
-	push	ix
-	ld	bc, -622
-	add	ix, bc
-	ld	(ix + 0), hl
-	pop	ix
 	pop	hl
-	ld	bc, -607
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_malloc
-	push	ix
-	ld	bc, -625
-	add	ix, bc
-	ld	(ix + 0), hl
-	pop	ix
 	pop	hl
 	ld	hl, 32
 	push	hl
-	ld	bc, -643
+	ld	bc, -596
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
@@ -192,35 +196,77 @@ BB0_2:
 	pop	hl
 	ld	hl, 32
 	push	hl
-	ld	bc, -646
+	ld	bc, -599
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
 	call	_hashlib_RandomBytes
+	pop	hl
+	pop	hl
+	ld	hl, 256
+	push	hl
+	ld	bc, -584
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -599
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hashlib_AESLoadKey
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 256
+	push	hl
+	ld	bc, -590
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -596
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hashlib_AESLoadKey
+	pop	hl
 	pop	hl
 	pop	hl
 	ld	hl, 16
 	push	hl
-	ld	bc, -634
+	ld	bc, -581
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
 	call	_hashlib_RandomBytes
 	pop	hl
+	pop	hl
+	ld	bc, -587
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_malloc
+	push	hl
+	pop	de
+	push	ix
+	ld	bc, -596
+	add	ix, bc
+	ld	(ix + 0), de
+	pop	ix
 	pop	hl
 	or	a, a
 	sbc	hl, hl
 	push	hl
 	inc	hl
 	push	hl
-	ld	bc, -613
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -652
+	push	de
+	ld	bc, -587
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
@@ -233,176 +279,34 @@ BB0_2:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, 256
-	push	hl
-	ld	bc, -628
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -646
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_hashlib_AESLoadKey
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, 256
-	push	hl
-	ld	bc, -631
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -643
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_hashlib_AESLoadKey
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	bc, -628
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -610
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -616
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -613
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_hashlib_AESOutputMAC
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, 28
-	push	hl
-	ld	hl, L_.str
-	push	hl
-	ld	hl, -327680
-	push	hl
-	call	_memcpy
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	de, 16
-	or	a, a
-	sbc	hl, hl
-	push	hl
-	pop	bc
-BB0_3:
-	push	bc
-	pop	hl
-	or	a, a
-	sbc	hl, de
-	jq	z, BB0_5
-	ld	de, -610
-	lea	hl, ix + 0
-	add	hl, de
-	ld	hl, (hl)
-	add	hl, bc
-	ld	a, (hl)
-	or	a, a
-	sbc	hl, hl
-	ld	l, a
-	push	hl
-	ld	hl, L_.str.1
-	push	hl
-	ld	hl, -327680
-	push	hl
-	ld	de, -643
-	lea	hl, ix + 0
-	add	hl, de
-	ld	(hl), bc
-	call	_sprintf_
-	ld	de, -643
-	lea	hl, ix + 0
-	add	hl, de
-	ld	bc, (hl)
-	pop	hl
-	pop	hl
-	pop	hl
-	inc	bc
-	ld	de, 16
-	jq	BB0_3
-BB0_5:
-	ld	hl, -327680
-	push	hl
-	pop	iy
-	ld.sis	hl, 10
-	ld	(iy), l
-	ld	(iy + 1), h
-	ld	hl, 16
-	push	hl
-	ld	bc, -610
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -637
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_memcpy
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	bc, -616
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -613
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -637
+	ld	bc, -575
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	iy, (hl)
-	pea	iy + 16
-	call	_memcpy
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	bc, -634
+	lea	hl, iy + 16
+	ld	bc, -581
+	lea	iy, ix + 0
+	add	iy, bc
+	ld	de, (iy + 0)
+	push	de
+	push	ix
+	ld	bc, -590
+	add	ix, bc
+	ld	de, (ix + 0)
+	pop	ix
+	push	de
+	push	ix
+	ld	bc, -599
+	add	ix, bc
+	ld	(ix + 0), hl
+	pop	ix
+	push	hl
+	ld	bc, -587
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -631
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -619
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -607
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -637
+	ld	bc, -596
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
@@ -413,27 +317,140 @@ BB0_5:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -634
+	ld	hl, 16
+	push	hl
+	ld	bc, -581
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -631
+	ld	bc, -575
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -622
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -575
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	iy, (hl)
+	push	ix
+	ld	bc, -602
+	add	ix, bc
+	ld	de, (ix + 0)
+	pop	ix
+	add	iy, de
+	push	ix
+	ld	bc, -584
+	add	ix, bc
+	ld	hl, (ix + 0)
+	pop	ix
+	push	hl
+	push	iy
+	push	de
+	ld	bc, -575
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -607
+	call	_hashlib_AESOutputMAC
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -596
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -619
+	call	_free
+	pop	hl
+	ld	bc, -578
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -575
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	ld	bc, -584
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -578
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -575
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hashlib_AESVerifyMAC
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	l, 1
+	xor	a, l
+	bit	0, a
+	jq	nz, BB1_4
+	ld	hl, L_.str.3
+	ld	de, 32
+	push	de
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 16
+	push	hl
+	ld	bc, -575
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -581
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -581
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -590
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -593
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -602
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -599
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
@@ -444,167 +461,29 @@ BB0_5:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -622
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	iy, (hl)
-	lea	de, iy + 16
-	ld	bc, -607
-	lea	iy, ix + 0
-	add	iy, bc
-	ld	(iy + 0), de
-	push	ix
-	ld	bc, -628
-	add	ix, bc
-	ld	hl, (ix + 0)
-	pop	ix
-	push	hl
-	ld	bc, -640
+	ld	bc, -578
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -616
+	ld	bc, -593
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	push	de
-	call	_hashlib_AESOutputMAC
+	call	_hexdump
 	pop	hl
 	pop	hl
-	pop	hl
-	pop	hl
-	or	a, a
-	sbc	hl, hl
-	push	hl
-	inc	hl
-	push	hl
-	ld	bc, -625
+	ld	bc, -593
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
-	push	hl
-	ld	bc, -616
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -607
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_hashlib_StripPadding
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	push	hl
-	ld	bc, -625
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	hl, L_.str.3
-	push	hl
-	ld	hl, -327680
-	push	hl
-	call	_sprintf_
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, 38
-	push	hl
-	ld	hl, L_.str.4
-	push	hl
-	ld	hl, -327680
-	push	hl
-	call	_memcpy
-	pop	hl
-	pop	hl
-	pop	hl
-	or	a, a
-	sbc	hl, hl
-	push	hl
-	pop	bc
-BB0_6:
-	push	bc
-	pop	hl
-	ld	de, 16
-	or	a, a
-	sbc	hl, de
-	jq	z, BB0_8
-	ld	de, -640
-	lea	hl, ix + 0
-	add	hl, de
-	ld	hl, (hl)
-	add	hl, bc
-	ld	a, (hl)
-	or	a, a
-	sbc	hl, hl
-	ld	l, a
-	push	hl
-	ld	hl, L_.str.1
-	push	hl
-	ld	hl, -327680
-	push	hl
-	ld	de, -607
-	lea	hl, ix + 0
-	add	hl, de
-	ld	(hl), bc
-	call	_sprintf_
-	ld	de, -607
-	lea	hl, ix + 0
-	add	hl, de
-	ld	bc, (hl)
-	pop	hl
-	pop	hl
-	pop	hl
-	inc	bc
-	jq	BB0_6
-BB0_8:
-	ld	hl, -327680
-	push	hl
-	pop	iy
-	ld.sis	hl, 10
-	ld	(iy), l
-	ld	(iy + 1), h
-	ld	hl, 16
-	push	hl
-	ld	bc, -640
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -610
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_memcmp
-	pop	de
-	pop	de
-	pop	de
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jq	nz, BB0_10
-	ld	hl, 32
 	push	hl
 	ld	hl, L_.str.5
-	jq	BB0_11
-BB0_10:
-	ld	hl, 38
-	push	hl
-	ld	hl, L_.str.6
-BB0_11:
 	push	hl
 	ld	hl, -327680
 	push	hl
-	call	_memcpy
+	call	_sprintf_
 	pop	hl
 	pop	hl
 	pop	hl
@@ -612,35 +491,14 @@ BB0_11:
 	ld	iy, -327680
 	ld	(iy), l
 	ld	(iy + 1), h
-	ld	bc, -613
+	ld	bc, -575
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
 	call	_free
 	pop	hl
-	ld	bc, -649
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_free
-	pop	hl
-	ld	bc, -619
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_free
-	pop	hl
-	ld	bc, -622
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_free
-	pop	hl
-	ld	bc, -625
+	ld	bc, -593
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
@@ -649,6 +507,20 @@ BB0_11:
 	pop	hl
 	or	a, a
 	sbc	hl, hl
+	jq	BB1_5
+BB1_4:
+	ld	hl, L_.str.4
+	ld	de, 38
+	push	de
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 1
+BB1_5:
 	ld	sp, ix
 	pop	ix
 	ret
@@ -662,7 +534,7 @@ _str:
 	section	.rodata,"a",@progbits
 	private	L_.str
 L_.str:
-	db	"The MAC of the message is: ",000o
+	db	"",012o,000o
 
 	section	.rodata,"a",@progbits
 	private	L_.str.1
@@ -670,41 +542,39 @@ L_.str.1:
 	db	"%02X ",000o
 
 	section	.rodata,"a",@progbits
+	private	L_.str.2
+L_.str.2:
+	db	"The string length is: %u.",012o,"The padded size is: %u.",012o,000o
+
+	section	.rodata,"a",@progbits
 	private	L_.str.3
 L_.str.3:
-	db	"The message is '%s' and its size is %u bytes.",012o,000o
+	db	"The MAC of the message matched.",000o
 
 	section	.rodata,"a",@progbits
 	private	L_.str.4
 L_.str.4:
-	db	"The MAC of the decrypted message is: ",000o
+	db	"The MAC of the message did not match.",000o
 
 	section	.rodata,"a",@progbits
 	private	L_.str.5
 L_.str.5:
-	db	"The MAC of the message matched.",000o
-
-	section	.rodata,"a",@progbits
-	private	L_.str.6
-L_.str.6:
-	db	"The MAC of the message did not match.",000o
+	db	"The string is '%s'.",012o,000o
 
 	ident	"clang version 12.0.0 (https://github.com/jacobly0/llvm-project 170be88120e3aa88c20eea5615ba76b8f1d6c647)"
 	extern	_hashlib_RandomBytes
-	extern	_hashlib_StripPadding
-	extern	_memcmp
-	extern	_memset
 	extern	__Unwind_SjLj_Register
+	extern	__Unwind_SjLj_Unregister
 	extern	_hashlib_AESDecrypt
 	extern	__frameset
 	extern	_malloc
+	extern	_hashlib_AESVerifyMAC
 	extern	__iand
 	extern	_sprintf_
-	extern	__Unwind_SjLj_Unregister
 	extern	_hashlib_AESOutputMAC
 	extern	_free
 	extern	_memcpy
 	extern	_hashlib_PadMessage
 	extern	_strlen
-	extern	_hashlib_AESEncrypt
 	extern	_hashlib_AESLoadKey
+	extern	_hashlib_AESEncrypt

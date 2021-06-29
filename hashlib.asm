@@ -22,6 +22,7 @@ library "HASHLIB", 3
     export hashlib_AESEncrypt
     export hashlib_AESDecrypt
     export hashlib_AESOutputMAC
+    export hashlib_AESVerifyMAC
     
     export hashlib_b64encode
     export hashlib_b64decode
@@ -7554,6 +7555,50 @@ BB30_31:
 	pop	ix
 	ret
 
+hashlib_AESVerifyMAC:
+	ld	hl, -22
+	call	ti._frameset
+	ld	iy, (ix + 6)
+	ld	hl, (ix + 9)
+	ld	bc, -16
+	lea	de, ix + -16
+	ld	(ix + -19), de
+	add	hl, bc
+	ld	(ix + -22), hl
+	ld	bc, (ix + 12)
+	push	bc
+	push	de
+	push	hl
+	push	iy
+	call	hashlib_AESOutputMAC
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix + 6)
+	ld	de, (ix + -22)
+	add	hl, de
+	ld	de, 16
+	push	de
+	push	hl
+	ld	hl, (ix + -19)
+	push	hl
+	call	ti._memcmp
+	pop	de
+	pop	de
+	pop	de
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jq	z, BB27_1
+	ld	a, 0
+	jq	BB27_3
+BB27_1:
+	ld	a, 1
+BB27_3:
+	ld	sp, ix
+	pop	ix
+	ret
  
  _csprng_state:
 	rb	195
