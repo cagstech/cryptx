@@ -93,6 +93,8 @@ void hashlib_Sha256Init(SHA256_CTX *ctx);
 void hashlib_Sha256Update(SHA256_CTX *ctx, const BYTE data[], uint32_t len);
 void hashlib_Sha256Final(SHA256_CTX *ctx, BYTE hash[]);
 
+bool hashlib_CompareDigest(uint8_t *dig1, uint8_t *dig2, size_t len);
+
 #define RANDBYTES 16
 
 
@@ -1174,7 +1176,7 @@ int hashlib_AESEncrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key,
 		memcpy(buf_in, &in[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
 		xor_buf(iv_buf, buf_in, AES_BLOCK_SIZE);
 		aes_encrypt_block(buf_in, buf_out, round_keys, keysize);
-		memcpy(&out[idx * AES_BLOCK_SIZE], buf_out, AES_BLOCK_SIZE);
+		memcpy(&out[idx * (AES_BLOCK_SIZE)+1], buf_out, AES_BLOCK_SIZE);
 		memcpy(iv_buf, buf_out, AES_BLOCK_SIZE);
 	}
 
@@ -1340,11 +1342,8 @@ size_t hashlib_StripPadding(const uint8_t* in, size_t len, uint8_t* out, uint8_t
         case ALG_AES:
             {
                 size_t outlen;
-                size_t blocksize=16, padded_len;
                 if(schm == SCHM_DEFAULT) schm = SCHM_PKCS7;
                 if(schm > SCHM_ANSIX923) return 0;
-                if((len % blocksize) == 0) padded_len = len + blocksize;
-                else padded_len = (( len / blocksize ) + 1) * blocksize;
                 switch(schm){
                     case SCHM_PKCS7:
                         outlen = len - in[len-1];
@@ -1403,4 +1402,18 @@ size_t hashlib_StripPadding(const uint8_t* in, size_t len, uint8_t* out, uint8_t
         default:
             return 0;
     }
+}
+
+#define AES_BLOCKSIZE 16
+bool hashlib_AESVerifyMAC(uint8_t *ciphertext, size_t len, aes_ctx *ks_mac){
+    uint8_t mac[AES_BLOCKSIZE];
+    hashlib_AESOutputMAC((ciphertext), len-AES_BLOCKSIZE, mac, (ks_mac));
+    return hashlib_CompareDigest(mac, (&ciphertext[len-AES_BLOCKSIZE]), AES_BLOCKSIZE);
+}
+
+bool hashlib_CompareDigest(uint8_t *dig1, uint8_t *dig2, size_t len){
+    bool result = false;
+    for(size_t i=0; i<len; i++)
+        result |= (dig1[i] ^ dig2[i]);
+    return !result;
 }
