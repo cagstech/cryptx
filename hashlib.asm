@@ -30,6 +30,7 @@ library "HASHLIB", 3
     export hashlib_EraseContext
     export hashlib_PadMessage
     export hashlib_StripPadding
+    export hashlib_CompareDigest
 
 ;------------------------------------------
 ; defines
@@ -7583,19 +7584,51 @@ hashlib_AESVerifyMAC:
 	push	hl
 	ld	hl, (ix + -19)
 	push	hl
-	call	ti._memcmp
-	pop	de
-	pop	de
-	pop	de
+	call	hashlib_CompareDigest
+	ld	sp, ix
+	pop	ix
+	ret
+ 
+ hashlib_CompareDigest:
+	ld	hl, -6
+	call	ti._frameset
+	ld	hl, (ix + 6)
+	ld	(ix + -3), hl
+	ld	iy, (ix + 9)
+	ld	hl, (ix + 12)
+	ld	e, 0
+	ld	d, 1
+BB28_1:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jq	z, BB27_1
-	ld	a, 0
-	jq	BB27_3
-BB27_1:
-	ld	a, 1
-BB27_3:
+	jq	z, BB28_2
+	ld	(ix + -6), iy
+	ld	a, (iy)
+	ld	iy, (ix + -3)
+	xor	a, (iy)
+	ld	c, a
+	ld	a, e
+	and	a, 1
+	ld	e, a
+	ld	a, c
+	or	a, e
+	or	a, a
+	ld	e, d
+	jq	nz, BB28_5
+	ld	e, 0
+BB28_5:
+	dec	hl
+	ld	bc, (ix + -3)
+	inc	bc
+	ld	(ix + -3), bc
+	ld	iy, (ix + -6)
+	inc	iy
+	jq	BB28_1
+BB28_2:
+	ld	a, e
+	ld	l, 1
+	xor	a, l
 	ld	sp, ix
 	pop	ix
 	ret

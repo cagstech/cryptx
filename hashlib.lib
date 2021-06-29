@@ -16,3 +16,4 @@ library	"HASHLIB", 3
 	export	hashlib_EraseContext ; 42
 	export	hashlib_PadMessage ; 45
 	export	hashlib_StripPadding ; 48
+	export	hashlib_CompareDigest ; 51

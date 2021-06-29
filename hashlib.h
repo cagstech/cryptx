@@ -50,6 +50,24 @@ typedef struct {
 void hashlib_EraseContext(void *ctx, size_t len);
 
 /*
+    A helper macro that returns a hashlib context (see defines above)
+    Can also be used to malloc buffers for encryption/decryption/padding/etc.
+ */
+#define hashlib_AllocContext(size) malloc((size))
+
+
+/*
+    Compares the pointed buffers digest1 and digest2 for size len.
+    This function is resistant to timing attacks.
+    
+    # Input #
+    <> digest1 = pointer to first buffer to compare
+    <> digest2 = pointer to second buffer to compare
+    <> len = number of bytes to compare
+ */
+hashlib_CompareDigest(const uint8_t* digest1, uint8_t* digest2, size_t len);
+
+/*
     Pads input data to a cipher based on cipher data according to a selected padding scheme
     
     # Inputs #
@@ -60,7 +78,7 @@ void hashlib_EraseContext(void *ctx, size_t len);
     <> schm = padding scheme to pad with (see enumerations below)
  */
  
- #define hashlib_AllocContext(size) malloc((size))
+ 
  
 size_t hashlib_PadMessage(
     const uint8_t* plaintext,

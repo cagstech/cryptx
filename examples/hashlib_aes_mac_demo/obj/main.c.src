@@ -87,13 +87,13 @@ _main:
 	pop	ix
 	lea	hl, iy + 48
 	push	ix
-	ld	bc, -596
+	ld	bc, -593
 	add	ix, bc
 	ld	(ix + 0), hl
 	pop	ix
 	lea	hl, iy + 16
 	push	ix
-	ld	bc, -599
+	ld	bc, -596
 	add	ix, bc
 	ld	(ix + 0), hl
 	pop	ix
@@ -131,7 +131,7 @@ BB1_2:
 	lea	hl, iy + 0
 	add	hl, de
 	push	ix
-	ld	bc, -602
+	ld	bc, -599
 	add	ix, bc
 	ld	(ix + 0), hl
 	pop	ix
@@ -160,10 +160,20 @@ BB1_2:
 	push	hl
 	call	_malloc
 	push	ix
-	ld	bc, -593
+	ld	bc, -602
 	add	ix, bc
 	ld	(ix + 0), hl
 	pop	ix
+	pop	hl
+	ld	hl, 36
+	push	hl
+	ld	hl, L_.str.2
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
 	pop	hl
 	ld	bc, -578
 	lea	hl, ix + 0
@@ -175,7 +185,7 @@ BB1_2:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	hl, L_.str.2
+	ld	hl, L_.str.3
 	push	hl
 	ld	hl, -327680
 	push	hl
@@ -186,7 +196,7 @@ BB1_2:
 	pop	hl
 	ld	hl, 32
 	push	hl
-	ld	bc, -596
+	ld	bc, -593
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
@@ -196,7 +206,7 @@ BB1_2:
 	pop	hl
 	ld	hl, 32
 	push	hl
-	ld	bc, -599
+	ld	bc, -596
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
@@ -211,7 +221,7 @@ BB1_2:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -599
+	ld	bc, -596
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
@@ -227,7 +237,7 @@ BB1_2:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -596
+	ld	bc, -593
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
@@ -255,7 +265,7 @@ BB1_2:
 	push	hl
 	pop	de
 	push	ix
-	ld	bc, -596
+	ld	bc, -593
 	add	ix, bc
 	ld	(ix + 0), de
 	pop	ix
@@ -296,7 +306,7 @@ BB1_2:
 	pop	ix
 	push	de
 	push	ix
-	ld	bc, -599
+	ld	bc, -596
 	add	ix, bc
 	ld	(ix + 0), hl
 	pop	ix
@@ -306,7 +316,7 @@ BB1_2:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -596
+	ld	bc, -593
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
@@ -338,7 +348,7 @@ BB1_2:
 	add	hl, bc
 	ld	iy, (hl)
 	push	ix
-	ld	bc, -602
+	ld	bc, -599
 	add	ix, bc
 	ld	de, (ix + 0)
 	pop	ix
@@ -361,12 +371,22 @@ BB1_2:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -596
+	ld	bc, -593
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
 	call	_free
+	pop	hl
+	ld	hl, 37
+	push	hl
+	ld	hl, L_.str.4
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
 	pop	hl
 	ld	bc, -578
 	lea	hl, ix + 0
@@ -403,17 +423,22 @@ BB1_2:
 	ld	l, 1
 	xor	a, l
 	bit	0, a
-	jq	nz, BB1_4
-	ld	hl, L_.str.3
-	ld	de, 32
-	push	de
+	jq	nz, BB1_5
+	ld	de, L_.str.5
+	ld	hl, 32
 	push	hl
+	push	de
 	ld	hl, -327680
 	push	hl
 	call	_memcpy
 	pop	hl
 	pop	hl
 	pop	hl
+	ld	hl, -327680
+	ld.sis	de, 10
+	ld	(hl), e
+	inc	hl
+	ld	(hl), d
 	ld	hl, 16
 	push	hl
 	ld	bc, -575
@@ -440,11 +465,6 @@ BB1_2:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -593
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
 	ld	bc, -602
 	lea	hl, ix + 0
 	add	hl, bc
@@ -455,35 +475,125 @@ BB1_2:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
+	ld	bc, -596
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
 	call	_hashlib_AESDecrypt
 	pop	hl
 	pop	hl
 	pop	hl
 	pop	hl
 	pop	hl
+	ld	bc, -602
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, L_.str.7
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf_
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 37
+	push	hl
+	ld	hl, L_.str.8
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 134
+	push	hl
+	ld	hl, L_.str.9
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -575
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	iy, (hl)
+	ld	a, (iy + 28)
+	xor	a, 69
+	ld	(iy + 28), a
+	push	ix
+	ld	bc, -578
+	add	ix, bc
+	ld	hl, (ix + 0)
+	pop	ix
+	push	hl
+	push	iy
+	call	_hexdump
+	pop	hl
+	pop	hl
+	ld	hl, 21
+	push	hl
+	ld	hl, L_.str.10
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	call	_os_GetKey
+	ld	bc, -584
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
 	ld	bc, -578
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -593
+	ld	bc, -575
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	_hexdump
+	call	_hashlib_AESVerifyMAC
 	pop	hl
 	pop	hl
-	ld	bc, -593
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
+	pop	hl
+	bit	0, a
+	ld	hl, -327680
+	jq	z, BB1_6
+	ld	de, 32
+	push	de
+	ld	de, L_.str.5
+	jq	BB1_7
+BB1_5:
+	ld	hl, 38
 	push	hl
-	ld	hl, L_.str.5
+	ld	hl, L_.str.6
 	push	hl
 	ld	hl, -327680
 	push	hl
-	call	_sprintf_
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 1
+	jq	BB1_9
+BB1_6:
+	ld	de, 38
+	push	de
+	ld	de, L_.str.6
+BB1_7:
+	push	de
+	push	hl
+	call	_memcpy
 	pop	hl
 	pop	hl
 	pop	hl
@@ -498,7 +608,7 @@ BB1_2:
 	push	hl
 	call	_free
 	pop	hl
-	ld	bc, -593
+	ld	bc, -602
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
@@ -507,20 +617,7 @@ BB1_2:
 	pop	hl
 	or	a, a
 	sbc	hl, hl
-	jq	BB1_5
-BB1_4:
-	ld	hl, L_.str.4
-	ld	de, 38
-	push	de
-	push	hl
-	ld	hl, -327680
-	push	hl
-	call	_memcpy
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, 1
-BB1_5:
+BB1_9:
 	ld	sp, ix
 	pop	ix
 	ret
@@ -544,25 +641,51 @@ L_.str.1:
 	section	.rodata,"a",@progbits
 	private	L_.str.2
 L_.str.2:
-	db	"The string length is: %u.",012o,"The padded size is: %u.",012o,000o
+	db	"----- AES with MAC AUTH DEMO -----",012o,000o
 
 	section	.rodata,"a",@progbits
 	private	L_.str.3
 L_.str.3:
-	db	"The MAC of the message matched.",000o
+	db	"The string length is: %u.",012o,"The padded size is: %u.",012o,000o
 
 	section	.rodata,"a",@progbits
 	private	L_.str.4
 L_.str.4:
-	db	"The MAC of the message did not match.",000o
+	db	"-- Result for unmodified message --",012o,000o
 
 	section	.rodata,"a",@progbits
 	private	L_.str.5
 L_.str.5:
+	db	"The MAC of the message matched.",000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.6
+L_.str.6:
+	db	"The MAC of the message did not match.",000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.7
+L_.str.7:
 	db	"The string is '%s'.",012o,000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.8
+L_.str.8:
+	db	"-- Chosen Ciphertext Attack Demo --",012o,000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.9
+L_.str.9:
+	db	"Suppose attacker modifies a byte in the ciphertext:",012o,"In this case, the 12th byte after the IV. (So row 2, position 14 of the hexdump)",012o,000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.10
+L_.str.10:
+	db	"Any key to continue",012o,000o
 
 	ident	"clang version 12.0.0 (https://github.com/jacobly0/llvm-project 170be88120e3aa88c20eea5615ba76b8f1d6c647)"
 	extern	_hashlib_RandomBytes
+	extern	_os_GetKey
 	extern	__Unwind_SjLj_Register
 	extern	__Unwind_SjLj_Unregister
 	extern	_hashlib_AESDecrypt

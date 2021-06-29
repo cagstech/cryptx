@@ -7,6 +7,7 @@
  *--------------------------------------
 */
 
+#include <tice.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -41,6 +42,7 @@ int main(void)
     uint8_t* ct = hashlib_AllocContext(ct_len);
     uint8_t* reverse_ct = hashlib_AllocContext(ct_len);
     
+    strcpy(CEMU_CONSOLE, "----- AES with MAC AUTH DEMO -----\n");
     sprintf(CEMU_CONSOLE, "The string length is: %u.\nThe padded size is: %u.\n", str_len, ct_len);
     
     // Load the distinct keys into respective key schedules
@@ -54,20 +56,28 @@ int main(void)
     
     // call the function macro in the library header
     hashlib_AESEncryptWithMAC(str, str_len, ct, &ctx_enc, &ctx_mac, SCHM_DEFAULT, iv);
-    hexdump(ct, ct_len);
     
     // reverse the encryption
+    strcpy(CEMU_CONSOLE, "-- Result for unmodified message --\n");
+    hexdump(ct, ct_len);
     if(hashlib_AESVerifyMAC(ct, ct_len, &ctx_mac))
         strcpy(CEMU_CONSOLE, "The MAC of the message matched.");
     else {strcpy(CEMU_CONSOLE, "The MAC of the message did not match."); return 1;}
+    strcpy(CEMU_CONSOLE, "\n");
     memcpy(iv, ct, AES_BLOCKSIZE);
     hashlib_AESDecrypt(&ct[AES_BLOCKSIZE], ct_len-AES_BLOCKSIZE, reverse_ct, &ctx_enc, iv);
-    hexdump(reverse_ct, ct_len);
+    sprintf(CEMU_CONSOLE, "The string is '%s'.\n", reverse_ct);
     // calculate the MAC of blocks0:end-1] of the decrypted msg
     // the output should match the MAC computed above
-    
-    sprintf(CEMU_CONSOLE, "The string is '%s'.\n", reverse_ct);
-    
+    strcpy(CEMU_CONSOLE, "-- Chosen Ciphertext Attack Demo --\n");
+    strcpy(CEMU_CONSOLE, "Suppose attacker modifies a byte in the ciphertext:\nIn this case, the 12th byte after the IV. (So row 2, position 14 of the hexdump)\n");
+    ct[AES_BLOCKSIZE+12] ^= 0x45;
+    hexdump(ct, ct_len);
+    strcpy(CEMU_CONSOLE, "Any key to continue\n");
+    os_GetKey();
+    if(hashlib_AESVerifyMAC(ct, ct_len, &ctx_mac))
+        strcpy(CEMU_CONSOLE, "The MAC of the message matched.");
+    else {strcpy(CEMU_CONSOLE, "The MAC of the message did not match.");}
         
     strcpy(CEMU_CONSOLE, "\n");
     
