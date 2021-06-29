@@ -65,7 +65,7 @@ void hashlib_EraseContext(void *ctx, size_t len);
     <> digest2 = pointer to second buffer to compare
     <> len = number of bytes to compare
  */
-hashlib_CompareDigest(const uint8_t* digest1, uint8_t* digest2, size_t len);
+hashlib_CompareDigest(const uint8_t* digest1, const uint8_t* digest2, size_t len);
 
 /*
     Pads input data to a cipher based on cipher data according to a selected padding scheme
@@ -103,7 +103,6 @@ enum _padding_schemes {
     SCHM_DEFAULT,
     SCHM_PKCS7,         // Pad with padding size        |   (AES)   *Default*
     SCHM_ISO_M2,        // Pad with 0x80,0x00...0x00    |   (AES)
-    SCHM_ISO_M1,        // Pad with 0x00...0x00         |   (AES)
     SCHM_ANSIX923,      // Pad with randomness          |   (AES)
     SCHM_RSA_OAEP       // OAEP encoding                |   (RSA)   *Default*
 };
@@ -249,7 +248,7 @@ void hashlib_Sha256Final(sha256_ctx *ctx, uint8_t *digest);
     <> ks = pointer to an AES key schedule context
     <> keysize = size of the key, in bits. Valid arguments are: 128, 192, and 256.
      */
-void hashlib_AESLoadKey(const uint8_t* key, aes_ctx* ks, size_t keysize);
+void hashlib_AESLoadKey(const uint8_t* key, const aes_ctx* ks, size_t keysize);
 
 /*
     AES-CBC Encrypt
@@ -265,7 +264,7 @@ bool hashlib_AESEncrypt(
     const uint8_t* plaintext,
     size_t len,
     uint8_t* ciphertext,
-    aes_ctx* ks,
+    const aes_ctx* ks,
     const uint8_t* iv);
     
 /*
@@ -279,7 +278,7 @@ size_t hashlib_AESDecrypt(
     const uint8_t* ciphertext,
     size_t len,
     uint8_t* plaintext,
-    aes_ctx* ks,
+    const aes_ctx* ks,
     const uint8_t* iv);
 
 /*
@@ -306,7 +305,7 @@ bool hashlib_AESOutputMAC(
     const uint8_t* plaintext,
     size_t len,
     uint8_t* ciphertext,
-    aes_ctx* ks);
+    const aes_ctx* ks);
 
 /*
     This function verifies the MAC for a given ciphertext. Use this function to verify the integrity of the message prior to Decryption
@@ -320,7 +319,7 @@ bool hashlib_AESOutputMAC(
     * Compares the CBC encryption of the ciphertext (excluding the last block) over ks_mac with the last block of the ciphertext
 
  */
-bool hashlib_AESVerifyMAC(uint8_t *ciphertext, size_t len, aes_ctx *ks_mac);
+bool hashlib_AESVerifyMAC(const uint8_t *ciphertext, size_t len, const aes_ctx *ks_mac);
 
 /*
     A Helper Macro to perform an AES-CBC encryption of a padded plaintext with a MAC added
