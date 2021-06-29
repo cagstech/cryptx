@@ -2,7 +2,7 @@
 include '../include/library.inc'
 
 ;------------------------------------------
-library "HASHLIB", 3
+library "HASHLIB", 4
 
 ;------------------------------------------
 

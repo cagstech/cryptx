@@ -1,4 +1,4 @@
-library	"HASHLIB", 3
+library	"HASHLIB", 4
 	export	hashlib_CSPRNGInit ; 0
 	export	hashlib_CSPRNGAddEntropy ; 3
 	export	hashlib_CSPRNGRandom ; 6
