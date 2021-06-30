@@ -110,7 +110,7 @@ enum _padding_schemes {
 // Macros to Return Correct Padding Size
 
 // Returns the correct padding size for an AES plaintext.
-#define hashlib_GetAESPaddedSize(len)  ((((len)%2)==0) ? len + AES_BLOCKSIZE : ((len/AES_BLOCKSIZE) + 1) * AES_BLOCKSIZE)
+#define hashlib_GetAESPaddedSize(len)  ((((len)%AES_BLOCKSIZE)==0) ? len + AES_BLOCKSIZE : ((len/AES_BLOCKSIZE) + 1) * AES_BLOCKSIZE)
 
 // Return the correct padding size for an AES plaintext with an extra block added for a MAC.
 #define hashlib_GetAESPaddedSizeMAC(len)    (hashlib_GetAESPaddedSize((len)) + AES_BLOCKSIZE)
