@@ -119,7 +119,7 @@ enum _padding_schemes {
 #define hashlib_GetAESPaddedSizeMACIV(len)  (hashlib_GetAESPaddedSizeMAC((len)) + AES_BLOCKSIZE)
 
 // Returns the correct padding size for RSA under OAEP. This implementation pads the plaintext to 256 bytes.
-#define hashlib_GetRSAPaddedSize(len)   (256)
+#define hashlib_GetRSAPaddedSize(len)   (128)
 
 /*
 #################################################

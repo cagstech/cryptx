@@ -6750,36 +6750,36 @@ hashlib_PadMessage:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jq	z, BB28_21
+	jq	z, BB24_21
 	ld	hl, (ix + 6)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jq	z, BB28_21
+	jq	z, BB24_21
 	ld	hl, (ix + 12)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jq	nz, BB28_6
-BB28_21:
+	jq	nz, BB24_6
+BB24_21:
 	push	bc
 	pop	hl
 	ld	sp, ix
 	pop	ix
 	ret
-BB28_6:
+BB24_6:
 	ld	e, (ix + 15)
 	ld	a, e
 	or	a, a
-	jq	nz, BB28_9
+	jq	nz, BB24_9
 	ld	de, 16
 	add	iy, de
-	ld	de, 257
+	ld	de, 129
 	lea	hl, iy + 0
 	or	a, a
 	sbc	hl, de
-	jq	nc, BB28_21
-	ld	hl, 256
+	jq	nc, BB24_21
+	ld	hl, 128
 	lea	de, ix + -114
 	ld	bc, -165
 	lea	iy, ix + 0
@@ -6876,13 +6876,13 @@ BB28_6:
 	ld	de, 0
 	pop	hl
 	pop	hl
-BB28_13:
+BB24_13:
 	push	de
 	pop	hl
-	ld	bc, 240
+	ld	bc, 112
 	or	a, a
 	sbc	hl, bc
-	jq	z, BB28_16
+	jq	z, BB24_16
 	push	de
 	pop	hl
 	ld	bc, 31
@@ -6893,29 +6893,29 @@ BB28_13:
 	ld	de, -168
 	lea	iy, ix + 0
 	add	iy, de
-	ld	iy, (iy + 0)
-	add	iy, bc
-	ld	hl, (ix + 12)
+	ld	hl, (iy + 0)
+	add	hl, bc
+	ld	iy, (ix + 12)
 	ld	de, (ix + -3)
-	add	hl, de
-	ld	a, (hl)
-	xor	a, (iy)
-	ld	(hl), a
+	add	iy, de
+	ld	a, (iy)
+	xor	a, (hl)
+	ld	(iy), a
 	inc	de
-	jq	BB28_13
-BB28_9:
+	jq	BB24_13
+BB24_9:
 	ld	a, e
 	cp	a, 1
-	jq	nz, BB28_21
+	jq	nz, BB24_21
 	ld	l, (ix + 18)
 	ld	a, l
 	or	a, a
-	jq	nz, BB28_23
+	jq	nz, BB24_23
 	ld	l, 1
-BB28_23:
+BB24_23:
 	ld	a, l
 	cp	a, 5
-	jq	nc, BB28_21
+	jq	nc, BB24_21
 	push	ix
 	ld	de, -168
 	add	ix, de
@@ -6929,10 +6929,10 @@ BB28_23:
 	lea	hl, iy + 0
 	call	ti._iand
 	or	a, a
-	jq	z, BB28_26
+	jq	z, BB24_26
 	push	hl
 	pop	iy
-BB28_26:
+BB24_26:
 	ld	bc, -168
 	lea	hl, ix + 0
 	add	hl, bc
@@ -6945,7 +6945,7 @@ BB28_26:
 	pop	af
 	ld	(ix + 0), iy
 	pop	ix
-	jq	nz, BB28_28
+	jq	nz, BB24_28
 	ld	hl, (ix + 9)
 	ex	de, hl
 	lea	hl, iy + 0
@@ -6962,8 +6962,8 @@ BB28_26:
 	ld	bc, (ix + 9)
 	ld	de, (ix + 12)
 	pop	hl
-	jq	BB28_32
-BB28_16:
+	jq	BB24_32
+BB24_16:
 	ld	bc, -165
 	lea	hl, ix + 0
 	add	hl, bc
@@ -6974,7 +6974,7 @@ BB28_16:
 	or	a, a
 	sbc	hl, hl
 	push	hl
-	ld	hl, 240
+	ld	hl, 112
 	push	hl
 	ld	hl, (ix + 12)
 	push	hl
@@ -6999,49 +6999,50 @@ BB28_16:
 	ld	hl, (hl)
 	push	hl
 	call	hashlib_Sha256Final
+	pop	hl
+	pop	hl
 	ld	iy, (ix + 12)
-	pop	hl
-	pop	hl
-	ld	de, 240
-	add	iy, de
-	ld	de, 16
-	ld	bc, 0
-BB28_17:
-	push	bc
+	lea	hl, iy + 112
+	ld	bc, -165
+	lea	iy, ix + 0
+	add	iy, bc
+	ld	(iy + 0), hl
+	ld	de, 0
+	ld	bc, 16
+BB24_17:
+	push	de
 	pop	hl
 	or	a, a
-	sbc	hl, de
-	jq	z, BB28_19
-	lea	de, iy + 0
-	ld	(ix + -3), de
-	ld	de, -171
+	sbc	hl, bc
+	jq	z, BB24_19
+	ld	(ix + -3), bc
+	ld	bc, -171
 	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
 	add	hl, de
-	ld	iy, (hl)
+	ld	bc, -168
+	lea	iy, ix + 0
 	add	iy, bc
-	push	ix
-	ld	de, -168
-	add	ix, de
-	ld	hl, (ix + 0)
-	pop	ix
+	ld	iy, (iy + 0)
+	add	iy, de
+	ld	a, (iy)
+	xor	a, (hl)
+	ld	bc, -165
+	lea	hl, ix + 0
 	add	hl, bc
-	ld	a, (hl)
-	xor	a, (iy)
-	ld	de, (ix + -3)
-	push	de
-	pop	iy
-	ld	de, 16
-	lea	hl, iy + 0
-	add	hl, bc
+	ld	hl, (hl)
+	add	hl, de
 	ld	(hl), a
-	inc	bc
-	jq	BB28_17
-BB28_19:
-	ld	bc, 256
-	jq	BB28_21
-BB28_28:
+	inc	de
+	ld	bc, (ix + -3)
+	jq	BB24_17
+BB24_19:
+	ld	bc, 128
+	jq	BB24_21
+BB24_28:
 	cp	a, 2
-	jq	nz, BB28_30
+	jq	nz, BB24_30
 	ld	hl, (ix + 9)
 	ex	de, hl
 	ld	hl, (ix + 12)
@@ -7075,12 +7076,12 @@ BB28_28:
 	ld	hl, (hl)
 	set	7, (hl)
 	ld	bc, (ix + -3)
-	jq	BB28_33
-BB28_30:
+	jq	BB24_33
+BB24_30:
 	cp	a, 4
 	ld	de, (ix + 12)
 	ld	bc, (ix + 9)
-	jq	nz, BB28_33
+	jq	nz, BB24_33
 	push	bc
 	pop	de
 	ld	iy, (ix + 12)
@@ -7096,10 +7097,10 @@ BB28_30:
 	call	hashlib_RandomBytes
 	ld	bc, (ix + 9)
 	ld	de, (ix + 12)
-BB28_32:
+BB24_32:
 	pop	hl
 	pop	hl
-BB28_33:
+BB24_33:
 	push	bc
 	ld	hl, (ix + 6)
 	push	hl
@@ -7112,7 +7113,7 @@ BB28_33:
 	lea	hl, ix + 0
 	add	hl, de
 	ld	bc, (hl)
-	jq	BB28_21
+	jq	BB24_21
  
  hashlib_AESOutputMAC:
 	ld	hl, -66
