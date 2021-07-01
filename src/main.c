@@ -1228,7 +1228,7 @@ enum _padding_schemes {
 };
 
 #define RSA_SALT_SIZE 16
-#define RSA_PADDED_SIZE (256)
+#define RSA_PADDED_SIZE (128)
 #define RSA_N (RSA_PADDED_SIZE - RSA_SALT_SIZE)
 
 size_t hashlib_PadMessage(const uint8_t* in, size_t len, uint8_t* out, uint8_t alg, uint8_t schm){
@@ -1265,11 +1265,11 @@ size_t hashlib_PadMessage(const uint8_t* in, size_t len, uint8_t* out, uint8_t a
                 uint8_t salt[RSA_SALT_SIZE];
                 uint8_t sha_digest[32];
                 
-                // Output is always 256 bytes ** this is implementation-specific **
-                size_t padded_len = 256;
+                // Output is always 128 bytes ** this is implementation-specific **
+                size_t padded_len = RSA_PADDED_SIZE;
                 
                 // If the length of the message and the salt exceeds 256, error
-                if((len + RSA_SALT_SIZE) > 256) return 0;
+                if((len + RSA_SALT_SIZE) > RSA_PADDED_SIZE) return 0;
                 
                 // Zero the output buffer. Quick way to pad
                 memset(out, 0, padded_len);
