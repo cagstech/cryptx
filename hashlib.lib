@@ -1,4 +1,4 @@
-library	"HASHLIB", 4
+library	"HASHLIB", 5
 	export	hashlib_CSPRNGInit ; 0
 	export	hashlib_CSPRNGAddEntropy ; 3
 	export	hashlib_CSPRNGRandom ; 6
@@ -14,6 +14,8 @@ library	"HASHLIB", 4
 	export	hashlib_b64encode ; 36
 	export	hashlib_b64decode ; 39
 	export	hashlib_EraseContext ; 42
-	export	hashlib_PadMessage ; 45
-	export	hashlib_StripPadding ; 48
-	export	hashlib_CompareDigest ; 51
+	export	hashlib_CompareDigest ; 45
+	export	hashlib_AESPadMessage ; 48
+	export	hashlib_RSAPadMessage ; 51
+	export	hashlib_AESStripPadding ; 54
+	export	hashlib_RSAStripPadding ; 57

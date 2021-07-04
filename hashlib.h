@@ -68,43 +68,85 @@ void hashlib_EraseContext(void *ctx, size_t len);
 hashlib_CompareDigest(const uint8_t* digest1, const uint8_t* digest2, size_t len);
 
 /*
-    Pads input data to a cipher based on cipher data according to a selected padding scheme
+    Pads input data for AES encryption according to a selection of standard padding schemes.
     
     # Inputs #
     <> plaintext = pointer to buffer containing data to pad
     <> len = size of data to pad, in bytes (real size, not block-aligned size)
     <> outbuf = pointer to buffer large enough to hold padded data (see macros below)
-    <> alg = encryption algorithm to pad for (see enumerations below)
     <> schm = padding scheme to pad with (see enumerations below)
  */
  
- 
- 
-size_t hashlib_PadMessage(
+size_t hashlib_AESPadMessage(
     const uint8_t* plaintext,
     size_t len,
     uint8_t* outbuf,
-    uint8_t alg,
     uint8_t schm);
     
-size_t hashlib_StripPadding(
+/*
+    Reverses the padding on an AES plaintext according to a selection of standard padding schemes.
+    
+    # Inputs #
+    <> plaintext = pointer to buffer containing data to pad
+    <> len = size of data to pad, in bytes (real size, not block-aligned size)
+    <> outbuf = pointer to buffer large enough to hold padded data (see macros below)
+    <> schm = padding scheme to pad with (see enumerations below)
+    
+    * If input SCHM mode is SCHM_ANSIX923, size returned is the same as input size
+        you will need to maintain your own expected unpadded data length
+ */
+size_t hashlib_AESStripPadding(
     const uint8_t* plaintext,
     size_t len,
     uint8_t* outbuf,
-    uint8_t alg,
     uint8_t schm);
     
-enum _enc_algs {
-    ALG_RSA,
-    ALG_AES
-};
+/*
+    Pads input data on an RSA plaintext according to the Optimal Asymmetric Encryption Padding (OAEP) scheme.
+    
+    |---------|--------------------------|-----------------|
+    | Message | 0x80, 0x00,... (Padding) | Salt (16 bytes) |    == modulus len
+    |---------|--------------------------|-----------------|
+                         |                        |
+                        XOR  <------SHA-256--------
+                         |                        |
+                         |-------SHA-256-------> XOR
+                         |                        |
+    |------------------------------------|-----------------|
+    |     Encoded Message + Padding      |  Encoded Salt   |
+    |------------------------------------|-----------------|
+    
+    # Inputs #
+    <> plaintext = pointer to buffer containing data to pad
+    <> len = size of data to pad, in bytes (real size, not block-aligned size)
+    <> outbuf = pointer to buffer large enough to hold padded data (see macros below)
+    <> modulus_len = the bit-length of the modulus, used to determine the padded message length
+ */
+size_t hashlib_RSAPadMessage(
+    const uint8_t* plaintext,
+    size_t len,
+    uint8_t* outbuf,
+    size_t modulus_len);
+    
+/*
+    Reverses the padding on an RSA plaintext according to the OAEP padding scheme.
+    
+    # Inputs #
+    <> plaintext = pointer to buffer containing data to pad
+    <> len = size of data to pad, in bytes (real size, not block-aligned size)
+    <> outbuf = pointer to buffer large enough to hold padded data (see macros below)
+*/
+size_t hashlib_RSAStripPadding(
+    const uint8_t* plaintext,
+    size_t len,
+    uint8_t* outbuf);
+    
 
 enum _padding_schemes {
     SCHM_DEFAULT,
     SCHM_PKCS7,         // Pad with padding size        |   (AES)   *Default*
     SCHM_ISO_M2,        // Pad with 0x80,0x00...0x00    |   (AES)
     SCHM_ANSIX923,      // Pad with randomness          |   (AES)
-    SCHM_RSA_OAEP       // OAEP encoding                |   (RSA)   *Default*
 };
 
 // Macros to Return Correct Padding Size
@@ -117,9 +159,6 @@ enum _padding_schemes {
 
 // Return the correct size for an AES cipher of size len with the IV prepended and a MAC appended
 #define hashlib_GetAESPaddedSizeMACIV(len)  (hashlib_GetAESPaddedSizeMAC((len)) + AES_BLOCKSIZE)
-
-// Returns the correct padding size for RSA under OAEP. This implementation pads the plaintext to 256 bytes.
-#define hashlib_GetRSAPaddedSize(len)   (128)
 
 /*
 #################################################
