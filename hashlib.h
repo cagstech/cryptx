@@ -383,7 +383,7 @@ bool hashlib_AESVerifyMAC(const uint8_t *ciphertext, size_t len, const aes_ctx *
             {   \
                 size_t padded_pt_size = hashlib_GetAESPaddedSize((len)); \
                 uint8_t* padded_pt = hashlib_AllocContext(padded_pt_size); \
-                hashlib_PadMessage((plaintext), padded_pt_size, padded_pt, ALG_AES, (pad_schm)); \
+                hashlib_PadMessage((plaintext), padded_pt_size, padded_pt, (pad_schm)); \
                 hashlib_AESEncrypt(padded_pt, padded_pt_size, (&ciphertext[AES_BLOCKSIZE]), (ks_encrypt), (iv)); \
                 memcpy((ciphertext), (iv), AES_BLOCKSIZE); \
                 hashlib_AESOutputMAC((ciphertext), padded_pt_size+AES_BLOCKSIZE, &ciphertext[padded_pt_size+AES_BLOCKSIZE], (ks_mac)); \
