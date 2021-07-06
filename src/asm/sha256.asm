@@ -8,12 +8,12 @@ _sha256ctx_size     := 4*8+offset_state
 hashlib_Sha256Init:
     pop bc,de
     push de,bc
-	ld hl,$FF0000 ;64k of 0x00 bytes
+	ld hl,$FF0000           ; 64k of 0x00 bytes
     ld bc,_sha256ctx_size
 	push de
 	ldir
 	pop de
-    ld c,8*4        ;bc=0 prior to this, due to ldir
+    ld c,8*4                ; bc=0 prior to this, due to ldir
     ld hl,_sha256_state_init
 	ldir
     ret
@@ -91,32 +91,49 @@ hashlib_Sha256Final:
     
     lea iy, (ix + 6)                    ; iy =  context block
     ld a, (iy + offset_datalen)         ; a = datalen in block cache
-    cp 64
-    jr nc, _sha256_skip_pad             ; if datalen equal to a block, skip init padding step
+    
+    ; let DE = &ctx->data[datalen]
     ld b, 0
     ld c, a                             ; ld bc, a
     lea hl, (ix + 6)                    ; ld hl, context_block_cache_addr
     add hl, bc                          ; hl + bc (context_block_cache_addr + bytes cached)
     ex de, hl                           ; put into de
-    ld b, c
-    ld a, 64
+    
+    cp 64
+    jr nc, _sha256_skip_pad             ; if datalen equal to a block, skip init padding step
+    cp 56
+    jr nc, _sha256_pad_to_block
+    
+    ld b, 56
     sub a, b
-    ld b, a
+    ld b, 0
+    ld c, a
     ld a, 080h
     ld (de), a
-    dec b
-    jr z, _sha256_skip_pad
-    xor a, a
-_sha256_pad_loop:
-    ld (de), a
-    djnz _sha256_pad_loop
+    dec bc
+    inc de
+    ld hl,$FF0000                       ; 64k of 0x00 bytes
+    ldir                                ; copy 56 - datalen bytes to &ctx->data
+    jr _sha256_skip_pad
     
+_sha256_pad_to_block:
+    ld b, 64
+    sub a, b
+    ld b, 0
+    ld c, a
+    ld a, 080h
+    ld (de), a
+    dec bc
+    inc de
+    ld hl,$FF0000                       ; 64k of 0x00 bytes
+    ldir                                ; copy 64 - datalen bytes to &ctx->data
     lea iy, (ix + 6)
-    call _sha256_transform
-    ld hl,$FF0000                       ;64k of 0x00 bytes
+    call _sha256_transform              ; hash the block
+    ld hl,$FF0000                       ; 64k of 0x00 bytes
     ld bc,56
 	lea de, (ix + 6)
-	ldir
+	ldir                                ; zero the first 56 bytes of a new block
+    
 _sha256_skip_pad:
     lea iy, (ix + 6)
     ld a, (iy + offset_datalen)
