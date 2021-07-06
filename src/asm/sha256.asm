@@ -25,7 +25,7 @@ hashlib_Sha256Init:
     
 ; void hashlib_Sha256Update(SHA256_CTX *ctx, const BYTE data[], uint32_t len)
 hashlib_Sha256Update:
-    ti._frameset0
+    call ti._frameset0
     ; (ix + 0) RV
     ; (ix + 3) old IX
     ; (ix + 6) arg1: ctx
@@ -57,11 +57,13 @@ _sha256_update_loop:
     ld iy, (ix + 6)
     call _sha256_transform      ; if we have one block (64-bytes), transform block
     ld iy, 512                  ; add 1 blocksize of bitlen to the bitlen field
+    push af, hl, de, bc
     push iy
         ld iy, (ix + 6)
         pea iy + offset_bitlen
             call u64_addi
-    pop iy,iy
+    pop hl,hl
+    pop bc, de, hl, af
     ld a, 0                     ; reset datalen to 0
 _sha256_update_noblock:
     inc de
