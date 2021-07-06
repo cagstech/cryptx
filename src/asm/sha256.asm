@@ -31,38 +31,44 @@ hashlib_Sha256Update:
     ; (ix + 6) arg1: ctx
     ; (ix + 9) arg2: data
     ; (ix + 12) arg3: len
-    lea hl, (ix + 9)
-    lea de, (ix + 6)
-    lea bc, (ix + 12)
-    push de
+    lea hl, (ix + 12)
+    lea de, (ix + 9)
+    ld bc, 64
 _sha256_update_loop:
-    ld a, (hl)
-    ld (de), a
-    
-    lea iy, ix + offset_datalen
-    ld a, (iy)
-    cp 64
-    jr nz, _sha256_nextbyte
-    call _sha256_transform      ; if we have one block (64-bytes), transform block
-    ld iy,512
-    push iy
-    ld iy, (ix + 6)
-    pea iy + offset_bitlen
-    call u64_addi
-    pop bc,bc
-    ld a, 0
+    or a
+    sbc hl, bc
+    jr c, _sha256_lessthanblock
+        push bc
+        push de
+        lea iy, (ix + 6)
+        push iy
+        call ti._memset
+        pop iy, iy, iy
+        call _sha256_transform      ; if we have one block (64-bytes), transform block
+        ld iy,512
+        push iy
+        ld iy, (ix + 6)
+        pea iy + offset_bitlen
+        call u64_addi
+        pop bc,bc
+        ld a, 0
+        lea iy, (ix + 6)
+        ld (iy + offset_datalen), a           ; reset the datalen field to 0 for next block
+        ex de, hl
+        add hl, 64
+        ex de, hl
+        jr nz, _sha256_update_loop
+_sha256_lessthanblock:
+    add hl, bc      ; return to whatever value is less than 64
+    push hl
+    push de
     lea iy, (ix + 6)
-    ld (iy + offset_datalen)            ; reset the datalen field to 0 for next block
-    pop de                              ; reset the data pointer to the start (re: push ix)
-    push de                             ; push it again
-    dec de
-_sha256_nextbyte:
-    inc de
-    inc hl
-    dec bc
-    ld a,c
-    or a,b
-    jq nz, _sha256_update_loop
+    call ti._memset
+    pop iy, iy, iy
+    ld a, l
+    lea iy, (ix + 6)
+    ld (iy + offset_datalen), a            ; set the data field to block size done
+; Exit routine
     lea ix, (ix + 3)
     ret
     
