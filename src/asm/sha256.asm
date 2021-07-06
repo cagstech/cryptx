@@ -205,7 +205,7 @@ _sha256_transform_stackmem_size    := 8 * 4 + state_vars
 
 ; iy = context pointer
 call _sha256_transform:
-    ld hl, -4 * 72
+    ld hl, _sha256_transform_stackmem_size
     call ti._frameset
     
     ; memset all stack mem to 0?
