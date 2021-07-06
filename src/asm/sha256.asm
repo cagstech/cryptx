@@ -187,17 +187,6 @@ _sha256_render_digest_loop:
     lea iy, iy + 4
     djnz sha256_render_digest_loop
     
-    
-    
-    
-    
-            
-    
-    
-    
-    
-
-
 
 _sha256_mblock          := 0
 _sha256_state_vars      := 64 * 4 + mblock
@@ -208,7 +197,7 @@ call _sha256_transform:
     ld hl, _sha256_transform_stackmem_size
     call ti._frameset
     
-    ; memset all stack mem to 0?
+    ; memset all stack mem to 0
     ld hl,$FF0000
     lea de, ix + 0
     ld bc, _sha256_transform_stackmem_size
