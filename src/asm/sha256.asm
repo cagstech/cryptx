@@ -22,30 +22,48 @@ hashlib_Sha256Init:
     pop bc,bc,bc
     ret
     
+    
+; void hashlib_Sha256Update(SHA256_CTX *ctx, const BYTE data[], uint32_t len)
 hashlib_Sha256Update:
-    pop bc, hl, de, ix  ; pop 3 args off stack
-    push ix, de         ; preserve ix, want de in ix for offset-referencing
-    pop ix              ; get PTR to context in ix
-    push ix             ; we want to preserve the start of the context data
+    ti._frameset0
+    ; (ix + 0) RV
+    ; (ix + 3) old IX
+    ; (ix + 6) arg1: ctx
+    ; (ix + 9) arg2: data
+    ; (ix + 12) arg3: len
+    lea hl, (ix + 9)
+    lea de, (ix + 6)
+    lea bc, (ix + 12)
+    push de
 _sha256_update_loop:
     ld a, (hl)
-    ld de, (a)
+    ld (de), a
     
-    ld a, (ix + offset_datalen)
+    lea iy, ix + offset_datalen
+    ld a, (iy)
     cp 64
     jr nz, _sha256_nextbyte
     call _sha256_transform      ; if we have one block (64-bytes), transform block
-    ; 64 bit math | either bigintce or custom
-    ; add (ix + offset_bitlen), 512     ; 64 bit addition of 512 (block size) to bitlen field
+    ld iy,512
+    push iy
+    ld iy, (ix + 6)
+    pea iy + offset_bitlen
+    call u64_addi
+    pop bc,bc
     ld a, 0
-    ld, (ix + offset_datalen), a        ; reset the datalen field to 0 for next block
+    lea iy, (ix + 6)
+    ld (iy + offset_datalen)            ; reset the datalen field to 0 for next block
     pop de                              ; reset the data pointer to the start (re: push ix)
     push de                             ; push it again
+    dec de
 _sha256_nextbyte:
     inc de
     inc hl
     dec bc
-    jr nz, _sha256_update_loop
+    ld a,c
+    or a,b
+    jq nz, _sha256_update_loop
+    lea ix, (ix + 3)
     ret
     
 
