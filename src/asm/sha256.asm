@@ -31,53 +31,63 @@ hashlib_Sha256Update:
     ; (ix + 6) arg1: ctx
     ; (ix + 9) arg2: data
     ; (ix + 12) arg3: len
-    lea hl, (ix + 12)
-    lea de, (ix + 9)
-    ld bc, 64
+    
+    ; get pointers to the things
+    lea bc, (ix + 12)           ; bc = len
+    lea hl, (ix + 9)            ; hl = source data
+    lea de, (ix + 6)            ; de = context, data ptr
+    lea iy, (ix + 6)            ; iy = context, reference
+    
+    ; start writing data to the right location in the data block
+    ld a, (iy + offset_datalen)
+    ld b, 0
+    ld c, a
+    ex de, hl
+    add hl, bc
+    ex de, hl
+   
 _sha256_update_loop:
-    or a
-    sbc hl, bc
-    jr c, _sha256_lessthanblock
-        push bc
-        push de
-        lea iy, (ix + 6)
-        push iy
-        call ti._memset
-        pop iy, iy, iy
-        call _sha256_transform      ; if we have one block (64-bytes), transform block
-        ld iy,512
-        push iy
+    push af                 ; we will wind up nuking a
+        ld a, (hl)
+        ld (de), a
+    pop af
+    inc a
+    cp 64
+    jr nz, _sha256_update_noblock
+    ld iy, (ix + 6)
+    call _sha256_transform      ; if we have one block (64-bytes), transform block
+    ld iy, 512                  ; add 1 blocksize of bitlen to the bitlen field
+    push iy
         ld iy, (ix + 6)
         pea iy + offset_bitlen
-        call u64_addi
-        pop iy,iy
-        ld a, 0
-        lea iy, (ix + 6)
-        ld (iy + offset_datalen), a           ; reset the datalen field to 0 for next block
-        ex de, hl
-        add hl, 64
-        ex de, hl
-        jr nz, _sha256_update_loop
-_sha256_lessthanblock:
-    add hl, bc      ; return to whatever value is less than 64
-    push hl
-    push de
+            call u64_addi
+    pop iy,iy
+    ld a, 0                     ; reset datalen to 0
+_sha256_update_noblock:
+    inc de
+    inc hl
+    dec bc
+    push af
+        ld a,c
+        or a,b
+        jq z, _sha256_update_done
+    pop af
+    jr _sha256_update_loop
+_sha256_update_done:
+    pop af
     lea iy, (ix + 6)
-    call ti._memset
-    pop iy, iy, iy
-    ld a, l
-    lea iy, (ix + 6)
-    ld (iy + offset_datalen), a            ; set the data field to block size done
-; Exit routine
+    ld (iy + offset_datalen), a           save current datalen
     lea ix, (ix + 3)
     ret
     
+    
+ 
 
 
 hashlib_Sha256Final:
 
 
-; de = context pointer
+; iy = context pointer
 call _sha256_transform:
     
     
