@@ -89,17 +89,71 @@ hashlib_Sha256Final:
     ; (ix + 6) arg1: ctx
     ; (ix + 9) arg2: outbuf
     
+    lea iy, (ix + 6)                    ; iy =  context block
+    ld a, (iy + offset_datalen)         ; a = datalen in block cache
+    cp 64
+    jr nc, _sha256_skip_pad             ; if datalen equal to a block, skip init padding step
+    ld b, 0
+    ld c, a                             ; ld bc, a
+    lea hl, (ix + 6)                    ; ld hl, context_block_cache_addr
+    add hl, bc                          ; hl + bc (context_block_cache_addr + bytes cached)
+    ex de, hl                           ; put into de
+    ld b, c
+    ld a, 64
+    sub a, b
+    ld b, a
+    ld a, 080h
+    ld (de), a
+    dec b
+    jr z, _sha256_skip_pad
+    xor a, a
+_sha256_pad_loop:
+    ld (de), a
+    djnz _sha256_pad_loop
+    
+    lea iy, (ix + 6)
+    call _sha256_transform
+    ld hl,$FF0000                       ;64k of 0x00 bytes
+    ld bc,56
+	lea de, (ix + 6)
+	ldir
+_sha256_skip_pad:
     lea iy, (ix + 6)
     ld a, (iy + offset_datalen)
-    cp 64
-    jr nc, _sha256_skip_pad
     ld b, 0
     ld c, a
+    push bc
+    pop hl
+    add hl, hl
+    add hl, hl
+    add hl, hl                      ; hl * 8
+    push hl
+        ld iy, (ix + 6)
+        pea iy + offset_bitlen
+            call u64_addi
+    pop hl, hl
     lea hl, (ix + 6)
+    ld bc, 63
     add hl, bc
     ex de, hl
+    lea hl, (ix + 6)
+    ld bc, offset_bitlen
+    add hl, bc
+    ld b, 8
+_sha256_echobitlen:
+    ld a, (hl)
+    ld (de), a
+    inc hl
+    dec de
+    djnz _sha256_echobitlen
     
-_sha256_pad_loop:
+    lea iy, (ix + 6)
+    call _sha256_transform
+    
+    
+            
+    
+    
     
     
 
