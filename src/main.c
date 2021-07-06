@@ -42,11 +42,6 @@ typedef struct {
 	WORD state[8];
 } SHA256_CTX;
 
-#define RSA_KEY_BYTELEN 8
-typedef struct {
-    uint8_t pubkey[RSA_KEY_BYTELEN];    // for encryption
-    uint8_t privkey[RSA_KEY_BYTELEN];   // for decryption
-} RSA_CTX;
 
 typedef union
 {
@@ -1153,7 +1148,7 @@ void aes_decrypt_block(const BYTE in[], BYTE out[], const WORD key[], int keysiz
 }
 
 
-
+#define AES_BLOCKSIZE 16
 int hashlib_AESEncrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[])
 {
 	BYTE buf_in[AES_BLOCK_SIZE], buf_out[AES_BLOCK_SIZE], iv_buf[AES_BLOCK_SIZE];
@@ -1189,7 +1184,6 @@ size_t hashlib_AESDecrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* k
 	int keysize = key->keysize;
     uint32_t *round_keys = key->round_keys;
 	int blocks, idx;
-    size_t pad_len;
 
     if(in==NULL) return false;
     if(out==NULL) return false;
@@ -1209,100 +1203,7 @@ size_t hashlib_AESDecrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* k
 		memcpy(&out[idx * AES_BLOCK_SIZE], buf_out, AES_BLOCK_SIZE);
 		memcpy(iv_buf, buf_in, AES_BLOCK_SIZE);
 	}
-    pad_len = out[in_len];
-	return in_len-pad_len;
-}
-
-enum _encrypt_algs {
-    ALG_RSA,
-    ALG_AES
-};
-
-enum _padding_schemes {
-    SCHM_DEFAULT,
-    SCHM_PKCS7,         // Pad with padding size
-    SCHM_ISO_M2,        // Pad with 0x80,0x00...0x00
-    SCHM_ISO_M1,        // Pad with 0x00...0x00
-    SCHM_ANSIX923,      // Pad with randomness
-    SCHM_RSA_OAEP       // OAEP encoding
-};
-
-#define RSA_SALT_SIZE 16
-#define RSA_PADDED_SIZE (128)
-#define RSA_N (RSA_PADDED_SIZE - RSA_SALT_SIZE)
-
-size_t hashlib_PadMessage(const uint8_t* in, size_t len, uint8_t* out, uint8_t alg, uint8_t schm){
-    if(in==NULL) return 0;
-    if(out==NULL) return 0;
-    if(len==0) return 0;
-    switch(alg){
-        case ALG_AES:
-            {
-                size_t blocksize=16, padded_len;
-                if(schm == SCHM_DEFAULT) schm = SCHM_PKCS7;
-                if(schm > SCHM_ANSIX923) return 0;
-                if((len % blocksize) == 0) padded_len = len + blocksize;
-                else padded_len = (( len / blocksize ) + 1) * blocksize;
-                switch(schm){
-                    case SCHM_PKCS7:
-                        memset(&out[len], padded_len-len, padded_len-len);
-                        break;
-                    case SCHM_ISO_M2:
-                        memset(&out[len], 0, padded_len-len);
-                        out[len] |= 0b10000000;
-                        break;
-                    case SCHM_ANSIX923:
-                        hashlib_RandomBytes(&out[len], padded_len-len);
-                        break;
-                }
-                memcpy(out, in, len);
-                return padded_len;
-                break;
-            }
-        case ALG_RSA:
-            {
-                SHA256_CTX ctx;
-                uint8_t salt[RSA_SALT_SIZE];
-                uint8_t sha_digest[32];
-                
-                // Output is always 128 bytes ** this is implementation-specific **
-                size_t padded_len = RSA_PADDED_SIZE;
-                
-                // If the length of the message and the salt exceeds 256, error
-                if((len + RSA_SALT_SIZE) > RSA_PADDED_SIZE) return 0;
-                
-                // Zero the output buffer. Quick way to pad
-                memset(out, 0, padded_len);
-                
-                // Copy input date to output buffer
-                memcpy(out, in, len);
-                
-                // Generate 16-byte salt and then hash it
-                hashlib_RandomBytes(salt, RSA_SALT_SIZE);
-                hashlib_Sha256Init(&ctx);
-                hashlib_Sha256Update(&ctx, salt, RSA_SALT_SIZE);      //  hash the salt
-                hashlib_Sha256Final(&ctx, sha_digest);
-                
-                // XOR the hashed salt with the output buffer cyclically to get encoded message
-                for(size_t i=0; i < RSA_N; i++)
-                    out[i] ^= sha_digest[i%32];
-                    
-                // Hash the encoded message
-                hashlib_Sha256Init(&ctx);
-                hashlib_Sha256Update(&ctx, out, RSA_N);
-                hashlib_Sha256Final(&ctx, sha_digest);
-                
-                // XOR the hashed encoded message with the salt to get the encoded salt
-                for(size_t i=0; i<RSA_SALT_SIZE; i++)
-                    out[RSA_N + i] = salt[i] ^ sha_digest[i];
-                    
-                // Return the static size of 256
-                return padded_len;
-                break;
-            }
-        default:
-            return 0;
-    }
+    return true;
 }
 
 int hashlib_AESOutputMAC(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key){
@@ -1333,78 +1234,144 @@ int hashlib_AESOutputMAC(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* ke
 	return true;
 }
 
-size_t hashlib_StripPadding(const uint8_t* in, size_t len, uint8_t* out, uint8_t alg, uint8_t schm){
+enum _aes_padding_schemes {
+    SCHM_DEFAULT,
+    SCHM_PKCS7,         // Pad with padding size
+    SCHM_ISO_M2,        // Pad with 0x80,0x00...0x00
+    SCHM_ANSIX923,      // Pad with randomness
+};
+
+
+
+size_t hashlib_AESPadMessage(const uint8_t* in, size_t len, uint8_t* out, uint8_t schm){
+    size_t blocksize=16, padded_len;
     if(in==NULL) return 0;
     if(out==NULL) return 0;
     if(len==0) return 0;
-    memset(out, 0, len);
-    switch(alg){
-        case ALG_AES:
-            {
-                size_t outlen;
-                if(schm == SCHM_DEFAULT) schm = SCHM_PKCS7;
-                if(schm > SCHM_ANSIX923) return 0;
-                switch(schm){
-                    case SCHM_PKCS7:
-                        outlen = len - in[len-1];
-                        break;
-                    case SCHM_ISO_M2:
-                        for(outlen = len-1; in[outlen] != 0x80; outlen--);
-                        outlen++;
-                        break;
-                    case SCHM_ANSIX923:
-                        outlen=len;
-                        break;
-                }
-                memcpy(out, in, outlen);
-                return outlen;
-                break;
-            }
-        case ALG_RSA:
-            {
-                size_t outlen;
-                SHA256_CTX ctx;
-                uint8_t salt[RSA_SALT_SIZE];
-                uint8_t sha_digest[32];
-                size_t msg_len = len - RSA_SALT_SIZE;
-                
-                // Copy last 16 bytes of input buf to salt to get encoded salt
-                memcpy(salt, &in[len-RSA_SALT_SIZE-1], RSA_SALT_SIZE);
-                
-                // Compute SHA-256 of the encoded message + padding
-                hashlib_Sha256Init(&ctx);
-                hashlib_Sha256Update(&ctx, in, msg_len);
-                hashlib_Sha256Final(&ctx, sha_digest);
-                
-                // XOR SHA-256 of encoded msg + pad with encoded salt to get salt
-                for(size_t i=0; i<RSA_SALT_SIZE; i++)
-                    salt[i] = salt[i] ^ sha_digest[i];
-                    
-                // Compute SHA-256 of the salt
-                hashlib_Sha256Init(&ctx);
-                hashlib_Sha256Update(&ctx, salt, RSA_SALT_SIZE);      //  hash the salt
-                hashlib_Sha256Final(&ctx, sha_digest);
-                
-                // XOR SHA-256 of salt with encoded message cyclically to get original message
-                for(size_t i=0; i < RSA_N; i++)
-                    out[i] = in[i] ^ sha_digest[i%32];
-                
-                // Look backwards from out[outlen-1] for the first non-zero byte
-                outlen = msg_len;
-                for(; out[outlen-1] != 0; outlen--);
-                
-                // outlen at that point should be the true len of the decoded RSA key
-                return outlen;
-                
-                
-                break;
-            }
-        default:
-            return 0;
+    if(schm == SCHM_DEFAULT) schm = SCHM_PKCS7;
+    if(schm > SCHM_ANSIX923) return 0;
+    if((len % blocksize) == 0) padded_len = len + blocksize;
+    else padded_len = (( len / blocksize ) + 1) * blocksize;
+    switch(schm){
+        case SCHM_PKCS7:
+            memset(&out[len], padded_len-len, padded_len-len);
+            break;
+        case SCHM_ISO_M2:
+            memset(&out[len], 0, padded_len-len);
+            out[len] |= 0b10000000;
+            break;
+        case SCHM_ANSIX923:
+            hashlib_RandomBytes(&out[len], padded_len-len);
+            break;
     }
+    memcpy(out, in, len);
+    return padded_len;
+}
+         
+#define RSA_SALT_SIZE 16
+size_t hashlib_RSAPadMessage(const uint8_t* in, size_t len, uint8_t* out, size_t modulus_len){
+    SHA256_CTX ctx;
+    uint8_t salt[RSA_SALT_SIZE];
+    uint8_t sha_digest[32];
+    size_t rsa_n;
+    if(in==NULL) return 0;
+    if(out==NULL) return 0;
+    if(len==0) return 0;
+    // ensure that the message length (including the salt) is smaller than the modulus
+    if((len + RSA_SALT_SIZE) > modulus_len) return 0;
+    
+    // set N to the modulus size, less the salt
+    rsa_n = modulus_len - RSA_SALT_SIZE;
+    
+    // Zero the output buffer. Quick way to pad
+    memset(out, 0, rsa_n);
+          
+    // Generate salt, SHA-256 hash the salt
+    hashlib_RandomBytes(salt, RSA_SALT_SIZE);
+    hashlib_Sha256Init(&ctx);
+    hashlib_Sha256Update(&ctx, salt, RSA_SALT_SIZE);
+    hashlib_Sha256Final(&ctx, sha_digest);
+                
+    // XOR the hashed salt with the input buffer cyclically to get encoded message
+    // write the encoded message (to len_n) to the output buffer
+    for(size_t i=0; i < rsa_n; i++)
+        out[i] = in[i] ^ sha_digest[i%32];
+                    
+    // SHA-256 hash the encoded message + padding
+    hashlib_Sha256Init(&ctx);
+    hashlib_Sha256Update(&ctx, out, rsa_n);
+    hashlib_Sha256Final(&ctx, sha_digest);
+                
+    // XOR the hashed encoded message with the salt to get the encoded salt
+    for(size_t i=0; i<RSA_SALT_SIZE; i++)
+        out[rsa_n + i] = salt[i] ^ sha_digest[i];
+                    
+                // Return the static size of 256
+    return modulus_len;
 }
 
-#define AES_BLOCKSIZE 16
+size_t hashlib_AESStripPadding(const uint8_t* in, size_t len, uint8_t* out, uint8_t schm){
+    if(in==NULL) return 0;
+    if(out==NULL) return 0;
+    if(len==0) return 0;
+    size_t outlen;
+    memset(out, 0, len);
+    if(schm == SCHM_DEFAULT) schm = SCHM_PKCS7;
+    if(schm > SCHM_ANSIX923) return 0;
+    switch(schm){
+        case SCHM_PKCS7:
+            outlen = len - in[len-1];
+            break;
+        case SCHM_ISO_M2:
+            for(outlen = len-1; in[outlen] != 0x80; outlen--);
+            outlen++;
+            break;
+        case SCHM_ANSIX923:
+            outlen=len;
+            break;
+    }
+    memcpy(out, in, outlen);
+    return outlen;
+}
+
+size_t hashlib_RSAStripPadding(const uint8_t *in, size_t len, uint8_t* out){
+    if(in==NULL) return 0;
+    if(out==NULL) return 0;
+    if(len==0) return 0;
+    size_t outlen;
+    SHA256_CTX ctx;
+    uint8_t salt[RSA_SALT_SIZE];
+    uint8_t sha_digest[32];
+    size_t rsa_n = len - RSA_SALT_SIZE;
+                
+    // Copy last 16 bytes of input buf to salt to get encoded salt
+    memcpy(salt, &in[len-RSA_SALT_SIZE-1], RSA_SALT_SIZE);
+                
+    // SHA-256 hash encoded message + padding
+    hashlib_Sha256Init(&ctx);
+    hashlib_Sha256Update(&ctx, in, rsa_n);
+    hashlib_Sha256Final(&ctx, sha_digest);
+                
+    // XOR hash encoded msg + pad with encoded salt to get decoded salt
+    for(size_t i=0; i<RSA_SALT_SIZE; i++)
+        salt[i] ^= sha_digest[i];
+                    
+    // SHA-256 hash the salt
+    hashlib_Sha256Init(&ctx);
+    hashlib_Sha256Update(&ctx, salt, RSA_SALT_SIZE);
+    hashlib_Sha256Final(&ctx, sha_digest);
+                
+    // XOR SHA-256 of salt with encoded message cyclically to get decoded message
+    for(size_t i=0; i < rsa_n; i++)
+        out[i] = in[i] ^ sha_digest[i%32];
+                
+    // Look backwards from out[outlen-1] for the first non-zero byte
+    outlen = rsa_n;
+    for(; out[outlen-1] != 0x00; outlen--);
+    // outlen at this point should be the true len of the decoded RSA key + 1
+    return outlen;
+}
+
 bool hashlib_AESVerifyMAC(uint8_t *ciphertext, size_t len, aes_ctx *ks_mac){
     uint8_t mac[AES_BLOCKSIZE];
     hashlib_AESOutputMAC((ciphertext), len-AES_BLOCKSIZE, mac, (ks_mac));
@@ -1417,3 +1384,23 @@ bool hashlib_CompareDigest(uint8_t *dig1, uint8_t *dig2, size_t len){
         result |= (dig1[i] ^ dig2[i]);
     return !result;
 }
+
+#define RSA_PUB_EXPONENT 65537
+/*
+bool hashlib_RSAEncrypt(const uint8_t* in, size_t len, uint8_t* out, const uint8_t *key, size_t keysize){
+    uint8_t output[257], modulus[257], msg[257], exponent[5];
+    uint32_t exp = RSA_PUB_EXPONENT;
+    vint_t  *var_output = &output,
+            *var_modulus = &modulus,
+            *var_msg = &msg,
+            *var_exponent = &exponent;
+            
+    if(len > keysize) return false;
+    vint_frombytes(in, len, var_msg);
+    vint_frombytes(key, keysize, var_modulus);
+    vint_frombytes(&exp, sizeof(uint32_t), var_exponent);
+    vint_powmod(var_msg, var_exponent, var_modulus);
+    vint_tobytes(var_msg, out, keysize);
+    return true;
+}
+*/
