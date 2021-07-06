@@ -8,18 +8,14 @@ _sha256ctx_size     := 4*8+offset_state
 hashlib_Sha256Init:
     pop bc,de
     push de,bc
-    or a,a
-    sbc hl,hl
+	ld hl,$FF0000 ;64k of 0x00 bytes
     ld bc,_sha256ctx_size
-    push bc,hl,de
-    call ti._memset
-    pop de,bc,bc
-    ld c,8*4        ;if bc is expected to have exceeded 255 prior to this, use ld bc instead.
-    push bc,de
-    ld bc,_sha256_state_init
-    push bc
-    call ti._memcpy
-    pop bc,bc,bc
+	push de
+	ldir
+	pop de
+    ld c,8*4        ;bc=0 prior to this, due to ldir
+    ld hl,_sha256_state_init
+	ldir
     ret
     
     
