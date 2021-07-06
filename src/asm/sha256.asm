@@ -199,16 +199,20 @@ _sha256_render_digest_loop:
 
 
 
-mblock          := 0
-state_vars      := 64 * 4 + mblock
+_sha256_mblock          := 0
+_sha256_state_vars      := 64 * 4 + mblock
+_sha256_transform_stackmem_size    := 8 * 4 + state_vars
 
 ; iy = context pointer
 call _sha256_transform:
     ld hl, -4 * 72
     call ti._frameset
     
-    
     ; memset all stack mem to 0?
+    ld hl,$FF0000
+    lea de, ix + 0
+    ld bc, _sha256_transform_stackmem_size
+    ldir
     
     lea hl, ix + 0
     ld b, 16
@@ -241,7 +245,7 @@ _sha256_transform_loop2:
     pop iy
     push iy
     lea hl, iy + offset_state
-    lea de, ix + state_vars
+    lea de, ix + _sha256_state_vars
     ld bc, 32
     ldir                ; copy the state to scratch stack memory
     
@@ -261,7 +265,7 @@ _sha256_transform_loop3:
     
     pop iy
     lea de, iy + offset_state
-    lea hl, ix + state_vars
+    lea hl, ix + _sha256_state_vars
     ld bc, 32
     ldir                ; copy scratch back to state
     ret
