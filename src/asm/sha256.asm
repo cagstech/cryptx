@@ -23,7 +23,7 @@ hashlib_Sha256Init:
     ret
     
     
-; void hashlib_Sha256Update(SHA256_CTX *ctx, const BYTE data[], uint32_t len)
+; void hashlib_Sha256Update(SHA256_CTX *ctx, const BYTE data[], size_t len)
 hashlib_Sha256Update:
     call ti._frameset0
     ; (ix + 0) RV
@@ -85,8 +85,29 @@ _sha256_update_done:
     
  
 
-
+; void hashlib_Sha256Final(SHA256_CTX *ctx, BYTE hash[])
 hashlib_Sha256Final:
+    call ti._frameset0
+    ; (ix + 0) RV
+    ; (ix + 3) old IX
+    ; (ix + 6) arg1: ctx
+    ; (ix + 9) arg2: outbuf
+    
+    lea iy, (ix + 6)
+    ld a, (iy + offset_datalen)
+    cp 64
+    jr nc, _sha256_skip_pad
+    ld b, 0
+    ld c, a
+    lea hl, (ix + 6)
+    add hl, bc
+    ex de, hl
+    
+_sha256_pad_loop:
+    
+    
+
+
 
 
 ; iy = context pointer
