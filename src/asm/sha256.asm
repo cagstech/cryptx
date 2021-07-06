@@ -199,10 +199,12 @@ _sha256_render_digest_loop:
 
 
 
+mblock          := 0
+state_vars      := 64 * 4 + mblock
 
 ; iy = context pointer
 call _sha256_transform:
-    ld hl, -4 * 64
+    ld hl, -4 * 72
     call ti._frameset
     
     
@@ -229,8 +231,43 @@ _sha256_transform_loop1:
     djnz _sha256_transform_loop1
     
     pop iy
+    push iy
     ld b, 64-16
 _sha256_transform_loop2:
+; m[i] = SIG1(m[i - 2]) + m[i - 7] + SIG0(m[i - 15]) + m[i - 16];
+
+    djnz _sha256_transform_loop2
+    
+    pop iy
+    push iy
+    lea hl, iy + offset_state
+    lea de, ix + state_vars
+    ld bc, 32
+    ldir                ; copy the state to scratch stack memory
+    
+    ld b, 64
+_sha256_transform_loop3:
+; tmp1 = h + EP1(e) + CH(e,f,g) + k[i] + m[i];
+; tmp2 = EP0(a) + MAJ(a,b,c);
+; h = g;
+; g = f;
+; f = e;
+; e = d + tmp1;
+; d = c;
+; c = b;
+; b = a;
+; a = tmp1 + tmp2;
+    djnz _sha256_transform_loop3
+    
+    pop iy
+    lea de, iy + offset_state
+    lea hl, ix + state_vars
+    ld bc, 32
+    ldir                ; copy scratch back to state
+    ret
+
+    
+    
     
     
     
@@ -248,14 +285,14 @@ _sha256_sig1:
 
 
 _sha256_state_init:
-    dd 06a09e667h
-    dd 0bb67ae85h
-    dd 03c6ef372h
-    dd 0a54ff53ah
-    dd 0510e527fh
-    dd 09b05688ch
-    dd 01f83d9abh
-    dd 05be0cd19h
+    dd $6a09e667
+    dd $bb67ae85
+    dd $3c6ef372
+    dd $a54ff53a
+    dd $510e527f
+    dd $9b05688c
+    dd $1f83d9ab
+    dd $5be0cd19
 
 _sha256_k:
 	dd	1116352408
