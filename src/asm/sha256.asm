@@ -50,7 +50,7 @@ _sha256_update_loop:
         ld iy, (ix + 6)
         pea iy + offset_bitlen
         call u64_addi
-        pop bc,bc
+        pop iy,iy
         ld a, 0
         lea iy, (ix + 6)
         ld (iy + offset_datalen), a           ; reset the datalen field to 0 for next block
