@@ -167,6 +167,29 @@ _sha256_echobitlen:
     lea iy, (ix + 6)
     call _sha256_transform
     
+    ld b, 8
+    lea hl, (ix + 9)
+    lea iy, (ix + 6)
+    lea iy, iy + offset_state
+_sha256_render_digest_loop:
+    ld a, (iy + 0)
+    ld c, (iy + 1)
+    ld d, (iy + 2)
+    ld e, (iy + 3)
+    ld (hl), e
+    inc hl
+    ld (hl), d
+    inc hl
+    ld (hl), c
+    inc hl
+    ld (hl), a
+    inc hl
+    lea iy, iy + 4
+    djnz sha256_render_digest_loop
+    
+    
+    
+    
     
             
     
