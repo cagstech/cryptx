@@ -202,21 +202,60 @@ _sha256_render_digest_loop:
 
 ; iy = context pointer
 call _sha256_transform:
+    ld hl, -4 * 64
+    call ti._frameset
+    
+    
+    ; memset all stack mem to 0?
+    
+    lea hl, ix + 0
+    ld b, 16
+    push iy
+
+_sha256_transform_loop1:
+    ld a, (iy + 0)
+    ld c, (iy + 1)
+    ld d, (iy + 2)
+    ld e, (iy + 3)
+    ld (hl), e
+    inc hl
+    ld (hl), d
+    inc hl
+    ld (hl), c
+    inc hl
+    ld (hl), a
+    inc hl
+    lea iy, iy + 4
+    djnz _sha256_transform_loop1
+    
+    pop iy
+    ld b, 64-16
+_sha256_transform_loop2:
     
     
     
+    
+    
+_sha256_sig0:
+;   ix = address to whatever the F sig0 is
+    ld ehl, 0
+    xor ehl, (
+
+_sha256_sig1:
+;   ehl = 32-bit value to... whatever the F sig1 is
+;   c = rotate this many times
 
 
 
 _sha256_state_init:
-    dd 0x6a09e667
-    dd 0xbb67ae85
-    dd 0x3c6ef372
-    dd 0xa54ff53a
-    dd 0x510e527f
-    dd 0x9b05688c
-    dd 0x1f83d9ab
-    dd 0x5be0cd19
+    dd 06a09e667h
+    dd 0bb67ae85h
+    dd 03c6ef372h
+    dd 0a54ff53ah
+    dd 0510e527fh
+    dd 09b05688ch
+    dd 01f83d9abh
+    dd 05be0cd19h
 
 _sha256_k:
 	dd	1116352408
