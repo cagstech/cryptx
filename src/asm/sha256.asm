@@ -208,9 +208,9 @@ _sha256_transform_loop3:
     lea hl, ix + _sha256_state_vars
     ld bc, 32
     ldir                ; copy scratch back to state
-	ld sp,ix
-	pop ix
-	ret
+    ld sp,ix
+    pop ix
+    ret
 
 
 _sha256_state_init:
