@@ -178,8 +178,36 @@ if offset_data <> 0
 	lea iy, iy + offset_data
 end if
 	call _sha256_reverse_endianness
-	
-	
+    
+    ld b, 64-16
+_sha256_transform_loop2:
+; m[i] = SIG1(m[i - 2]) + m[i - 7] + SIG0(m[i - 15]) + m[i - 16];
+    djnz _sha256_transform_loop2
+    
+    
+    lea hl, iy + offset_state
+    lea de, ix + _sha256_state_vars
+    ld bc, 32
+    ldir                ; copy the state to scratch stack memory
+    
+    ld b, 64
+_sha256_transform_loop3:
+; tmp1 = h + EP1(e) + CH(e,f,g) + k[i] + m[i];
+; tmp2 = EP0(a) + MAJ(a,b,c);
+; h = g;
+; g = f;
+; f = e;
+; e = d + tmp1;
+; d = c;
+; c = b;
+; b = a;
+; a = tmp1 + tmp2;
+    djnz _sha256_transform_loop3
+    
+    lea de, iy + offset_state
+    lea hl, ix + _sha256_state_vars
+    ld bc, 32
+    ldir                ; copy scratch back to state
 	ld sp,ix
 	pop ix
 	ret
