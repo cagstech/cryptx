@@ -1,0 +1,703 @@
+	section	.text,"ax",@progbits
+	assume	adl = 1
+	section	.text,"ax",@progbits
+	public	_hexdump
+_hexdump:
+	ld	hl, -4
+	call	__frameset
+	ld	hl, -327680
+	ld	de, L_.str
+	push	de
+	push	hl
+	call	_sprintf_
+	ld	hl, (ix + 9)
+	pop	de
+	pop	de
+	ld	de, 0
+BB0_1:
+	ld	a, e
+	inc	a
+	or	a, a
+	sbc	hl, de
+	jq	z, BB0_2
+	ld	hl, (ix + 6)
+	ld	(ix + -3), de
+	add	hl, de
+	ld	(ix + -4), a
+	ld	a, (hl)
+	or	a, a
+	sbc	hl, hl
+	ld	l, a
+	push	hl
+	ld	hl, L_.str.1
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf_
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	a, (ix + -4)
+	and	a, 15
+	or	a, a
+	ld	hl, L_.str
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	z, _sprintf_
+	pop	hl
+	pop	hl
+	ld	de, (ix + -3)
+	inc	de
+	ld	hl, (ix + 9)
+	jq	BB0_1
+BB0_2:
+	ld	hl, L_.str
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf_
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_main
+_main:
+	ld	hl, -605
+	call	__frameset
+	ld	bc, -572
+	lea	iy, ix + 0
+	add	iy, bc
+	ld	de, _str
+	ld	bc, -249
+	lea	hl, ix + 0
+	add	hl, bc
+	push	ix
+	ld	bc, -590
+	add	ix, bc
+	ld	(ix + 0), hl
+	pop	ix
+	lea	hl, iy + 80
+	push	ix
+	ld	bc, -584
+	add	ix, bc
+	ld	(ix + 0), hl
+	pop	ix
+	lea	hl, iy + 48
+	push	ix
+	ld	bc, -593
+	add	ix, bc
+	ld	(ix + 0), hl
+	pop	ix
+	lea	hl, iy + 16
+	push	ix
+	ld	bc, -596
+	add	ix, bc
+	ld	(ix + 0), hl
+	pop	ix
+	lea	hl, iy + 0
+	ld	bc, -581
+	lea	iy, ix + 0
+	add	iy, bc
+	ld	(iy + 0), hl
+	push	de
+	call	_strlen
+	ld	de, 16
+	push	hl
+	pop	iy
+	pop	hl
+	lea	hl, iy + 0
+	ld	bc, 1
+	call	__iand
+	ld	a, l
+	xor	a, c
+	ld	(ix + -3), bc
+	ld	bc, -605
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	(hl), iy
+	add	iy, de
+	lea	hl, iy + 0
+	ld	bc, (ix + -3)
+	ld	bc, -16
+	call	__iand
+	bit	0, a
+	jq	nz, BB1_2
+	push	hl
+	pop	iy
+BB1_2:
+	lea	hl, iy + 0
+	add	hl, de
+	push	ix
+	ld	bc, -599
+	add	ix, bc
+	ld	(ix + 0), hl
+	pop	ix
+	ld	bc, -587
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	(hl), iy
+	ld	hl, 32
+	ex	de, hl
+	add	iy, de
+	ld	bc, -578
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	(hl), iy
+	push	iy
+	call	_malloc
+	ld	bc, -575
+	lea	iy, ix + 0
+	add	iy, bc
+	ld	(iy + 0), hl
+	pop	hl
+	ld	bc, -578
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_malloc
+	push	ix
+	ld	bc, -602
+	add	ix, bc
+	ld	(ix + 0), hl
+	pop	ix
+	pop	hl
+	ld	hl, 36
+	push	hl
+	ld	hl, L_.str.2
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -578
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -605
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, L_.str.3
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf_
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 32
+	push	hl
+	ld	bc, -593
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hashlib_RandomBytes
+	pop	hl
+	pop	hl
+	ld	hl, 32
+	push	hl
+	ld	bc, -596
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hashlib_RandomBytes
+	pop	hl
+	pop	hl
+	ld	hl, 256
+	push	hl
+	ld	bc, -584
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -596
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hashlib_AESLoadKey
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 256
+	push	hl
+	ld	bc, -590
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -593
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hashlib_AESLoadKey
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 16
+	push	hl
+	ld	bc, -581
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hashlib_RandomBytes
+	pop	hl
+	pop	hl
+	ld	bc, -587
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_malloc
+	push	hl
+	pop	de
+	push	ix
+	ld	bc, -593
+	add	ix, bc
+	ld	(ix + 0), de
+	pop	ix
+	pop	hl
+	or	a, a
+	sbc	hl, hl
+	push	hl
+	inc	hl
+	push	hl
+	push	de
+	ld	bc, -587
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, _str
+	push	hl
+	call	_hashlib_PadMessage
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -575
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	iy, (hl)
+	lea	hl, iy + 16
+	ld	bc, -581
+	lea	iy, ix + 0
+	add	iy, bc
+	ld	de, (iy + 0)
+	push	de
+	push	ix
+	ld	bc, -590
+	add	ix, bc
+	ld	de, (ix + 0)
+	pop	ix
+	push	de
+	push	ix
+	ld	bc, -596
+	add	ix, bc
+	ld	(ix + 0), hl
+	pop	ix
+	push	hl
+	ld	bc, -587
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -593
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hashlib_AESEncrypt
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 16
+	push	hl
+	ld	bc, -581
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -575
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -575
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	iy, (hl)
+	push	ix
+	ld	bc, -599
+	add	ix, bc
+	ld	de, (ix + 0)
+	pop	ix
+	add	iy, de
+	push	ix
+	ld	bc, -584
+	add	ix, bc
+	ld	hl, (ix + 0)
+	pop	ix
+	push	hl
+	push	iy
+	push	de
+	ld	bc, -575
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hashlib_AESOutputMAC
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -593
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_free
+	pop	hl
+	ld	hl, 37
+	push	hl
+	ld	hl, L_.str.4
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -578
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -575
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	ld	bc, -584
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -578
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -575
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hashlib_AESVerifyMAC
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	l, 1
+	xor	a, l
+	bit	0, a
+	jq	nz, BB1_5
+	ld	de, L_.str.5
+	ld	hl, 32
+	push	hl
+	push	de
+	ld	hl, -327680
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, -327680
+	ld.sis	de, 10
+	ld	(hl), e
+	inc	hl
+	ld	(hl), d
+	ld	hl, 16
+	push	hl
+	ld	bc, -575
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -581
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -581
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -590
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -602
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -599
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -596
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hashlib_AESDecrypt
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -602
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, L_.str.7
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf_
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 37
+	push	hl
+	ld	hl, L_.str.8
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 134
+	push	hl
+	ld	hl, L_.str.9
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -575
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	iy, (hl)
+	ld	a, (iy + 28)
+	xor	a, 69
+	ld	(iy + 28), a
+	push	ix
+	ld	bc, -578
+	add	ix, bc
+	ld	hl, (ix + 0)
+	pop	ix
+	push	hl
+	push	iy
+	call	_hexdump
+	pop	hl
+	pop	hl
+	ld	hl, 21
+	push	hl
+	ld	hl, L_.str.10
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	call	_os_GetKey
+	ld	bc, -584
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -578
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -575
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hashlib_AESVerifyMAC
+	pop	hl
+	pop	hl
+	pop	hl
+	bit	0, a
+	ld	hl, -327680
+	jq	z, BB1_6
+	ld	de, 32
+	push	de
+	ld	de, L_.str.5
+	jq	BB1_7
+BB1_5:
+	ld	hl, 38
+	push	hl
+	ld	hl, L_.str.6
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 1
+	jq	BB1_9
+BB1_6:
+	ld	de, 38
+	push	de
+	ld	de, L_.str.6
+BB1_7:
+	push	de
+	push	hl
+	call	_memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld.sis	hl, 10
+	ld	iy, -327680
+	ld	(iy), l
+	ld	(iy + 1), h
+	ld	bc, -575
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_free
+	pop	hl
+	ld	bc, -602
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_free
+	pop	hl
+	or	a, a
+	sbc	hl, hl
+BB1_9:
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.data,"aw",@progbits
+	public	_str
+_str:
+	db	"The lazy fox jumped over the dog!",000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str
+L_.str:
+	db	"",012o,000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.1
+L_.str.1:
+	db	"%02X ",000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.2
+L_.str.2:
+	db	"----- AES with MAC AUTH DEMO -----",012o,000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.3
+L_.str.3:
+	db	"The string length is: %u.",012o,"The padded size is: %u.",012o,000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.4
+L_.str.4:
+	db	"-- Result for unmodified message --",012o,000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.5
+L_.str.5:
+	db	"The MAC of the message matched.",000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.6
+L_.str.6:
+	db	"The MAC of the message did not match.",000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.7
+L_.str.7:
+	db	"The string is '%s'.",012o,000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.8
+L_.str.8:
+	db	"-- Chosen Ciphertext Attack Demo --",012o,000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.9
+L_.str.9:
+	db	"Suppose attacker modifies a byte in the ciphertext:",012o,"In this case, the 12th byte after the IV. (So row 2, position 14 of the hexdump)",012o,000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.10
+L_.str.10:
+	db	"Any key to continue",012o,000o
+
+	ident	"clang version 12.0.0 (https://github.com/jacobly0/llvm-project 170be88120e3aa88c20eea5615ba76b8f1d6c647)"
+	extern	_hashlib_RandomBytes
+	extern	_os_GetKey
+	extern	__Unwind_SjLj_Register
+	extern	__Unwind_SjLj_Unregister
+	extern	_hashlib_AESDecrypt
+	extern	__frameset
+	extern	_malloc
+	extern	_hashlib_AESVerifyMAC
+	extern	__iand
+	extern	_sprintf_
+	extern	_hashlib_AESOutputMAC
+	extern	_free
+	extern	_memcpy
+	extern	_hashlib_PadMessage
+	extern	_strlen
+	extern	_hashlib_AESLoadKey
+	extern	_hashlib_AESEncrypt

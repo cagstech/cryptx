@@ -26,6 +26,9 @@ library	"HASHLIB", 6
 	export	_hashlib_RSAStripPadding ; 72
 	export	_hashlib_AESVerifyMAC ; 75
 	export	_hashlib_CompareDigest ; 78
-	export	_csprng_state ; 81
-	export	_prng_init ; 84
-	export	_Base64Code ; 87
+	export	_hashlib_Sha256Init ; 81
+	export	_hashlib_Sha256Update ; 84
+	export	_hashlib_Sha256Final ; 87
+	export	_csprng_state ; 90
+	export	_prng_init ; 93
+	export	_Base64Code ; 96

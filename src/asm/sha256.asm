@@ -2,6 +2,10 @@ if ~defined DONT_PUBLIC_STUFF
 public _hashlib_Sha256Init
 public _hashlib_Sha256Update
 public _hashlib_Sha256Final
+else
+export _hashlib_Sha256Init
+export _hashlib_Sha256Update
+export _hashlib_Sha256Final
 end if
 
 offset_data		 := 0
