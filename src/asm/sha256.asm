@@ -5,20 +5,17 @@ offset_state		:= offset_bitlen+8
 _sha256ctx_size	 := 4*8+offset_state
 _sha256_m_buffer_length := 80*4
 
-; void hashlib_Sha256Init(SHA256_CTX *ctx, void *(*alloc)(size_t));
+; void hashlib_Sha256Init(SHA256_CTX *ctx, uint32_t *mbuffer);
 hashlib_Sha256Init:
-	pop bc,de,hl
-	push hl,de,bc
-	push de,hl
-	ld bc,_sha256_m_buffer_length
-	push bc
-	call _helper_jphl
+	pop bc,de
+	ex (sp),hl
+	push de,bc
 	add hl,bc
 	or a,a
 	sbc hl,bc
-	pop bc,bc,de
-	ret z
+	jr z,.dont_set_buffer
 	ld (_sha256_m_buffer_ptr),hl
+.dont_set_buffer:
 	ld hl,$FF0000		   ; 64k of 0x00 bytes
 	ld bc,_sha256ctx_size
 	push de
