@@ -1,3 +1,9 @@
+if ~defined DONT_PUBLIC_STUFF
+public _hashlib_Sha256Init
+public _hashlib_Sha256Update
+public _hashlib_Sha256Final
+end if
+
 offset_data		 := 0
 offset_datalen	  := offset_data+64
 offset_bitlen	   := offset_datalen+1
@@ -5,8 +11,31 @@ offset_state		:= offset_bitlen+8
 _sha256ctx_size	 := 4*8+offset_state
 _sha256_m_buffer_length := 80*4
 
+; probably better to just add the one u64 function used by hashlib rather than screw with dependencies
+u64_addi:
+	pop bc,hl,de
+	push de,hl,bc
+	xor a,a
+	ld bc,(hl)
+	ex hl,de
+	adc hl,bc
+	ex hl,de
+	ld (hl),de
+	inc hl
+	inc hl
+	inc hl
+	ld b,5
+	ld c,a
+.loop:
+	ld a,(hl)
+	adc a,c
+	ld (hl),a
+	inc hl
+	djnz .loop
+	ret
+
 ; void hashlib_Sha256Init(SHA256_CTX *ctx, uint32_t *mbuffer);
-hashlib_Sha256Init:
+_hashlib_Sha256Init:
 	pop bc,de
 	ex (sp),hl
 	push de,bc
@@ -30,7 +59,7 @@ _helper_jphl:
 	jp (hl)
 
 ; void hashlib_Sha256Update(SHA256_CTX *ctx, const BYTE data[], size_t len);
-hashlib_Sha256Update:
+_hashlib_Sha256Update:
 	call ti._frameset0
 	; (ix + 0) RV
 	; (ix + 3) old IX
@@ -56,7 +85,7 @@ hashlib_Sha256Update:
 	call _sha256_update_loop
 _sha256_update_done:
 	ld iy, (ix + 6)
-	ld (iy + offset_datalen), a		   save current datalen
+	ld (iy + offset_datalen), a		   ;save current datalen
 	pop ix
 	ret
 
@@ -82,7 +111,7 @@ _sha256_update_transform:
 
 
 ; void hashlib_Sha256Final(SHA256_CTX *ctx, BYTE hash[]);
-hashlib_Sha256Final:
+_hashlib_Sha256Final:
 	call ti._frameset0
 	; (ix + 0) Return address
 	; (ix + 3) saved IX
@@ -189,7 +218,7 @@ end macro
 ; destroys: af
 ; note: this will add including the carry flag, so be sure of what the carry flag is before this
 ; note: if you're chaining this into a number longer than 16 bits, the order must be low->high
-macro _addbc
+macro _addbc? R1,R2
 	ld a,c
 	adc a,R2
 	ld R2,a
@@ -375,7 +404,7 @@ end if
 	_longloaddehl_iy -15
 	call _SIG0
 	push de,hl
-	_loadloaddehl_iy -16
+	_longloaddehl_iy -16
 
 ; SIG0(m[i - 15]) + m[i - 16]
 	or a,a
@@ -414,7 +443,7 @@ if offset_state <> 0
 else
 	ld hl, (ix + 6)
 end if
-	lea de, ._state_vars
+	lea de, ix + ._state_vars
 	ld bc, 32
 	ldir				; copy the state to scratch stack memory
 
@@ -618,12 +647,12 @@ end if
 
 	inc (ix + ._i2)
 	dec (ix + ._i) ;yes, this updates the Z flag
-	jq nz ._loop3
+	jq nz,._loop3
 
 	push ix
 	ld iy, (ix+6)
 	lea iy, iy + offset_state
-	lea ix, ._state_vars
+	lea ix, ix + ._state_vars
 	ld b,4
 ._loop4:
 	ld hl, (iy + 0)

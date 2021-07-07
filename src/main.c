@@ -84,7 +84,7 @@ void hashlib_Sha1Init(SHA1_CTX *ctx);
 void hashlib_Sha1Update(SHA1_CTX *ctx, const BYTE data[], uint32_t len);
 void hashlib_Sha1Final(SHA1_CTX *ctx, BYTE hash[]);
 
-void hashlib_Sha256Init(SHA256_CTX *ctx);
+void hashlib_Sha256Init(SHA256_CTX *ctx, uint32_t *mbuffer);
 void hashlib_Sha256Update(SHA256_CTX *ctx, const BYTE data[], uint32_t len);
 void hashlib_Sha256Final(SHA256_CTX *ctx, BYTE hash[]);
 
@@ -152,6 +152,7 @@ bool hashlib_CSPRNGAddEntropy(void){
 
 
 uint32_t hashlib_CSPRNGRandom(void){
+	uint32_t mbuffer[80];
     uint8_t ctr = 5;
     while((!csprng_state.eread) && ctr--) hashlib_CSPRNGInit();
     if(!csprng_state.eread) return 0;
@@ -163,7 +164,7 @@ uint32_t hashlib_CSPRNGRandom(void){
     if(eread==NULL) return 0;
     for(uint8_t i = 0; i < 4; i++)
         rand[i] ^= *eread;  // read *eread 4 times, XORing the value and writing it into each byte of rand[]
-    hashlib_Sha256Init(&ctx);
+    hashlib_Sha256Init(&ctx, &mbuffer);
     hashlib_Sha256Update(&ctx, &csprng_state.epool, EPOOL_SIZE);
     hashlib_Sha256Final(&ctx, &hash);
     
@@ -186,7 +187,7 @@ void hashlib_RandomBytes(uint8_t* buffer, size_t size){
 }
 
 
-#define ROTLEFT(a,b) (((a) << (b)) | ((a) >> (32-(b))))
+/* #define ROTLEFT(a,b) (((a) << (b)) | ((a) >> (32-(b))))
 #define ROTRIGHT(a,b) (((a) >> (b)) | ((a) << (32-(b))))
 
 #define CH(x,y,z) (((x) & (y)) ^ (~(x) & (z)))
@@ -195,9 +196,9 @@ void hashlib_RandomBytes(uint8_t* buffer, size_t size){
 #define EP1(x) (ROTRIGHT(x,6) ^ ROTRIGHT(x,11) ^ ROTRIGHT(x,25))
 #define SIG0(x) (ROTRIGHT(x,7) ^ ROTRIGHT(x,18) ^ ((x) >> 3))
 #define SIG1(x) (ROTRIGHT(x,17) ^ ROTRIGHT(x,19) ^ ((x) >> 10))
-
+ */
 /**************************** VARIABLES *****************************/
-static const WORD k[64] = {
+/* static const WORD k[64] = {
 	0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
 	0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
 	0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
@@ -206,10 +207,10 @@ static const WORD k[64] = {
 	0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
 	0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
 	0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
-};
+}; */
 
 /*********************** FUNCTION DEFINITIONS ***********************/
-void sha256_transform(SHA256_CTX *ctx, const BYTE data[])
+/* void sha256_transform(SHA256_CTX *ctx, const BYTE data[])
 {
 	WORD a, b, c, d, e, f, g, h, i, j, tmp1, tmp2, m[64];
 
@@ -253,9 +254,9 @@ void sha256_transform(SHA256_CTX *ctx, const BYTE data[])
 	ctx->state[5] += f;
 	ctx->state[6] += g;
 	ctx->state[7] += h;
-}
+} */
 
-void hashlib_Sha256Init(SHA256_CTX *ctx)
+/* void hashlib_Sha256Init(SHA256_CTX *ctx)
 {
 	ctx->datalen = 0;
 	zero64(ctx->bitlen);
@@ -324,7 +325,7 @@ void hashlib_Sha256Final(SHA256_CTX *ctx, BYTE hash[])
 		hash[i + 28] = (ctx->state[7] >> (24 - i * 8)) & 0x000000ff;
 	}
 }
-
+ */
 
 
 
@@ -1270,6 +1271,7 @@ size_t hashlib_AESPadMessage(const uint8_t* in, size_t len, uint8_t* out, uint8_
          
 #define RSA_SALT_SIZE 16
 size_t hashlib_RSAPadMessage(const uint8_t* in, size_t len, uint8_t* out, size_t modulus_len){
+	uint32_t mbuffer[80];
     SHA256_CTX ctx;
     uint8_t salt[RSA_SALT_SIZE];
     uint8_t sha_digest[32];
@@ -1288,7 +1290,7 @@ size_t hashlib_RSAPadMessage(const uint8_t* in, size_t len, uint8_t* out, size_t
           
     // Generate salt, SHA-256 hash the salt
     hashlib_RandomBytes(salt, RSA_SALT_SIZE);
-    hashlib_Sha256Init(&ctx);
+    hashlib_Sha256Init(&ctx, &mbuffer);
     hashlib_Sha256Update(&ctx, salt, RSA_SALT_SIZE);
     hashlib_Sha256Final(&ctx, sha_digest);
                 
@@ -1298,7 +1300,7 @@ size_t hashlib_RSAPadMessage(const uint8_t* in, size_t len, uint8_t* out, size_t
         out[i] = in[i] ^ sha_digest[i%32];
                     
     // SHA-256 hash the encoded message + padding
-    hashlib_Sha256Init(&ctx);
+    hashlib_Sha256Init(&ctx, 0);
     hashlib_Sha256Update(&ctx, out, rsa_n);
     hashlib_Sha256Final(&ctx, sha_digest);
                 
@@ -1335,6 +1337,7 @@ size_t hashlib_AESStripPadding(const uint8_t* in, size_t len, uint8_t* out, uint
 }
 
 size_t hashlib_RSAStripPadding(const uint8_t *in, size_t len, uint8_t* out){
+	uint32_t mbuffer[80];
     if(in==NULL) return 0;
     if(out==NULL) return 0;
     if(len==0) return 0;
@@ -1348,7 +1351,7 @@ size_t hashlib_RSAStripPadding(const uint8_t *in, size_t len, uint8_t* out){
     memcpy(salt, &in[len-RSA_SALT_SIZE-1], RSA_SALT_SIZE);
                 
     // SHA-256 hash encoded message + padding
-    hashlib_Sha256Init(&ctx);
+    hashlib_Sha256Init(&ctx, &mbuffer);
     hashlib_Sha256Update(&ctx, in, rsa_n);
     hashlib_Sha256Final(&ctx, sha_digest);
                 
@@ -1357,7 +1360,7 @@ size_t hashlib_RSAStripPadding(const uint8_t *in, size_t len, uint8_t* out){
         salt[i] ^= sha_digest[i];
                     
     // SHA-256 hash the salt
-    hashlib_Sha256Init(&ctx);
+    hashlib_Sha256Init(&ctx, 0);
     hashlib_Sha256Update(&ctx, salt, RSA_SALT_SIZE);
     hashlib_Sha256Final(&ctx, sha_digest);
                 
