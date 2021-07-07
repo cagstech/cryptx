@@ -1,12 +1,6 @@
-if ~defined DONT_PUBLIC_STUFF
-public _hashlib_Sha256Init
-public _hashlib_Sha256Update
-public _hashlib_Sha256Final
-else
-export _hashlib_Sha256Init
-export _hashlib_Sha256Update
-export _hashlib_Sha256Final
-end if
+export hashlib_Sha256Init
+export hashlib_Sha256Update
+export hashlib_Sha256Final
 
 offset_data		 := 0
 offset_datalen	  := offset_data+64
@@ -39,7 +33,7 @@ u64_addi:
 	ret
 
 ; void hashlib_Sha256Init(SHA256_CTX *ctx, uint32_t *mbuffer);
-_hashlib_Sha256Init:
+hashlib_Sha256Init:
 	pop bc,de
 	ex (sp),hl
 	push de,bc
@@ -63,7 +57,7 @@ _helper_jphl:
 	jp (hl)
 
 ; void hashlib_Sha256Update(SHA256_CTX *ctx, const BYTE data[], size_t len);
-_hashlib_Sha256Update:
+hashlib_Sha256Update:
 	call ti._frameset0
 	; (ix + 0) RV
 	; (ix + 3) old IX
@@ -115,7 +109,7 @@ _sha256_update_transform:
 
 
 ; void hashlib_Sha256Final(SHA256_CTX *ctx, BYTE hash[]);
-_hashlib_Sha256Final:
+hashlib_Sha256Final:
 	call ti._frameset0
 	; (ix + 0) Return address
 	; (ix + 3) saved IX
