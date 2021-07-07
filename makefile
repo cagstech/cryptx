@@ -50,11 +50,6 @@ install: bin/HASHLIB.8xv bin/HASHLIB.lib
 	$(CP) $(call NATIVEPATH,hashlib.h) $(call NATIVEPATH,$(CEDEV)/include)
 	$(CP) $(call NATIVEPATH,bin/HASHLIB.lib) $(call NATIVEPATH,$(CEDEV)/lib/libload/hashlib.lib)
 
-# make clean
-clean:
-	$(call RMDIR,bin)
-	$(Q)echo Removed binaries.
-
 #make clean-install
 clean-install:
 	$(RM) $(call NATIVEPATH,$(CEDEV)/include/hashlib.h))
