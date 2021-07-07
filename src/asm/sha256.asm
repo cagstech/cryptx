@@ -53,9 +53,6 @@ hashlib_Sha256Init:
 	ldir
 	ret
 
-_helper_jphl:
-	jp (hl)
-
 ; void hashlib_Sha256Update(SHA256_CTX *ctx, const BYTE data[], size_t len);
 hashlib_Sha256Update:
 	call ti._frameset0
@@ -90,10 +87,7 @@ _sha256_update_done:
 _sha256_update_loop:
 	inc a
 	cp a,64
-	call z,_sha256_update_transform
-	ldi ;ld (de),(hl) / inc de / inc hl / dec bc
-	jp pe,_sha256_update_loop ;continue if bc > 0 (ldi decrements bc and updates parity flag)
-_sha256_update_transform:
+	jr nz,.next
 	push hl, de, bc
 	ld bc, (ix + 6)
 	push bc
@@ -105,7 +99,11 @@ _sha256_update_transform:
 	call u64_addi
 	pop bc, bc, bc, de, hl
 	xor a,a					 ; reset datalen to 0
-	ret
+.next:
+	ld (iy + offset_datalen),a
+	ldi ;ld (de),(hl) / inc de / inc hl / dec bc
+	ret po
+	jr _sha256_update_loop ;continue if bc > 0 (ldi decrements bc and updates parity flag)
 
 
 ; void hashlib_Sha256Final(SHA256_CTX *ctx, BYTE hash[]);
@@ -117,27 +115,25 @@ hashlib_Sha256Final:
 	; (ix + 9) arg2: outbuf
 	
 	ld iy, (ix + 6)					; iy =  context block
-	ld a, (iy + offset_datalen)		 ; a = datalen in block cache
-	
+
 	; let DE = &ctx->data[datalen]
 	ld bc, 0
-	ld c, a							 ; ld bc, a
+	ld c, (iy + offset_datalen)     ; data length
 	ld hl, (ix + 6)					; ld hl, context_block_cache_addr
-	add hl, bc						  ; hl + bc (context_block_cache_addr + bytes cached)
+	add hl, bc						; hl + bc (context_block_cache_addr + bytes cached)
 
 	ld a,56
 	sub a,c ;c is set to datalen earlier
+	ld (hl),$80
 	jq c,_sha256_final_over_56
 	ld b,a
 	xor a,a
-	ld (hl),$80
 _sha_final_under_56_loop:
 	inc hl
 	ld (hl),a
 	djnz _sha_final_under_56_loop
 	jq _sha256_final_done_pad
 _sha256_final_over_56:
-	ld (hl),$80
 	ld a,63 ;so we can turn the condition into a<64 into a<=63
 	sub a,c ;c is set to datalen earlier
 	jq c,_sha256_final_over_64 ;jump if datalen <= 63
@@ -216,7 +212,15 @@ end macro
 ; destroys: af
 ; note: this will add including the carry flag, so be sure of what the carry flag is before this
 ; note: if you're chaining this into a number longer than 16 bits, the order must be low->high
-macro _addbc? R1,R2
+macro _addbclow? R1,R2
+	ld a,c
+	add a,R2
+	ld R2,a
+	ld a,b
+	adc a,R1
+	ld R1,a
+end macro
+macro _addbchigh? R1,R2
 	ld a,c
 	adc a,R2
 	ld R2,a
@@ -405,25 +409,22 @@ end if
 	_longloaddehl_iy -16
 
 ; SIG0(m[i - 15]) + m[i - 16]
-	or a,a
 	pop bc
-	_addbc h,l
+	_addbclow h,l
 	pop bc
-	_addbc d,e
+	_addbchigh d,e
 
 ; + SIG1(m[i - 2])
-	or a,a
 	pop bc
-	_addbc h,l
+	_addbclow h,l
 	pop bc
-	_addbc d,e
+	_addbchigh d,e
 
 ; + m[i - 7]
-	or a,a
 	ld bc, (iy + -15*4)
-	_addbc h,l
+	_addbclow h,l
 	ld bc, (iy + -15*4 + 2)
-	_addbc d,e
+	_addbchigh d,e
 
 ; --> m[i]
 	ld (iy + 3), d
@@ -437,6 +438,7 @@ end if
 
 
 if offset_state <> 0
+	ld iy, (ix + 6)
 	lea hl, iy + offset_state - offset_datalen
 else
 	ld hl, (ix + 6)
@@ -487,17 +489,17 @@ end if
 	pop bc
 	_xorbc d,e
 
-	or a,a                   ; EP1(e) + h
+; EP1(e) + h
 	ld bc, (ix + ._h)
-	_addbc h,l
+	_addbclow h,l
 	ld bc, (ix + ._h + 2)
-	_addbc d,e
+	_addbchigh d,e
 
-	or a,a                   ; h + EP1(e) + CH(e,f,g)
+; h + EP1(e) + CH(e,f,g)
 	ld bc, (ix + ._tmp1)
-	_addbc h,l
+	_addbclow h,l
 	ld bc, (ix + ._tmp1 + 2)
-	_addbc d,e
+	_addbchigh d,e
 
 	push de,hl
 if offset_state <> 0
@@ -514,23 +516,26 @@ end if
 	inc hl
 	inc hl
 	ld hl,(hl)
-	push de,hl
+	push hl,de
 	ld hl,_sha256_k
 	add hl,bc
 	ld de,(hl)
 	inc hl
 	inc hl
 	ld hl,(hl)
+	ex hl,de
 
-	pop bc       ; m[i] + k[i]
-	_addbc h,l
+; m[i] + k[i]
 	pop bc
-	_addbc d,e
+	_addbclow h,l
+	pop bc
+	_addbchigh d,e
 
-	pop bc       ; h + EP1(e) + CH(e,f,g) + m[i] + k[i]
-	_addbc h,l
+; h + EP1(e) + CH(e,f,g) + m[i] + k[i]
 	pop bc
-	_addbc d,e
+	_addbclow h,l
+	pop bc
+	_addbchigh d,e
 
 	ld (ix + ._tmp1 + 3),d
 	ld (ix + ._tmp1 + 2),e
@@ -579,9 +584,9 @@ end if
 	_xorbc d,e
 
 	ld bc, (ix + ._tmp2)  ; EP0(a) + MAJ(a,b,c)
-	_addbc h,l
+	_addbclow h,l
 	ld bc, (ix + ._tmp2 + 2)
-	_addbc d,e
+	_addbchigh d,e
 	ld (ix + ._tmp2 + 3), d
 	ld (ix + ._tmp2 + 2), e
 	ld (ix + ._tmp2 + 1), h
@@ -656,13 +661,11 @@ end if
 	ld hl, (iy + 0)
 	ld de, (ix + 0)
 	ld a, (iy + 3)
-	ld c, (ix + 3)
-	or a,a
-	adc hl,de
-	adc a,c
+	add hl,de
+	adc a,(ix + 3)
 	ld (iy + 0), hl
 	ld (iy + 3), a
-	lea ix, ix - 4
+	lea ix, ix + 4
 	lea iy, iy + 4
 	djnz ._loop4
 
