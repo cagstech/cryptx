@@ -1,222 +1,199 @@
-offset_data         := 0
-offset_datalen      := offset_data+64
-offset_bitlen       := offset_datalen+1
-offset_state        := offset_bitlen+8
-_sha256ctx_size     := 4*8+offset_state
+offset_data		 := 0
+offset_datalen	  := offset_data+64
+offset_bitlen	   := offset_datalen+1
+offset_state		:= offset_bitlen+8
+_sha256ctx_size	 := 4*8+offset_state
 
-; void hashlib_Sha256Init(SHA256_CTX *ctx)
+; void hashlib_Sha256Init(SHA256_CTX *ctx);
 hashlib_Sha256Init:
-    pop bc,de
-    push de,bc
-	ld hl,$FF0000           ; 64k of 0x00 bytes
-    ld bc,_sha256ctx_size
+	pop bc,de
+	push de,bc
+	ld hl,$FF0000		   ; 64k of 0x00 bytes
+	ld bc,_sha256ctx_size
 	push de
 	ldir
 	pop de
-    ld c,8*4                ; bc=0 prior to this, due to ldir
-    ld hl,_sha256_state_init
+	ld c,8*4				; bc=0 prior to this, due to ldir
+	ld hl,_sha256_state_init
 	ldir
-    ret
-    
-    
-; void hashlib_Sha256Update(SHA256_CTX *ctx, const BYTE data[], size_t len)
+	ret
+	
+	
+; void hashlib_Sha256Update(SHA256_CTX *ctx, const BYTE data[], size_t len);
 hashlib_Sha256Update:
-    call ti._frameset0
-    ; (ix + 0) RV
-    ; (ix + 3) old IX
-    ; (ix + 6) arg1: ctx
-    ; (ix + 9) arg2: data
-    ; (ix + 12) arg3: len
-    
-    ; get pointers to the things
-    lea bc, (ix + 12)           ; bc = len
-    lea hl, (ix + 9)            ; hl = source data
-    lea de, (ix + 6)            ; de = context, data ptr
-    lea iy, (ix + 6)            ; iy = context, reference
-    
-    ; start writing data to the right location in the data block
-    ld a, (iy + offset_datalen)
-    ld b, 0
-    ld c, a
-    ex de, hl
-    add hl, bc
-    ex de, hl
-   
-_sha256_update_loop:
-    push af                 ; we will wind up nuking a
-        ld a, (hl)
-        ld (de), a
-    pop af
-    inc a
-    cp 64
-    jr nz, _sha256_update_noblock
-    ld iy, (ix + 6)
-    call _sha256_transform      ; if we have one block (64-bytes), transform block
-    ld iy, 512                  ; add 1 blocksize of bitlen to the bitlen field
-    push af, hl, de, bc
-    push iy
-        ld iy, (ix + 6)
-        pea iy + offset_bitlen
-            call u64_addi
-    pop hl,hl
-    pop bc, de, hl, af
-    ld a, 0                     ; reset datalen to 0
-_sha256_update_noblock:
-    inc de
-    inc hl
-    dec bc
-    push af
-        ld a,c
-        or a,b
-        jq z, _sha256_update_done
-    pop af
-    jr _sha256_update_loop
+	call ti._frameset0
+	; (ix + 0) RV
+	; (ix + 3) old IX
+	; (ix + 6) arg1: ctx
+	; (ix + 9) arg2: data
+	; (ix + 12) arg3: len
+
+	ld iy, (ix + 6)			; iy = context, reference
+
+		; start writing data to the right location in the data block
+	ld a, (iy + offset_datalen)
+	ld bc, 0
+	ld c, a
+
+	; get pointers to the things
+	ld de, (ix + 9)			; de = source data
+	ld hl, (ix + 6)			; hl = context, data ptr
+	add hl, bc
+	ex de, hl ;hl = source data, de = context / data ptr
+
+	ld bc, (ix + 12)		   ; bc = len
+
+	call _sha256_update_loop
 _sha256_update_done:
-    pop af
-    lea iy, (ix + 6)
-    ld (iy + offset_datalen), a           save current datalen
-    lea ix, (ix + 3)
-    ret
-    
-    
- 
+	ld iy, (ix + 6)
+	ld (iy + offset_datalen), a		   save current datalen
+	pop ix
+	ret
 
-; void hashlib_Sha256Final(SHA256_CTX *ctx, BYTE hash[])
+_sha256_update_loop:
+	inc a
+	cp a,64
+	call z,_sha256_update_transform
+	ldi ;ld (de),(hl) / inc de / inc hl / dec bc
+	jp pe,_sha256_update_loop ;continue if bc > 0 (ldi decrements bc and updates parity flag)
+_sha256_update_transform:
+	push hl, de, bc
+	ld bc, (ix + 6)
+	push bc
+	call _sha256_transform	  ; if we have one block (64-bytes), transform block
+	ld hl, 512				  ; add 1 blocksize of bitlen to the bitlen field
+	ex (sp),hl
+	ld iy, (ix + 6)
+	pea iy + offset_bitlen
+	call u64_addi
+	pop bc, bc, bc, de, hl
+	xor a,a					 ; reset datalen to 0
+	ret
+
+
+; void hashlib_Sha256Final(SHA256_CTX *ctx, BYTE hash[]);
 hashlib_Sha256Final:
-    call ti._frameset0
-    ; (ix + 0) RV
-    ; (ix + 3) old IX
-    ; (ix + 6) arg1: ctx
-    ; (ix + 9) arg2: outbuf
-    
-    lea iy, (ix + 6)                    ; iy =  context block
-    ld a, (iy + offset_datalen)         ; a = datalen in block cache
-    
-    ; let DE = &ctx->data[datalen]
-    ld b, 0
-    ld c, a                             ; ld bc, a
-    lea hl, (ix + 6)                    ; ld hl, context_block_cache_addr
-    add hl, bc                          ; hl + bc (context_block_cache_addr + bytes cached)
-    ex de, hl                           ; put into de
-    
-    cp 64
-    jr nc, _sha256_skip_pad             ; if datalen equal to a block, skip init padding step
-    cp 56
-    jr nc, _sha256_pad_to_block
-    
-    ld b, 56
-    sub a, b
-    ld b, 0
-    ld c, a
-    ld a, 080h
-    ld (de), a
-    dec bc
-    inc de
-    ld hl,$FF0000                       ; 64k of 0x00 bytes
-    ldir                                ; copy 56 - datalen bytes to &ctx->data
-    jr _sha256_skip_pad
-    
-_sha256_pad_to_block:
-    ld b, 64
-    sub a, b
-    ld b, 0
-    ld c, a
-    ld a, 080h
-    ld (de), a
-    dec bc
-    inc de
-    ld hl,$FF0000                       ; 64k of 0x00 bytes
-    ldir                                ; copy 64 - datalen bytes to &ctx->data
-    lea iy, (ix + 6)
-    call _sha256_transform              ; hash the block
-    ld hl,$FF0000                       ; 64k of 0x00 bytes
-    ld bc,56
-	lea de, (ix + 6)
-	ldir                                ; zero the first 56 bytes of a new block
-    
-_sha256_skip_pad:
-    lea iy, (ix + 6)
-    ld a, (iy + offset_datalen)
-    ld b, 0
-    ld c, a
-    push bc
-    pop hl
-    add hl, hl
-    add hl, hl
-    add hl, hl                      ; hl * 8
-    push hl
-        ld iy, (ix + 6)
-        pea iy + offset_bitlen
-            call u64_addi
-    pop hl, hl
-    lea hl, (ix + 6)
-    ld bc, 63
-    add hl, bc
-    ex de, hl
-    lea hl, (ix + 6)
-    ld bc, offset_bitlen
-    add hl, bc
-    ld b, 8
-_sha256_echobitlen:
-    ld a, (hl)
-    ld (de), a
-    inc hl
-    dec de
-    djnz _sha256_echobitlen
-    
-    lea iy, (ix + 6)
-    call _sha256_transform
-    
-    ld b, 8
-    lea hl, (ix + 9)
-    lea iy, (ix + 6)
-    lea iy, iy + offset_state
-_sha256_render_digest_loop:
-    ld a, (iy + 0)
-    ld c, (iy + 1)
-    ld d, (iy + 2)
-    ld e, (iy + 3)
-    ld (hl), e
-    inc hl
-    ld (hl), d
-    inc hl
-    ld (hl), c
-    inc hl
-    ld (hl), a
-    inc hl
-    lea iy, iy + 4
-    djnz sha256_render_digest_loop
-    
-    
-    
-    
-    
-            
-    
-    
-    
-    
+	call ti._frameset0
+	; (ix + 0) Return address
+	; (ix + 3) saved IX
+	; (ix + 6) arg1: ctx
+	; (ix + 9) arg2: outbuf
+	
+	ld iy, (ix + 6)					; iy =  context block
+	ld a, (iy + offset_datalen)		 ; a = datalen in block cache
+	
+	; let DE = &ctx->data[datalen]
+	ld bc, 0
+	ld c, a							 ; ld bc, a
+	ld hl, (ix + 6)					; ld hl, context_block_cache_addr
+	add hl, bc						  ; hl + bc (context_block_cache_addr + bytes cached)
 
+	ld a,56
+	sub a,c ;c is set to datalen earlier
+	jq c,_sha256_final_over_56
+	ld b,a
+	xor a,a
+	ld (hl),$80
+_sha_final_under_56_loop:
+	inc hl
+	ld (hl),a
+	djnz _sha_final_under_56_loop
+	jq _sha256_final_done_pad
+_sha256_final_over_56:
+	ld (hl),$80
+	ld a,63 ;so we can turn the condition into a<64 into a<=63
+	sub a,c ;c is set to datalen earlier
+	jq c,_sha256_final_over_64 ;jump if datalen <= 63
+	inc a ;adjust from earlier decrement
+	ld b,a
+	xor a,a
+_sha256_final_64_loop:
+	inc hl
+	ld (hl),a
+	djnz _sha256_final_64_loop
+_sha256_final_over_64:
+_sha256_final_done_pad:
+	ld iy, (ix + 6)
+	ld c, (iy + offset_datalen)
+	ld b,8
+	mlt bc ;multiply 8-bit datalen by 8-bit value 8
+	push bc
+	pea iy + offset_bitlen
+	call u64_addi
+	pop bc,bc
 
+	ld iy, (ix + 6) ;ctx
+	lea hl,iy + offset_bitlen
+	lea de,iy + offset_datalen
 
+	ld b,8
+_sha256_final_pad_message_len_loop:
+	ld a,(hl)
+	ld (de),a
+	inc hl
+	dec de
+	djnz _sha256_final_pad_message_len_loop
 
-; iy = context pointer
-call _sha256_transform:
-    
-    
-    
+	ld bc, (ix + 6) ;ctx
+	push bc
+	call _sha256_transform
+	pop bc
 
+	ld b, 8
+	ld hl, (ix + 9)
+	ld iy, (ix + 6)
+	lea iy, iy + offset_state
+	pop ix
+	; continue running into _sha256_reverse_endianness
+
+; reverse b longs endianness from iy to hl
+_sha256_reverse_endianness:
+	ld a, (iy + 0)
+	ld c, (iy + 1)
+	ld d, (iy + 2)
+	ld e, (iy + 3)
+	ld (hl), e
+	inc hl
+	ld (hl), d
+	inc hl
+	ld (hl), c
+	inc hl
+	ld (hl), a
+	inc hl
+	lea iy, iy + 4
+	djnz _sha256_reverse_endianness
+	ret
+
+; void _sha256_transform(SHA256_CTX *ctx);
+_sha256_transform:
+	ld hl,-323
+	call ti._frameset
+	ld b,16
+	ld iy,(ix + 6)
+	ld hl,-323
+	lea de,iy
+	add hl,de
+	ld (ix-3),hl
+if offset_data <> 0
+	lea iy, iy + offset_data
+end if
+	call _sha256_reverse_endianness
+	
+	
+	ld sp,ix
+	pop ix
+	ret
 
 
 _sha256_state_init:
-    dd 0x6a09e667
-    dd 0xbb67ae85
-    dd 0x3c6ef372
-    dd 0xa54ff53a
-    dd 0x510e527f
-    dd 0x9b05688c
-    dd 0x1f83d9ab
-    dd 0x5be0cd19
+	dd $6a09e667
+	dd $bb67ae85
+	dd $3c6ef372
+	dd $a54ff53a
+	dd $510e527f
+	dd $9b05688c
+	dd $1f83d9ab
+	dd $5be0cd19
 
 _sha256_k:
 	dd	1116352408
