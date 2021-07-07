@@ -3,11 +3,22 @@ offset_datalen	  := offset_data+64
 offset_bitlen	   := offset_datalen+1
 offset_state		:= offset_bitlen+8
 _sha256ctx_size	 := 4*8+offset_state
+_sha256_m_buffer_length := 80*4
 
-; void hashlib_Sha256Init(SHA256_CTX *ctx);
+; void hashlib_Sha256Init(SHA256_CTX *ctx, void *(*alloc)(size_t));
 hashlib_Sha256Init:
-	pop bc,de
-	push de,bc
+	pop bc,de,hl
+	push hl,de,bc
+	push de,hl
+	ld bc,_sha256_m_buffer_length
+	push bc
+	call _helper_jphl
+	add hl,bc
+	or a,a
+	sbc hl,bc
+	pop bc,bc,de
+	ret z
+	ld (_sha256_m_buffer_ptr),hl
 	ld hl,$FF0000		   ; 64k of 0x00 bytes
 	ld bc,_sha256ctx_size
 	push de
@@ -17,8 +28,10 @@ hashlib_Sha256Init:
 	ld hl,_sha256_state_init
 	ldir
 	ret
-	
-	
+
+_helper_jphl:
+	jp (hl)
+
 ; void hashlib_Sha256Update(SHA256_CTX *ctx, const BYTE data[], size_t len);
 hashlib_Sha256Update:
 	call ti._frameset0
@@ -164,53 +177,476 @@ _sha256_reverse_endianness:
 	djnz _sha256_reverse_endianness
 	ret
 
+; helper macro to xor [B,C] with [R1,R2] storing into [R1,R2]
+; destroys: af
+macro _xorbc? R1,R2
+	ld a,b
+	xor a,R1
+	ld R1,a
+	ld a,c
+	xor a,R2
+	ld R2,a
+end macro
+
+; helper macro to add [B,C] with [R1,R2] storing into [R1,R2]
+; destroys: af
+; note: this will add including the carry flag, so be sure of what the carry flag is before this
+; note: if you're chaining this into a number longer than 16 bits, the order must be low->high
+macro _addbc
+	ld a,c
+	adc a,R2
+	ld R2,a
+	ld a,b
+	adc a,R1
+	ld R1,a
+end macro
+
+; helper macro to move [d,e,h,l] <- [l,e,d,h] therefore shifting 8 bits right.
+; destroys: af
+macro _rotright8?
+	ld a,l
+	ld l,h
+	ld h,e
+	ld e,d
+	ld d,a
+end macro
+
+; helper macro to move [d,e,h,l] <- [e,h,l,d] therefore shifting 8 bits left.
+; destroys: af
+macro _rotleft8? TR
+	ld TR,d
+	ld d,e
+	ld e,h
+	ld h,l
+	ld l,TR
+end macro
+
+; helper macro to load [d,e,h,l] with (iy + offset * sizeof uint32_t)
+; destroys: none
+macro _longloaddehl_iy? offset
+	ld de,(iy + (offset) * 4 + 2)
+	ld hl,(iy + (offset) * 4 + 0)
+end macro
+
+; helper macro to load [d,e,h,l] with (ix + offset * sizeof uint32_t)
+; destroys: none
+macro _longloaddehl_iy? offset
+	ld de,(ix + (offset) * 4 + 2)
+	ld hl,(ix + (offset) * 4 + 0)
+end macro
+
+; helper macro to load [d,e,h,l] with (ix + offset)
+; destroys: none
+macro _loaddehl_ix? offset
+	ld de,(ix + (offset) + 2)
+	ld hl,(ix + (offset) + 0)
+end macro
+
+
+
+; #define ROTLEFT(a,b) (((a) << (b)) | ((a) >> (32-(b))))
+;input: [d,e,h,l], b
+;output: [d,e,h,l]
+;destroys: af, b
+_ROTLEFT:
+	xor a,a
+	rl l
+	rl h
+	rl e
+	rl d
+	adc a,l
+	ld l,a
+	djnz .
+	ret
+
+; #define ROTRIGHT(a,b) (((a) >> (b)) | ((a) << (32-(b))))
+;input: [d,e,h,l], b
+;output: [d,e,h,l]
+;destroys: af, b
+_ROTRIGHT:
+	xor a,a
+	rr d
+	rr e
+	rr h
+	rr l
+	rra
+	or a,d
+	ld d,a
+	djnz .
+	ret
+
+; #define SIG0(x) (ROTRIGHT(x,7) ^ ROTRIGHT(x,18) ^ ((x) >> 3))
+;input [d,e,h,l]
+;output [d,e,h,l]
+;destroys af, bc
+_SIG0:
+	ld b,3
+	call _ROTRIGHT  ;rotate long accumulator 3 bits right
+	push hl,de	  ;save value for later
+	ld b,4
+	call _ROTRIGHT  ;rotate long accumulator another 4 bits right for a total of 7 bits right
+	push hl,de	  ;save value for later
+	_rotright8      ;rotate long accumulator 8 bits right
+	ld b,3
+	call _ROTRIGHT  ;rotate long accumulator another 3 bits right for a total of 18 bits right
+	pop bc
+	_xorbc d,e  ;xor third ROTRIGHT result with second ROTRIGHT result (upper 16 bits)
+	pop bc
+	_xorbc h,l  ;xor third ROTRIGHT result with second ROTRIGHT result (lower 16 bits)
+	pop bc
+	ld a,b
+	and a,$1F   ;cut off the upper 3 bits from the result of the first ROTRIGHT call
+	xor a,d	 ;xor first ROTRIGHT result with result of prior xor (upper upper 8 bits)
+	ld d,a
+	ld a,c
+	xor a,e	 ;xor first ROTRIGHT result with result of prior xor (lower upper 8 bits)
+	ld e,a
+	pop bc
+	_xorbc h,l  ;xor first ROTRIGHT result with result of prior xor (lower 16 bits)
+	ret
+
+; #define SIG1(x) (ROTRIGHT(x,17) ^ ROTRIGHT(x,19) ^ ((x) >> 10))
+;input: [d,e,h,l]
+;output: [d,e,h,l]
+;destroys: af, bc
+_SIG1:
+	_rotright8      ;rotate long accumulator 8 bits right
+	ld b,2
+	call _ROTRIGHT  ;rotate long accumulator 2 bits right for a total of 10 bits right
+	push hl,de	    ;save value for later
+	_rotright8      ;rotate long accumulator 8 bits right for a total of 18 bits right
+	ld b,1
+	call _ROTLEFT  ;rotate long accumulator a bit left for a total of 17 bits right
+	push hl,de	  ;save value for later
+	ld b,11
+	call _ROTRIGHT  ;rotate long accumulator another 2 bits right
+	pop bc
+	_xorbc d,e  ;xor third ROTRIGHT result with second ROTRIGHT result (upper 16 bits)
+	pop bc
+	_xorbc h,l  ;xor third ROTRIGHT result with second ROTRIGHT result (lower 16 bits)
+	pop bc
+	ld d,b     ;cut off upper 10 bits of first ROTRIGHT result meaning we're xoring by zero, so we can just load the value.
+	ld a,c
+	and a,$3F   ;cut off the upper 2 bits from the lower upper byte of the first ROTRIGHT result.
+	xor a,e	 ;xor first ROTRIGHT result with result of prior xor (lower upper upper 8 bits)
+	ld e,a
+	pop bc
+	_xorbc h,l  ;xor first ROTRIGHT result with result of prior xor (lower 16 bits)
+	ret
+
+
 ; void _sha256_transform(SHA256_CTX *ctx);
 _sha256_transform:
-	ld hl,-323
+._h := -4
+._g := -8
+._f := -12
+._e := -16
+._d := -20
+._c := -24
+._b := -28
+._a := -32
+._state_vars := -32
+._tmp1 := -36
+._tmp2 := -40
+._i := -41
+._i2 := -42
+._frame_offset := -42
+	ld hl,._frame_offset
 	call ti._frameset
 	ld b,16
 	ld iy,(ix + 6)
-	ld hl,-323
-	lea de,iy
-	add hl,de
-	ld (ix-3),hl
+	ld hl,0
+_sha256_m_buffer_ptr:=$-3
+	add hl,bc
+	or a,a
+	sbc hl,bc
+	jq z,._exit
 if offset_data <> 0
 	lea iy, iy + offset_data
 end if
-	call _sha256_reverse_endianness
-    
-    ld b, 64-16
-_sha256_transform_loop2:
+	call _sha256_reverse_endianness ;first loop is essentially just reversing the endian-ness of the data into the state (both represented as 32-bit integers)
+
+	ld iy,(_sha256_m_buffer_ptr)
+	lea iy, iy + 16*4
+	ld b, 64-16
+._loop2:
+	push bc
 ; m[i] = SIG1(m[i - 2]) + m[i - 7] + SIG0(m[i - 15]) + m[i - 16];
-    djnz _sha256_transform_loop2
-    
-    
-    lea hl, iy + offset_state
-    lea de, ix + _sha256_state_vars
-    ld bc, 32
-    ldir                ; copy the state to scratch stack memory
-    
-    ld b, 64
-_sha256_transform_loop3:
+	_longloaddehl_iy -2
+	call _SIG1
+	push de,hl
+	_longloaddehl_iy -15
+	call _SIG0
+	push de,hl
+	_loadloaddehl_iy -16
+
+; SIG0(m[i - 15]) + m[i - 16]
+	or a,a
+	pop bc
+	_addbc h,l
+	pop bc
+	_addbc d,e
+
+; + SIG1(m[i - 2])
+	or a,a
+	pop bc
+	_addbc h,l
+	pop bc
+	_addbc d,e
+
+; + m[i - 7]
+	or a,a
+	ld bc, (iy + -15*4)
+	_addbc h,l
+	ld bc, (iy + -15*4 + 2)
+	_addbc d,e
+
+; --> m[i]
+	ld (iy + 3), d
+	ld (iy + 2), e
+	ld (iy + 1), h
+	ld (iy + 0), l
+
+	lea iy, iy + 4
+	pop bc
+	djnz ._loop2
+
+
+if offset_state <> 0
+	lea hl, iy + offset_state - offset_datalen
+else
+	ld hl, (ix + 6)
+end if
+	lea de, ._state_vars
+	ld bc, 32
+	ldir				; copy the state to scratch stack memory
+
+	ld (ix + ._i2), c
+	ld a, 64
+	ld (ix + ._i), a
+._loop3:
 ; tmp1 = h + EP1(e) + CH(e,f,g) + k[i] + m[i];
+; CH(e,f,g)
+; #define CH(x,y,z) (((x) & (y)) ^ (~(x) & (z)))
+	lea iy,ix
+	ld b,4
+._loop3inner1:
+	ld a, (iy + ._e)
+	xor a,$FF
+	and a, (iy + ._g)
+	ld c,a
+	ld a, (iy + ._e)
+	and a, (iy + ._f)
+	xor a,c
+	ld (iy + ._tmp1),a
+	inc iy
+	djnz ._loop3inner1
+
+; EP1(e)
+; #define EP1(x) (ROTRIGHT(x,6) ^ ROTRIGHT(x,11) ^ ROTRIGHT(x,25))
+	_loaddehl_ix ._e
+	ld b,6    ;rotate e 6 bits right
+	call _ROTRIGHT
+	push de,hl
+	ld b,5    ;rotate accumulator another 5 bits for a total of 11
+	call _ROTRIGHT
+	push de,hl
+	_rotright8 ;rotate accumulator another 8 bits for a total of 19
+	ld b,6
+	call _ROTRIGHT ;rotate accumulator another 6 bits for a total of 25
+	pop bc         ;ROTRIGHT(x,11) ^ ROTRIGHT(x,25)
+	_xorbc h,l
+	pop bc
+	_xorbc d,e
+	pop bc         ; ^ ROTRIGHT(x,6)
+	_xorbc h,l
+	pop bc
+	_xorbc d,e
+
+	or a,a                   ; EP1(e) + h
+	ld bc, (ix + ._h)
+	_addbc h,l
+	ld bc, (ix + ._h + 2)
+	_addbc d,e
+
+	or a,a                   ; h + EP1(e) + CH(e,f,g)
+	ld bc, (ix + ._tmp1)
+	_addbc h,l
+	ld bc, (ix + ._tmp1 + 2)
+	_addbc d,e
+
+	push de,hl
+if offset_state <> 0
+	ld iy, (ix + 6)
+	lea hl, iy + offset_state
+else
+	ld hl, (ix + 6)
+end if
+	ld b,4
+	ld c,(ix + ._i2)
+	mlt bc
+	add hl,bc
+	ld de,(hl)
+	inc hl
+	inc hl
+	ld hl,(hl)
+	push de,hl
+	ld hl,_sha256_k
+	add hl,bc
+	ld de,(hl)
+	inc hl
+	inc hl
+	ld hl,(hl)
+
+	pop bc       ; m[i] + k[i]
+	_addbc h,l
+	pop bc
+	_addbc d,e
+
+	pop bc       ; h + EP1(e) + CH(e,f,g) + m[i] + k[i]
+	_addbc h,l
+	pop bc
+	_addbc d,e
+
+	ld (ix + ._tmp1 + 3),d
+	ld (ix + ._tmp1 + 2),e
+	ld (ix + ._tmp1 + 1),h
+	ld (ix + ._tmp1 + 0),l
+
 ; tmp2 = EP0(a) + MAJ(a,b,c);
+; MAJ(a,b,c)
+; #define MAJ(x,y,z) (((x) & (y)) ^ ((x) & (z)) ^ ((y) & (z)))
+	lea iy,ix
+	ld b,4
+._loop3inner2:
+	ld a, (iy + ._a)
+	and a, (iy + ._b)
+	ld c,a
+	ld a, (iy + ._a)
+	and a, (iy + ._c)
+	xor a,c
+	ld c,a
+	ld a, (iy + ._b)
+	and a, (iy + ._c)
+	xor a,c
+	ld (iy + ._tmp2), a
+	djnz ._loop3inner2
+
+; EP0(a)
+; #define EP0(x) (ROTRIGHT(x,2) ^ ROTRIGHT(x,13) ^ ROTRIGHT(x,22))
+	_loaddehl_ix ._a
+	ld b,2
+	call _ROTRIGHT     ; x >> 2
+	push de,hl
+	_rotright8
+	ld b,3
+	call _ROTRIGHT     ; x >> 13
+	push de,hl
+	_rotright8
+	inc b
+	call _ROTRIGHT     ; x >> 22
+	pop bc             ; (x >> 22) ^ (x >> 13)
+	_xorbc h,l
+	pop bc
+	_xorbc d,e
+	pop bc             ; (x >> 2) ^ (x >> 22) ^ (x >> 13)
+	_xorbc h,l
+	pop bc
+	_xorbc d,e
+
+	ld bc, (ix + ._tmp2)  ; EP0(a) + MAJ(a,b,c)
+	_addbc h,l
+	ld bc, (ix + ._tmp2 + 2)
+	_addbc d,e
+	ld (ix + ._tmp2 + 3), d
+	ld (ix + ._tmp2 + 2), e
+	ld (ix + ._tmp2 + 1), h
+	ld (ix + ._tmp2 + 0), l
+
 ; h = g;
+	ld hl, (ix + ._g + 0)
+	ld a,  (ix + ._g + 3)
+	ld (ix + ._h + 0), hl
+	ld (ix + ._h + 3), a
+
 ; g = f;
+	ld hl, (ix + ._f + 0)
+	ld a,  (ix + ._f + 3)
+	ld (ix + ._g + 0), hl
+	ld (ix + ._g + 3), a
+
 ; f = e;
+	ld hl, (ix + ._e + 0)
+	ld a,  (ix + ._e + 3)
+	ld (ix + ._f + 0), hl
+	ld (ix + ._f + 3), a
+
 ; e = d + tmp1;
+	ld hl, (ix + ._d + 0)
+	ld a,  (ix + ._d + 3)
+	ld de, (ix + ._tmp1 + 0)
+	or a,a
+	adc hl,de
+	adc a, (ix + ._tmp1 + 3)
+	ld (ix + ._e + 0), hl
+	ld (ix + ._e + 3), a
+
 ; d = c;
+	ld hl, (ix + ._c + 0)
+	ld a,  (ix + ._c + 3)
+	ld (ix + ._d + 0), hl
+	ld (ix + ._d + 3), a
+
 ; c = b;
+	ld hl, (ix + ._b + 0)
+	ld a,  (ix + ._b + 3)
+	ld (ix + ._c + 0), hl
+	ld (ix + ._c + 3), a
+
 ; b = a;
+	ld hl, (ix + ._a + 0)
+	ld a,  (ix + ._a + 3)
+	ld (ix + ._b + 0), hl
+	ld (ix + ._b + 3), a
+
 ; a = tmp1 + tmp2;
-    djnz _sha256_transform_loop3
-    
-    lea de, iy + offset_state
-    lea hl, ix + _sha256_state_vars
-    ld bc, 32
-    ldir                ; copy scratch back to state
-    ld sp,ix
-    pop ix
-    ret
+	ld hl, (ix + ._tmp1 + 0)
+	ld a,  (ix + ._tmp1 + 3)
+	ld de, (ix + ._tmp2 + 0)
+	or a,a
+	adc hl,de
+	adc a, (ix + ._tmp2 + 3)
+	ld (ix + ._a + 0), hl
+	ld (ix + ._a + 3), a
+
+	inc (ix + ._i2)
+	dec (ix + ._i) ;yes, this updates the Z flag
+	jq nz ._loop3
+
+	push ix
+	ld iy, (ix+6)
+	lea iy, iy + offset_state
+	lea ix, ._state_vars
+	ld b,4
+._loop4:
+	ld hl, (iy + 0)
+	ld de, (ix + 0)
+	ld a, (iy + 3)
+	ld c, (ix + 3)
+	or a,a
+	adc hl,de
+	adc a,c
+	ld (iy + 0), hl
+	ld (iy + 3), a
+	lea ix, ix - 4
+	lea iy, iy + 4
+	djnz ._loop4
+
+	pop ix
+._exit:
+	ld sp,ix
+	pop ix
+	ret
 
 
 _sha256_state_init:
