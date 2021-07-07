@@ -234,19 +234,19 @@ bool hashlib_RandomBytes(uint8_t *buffer, size_t size);
     Init Context for SHA-256
 
     # Inputs #
-    <> ctx = pointer to an SHA256_CTX
+    <> ctx = pointer to an sha256_ctx
     <> mbuffer = pointer to 80*4 bytes of temporary ram used internally by hashlib_Sha256Update. It may be 0 if it's been set before, and if the memory it's been set to is still valid.
     ** SHA-256 will be invalid if this function is not called before hashing
     ** contexts are specific to a hash-stream. If there is another block of data you
         want to hash concurrently, you will need to init a new context
 */
-void hashlib_Sha256Init(SHA256_CTX *ctx, uint32_t *mbuffer);
+void hashlib_Sha256Init(sha256_ctx *ctx, uint32_t *mbuffer);
 
 /*
     Update Context for SHA-256
 
     # Inputs #
-    <> ctx = pointer to an SHA256_CTX
+    <> ctx = pointer to an sha256_ctx
     <> buf = ptr to a block of data to hash
     <> len = size of the block of data to hash
     ** Remember, if hashlib_Sha256Init is not called first, your hash will be wrong
@@ -257,7 +257,7 @@ void hashlib_Sha256Update(sha256_ctx *ctx, const uint8_t *buf, uint32_t len);
     Finalize Context and Render Digest for SHA-256
 
     # Inputs #
-    <> ctx = pointer to an SHA256_CTX
+    <> ctx = pointer to an sha256_ctx
     <> digest = pointer to buffer to write digest
 */
 void hashlib_Sha256Final(sha256_ctx *ctx, uint8_t *digest);
