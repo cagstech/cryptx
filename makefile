@@ -1,4 +1,5 @@
 
+include $(CEDEV)/meta/makefile.mk
 # common/os specific things
 ifeq ($(OS),Windows_NT)
 SHELL      = cmd.exe
@@ -12,11 +13,11 @@ INSTALLLOC := $(call NATIVEPATH,$(DESTDIR)$(PREFIX))
 CP         = copy /y
 EXMPL_DIR  = $(call NATIVEPATH,$(INSTALLLOC)/CEdev/examples)
 CPDIR      = xcopy /e /i /q /r /y /b
-# CP_EXMPLS  = $(call MKDIR,$(EXMPL_DIR)) && $(CPDIR) $(call NATIVEPATH,$(CURDIR)/examples) $(EXMPL_DIR)
-# ARCH       = $(call MKDIR,release) && cd tools\installer && ISCC.exe /DAPP_VERSION=8.4 /DDIST_PATH=$(call NATIVEPATH,$(DESTDIR)$(PREFIX)/CEdev) installer.iss && \
-             # cd ..\.. && move /y tools\installer\CEdev.exe release\\
-# QUOTE_ARG  = "$(subst ",',$1)"#'
-# APPEND     = @echo.$(subst ",^",$(subst \,^\,$(subst &,^&,$(subst |,^|,$(subst >,^>,$(subst <,^<,$(subst ^,^^,$1))))))) >>$@
+CP_EXMPLS  = $(call MKDIR,$(EXMPL_DIR)) && $(CPDIR) $(call NATIVEPATH,$(CURDIR)/examples) $(EXMPL_DIR)
+ARCH       = $(call MKDIR,release) && cd tools\installer && ISCC.exe /DAPP_VERSION=8.4 /DDIST_PATH=$(call NATIVEPATH,$(DESTDIR)$(PREFIX)/CEdev) installer.iss && \
+             cd ..\.. && move /y tools\installer\CEdev.exe release\\
+QUOTE_ARG  = "$(subst ",',$1)"#'
+APPEND     = @echo.$(subst ",^",$(subst \,^\,$(subst &,^&,$(subst |,^|,$(subst >,^>,$(subst <,^<,$(subst ^,^^,$1))))))) >>$@
 else
 NATIVEPATH = $(subst \,/,$1)
 DIRNAME    = $(patsubst %/,%,$(dir $1))
@@ -27,15 +28,13 @@ PREFIX    ?= $(HOME)
 INSTALLLOC := $(call NATIVEPATH,$(DESTDIR)$(PREFIX))
 CP         = cp
 CPDIR      = cp -r
-# CP_EXMPLS  = $(CPDIR) $(call NATIVEPATH,$(CURDIR)/examples) $(call NATIVEPATH,$(INSTALLLOC)/CEdev)
-# ARCH       = cd $(INSTALLLOC) && tar -czf $(RELEASE_NAME).tar.gz $(RELEASE_NAME) ; \
-             # cd $(CURDIR) && $(call MKDIR,release) && mv -f $(INSTALLLOC)/$(RELEASE_NAME).tar.gz release
-# CHMOD      = find $(BIN) -name "*.exe" -exec chmod +x {} \;
-# QUOTE_ARG  = '$(subst ','\'',$1)'#'
-# APPEND     = @echo $(call QUOTE_ARG,$1) >>$@
+CP_EXMPLS  = $(CPDIR) $(call NATIVEPATH,$(CURDIR)/examples) $(call NATIVEPATH,$(INSTALLLOC)/CEdev)
+ARCH       = cd $(INSTALLLOC) && tar -czf $(RELEASE_NAME).tar.gz $(RELEASE_NAME) ; \
+             cd $(CURDIR) && $(call MKDIR,release) && mv -f $(INSTALLLOC)/$(RELEASE_NAME).tar.gz release
+CHMOD      = find $(BIN) -name "*.exe" -exec chmod +x {} \;
+QUOTE_ARG  = '$(subst ','\'',$1)'#'
+APPEND     = @echo $(call QUOTE_ARG,$1) >>$@
 endif
-
-include $(CEDEV)/meta/makefile.mk
 
 #hashlib build rules
 all: hashlib
@@ -52,14 +51,14 @@ install: bin/HASHLIB.8xv bin/HASHLIB.lib
 	$(CP) $(call NATIVEPATH,bin/HASHLIB.lib) $(call NATIVEPATH,$(CEDEV)/lib/libload/hashlib.lib)
 
 # make clean
-# clean:
-	# $(call RMDIR,bin)
-	# $(Q)echo Removed binaries.
+clean:
+	$(call RMDIR,bin)
+	$(Q)echo Removed binaries.
 
 #make clean-install
-# clean-install:
-	# $(RM) $(call NATIVEPATH,$(CEDEV)/include/hashlib.h))
-	# $(RM) $(call NATIVEPATH,$(CEDEV)/lib/libload/hashlib.lib))
+clean-install:
+	$(RM) $(call NATIVEPATH,$(CEDEV)/include/hashlib.h))
+	$(RM) $(call NATIVEPATH,$(CEDEV)/lib/libload/hashlib.lib))
 
 .PHONY: all install hashlib clean clean-install
 
