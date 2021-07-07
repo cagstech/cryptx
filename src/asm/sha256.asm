@@ -75,7 +75,8 @@ _sha256_update_done:
     pop af
     lea iy, (ix + 6)
     ld (iy + offset_datalen), a           save current datalen
-    lea ix, (ix + 3)
+    ld sp, ix
+    pop ix
     ret
     
     
@@ -186,20 +187,23 @@ _sha256_render_digest_loop:
     inc hl
     lea iy, iy + 4
     djnz sha256_render_digest_loop
+    ld sp, ix
+    pop ix
+    ret
     
 
-_sha256_mblock          := 0
+_sha256_mblock          := 3
 _sha256_state_vars      := 64 * 4 + mblock
-_sha256_transform_stackmem_size    := 8 * 4 + state_vars
+_sha256_transform_stackmem_size    := 8 * 4 + state_vars - 3
 
 ; iy = context pointer
 call _sha256_transform:
-    ld hl, _sha256_transform_stackmem_size
+    ld hl, -1 * _sha256_transform_stackmem_size
     call ti._frameset
     
     ; memset all stack mem to 0
     ld hl,$FF0000
-    lea de, ix + 0
+    lea de, ix
     ld bc, _sha256_transform_stackmem_size
     ldir
     
