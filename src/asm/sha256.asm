@@ -47,7 +47,10 @@ hashlib_Sha256Init:
 	ld bc,_sha256ctx_size
 	push de
 	ldir
-	pop de
+	pop hl
+	ld c,offset_state
+	add hl,bc
+	ex hl,de
 	ld c,8*4				; bc=0 prior to this, due to ldir
 	ld hl,_sha256_state_init
 	ldir
@@ -116,7 +119,6 @@ hashlib_Sha256Final:
 	
 	ld iy, (ix + 6)					; iy =  context block
 
-	; let DE = &ctx->data[datalen]
 	ld bc, 0
 	ld c, (iy + offset_datalen)     ; data length
 	ld hl, (ix + 6)					; ld hl, context_block_cache_addr
