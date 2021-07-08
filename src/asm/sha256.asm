@@ -44,11 +44,12 @@ hashlib_Sha256Init:
 	ld (_sha256_m_buffer_ptr),hl
 .dont_set_buffer:
 	ld hl,$FF0000		   ; 64k of 0x00 bytes
-	ld bc,_sha256ctx_size
+	ld bc,offset_state
+	ld a,c
 	push de
 	ldir
 	pop hl
-	ld c,offset_state
+	ld c,a
 	add hl,bc
 	ex hl,de
 	ld c,8*4				; bc=0 prior to this, due to ldir
@@ -127,25 +128,19 @@ hashlib_Sha256Final:
 	ld a,56
 	sub a,c ;c is set to datalen earlier
 	ld (hl),$80
-	jq c,_sha256_final_over_56
-	ld b,a
-	xor a,a
-_sha_final_under_56_loop:
-	inc hl
-	ld (hl),a
-	djnz _sha_final_under_56_loop
-	jq _sha256_final_done_pad
+	jq nc,_sha256_final_pad_loop_entry
 _sha256_final_over_56:
 	ld a,63 ;so we can turn the condition into a<64 into a<=63
 	sub a,c ;c is set to datalen earlier
 	jq c,_sha256_final_over_64 ;jump if datalen <= 63
 	inc a ;adjust from earlier decrement
+_sha256_final_pad_loop_entry:
 	ld b,a
 	xor a,a
-_sha256_final_64_loop:
+_sha256_final_pad_loop:
 	inc hl
 	ld (hl),a
-	djnz _sha256_final_64_loop
+	djnz _sha256_final_pad_loop
 _sha256_final_over_64:
 _sha256_final_done_pad:
 	ld iy, (ix + 6)
@@ -159,7 +154,7 @@ _sha256_final_done_pad:
 
 	ld iy, (ix + 6) ;ctx
 	lea hl,iy + offset_bitlen
-	lea de,iy + offset_datalen
+	lea de,iy + offset_data + 63
 
 	ld b,8
 _sha256_final_pad_message_len_loop:
@@ -174,10 +169,10 @@ _sha256_final_pad_message_len_loop:
 	call _sha256_transform
 	pop bc
 
-	ld b, 8
 	ld hl, (ix + 9)
 	ld iy, (ix + 6)
 	lea iy, iy + offset_state
+	ld b, 8
 	pop ix
 	; continue running into _sha256_reverse_endianness
 
@@ -383,18 +378,22 @@ _sha256_transform:
 ._frame_offset := -42
 	ld hl,._frame_offset
 	call ti._frameset
-	ld b,16
-	ld iy,(ix + 6)
 	ld hl,0
 _sha256_m_buffer_ptr:=$-3
 	add hl,bc
 	or a,a
 	sbc hl,bc
 	jq z,._exit
+	ld iy,(ix + 6)
 if offset_data <> 0
 	lea iy, iy + offset_data
 end if
+	ld b,16
 	call _sha256_reverse_endianness ;first loop is essentially just reversing the endian-ness of the data into the state (both represented as 32-bit integers)
+
+	; scf
+	; sbc hl,hl
+	; ld (hl),2
 
 	ld iy,(_sha256_m_buffer_ptr)
 	lea iy, iy + 16*4
@@ -407,13 +406,11 @@ end if
 	push de,hl
 	_longloaddehl_iy -15
 	call _SIG0
-	push de,hl
-	_longloaddehl_iy -16
 
 ; SIG0(m[i - 15]) + m[i - 16]
-	pop bc
+	ld bc, (iy + -16*4 + 0)
 	_addbclow h,l
-	pop bc
+	ld bc, (iy + -16*4 + 2)
 	_addbchigh d,e
 
 ; + SIG1(m[i - 2])
@@ -446,7 +443,7 @@ else
 	ld hl, (ix + 6)
 end if
 	lea de, ix + ._state_vars
-	ld bc, 32
+	ld bc, 8*4
 	ldir				; copy the state to scratch stack memory
 
 	ld (ix + ._i2), c
