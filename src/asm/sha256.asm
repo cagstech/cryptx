@@ -550,6 +550,7 @@ end if
 	and a, (iy + ._c)
 	xor a,c
 	ld (iy + ._tmp2), a
+	inc iy
 	djnz ._loop3inner2
 
 ; EP0(a)
