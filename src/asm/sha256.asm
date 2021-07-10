@@ -343,14 +343,14 @@ _SIG1:
 	ld b,1
 	call _ROTLEFT  ;rotate long accumulator a bit left for a total of 17 bits right
 	push hl,de	  ;save value for later
-	ld b,11
+	ld b,2
 	call _ROTRIGHT  ;rotate long accumulator another 2 bits right
 	pop bc
 	_xorbc d,e  ;xor third ROTRIGHT result with second ROTRIGHT result (upper 16 bits)
 	pop bc
 	_xorbc h,l  ;xor third ROTRIGHT result with second ROTRIGHT result (lower 16 bits)
 	pop bc
-	ld d,b     ;cut off upper 10 bits of first ROTRIGHT result meaning we're xoring by zero, so we can just load the value.
+	;we're cutting off upper 10 bits of first ROTRIGHT result meaning we're xoring by zero, so we can just keep the value.
 	ld a,c
 	and a,$3F   ;cut off the upper 2 bits from the lower upper byte of the first ROTRIGHT result.
 	xor a,e	 ;xor first ROTRIGHT result with result of prior xor (lower upper upper 8 bits)
