@@ -235,7 +235,7 @@ bool hashlib_RandomBytes(uint8_t *buffer, size_t size);
 
     # Inputs #
     <> ctx = pointer to an sha256_ctx
-    <> mbuffer = pointer to 80*4 bytes of temporary ram used internally by hashlib_Sha256Update. It may be 0 if it's been set before, and if the memory it's been set to is still valid.
+    <> mbuffer = pointer to 64*4 bytes of temporary ram used internally by hashlib_Sha256Update. It may be 0 if it's been set before, and if the memory it's been set to is still valid.
     ** SHA-256 will be invalid if this function is not called before hashing
     ** contexts are specific to a hash-stream. If there is another block of data you
         want to hash concurrently, you will need to init a new context

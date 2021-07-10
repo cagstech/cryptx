@@ -39,7 +39,7 @@ int main(void)
     sha256_ctx sha256;
     uint8_t sha256_digest[SHA256_DIGEST_LEN];
     size_t str_len = strlen(str);
-	if (!(mbuffer = malloc(80*4))) return 1;
+	if (!(mbuffer = malloc(64*4))) return 1;
 	if (!(sbuf = malloc(SHA256_DIGEST_LEN*2 + 1))) return 1;
 
 	sprintf(CEMU_CONSOLE, "SHA_CTX Addr: %u\nSHA_CTX EndAddr: %u\n", &sha256, (uint24_t)&sha256 + sizeof(sha256)-1);

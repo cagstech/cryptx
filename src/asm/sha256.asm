@@ -7,7 +7,7 @@ offset_datalen	  := offset_data+64
 offset_bitlen	   := offset_datalen+1
 offset_state		:= offset_bitlen+8
 _sha256ctx_size	 := 4*8+offset_state
-_sha256_m_buffer_length := 80*4
+_sha256_m_buffer_length := 64*4
 
 ; probably better to just add the one u64 function used by hashlib rather than screw with dependencies
 u64_addi:
