@@ -42,8 +42,15 @@ int main(void)
 	if (!(mbuffer = malloc(80*4))) return 1;
 	if (!(sbuf = malloc(SHA256_DIGEST_LEN*2 + 1))) return 1;
 
+<<<<<<< HEAD
 	sprintf(CEMU_CONSOLE, "SHA_CTX Addr: %u\nSHA_CTX EndAddr: %u\n", &sha256, (uint24_t)&sha256 + sizeof(sha256)-1);
     (*(uint8_t*)-1) = 2;
+=======
+	// sprintf(CEMU_CONSOLE, "The state is located at '%u'.\n", (uint32_t*)&sha256.state);
+	// sprintf(CEMU_CONSOLE, "The mbuffer is located at '%u'.\n", (uint32_t*)mbuffer);
+	// (*(uint8_t*)(-1)) = 2;
+
+>>>>>>> 0248ceb3100ccd7dfafccb9f71b189d444e65721
     sprintf(CEMU_CONSOLE, "The string is '%s'.\n", str);
     sprintf(CEMU_CONSOLE, "Its size is: %u\n", str_len);
     
