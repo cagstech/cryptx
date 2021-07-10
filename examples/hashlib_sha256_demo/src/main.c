@@ -13,6 +13,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <hashlib.h>
+#include <debug.h>
 
 #define CEMU_CONSOLE ((char*)0xFB0000)
 char hexc[16] = "0123456789ABCDEF";
@@ -41,6 +42,8 @@ int main(void)
 	if (!(mbuffer = malloc(80*4))) return 1;
 	if (!(sbuf = malloc(SHA256_DIGEST_LEN*2 + 1))) return 1;
 
+	sprintf(CEMU_CONSOLE, "SHA_CTX Addr: %u\nSHA_CTX EndAddr: %u\n", &sha256, (uint24_t)&sha256 + sizeof(sha256)-1);
+    (*(uint8_t*)-1) = 2;
     sprintf(CEMU_CONSOLE, "The string is '%s'.\n", str);
     sprintf(CEMU_CONSOLE, "Its size is: %u\n", str_len);
     
