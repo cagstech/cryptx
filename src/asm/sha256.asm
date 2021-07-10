@@ -98,7 +98,6 @@ _sha256_update_loop:
 	pop bc, bc, bc, de, hl
 	xor a,a					 ; reset datalen to 0
 .next:
-	ld (iy + offset_datalen),a
 	ldi ;ld (de),(hl) / inc de / inc hl / dec bc
 	ret po
 	jr _sha256_update_loop ;continue if bc > 0 (ldi decrements bc and updates parity flag)
@@ -383,7 +382,7 @@ if offset_data <> 0
 	lea iy, iy + offset_data
 end if
 	ld b,16
-	call _sha256_reverse_endianness ;first loop is essentially just reversing the endian-ness of the data into the state (both represented as 32-bit integers)
+	call _sha256_reverse_endianness ;first loop is essentially just reversing the endian-ness of the data into m (both represented as 32-bit integers)
 
 	; scf
 	; sbc hl,hl
@@ -432,7 +431,7 @@ end if
 
 if offset_state <> 0
 	ld iy, (ix + 6)
-	lea hl, iy + offset_state - offset_datalen
+	lea hl, iy + offset_state
 else
 	ld hl, (ix + 6)
 end if
@@ -516,13 +515,12 @@ end if
 	inc hl
 	inc hl
 	ld hl,(hl)
-	ex hl,de
 
 ; m[i] + k[i]
 	pop bc
-	_addbclow h,l
+	_addbclow d,e
 	pop bc
-	_addbchigh d,e
+	_addbchigh h,l
 
 ; h + EP1(e) + CH(e,f,g) + m[i] + k[i]
 	pop bc
@@ -607,8 +605,7 @@ end if
 	ld hl, (ix + ._d + 0)
 	ld a,  (ix + ._d + 3)
 	ld de, (ix + ._tmp1 + 0)
-	or a,a
-	adc hl,de
+	add hl,de
 	adc a, (ix + ._tmp1 + 3)
 	ld (ix + ._e + 0), hl
 	ld (ix + ._e + 3), a
@@ -635,8 +632,7 @@ end if
 	ld hl, (ix + ._tmp1 + 0)
 	ld a,  (ix + ._tmp1 + 3)
 	ld de, (ix + ._tmp2 + 0)
-	or a,a
-	adc hl,de
+	add hl,de
 	adc a, (ix + ._tmp2 + 3)
 	ld (ix + ._a + 0), hl
 	ld (ix + ._a + 3), a
@@ -649,7 +645,7 @@ end if
 	ld iy, (ix+6)
 	lea iy, iy + offset_state
 	lea ix, ix + ._state_vars
-	ld b,4
+	ld b,8
 ._loop4:
 	ld hl, (iy + 0)
 	ld de, (ix + 0)
