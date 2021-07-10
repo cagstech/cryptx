@@ -239,28 +239,6 @@ macro _rotleft8?
 	ld l,a
 end macro
 
-; helper macro to load [d,e,h,l] with (iy + offset * sizeof uint32_t)
-; destroys: none
-macro _longloaddehl_iy? offset
-	ld hl,(iy + (offset) * 4 + 0)
-	ld de,(iy + (offset) * 4 + 2)
-end macro
-
-; helper macro to load [d,e,h,l] with (ix + offset * sizeof uint32_t)
-; destroys: none
-macro _longloaddehl_ix? offset
-	ld hl,(ix + (offset) * 4 + 0)
-	ld de,(ix + (offset) * 4 + 2)
-end macro
-
-; helper macro to load [d,e,h,l] with (ix + offset)
-; destroys: none
-macro _loaddehl_ix? offset
-	ld hl,(ix + (offset) + 0)
-	ld de,(ix + (offset) + 2)
-end macro
-
-
 
 ; #define ROTLEFT(a,b) (((a) << (b)) | ((a) >> (32-(b))))
 ;input: [d,e,h,l], b
@@ -342,8 +320,9 @@ _SIG1:
 	_xorbc d,e  ;xor third ROTRIGHT result with second ROTRIGHT result (upper 16 bits)
 	pop bc
 	_xorbc h,l  ;xor third ROTRIGHT result with second ROTRIGHT result (lower 16 bits)
-	pop bc
+
 	;we're cutting off upper 10 bits of first ROTRIGHT result meaning we're xoring by zero, so we can just keep the value of d.
+	pop bc
 	ld a,c
 	and a,$3F   ;cut off the upper 2 bits from the lower upper byte of the first ROTRIGHT result.
 	xor a,e	 ;xor first ROTRIGHT result with result of prior xor (lower upper upper 8 bits)
@@ -378,9 +357,6 @@ _sha256_m_buffer_ptr:=$-3
 	sbc hl,bc
 	jq z,._exit
 	ld iy,(ix + 6)
-if offset_data <> 0
-	lea iy, iy + offset_data
-end if
 	ld b,16
 	call _sha256_reverse_endianness ;first loop is essentially just reversing the endian-ness of the data into m (both represented as 32-bit integers)
 
@@ -394,10 +370,12 @@ end if
 ._loop2:
 	push bc
 ; m[i] = SIG1(m[i - 2]) + m[i - 7] + SIG0(m[i - 15]) + m[i - 16];
-	_longloaddehl_iy -2
+	ld hl,(iy + -2*4 + 0)
+	ld de,(iy + -2*4 + 2)
 	call _SIG1
 	push de,hl
-	_longloaddehl_iy -15
+	ld hl,(iy + -15*4 + 0)
+	ld de,(iy + -15*4 + 2)
 	call _SIG0
 
 ; SIG0(m[i - 15]) + m[i - 16]
@@ -429,15 +407,11 @@ end if
 	djnz ._loop2
 
 
-if offset_state <> 0
 	ld iy, (ix + 6)
 	lea hl, iy + offset_state
-else
-	ld hl, (ix + 6)
-end if
 	lea de, ix + ._state_vars
 	ld bc, 8*4
-	ldir				; copy the state to scratch stack memory
+	ldir				; copy the ctx state to scratch stack memory (uint32_t a,b,c,d,e,f,g,h)
 
 	ld (ix + ._i2), c
 	ld a, 64
@@ -462,7 +436,8 @@ end if
 
 ; EP1(e)
 ; #define EP1(x) (ROTRIGHT(x,6) ^ ROTRIGHT(x,11) ^ ROTRIGHT(x,25))
-	_loaddehl_ix ._e
+	ld hl,(ix + ._e + 0)
+	ld de,(ix + ._e + 2)
 	ld b,6    ;rotate e 6 bits right
 	call _ROTRIGHT
 	push de,hl
@@ -494,12 +469,7 @@ end if
 	_addbchigh d,e
 
 	push de,hl
-if offset_state <> 0
-	ld iy, (ix + 6)
-	lea hl, iy + offset_state
-else
-	ld hl, (ix + 6)
-end if
+	ld hl,(_sha256_m_buffer_ptr)
 	ld b,4
 	ld c,(ix + ._i2)
 	mlt bc
@@ -522,12 +492,13 @@ end if
 	pop bc
 	_addbchigh h,l
 
-; h + EP1(e) + CH(e,f,g) + m[i] + k[i]
+; m[i] + k[i] + h + EP1(e) + CH(e,f,g)
 	pop bc
 	_addbclow h,l
 	pop bc
 	_addbchigh d,e
 
+; --> tmp1
 	ld (ix + ._tmp1 + 3),d
 	ld (ix + ._tmp1 + 2),e
 	ld (ix + ._tmp1 + 1),h
@@ -555,16 +526,17 @@ end if
 
 ; EP0(a)
 ; #define EP0(x) (ROTRIGHT(x,2) ^ ROTRIGHT(x,13) ^ ROTRIGHT(x,22))
-	_loaddehl_ix ._a
+	ld hl,(ix + ._a + 0)
+	ld de,(ix + ._a + 2)
 	ld b,2
 	call _ROTRIGHT     ; x >> 2
 	push de,hl
-	_rotright8
+	_rotright8         ; x >> 10
 	ld b,3
 	call _ROTRIGHT     ; x >> 13
 	push de,hl
-	_rotright8
-	inc b
+	_rotright8         ; x >> 21
+	inc b ;_ROTRIGHT sets b to zero
 	call _ROTRIGHT     ; x >> 22
 	pop bc             ; (x >> 22) ^ (x >> 13)
 	_xorbc h,l
@@ -606,7 +578,8 @@ end if
 	ld hl, (ix + ._d + 0)
 	ld a,  (ix + ._d + 3)
 	ld de, (ix + ._tmp1 + 0)
-	add hl,de
+	or a,a
+	adc hl,de
 	adc a, (ix + ._tmp1 + 3)
 	ld (ix + ._e + 0), hl
 	ld (ix + ._e + 3), a
@@ -633,7 +606,8 @@ end if
 	ld hl, (ix + ._tmp1 + 0)
 	ld a,  (ix + ._tmp1 + 3)
 	ld de, (ix + ._tmp2 + 0)
-	add hl,de
+	or a,a
+	adc hl,de
 	adc a, (ix + ._tmp2 + 3)
 	ld (ix + ._a + 0), hl
 	ld (ix + ._a + 3), a
@@ -642,8 +616,12 @@ end if
 	dec (ix + ._i) ;yes, this updates the Z flag
 	jq nz,._loop3
 
+	scf
+	sbc hl,hl
+	ld (hl),2
+
 	push ix
-	ld iy, (ix+6)
+	ld iy, (ix + 6)
 	lea iy, iy + offset_state
 	lea ix, ix + ._state_vars
 	ld b,8
@@ -651,7 +629,8 @@ end if
 	ld hl, (iy + 0)
 	ld de, (ix + 0)
 	ld a, (iy + 3)
-	add hl,de
+	or a,a
+	adc hl,de
 	adc a,(ix + 3)
 	ld (iy + 0), hl
 	ld (iy + 3), a
