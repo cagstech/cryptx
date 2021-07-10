@@ -45,13 +45,7 @@ hashlib_Sha256Init:
 .dont_set_buffer:
 	ld hl,$FF0000		   ; 64k of 0x00 bytes
 	ld bc,offset_state
-	ld a,c
-	push de
-	ldir
-	pop hl
-	ld c,a
-	add hl,bc
-	ex hl,de
+	ldir ;de should point to ctx->data + offsetof ctx->state which is ctx->state
 	ld c,8*4				; bc=0 prior to this, due to ldir
 	ld hl,_sha256_state_init
 	ldir
@@ -238,33 +232,33 @@ end macro
 
 ; helper macro to move [d,e,h,l] <- [e,h,l,d] therefore shifting 8 bits left.
 ; destroys: af
-macro _rotleft8? TR
-	ld TR,d
+macro _rotleft8?
+	ld a,d
 	ld d,e
 	ld e,h
 	ld h,l
-	ld l,TR
+	ld l,a
 end macro
 
 ; helper macro to load [d,e,h,l] with (iy + offset * sizeof uint32_t)
 ; destroys: none
 macro _longloaddehl_iy? offset
-	ld de,(iy + (offset) * 4 + 2)
 	ld hl,(iy + (offset) * 4 + 0)
+	ld de,(iy + (offset) * 4 + 2)
 end macro
 
 ; helper macro to load [d,e,h,l] with (ix + offset * sizeof uint32_t)
 ; destroys: none
-macro _longloaddehl_iy? offset
-	ld de,(ix + (offset) * 4 + 2)
+macro _longloaddehl_ix? offset
 	ld hl,(ix + (offset) * 4 + 0)
+	ld de,(ix + (offset) * 4 + 2)
 end macro
 
 ; helper macro to load [d,e,h,l] with (ix + offset)
 ; destroys: none
 macro _loaddehl_ix? offset
-	ld de,(ix + (offset) + 2)
 	ld hl,(ix + (offset) + 0)
+	ld de,(ix + (offset) + 2)
 end macro
 
 
@@ -350,7 +344,7 @@ _SIG1:
 	pop bc
 	_xorbc h,l  ;xor third ROTRIGHT result with second ROTRIGHT result (lower 16 bits)
 	pop bc
-	;we're cutting off upper 10 bits of first ROTRIGHT result meaning we're xoring by zero, so we can just keep the value.
+	;we're cutting off upper 10 bits of first ROTRIGHT result meaning we're xoring by zero, so we can just keep the value of d.
 	ld a,c
 	and a,$3F   ;cut off the upper 2 bits from the lower upper byte of the first ROTRIGHT result.
 	xor a,e	 ;xor first ROTRIGHT result with result of prior xor (lower upper upper 8 bits)
@@ -676,14 +670,22 @@ end if
 
 
 _sha256_state_init:
-	dd $6a09e667
-	dd $bb67ae85
-	dd $3c6ef372
-	dd $a54ff53a
-	dd $510e527f
-	dd $9b05688c
-	dd $1f83d9ab
-	dd $5be0cd19
+	dl 648807
+	db 106
+	dl 6794885
+	db -69
+	dl 7271282
+	db 60
+	dl 5240122
+	db -91
+	dl 938623
+	db 81
+	dl 354444
+	db -101
+	dl -8136277
+	db 31
+	dl -2044647
+	db 91
 
 _sha256_k:
 	dd	1116352408
