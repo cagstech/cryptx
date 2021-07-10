@@ -13,7 +13,7 @@
 
 typedef struct _sha256_ctx {
 	uint8_t data[64];
-	uint32_t datalen;
+	uint8_t datalen;
 	uint8_t bitlen[8];
 	uint32_t state[8];
 } sha256_ctx;
