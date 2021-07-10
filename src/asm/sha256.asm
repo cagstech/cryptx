@@ -413,9 +413,9 @@ end if
 	_addbchigh d,e
 
 ; + m[i - 7]
-	ld bc, (iy + -15*4)
+	ld bc, (iy + -7*4)
 	_addbclow h,l
-	ld bc, (iy + -15*4 + 2)
+	ld bc, (iy + -7*4 + 2)
 	_addbchigh d,e
 
 ; --> m[i]
