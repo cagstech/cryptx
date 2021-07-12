@@ -126,10 +126,11 @@ hashlib_Sha256Final:
 	ld hl, (ix + 6)					; ld hl, context_block_cache_addr
 	add hl, bc						; hl + bc (context_block_cache_addr + bytes cached)
 
-	ld a,56
+	ld a,55
 	sub a,c ;c is set to datalen earlier
 	ld (hl),$80
 	jq c,_sha256_final_over_56
+	inc a
 _sha256_final_under_56:
 	ld b,a
 	xor a,a
