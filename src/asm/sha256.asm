@@ -92,13 +92,15 @@ _sha256_update_loop:
 	ld bc, (ix + 6)
 	push bc
 	call _sha256_transform	  ; if we have one block (64-bytes), transform block
-	ld hl, 512				  ; add 1 blocksize of bitlen to the bitlen field
-	ex (sp),hl
-	ld iy, (ix + 6)
+	pop iy
+	ld bc, 512				  ; add 1 blocksize of bitlen to the bitlen field
+	push bc
 	pea iy + offset_bitlen
 	call u64_addi
 	pop bc, bc, bc, de, hl
-	xor a,a					 ; reset datalen to 0
+	xor a,a
+	ld hl, (ix + 9)
+	ld de, (ix + 6)
 .next:
 	ldi ;ld (de),(hl) / inc de / inc hl / dec bc
 	ret po
@@ -107,39 +109,50 @@ _sha256_update_loop:
 
 ; void hashlib_Sha256Final(SHA256_CTX *ctx, BYTE hash[]);
 hashlib_Sha256Final:
-	scf
-	sbc hl,hl
-	call ti._frameset
+	call ti._frameset0
 	; (ix + 0) Return address
 	; (ix + 3) saved IX
 	; (ix + 6) arg1: ctx
 	; (ix + 9) arg2: outbuf
 	
+	scf
+	sbc hl,hl
+	ld (hl),2
+
 	ld iy, (ix + 6)					; iy =  context block
 
 	ld bc, 0
 	ld c, (iy + offset_datalen)     ; data length
-	ld (ix-1),c
 	ld hl, (ix + 6)					; ld hl, context_block_cache_addr
 	add hl, bc						; hl + bc (context_block_cache_addr + bytes cached)
 
 	ld a,56
 	sub a,c ;c is set to datalen earlier
 	ld (hl),$80
-	jq nc,_sha256_final_pad_loop_entry
-_sha256_final_over_56:
-	ld a,63 ;so we can turn the condition into a<64 into a<=63
-	sub a,c ;c is set to datalen earlier
-	jq c,_sha256_final_over_64 ;jump if datalen <= 63
-	inc a ;adjust from earlier decrement
-_sha256_final_pad_loop_entry:
+	jq c,_sha256_final_over_56
+_sha256_final_under_56:
 	ld b,a
 	xor a,a
-_sha256_final_pad_loop:
+_sha256_final_pad_loop2:
 	inc hl
 	ld (hl),a
-	djnz _sha256_final_pad_loop
-_sha256_final_over_64:
+	djnz _sha256_final_pad_loop2
+	jq _sha256_final_done_pad
+_sha256_final_over_56:
+	ld a,64
+	sub a,c
+	ld b,a
+	xor a,a
+_sha256_final_pad_loop1:
+	inc hl
+	ld (hl),a
+	djnz _sha256_final_pad_loop1
+	push iy
+	call _sha256_transform
+	pop de
+	ld hl,$FF0000
+	ld bc,56
+	ldir
 _sha256_final_done_pad:
 	ld iy, (ix + 6)
 	ld c, (iy + offset_datalen)
@@ -162,17 +175,14 @@ _sha256_final_pad_message_len_loop:
 	dec de
 	djnz _sha256_final_pad_message_len_loop
 
-	ld bc, (ix + 6) ;ctx
-	push bc
+	push iy ;ctx
 	call _sha256_transform
-	pop bc
+	pop iy
 
 	ld hl, (ix + 9)
-	ld iy, (ix + 6)
 	lea iy, iy + offset_state
 	ld b, 8
 
-	inc sp
 	pop ix
 	; continue running into _sha256_reverse_endianness
 
