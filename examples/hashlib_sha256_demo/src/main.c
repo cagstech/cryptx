@@ -42,8 +42,8 @@ int main(void)
 	if (!(mbuffer = malloc(64*4))) return 1;
 	if (!(sbuf = malloc(SHA256_DIGEST_LEN*2 + 1))) return 1;
 
-	sprintf(CEMU_CONSOLE, "SHA_CTX Addr: %u\nSHA_CTX EndAddr: %u\n", &sha256, (uint24_t)&sha256 + sizeof(sha256)-1);
-    (*(uint8_t*)-1) = 2;
+	// sprintf(CEMU_CONSOLE, "SHA_CTX Addr: %u\nSHA_CTX EndAddr: %u\n", &sha256, (uint24_t)&sha256 + sizeof(sha256)-1);
+    // (*(uint8_t*)-1) = 2;
 
     sprintf(CEMU_CONSOLE, "The string is '%s'.\n", str);
     sprintf(CEMU_CONSOLE, "Its size is: %u\n", str_len);
@@ -53,7 +53,7 @@ int main(void)
     hashlib_Sha256Final(&sha256, sha256_digest);
 
 	tohex(sbuf, sha256_test);
-	sprintf(CEMU_CONSOLE, "Expected hash: %s \n", sbuf);
+	sprintf(CEMU_CONSOLE, "Expected hash:  %s \n", sbuf);
 
 	tohex(sbuf, sha256_digest);
 	sprintf(CEMU_CONSOLE, "Resulting hash: %s \n", sbuf);

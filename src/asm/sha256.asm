@@ -2,11 +2,13 @@ export hashlib_Sha256Init
 export hashlib_Sha256Update
 export hashlib_Sha256Final
 
-offset_data		 := 0
-offset_datalen	  := offset_data+64
-offset_bitlen	   := offset_datalen+1
-offset_state		:= offset_bitlen+8
-_sha256ctx_size	 := 4*8+offset_state
+virtual at 0
+	offset_data     rb 64
+	offset_bitlen   rb 8
+	offset_datalen  rb 1
+	offset_state    rb 4*8
+	_sha256ctx_size:
+end virtual
 _sha256_m_buffer_length := 64*4
 
 ; probably better to just add the one u64 function used by hashlib rather than screw with dependencies
@@ -105,7 +107,9 @@ _sha256_update_loop:
 
 ; void hashlib_Sha256Final(SHA256_CTX *ctx, BYTE hash[]);
 hashlib_Sha256Final:
-	call ti._frameset0
+	scf
+	sbc hl,hl
+	call ti._frameset
 	; (ix + 0) Return address
 	; (ix + 3) saved IX
 	; (ix + 6) arg1: ctx
@@ -115,6 +119,7 @@ hashlib_Sha256Final:
 
 	ld bc, 0
 	ld c, (iy + offset_datalen)     ; data length
+	ld (ix-1),c
 	ld hl, (ix + 6)					; ld hl, context_block_cache_addr
 	add hl, bc						; hl + bc (context_block_cache_addr + bytes cached)
 
@@ -166,6 +171,8 @@ _sha256_final_pad_message_len_loop:
 	ld iy, (ix + 6)
 	lea iy, iy + offset_state
 	ld b, 8
+
+	inc sp
 	pop ix
 	; continue running into _sha256_reverse_endianness
 
@@ -346,8 +353,7 @@ _sha256_transform:
 ._tmp1 := -36
 ._tmp2 := -40
 ._i := -41
-._i2 := -42
-._frame_offset := -42
+._frame_offset := -41
 	ld hl,._frame_offset
 	call ti._frameset
 	ld hl,0
@@ -359,10 +365,6 @@ _sha256_m_buffer_ptr:=$-3
 	ld iy,(ix + 6)
 	ld b,16
 	call _sha256_reverse_endianness ;first loop is essentially just reversing the endian-ness of the data into m (both represented as 32-bit integers)
-
-	; scf
-	; sbc hl,hl
-	; ld (hl),2
 
 	ld iy,(_sha256_m_buffer_ptr)
 	lea iy, iy + 16*4
@@ -413,9 +415,7 @@ _sha256_m_buffer_ptr:=$-3
 	ld bc, 8*4
 	ldir				; copy the ctx state to scratch stack memory (uint32_t a,b,c,d,e,f,g,h)
 
-	ld (ix + ._i2), c
-	ld a, 64
-	ld (ix + ._i), a
+	ld (ix + ._i), c
 ._loop3:
 ; tmp1 = h + EP1(e) + CH(e,f,g) + k[i] + m[i];
 ; CH(e,f,g)
@@ -433,6 +433,10 @@ _sha256_m_buffer_ptr:=$-3
 	ld (iy + ._tmp1),a
 	inc iy
 	djnz ._loop3inner1
+
+	; scf
+	; sbc hl,hl
+	; ld (hl),2
 
 ; EP1(e)
 ; #define EP1(x) (ROTRIGHT(x,6) ^ ROTRIGHT(x,11) ^ ROTRIGHT(x,25))
@@ -468,10 +472,11 @@ _sha256_m_buffer_ptr:=$-3
 	ld bc, (ix + ._tmp1 + 2)
 	_addbchigh d,e
 
+; B0ED BDD0
 	push de,hl
 	ld hl,(_sha256_m_buffer_ptr)
 	ld b,4
-	ld c,(ix + ._i2)
+	ld c,(ix + ._i)
 	mlt bc
 	add hl,bc
 	ld de,(hl)
@@ -494,15 +499,15 @@ _sha256_m_buffer_ptr:=$-3
 
 ; m[i] + k[i] + h + EP1(e) + CH(e,f,g)
 	pop bc
-	_addbclow h,l
+	_addbclow d,e
 	pop bc
-	_addbchigh d,e
+	_addbchigh h,l
 
 ; --> tmp1
-	ld (ix + ._tmp1 + 3),d
-	ld (ix + ._tmp1 + 2),e
-	ld (ix + ._tmp1 + 1),h
-	ld (ix + ._tmp1 + 0),l
+	ld (ix + ._tmp1 + 3),h
+	ld (ix + ._tmp1 + 2),l
+	ld (ix + ._tmp1 + 1),d
+	ld (ix + ._tmp1 + 0),e
 
 ; tmp2 = EP0(a) + MAJ(a,b,c);
 ; MAJ(a,b,c)
@@ -611,14 +616,11 @@ _sha256_m_buffer_ptr:=$-3
 	adc a, (ix + ._tmp2 + 3)
 	ld (ix + ._a + 0), hl
 	ld (ix + ._a + 3), a
-
-	inc (ix + ._i2)
-	dec (ix + ._i) ;yes, this updates the Z flag
-	jq nz,._loop3
-
-	scf
-	sbc hl,hl
-	ld (hl),2
+	ld a,(ix + ._i)
+	inc a
+	ld (ix + ._i),a
+	cp a,64
+	jq c,._loop3
 
 	push ix
 	ld iy, (ix + 6)
