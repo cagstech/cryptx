@@ -69,6 +69,10 @@ hashlib_Sha256Update:
 	ld bc, 0
 	ld c, a
 
+	scf
+	sbc hl,hl
+	ld (hl),2
+
 	; get pointers to the things
 	ld de, (ix + 9)			; de = source data
 	ld hl, (ix + 6)			; hl = context, data ptr
