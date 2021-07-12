@@ -99,7 +99,6 @@ _sha256_update_loop:
 	call u64_addi
 	pop bc, bc, bc, de, hl
 	xor a,a
-	ld hl, (ix + 9)
 	ld de, (ix + 6)
 .next:
 	ldi ;ld (de),(hl) / inc de / inc hl / dec bc
