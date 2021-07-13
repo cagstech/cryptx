@@ -6388,38 +6388,3 @@ _sha256_k:
 	dd	3204031479
 	dd	3329325298
 
-
-_zero64:
-	pop de
-	ex (sp),hl
-	ld b,8
-	xor a,a
-.loop:
-	ld (hl),a
-	inc hl
-	djnz .loop
-	ex hl,de
-	jp (hl)
-
-_add64iu:
-	pop bc,de
-	ex (sp),hl
-	push de,bc
-	ex hl,de
-	ld bc,(hl)
-	ex hl,de
-	xor a,a
-	adc hl,bc
-	ex hl,de
-	ld (hl),de
-	inc hl
-	inc hl
-	ld b,5
-	ld c,a
-.loop:
-	inc hl
-	adc a,(hl)
-	ld (hl),a
-	ld a,c
-	djnz .loop
-	ret
