@@ -69,9 +69,9 @@ hashlib_Sha256Update:
 	ld bc, 0
 	ld c, a
 
-	scf
-	sbc hl,hl
-	ld (hl),2
+	; scf
+	; sbc hl,hl
+	; ld (hl),2
 
 	; get pointers to the things
 	ld de, (ix + 9)			; de = source data
@@ -82,7 +82,9 @@ hashlib_Sha256Update:
 	ld bc, (ix + 12)		   ; bc = len
 
 	call _sha256_update_loop
-_sha256_update_done:
+	cp a,64
+	call z,_sha256_update_apply_transform
+
 	ld iy, (ix + 6)
 	ld (iy + offset_datalen), a		   ;save current datalen
 	pop ix
@@ -90,8 +92,12 @@ _sha256_update_done:
 
 _sha256_update_loop:
 	inc a
+	ldi ;ld (de),(hl) / inc de / inc hl / dec bc
+	ret po ;return if bc==0 (ldi decrements bc and updates parity flag)
 	cp a,64
-	jr nz,.next
+	call z,_sha256_update_apply_transform
+	jq _sha256_update_loop
+_sha256_update_apply_transform:
 	push hl, de, bc
 	ld bc, (ix + 6)
 	push bc
@@ -104,11 +110,7 @@ _sha256_update_loop:
 	pop bc, bc, bc, de, hl
 	xor a,a
 	ld de, (ix + 6)
-.next:
-	ldi ;ld (de),(hl) / inc de / inc hl / dec bc
-	ret po
-	jr _sha256_update_loop ;continue if bc > 0 (ldi decrements bc and updates parity flag)
-
+	ret
 
 ; void hashlib_Sha256Final(SHA256_CTX *ctx, BYTE hash[]);
 hashlib_Sha256Final:
@@ -118,9 +120,9 @@ hashlib_Sha256Final:
 	; (ix + 6) arg1: ctx
 	; (ix + 9) arg2: outbuf
 	
-	scf
-	sbc hl,hl
-	ld (hl),2
+	; scf
+	; sbc hl,hl
+	; ld (hl),2
 
 	ld iy, (ix + 6)					; iy =  context block
 
