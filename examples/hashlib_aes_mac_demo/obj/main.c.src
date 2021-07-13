@@ -108,23 +108,18 @@ _main:
 	push	hl
 	pop	iy
 	pop	hl
-	lea	hl, iy + 0
-	ld	bc, 1
-	call	__iand
-	ld	a, l
-	xor	a, c
-	ld	(ix + -3), bc
+	ld	a, iyl
+	and	a, 15
 	ld	bc, -605
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	(hl), iy
 	add	iy, de
 	lea	hl, iy + 0
-	ld	bc, (ix + -3)
 	ld	bc, -16
 	call	__iand
-	bit	0, a
-	jq	nz, BB1_2
+	or	a, a
+	jq	z, BB1_2
 	push	hl
 	pop	iy
 BB1_2:
@@ -273,8 +268,6 @@ BB1_2:
 	or	a, a
 	sbc	hl, hl
 	push	hl
-	inc	hl
-	push	hl
 	push	de
 	ld	bc, -587
 	lea	hl, ix + 0
@@ -283,8 +276,7 @@ BB1_2:
 	push	hl
 	ld	hl, _str
 	push	hl
-	call	_hashlib_PadMessage
-	pop	hl
+	call	_hashlib_AESPadMessage
 	pop	hl
 	pop	hl
 	pop	hl
@@ -695,9 +687,9 @@ L_.str.10:
 	extern	__iand
 	extern	_sprintf_
 	extern	_hashlib_AESOutputMAC
+	extern	_hashlib_AESPadMessage
 	extern	_free
 	extern	_memcpy
-	extern	_hashlib_PadMessage
 	extern	_strlen
 	extern	_hashlib_AESLoadKey
 	extern	_hashlib_AESEncrypt

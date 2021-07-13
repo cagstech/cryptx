@@ -1,19 +1,56 @@
 	section	.text,"ax",@progbits
 	assume	adl = 1
 	section	.text,"ax",@progbits
+	public	_start_timer
+_start_timer:
+	ld	iy, -917456
+	ld.sis	bc, -2
+	xor	a, a
+	ld	de, -917504
+	ld	l, (iy)
+	ld	h, (iy + 1)
+	call	__sand
+	ld	(iy), l
+	ld	(iy + 1), h
+	push	de
+	pop	hl
+	ld	bc, 0
+	ld	(hl), bc
+	push	de
+	pop	iy
+	ld	(iy + 3), a
+	ld	iy, -917456
+	ld	l, (iy)
+	ld	h, (iy + 1)
+	ld.sis	bc, -520
+	call	__sand
+	ld.sis	de, 515
+	add.sis	hl, de
+	ld	(iy), l
+	ld	(iy + 1), h
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
 	public	_main
 _main:
-	ld	hl, -22
+	ld	hl, -1028
 	call	__frameset
 	ld	e, 10
-	lea	hl, ix + -16
-	ld	(ix + -19), hl
-BB0_1:
+	lea	hl, ix + -22
+	ld	bc, -1025
+	lea	iy, ix + 0
+	add	iy, bc
+	ld	(iy + 0), hl
+BB1_1:
 	ld	a, e
 	or	a, a
-	jq	z, BB0_2
-	ld	(ix + -22), e
-	call	_hashlib_CSPRNGRandom
+	jq	z, BB1_2
+	ld	bc, -1028
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	(hl), e
+	call	_hashlib_SPRNGRandom
 	push	de
 	push	hl
 	ld	hl, L_.str
@@ -21,17 +58,23 @@ BB0_1:
 	ld	hl, -327680
 	push	hl
 	call	_sprintf_
-	ld	e, (ix + -22)
+	ld	bc, -1028
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	e, (hl)
 	pop	hl
 	pop	hl
 	pop	hl
 	pop	hl
 	dec	e
-	jq	BB0_1
-BB0_2:
+	jq	BB1_1
+BB1_2:
 	ld	hl, 16
 	push	hl
-	ld	hl, (ix + -19)
+	ld	bc, -1025
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
 	push	hl
 	call	_hashlib_RandomBytes
 	pop	hl
@@ -51,13 +94,16 @@ BB0_2:
 	sbc	hl, hl
 	push	hl
 	pop	bc
-BB0_4:
+BB1_4:
 	push	bc
 	pop	hl
 	or	a, a
 	sbc	hl, de
-	jq	z, BB0_5
-	ld	hl, (ix + -19)
+	jq	z, BB1_5
+	ld	de, -1025
+	lea	hl, ix + 0
+	add	hl, de
+	ld	hl, (hl)
 	add	hl, bc
 	ld	a, (hl)
 	or	a, a
@@ -68,21 +114,51 @@ BB0_4:
 	push	hl
 	ld	hl, -327680
 	push	hl
-	ld	(ix + -22), bc
+	ld	de, -1028
+	lea	hl, ix + 0
+	add	hl, de
+	ld	(hl), bc
 	call	_sprintf_
-	ld	bc, (ix + -22)
+	ld	de, -1028
+	lea	hl, ix + 0
+	add	hl, de
+	ld	bc, (hl)
 	ld	de, 16
 	pop	hl
 	pop	hl
 	pop	hl
 	inc	bc
-	jq	BB0_4
-BB0_5:
+	jq	BB1_4
+BB1_5:
+	call	_start_timer
+	ld	hl, 1000
+	push	hl
+	ld	bc, -1022
+	lea	hl, ix + 0
+	add	hl, bc
+	push	hl
+	call	_hashlib_RandomBytes
+	pop	hl
+	pop	hl
 	ld	hl, -327680
-	ld.sis	de, 10
-	ld	(hl), e
-	inc	hl
-	ld	(hl), d
+	push	hl
+	pop	iy
+	ld.sis	hl, 10
+	ld	(iy), l
+	ld	(iy + 1), h
+	ld	hl, -917504
+	push	hl
+	call	_atomic_load_increasing_32
+	pop	de
+	push	hl
+	ld	hl, L_.str.4
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf_
+	pop	hl
+	pop	hl
+	pop	hl
 	or	a, a
 	sbc	hl, hl
 	ld	sp, ix
@@ -105,11 +181,18 @@ L_.str.1:
 L_.str.2:
 	db	"%02X ",000o
 
+	section	.rodata,"a",@progbits
+	private	L_.str.4
+L_.str.4:
+	db	"Time taken to generate 1000 bytes of random data: %u/32768 seconds.",012o,000o
+
 	ident	"clang version 12.0.0 (https://github.com/jacobly0/llvm-project 170be88120e3aa88c20eea5615ba76b8f1d6c647)"
 	extern	_hashlib_RandomBytes
 	extern	__Unwind_SjLj_Register
 	extern	__Unwind_SjLj_Unregister
 	extern	__frameset
+	extern	_hashlib_SPRNGRandom
 	extern	_sprintf_
-	extern	_hashlib_CSPRNGRandom
+	extern	_atomic_load_increasing_32
+	extern	__sand
 	extern	_memcpy

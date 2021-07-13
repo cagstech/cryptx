@@ -28,11 +28,9 @@ typedef struct {
 // ##### DEFINES and EQUATES #####
 // ###############################
 
-#define SHA1_DIGEST_LEN     20
-#define SHA1_HEXSTR_LEN     (SHA1_DIGEST_LEN<<1) + 1        // twice the digest, plus null terminator
-
 #define SHA256_DIGEST_LEN   32
-#define SHA256_HEXSTR_LEN   (SHA256_DIGEST_LEN<<1) + 1      // twice the digest, plus null terminator
+#define SHA256_HEXSTR_LEN   (SHA256_DIGEST_LEN<<1) + 1      // 2x digest len, plus null
+#define SHA256_MBUFFER_LEN	(64 * 4)
 
 #define AES_BLOCKSIZE 16
 
@@ -102,10 +100,10 @@ size_t hashlib_AESStripPadding(
     uint8_t schm);
     
 /*
-    Pads input data on an RSA plaintext according to the Optimal Asymmetric Encryption Padding (OAEP) scheme.
+    Pads input data in an RSA plaintext according to the Optimal Asymmetric Encryption Padding (OAEP) scheme.
     
     |---------|--------------------------|-----------------|
-    | Message | 0x80, 0x00,... (Padding) | Salt (16 bytes) |    == modulus len
+    | Message | 0x00, 0x00,... (Padding) | Salt (16 bytes) |    == modulus len
     |---------|--------------------------|-----------------|
                          |                        |
                         XOR  <------SHA-256--------
@@ -118,7 +116,7 @@ size_t hashlib_AESStripPadding(
     
     # Inputs #
     <> plaintext = pointer to buffer containing data to pad
-    <> len = size of data to pad, in bytes (real size, not block-aligned size)
+    <> len = size of data to pad, in bytes
     <> outbuf = pointer to buffer large enough to hold padded data (see macros below)
     <> modulus_len = the bit-length of the modulus, used to determine the padded message length
  */
@@ -160,10 +158,13 @@ enum _padding_schemes {
 // Return the correct size for an AES cipher of size len with the IV prepended and a MAC appended
 #define hashlib_GetAESPaddedSizeMACIV(len)  (hashlib_GetAESPaddedSizeMAC((len)) + AES_BLOCKSIZE)
 
+// Returns the OAEP-padded size of an RSA plaintext (equal to the modulus length)
+#define hashlib_GetRSAPaddedSize(modulus_len)   (modulus_len)
+
 /*
-#################################################
-### Crypto-Safe Psuedorandom Number Generator ###
-#################################################
+####################################################
+### Secure Psuedorandom Number Generator (SPRNG) ###
+####################################################
 
     This PRNG utilizes an internal state that is controlled by the lib.
     While users can read from it and add entropy to it manually, they cannot modify it
@@ -172,7 +173,7 @@ enum _padding_schemes {
         a 128-byte entropy pool.
    
     ### Polling for Most Entropic Bit ###
-        * hashlib_CSPRNGInit();
+        * hashlib_SPRNGInit();
         <> For each byte in the memory region affected by bus noise, read each bit 1024 times
         <> If the bit was set, increment a counter
         <> Set initial minimum deviation to +/- 1/4 of the read count from absolute 50/50 split.
@@ -180,35 +181,35 @@ enum _padding_schemes {
             if it deviates from 256-768 1's, with values closer to 512 being preferred.
         <> Select the byte with the bit that deviates from 512 the least.
     
-    ** hashlib_CSPRNGInit() will return NULL if it was unable to find a bit of sufficient
-        entropy on your device. If this happens for you, let me know. I will have you run a program
-        I wrote to dump the stats from your calc's bus and send me the 8xv it generates. We will
-        update the candidate table accordingly. **
+    ** hashlib_SPRNGInit() will return NULL if it was unable to find a bit of sufficient
+        entropy on your device. While this is unlikely, if this does occur, it may help to run it a few times. Like so:
+        
+        `for(uint8_t ctr = 5; ctr>0 && !hashlib_SPRNGInit(); ctr--);`
         
     ### Generation of Random Numbers ###
-        * hashlib_CSPRNGRandom()
+        * hashlib_SPRNGRandom()
         <> Allocate but do not assign a uint32_t. This will fill the value with garbage.
         <> Read from eread 4 times, XOR'ing each read with 8 bits of our partial rand.
         <> SHA-256 hash the entropy pool, then XOR the hash with the partial rand in 4-byte blocks.
         <> Call hashlib_CSPRNGAddEntropy() to scramble the state
         <> Return the uint32_t
         
-    * hashlib_CSPRNGAddEntropy() may be called by the user in a loop to provide more dynamic entropy
+    * hashlib_SPRNGAddEntropy() may be called by the user in a loop to provide more dynamic entropy
         than this lib can provide by default
         
-    * This CSPRNG passes all dieharder tests for a sample size of 16,384 bytes *
+    * This SPRNG passes all dieharder tests for a sample size of 16,384 bytes or more *
 */
 
 
 //  Initialize the cryptographic RNG by finding the byte of most entropy on the current device
 //  Returns the address selected as a (void*)
-void* hashlib_CSPRNGInit(void);
+void* hashlib_SPRNGInit(void);
 
 //  Reads from byte selected 128 times, XORing new reads with existing data in the entropy pool
-bool hashlib_CSPRNGAddEntropy(void);
+bool hashlib_SPRNGAddEntropy(void);
  
 //  Returns a 32-bit integer, derived from the entropy pool
-uint32_t hashlib_CSPRNGRandom(void);
+uint32_t hashlib_SPRNGRandom(void);
 
 
 /*
@@ -234,13 +235,13 @@ bool hashlib_RandomBytes(uint8_t *buffer, size_t size);
     Init Context for SHA-256
 
     # Inputs #
-    <> ctx = pointer to an SHA256_CTX
+    <> ctx = pointer to an sha256_ctx
+    <> mbuffer = pointer to 64*4 bytes of temporary ram used internally by hashlib_Sha256Update. It may be 0 if it's been set before, and if the memory it's been set to is still valid.
     ** SHA-256 will be invalid if this function is not called before hashing
     ** contexts are specific to a hash-stream. If there is another block of data you
         want to hash concurrently, you will need to init a new context
 */
-void hashlib_Sha256Init(sha256_ctx *ctx);
-
+void hashlib_Sha256Init(sha256_ctx *ctx, uint32_t *mbuffer);
 /*
     Update Context for SHA-256
 
@@ -383,7 +384,7 @@ bool hashlib_AESVerifyMAC(const uint8_t *ciphertext, size_t len, const aes_ctx *
             {   \
                 size_t padded_pt_size = hashlib_GetAESPaddedSize((len)); \
                 uint8_t* padded_pt = hashlib_AllocContext(padded_pt_size); \
-                hashlib_PadMessage((plaintext), padded_pt_size, padded_pt, (pad_schm)); \
+                hashlib_AESPadMessage((plaintext), padded_pt_size, padded_pt, (pad_schm)); \
                 hashlib_AESEncrypt(padded_pt, padded_pt_size, (&ciphertext[AES_BLOCKSIZE]), (ks_encrypt), (iv)); \
                 memcpy((ciphertext), (iv), AES_BLOCKSIZE); \
                 hashlib_AESOutputMAC((ciphertext), padded_pt_size+AES_BLOCKSIZE, &ciphertext[padded_pt_size+AES_BLOCKSIZE], (ks_mac)); \

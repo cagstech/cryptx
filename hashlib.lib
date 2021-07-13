@@ -1,7 +1,7 @@
-library	"HASHLIB", 5
-	export	hashlib_CSPRNGInit ; 0
-	export	hashlib_CSPRNGAddEntropy ; 3
-	export	hashlib_CSPRNGRandom ; 6
+library	"HASHLIB", 6
+	export	hashlib_SPRNGInit ; 0
+	export	hashlib_SPRNGAddEntropy ; 3
+	export	hashlib_SPRNGRandom ; 6
 	export	hashlib_RandomBytes ; 9
 	export	hashlib_Sha256Init ; 12
 	export	hashlib_Sha256Update ; 15

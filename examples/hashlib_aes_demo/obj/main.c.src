@@ -31,23 +31,19 @@ _main:
 	push	hl
 	pop	iy
 	pop	hl
-	lea	hl, iy + 0
-	ld	bc, 1
-	call	__iand
-	ld	e, 1
-	ld	a, l
-	xor	a, e
-	ld	de, -324
+	ld	a, iyl
+	and	a, 15
+	ld	bc, -324
 	lea	hl, ix + 0
-	add	hl, de
+	add	hl, bc
 	ld	(hl), iy
 	ld	de, 16
 	add	iy, de
 	lea	hl, iy + 0
 	ld	bc, -16
 	call	__iand
-	bit	0, a
-	jq	nz, BB0_2
+	or	a, a
+	jq	z, BB0_2
 	push	hl
 	pop	iy
 BB0_2:
@@ -121,8 +117,6 @@ BB0_2:
 	or	a, a
 	sbc	hl, hl
 	push	hl
-	inc	hl
-	push	hl
 	ld	bc, -309
 	lea	hl, ix + 0
 	add	hl, bc
@@ -135,8 +129,7 @@ BB0_2:
 	push	hl
 	ld	hl, _str
 	push	hl
-	call	_hashlib_PadMessage
-	pop	hl
+	call	_hashlib_AESPadMessage
 	pop	hl
 	pop	hl
 	pop	hl
@@ -222,8 +215,6 @@ BB0_2:
 	or	a, a
 	sbc	hl, hl
 	push	hl
-	inc	hl
-	push	hl
 	ld	bc, -318
 	lea	hl, ix + 0
 	add	hl, bc
@@ -239,8 +230,7 @@ BB0_2:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	_hashlib_StripPadding
-	pop	de
+	call	_hashlib_AESStripPadding
 	pop	de
 	pop	de
 	pop	de
@@ -307,16 +297,16 @@ L_.str:
 
 	ident	"clang version 12.0.0 (https://github.com/jacobly0/llvm-project 170be88120e3aa88c20eea5615ba76b8f1d6c647)"
 	extern	_hashlib_RandomBytes
-	extern	_hashlib_StripPadding
 	extern	__Unwind_SjLj_Register
 	extern	__Unwind_SjLj_Unregister
 	extern	_hashlib_AESDecrypt
 	extern	__frameset
 	extern	_malloc
 	extern	__iand
+	extern	_hashlib_AESStripPadding
 	extern	_sprintf_
+	extern	_hashlib_AESPadMessage
 	extern	_free
-	extern	_hashlib_PadMessage
 	extern	_strlen
 	extern	_hashlib_AESEncrypt
 	extern	_hashlib_AESLoadKey
