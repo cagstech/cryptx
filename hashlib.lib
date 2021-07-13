@@ -1,4 +1,4 @@
-library	"HASHLIB", 6
+library	"HASHLIB", 5
 	export	hashlib_SPRNGInit ; 0
 	export	hashlib_SPRNGAddEntropy ; 3
 	export	hashlib_SPRNGRandom ; 6
