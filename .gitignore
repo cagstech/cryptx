@@ -1,1 +1,4 @@
 .DS_STORE
+.local
+examples/*/obj
+examples/*/bin
