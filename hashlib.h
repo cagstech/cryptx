@@ -28,12 +28,49 @@ typedef struct {
 // ##### DEFINES and EQUATES #####
 // ###############################
 
+/* SHA Size Defines */
 #define SHA256_DIGEST_LEN   32
 #define SHA256_HEXSTR_LEN   (SHA256_DIGEST_LEN<<1) + 1      // 2x digest len, plus null
 #define SHA256_MBUFFER_LEN	(64 * 4)
 
-#define AES_BLOCKSIZE 16
+/* AES Size Defines */
+#define AES_BLOCKSIZE	16
+#define AES_IV_SIZE		AES_BLOCKSIZE
+#define AES_MAC_SIZE	AES_BLOCKSIZE
 
+/* AES Padded Size - Data only */
+#define hashlib_AESPaddedSize \
+	((((len)%AES_BLOCKSIZE)==0) ? len + AES_BLOCKSIZE : ((len>>4) + 1)<<4)
+
+/* AES Ciphertext Size - Padded Size + IV Size */
+#define hashlib_AESCiphertextSize(len)	\
+	(hashlib_AESPaddedSize((len)) + AES_IV_SIZE)
+	
+/* AES Ciphertext + MAC Size - Padded Size + IV Size + MAC Size */
+#define hashlib_AESCiphertextMACSize(len)	\
+	(hashlib_AESCiphertextSize((len)) + AES_MAC_SIZE)
+
+/* Returns the OAEP-padded size of an RSA plaintext - simply equal to modulus size */
+#define hashlib_RSAPaddedSize(modulus_len)   (modulus_len)
+
+/*
+	## Fast Memory Defines ##
+	
+	You can use these defines to store various contexts and memory buffers into
+	the region of fast memory (cursorImage) so that they run faster.
+	
+	* NOTE This region gets clobbered by LIBLOAD
+	If Libload runs, any contexts in use will be destroyed
+*/
+#define hashlib_Sha256MBufferFast	((uint8_t*)0xE30800)
+#define hashlib_Sha256ContextFast	((sha256_ctx*)(hashlib_Sha256MBufferFast + 64*4))
+// #define hashlib_RSAVintBufferFast	((vint_t*)(hashlib_Sha256ContextFast + sizeof(sha256_t)))
+#define hashlib_AESKeyScheduleBufferFast	((aes_ctx*)(hashlib_RSAVintBuffer + 257))
+
+
+// ###################################
+// ##### MISCELLANEOUS FUNCTIONS #####
+// ###################################
 
 /*
     Erases the data in a context, ensuring that no traces of cryptographic arithmetic remain.
@@ -47,11 +84,26 @@ typedef struct {
  */
 void hashlib_EraseContext(void *ctx, size_t len);
 
+
 /*
     A helper macro that returns a hashlib context (see defines above)
     Can also be used to malloc buffers for encryption/decryption/padding/etc.
  */
-#define hashlib_AllocContext(size) malloc((size))
+#define hashlib_AllocContext(size)		malloc((size))
+
+
+/*
+	Helper macros to generate AES keys for the 3 possible keylengths.
+	
+	# Inputs #
+	<> buffer = A pointer to a buffer to write the key to
+	
+	# Outputs #
+	An AES key of the correct length is written to buffer
+ */
+#define hashlib_AESKeygen128(buffer)	hashlib_RandomBytes((buffer), (128>>3))
+#define hashlib_AESKeygen192(buffer)	hashlib_RandomBytes((buffer), (192>>3))
+#define hashlib_AESKeygen256(buffer)	hashlib_RandomBytes((buffer), (256>>3))
 
 
 /*
@@ -146,20 +198,6 @@ enum _padding_schemes {
     SCHM_ISO_M2,        // Pad with 0x80,0x00...0x00    |   (AES)
     SCHM_ANSIX923,      // Pad with randomness          |   (AES)
 };
-
-// Macros to Return Correct Padding Size
-
-// Returns the correct padding size for an AES plaintext.
-#define hashlib_GetAESPaddedSize(len)  ((((len)%AES_BLOCKSIZE)==0) ? len + AES_BLOCKSIZE : ((len/AES_BLOCKSIZE) + 1) * AES_BLOCKSIZE)
-
-// Return the correct padding size for an AES plaintext with an extra block added for a MAC.
-#define hashlib_GetAESPaddedSizeMAC(len)    (hashlib_GetAESPaddedSize((len)) + AES_BLOCKSIZE)
-
-// Return the correct size for an AES cipher of size len with the IV prepended and a MAC appended
-#define hashlib_GetAESPaddedSizeMACIV(len)  (hashlib_GetAESPaddedSizeMAC((len)) + AES_BLOCKSIZE)
-
-// Returns the OAEP-padded size of an RSA plaintext (equal to the modulus length)
-#define hashlib_GetRSAPaddedSize(modulus_len)   (modulus_len)
 
 /*
 ####################################################
