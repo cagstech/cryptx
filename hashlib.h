@@ -40,7 +40,7 @@ typedef struct {
 
 /* AES Padded Size - Data only */
 #define hashlib_AESPaddedSize(len) \
-	((((len)%AES_BLOCKSIZE)==0) ? len + AES_BLOCKSIZE : ((len>>4) + 1)<<4)
+	((((len)%AES_BLOCKSIZE)==0) ? (len) + AES_BLOCKSIZE : (((len)>>4) + 1)<<4)
 
 /* AES Ciphertext Size - Padded Size + IV Size */
 #define hashlib_AESCiphertextSize(len)	\
