@@ -38,7 +38,7 @@ int main(void)
     hashlib_RandomBytes(iv, IV_LEN);
     
     // pad the input message
-    hashlib_PadMessage(str, msg_len, padded, ALG_AES, SCHM_DEFAULT);
+    hashlib_AESPadMessage(str, msg_len, padded, SCHM_DEFAULT);
     
     // load the key into the key schedule
     hashlib_AESLoadKey(key, &ctx, (KEYSIZE<<3)); // requires size in bits, not bytes
@@ -46,7 +46,7 @@ int main(void)
     hashlib_AESEncrypt(padded, padded_len, out, &ctx, iv);
     hashlib_AESDecrypt(out, padded_len, test, &ctx, iv);
     
-    stripped_len = hashlib_StripPadding(test, padded_len, stripped, ALG_AES, SCHM_DEFAULT);
+    stripped_len = hashlib_AESStripPadding(test, padded_len, stripped, SCHM_DEFAULT);
     sprintf(CEMU_CONSOLE, "The message is '%s' and its size is %u bytes.\n", stripped, stripped_len);
     
     free(padded);

@@ -28,11 +28,9 @@ typedef struct {
 // ##### DEFINES and EQUATES #####
 // ###############################
 
-#define SHA1_DIGEST_LEN     20
-#define SHA1_HEXSTR_LEN     (SHA1_DIGEST_LEN<<1) + 1        // twice the digest, plus null terminator
-
 #define SHA256_DIGEST_LEN   32
-#define SHA256_HEXSTR_LEN   (SHA256_DIGEST_LEN<<1) + 1      // twice the digest, plus null terminator
+#define SHA256_HEXSTR_LEN   (SHA256_DIGEST_LEN<<1) + 1      // 2x digest len, plus null
+#define SHA256_MBUFFER_LEN	(64 * 4)
 
 #define AES_BLOCKSIZE 16
 
@@ -48,6 +46,10 @@ typedef struct {
     * It is advised to call this on every context declared in your program before exiting or freeing that region
  */
 void hashlib_EraseContext(void *ctx, size_t len);
+
+#define hashlib_SecureEraseContext(ctx, len, zcount)	\
+	for(int zstart = 0; zstart < (zcount); zstart++) \
+		hashlib_EraseContext((ctx), (len))
 
 /*
     A helper macro that returns a hashlib context (see defines above)
@@ -384,7 +386,7 @@ bool hashlib_AESVerifyMAC(const uint8_t *ciphertext, size_t len, const aes_ctx *
             {   \
                 size_t padded_pt_size = hashlib_GetAESPaddedSize((len)); \
                 uint8_t* padded_pt = hashlib_AllocContext(padded_pt_size); \
-                hashlib_PadMessage((plaintext), padded_pt_size, padded_pt, (pad_schm)); \
+                hashlib_AESPadMessage((plaintext), padded_pt_size, padded_pt, (pad_schm)); \
                 hashlib_AESEncrypt(padded_pt, padded_pt_size, (&ciphertext[AES_BLOCKSIZE]), (ks_encrypt), (iv)); \
                 memcpy((ciphertext), (iv), AES_BLOCKSIZE); \
                 hashlib_AESOutputMAC((ciphertext), padded_pt_size+AES_BLOCKSIZE, &ciphertext[padded_pt_size+AES_BLOCKSIZE], (ks_mac)); \
