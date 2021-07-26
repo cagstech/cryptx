@@ -34,6 +34,7 @@ int main(void)
     uint8_t salt[SALT_LEN];
     uint8_t stress_buf[STRESS_BUF_LEN];
     int time;
+    hashlib_SPRNGInit();
     
     // generate some random uint32_ts
     for(uint8_t i=0; i<10; i++)

@@ -46,8 +46,8 @@ typedef struct {
 #define hashlib_AESCiphertextSize(len)	\
 	(hashlib_AESPaddedSize((len)) + AES_IV_SIZE)
 	
-/* AES Ciphertext + MAC Size - Padded Size + IV Size + MAC Size */
-#define hashlib_AESCiphertextMACSize(len)	\
+/* Ciphertext Size with Authenticated Encryption (MAC) - Padded Size + IV Size + MAC Size */
+#define hashlib_AESAuthCiphertextSize(len)	\
 	(hashlib_AESCiphertextSize((len)) + AES_MAC_SIZE)
 
 /* Returns the OAEP-padded size of an RSA plaintext - simply equal to modulus size */
@@ -62,7 +62,7 @@ typedef struct {
 	* NOTE This region gets clobbered by LIBLOAD
 	If Libload runs, any contexts in use will be destroyed
 */
-#define hashlib_Sha256MBufferFast	((uint8_t*)0xE30800)
+#define hashlib_Sha256MBufferFast	((uint8_t*)0xE30969)
 #define hashlib_Sha256ContextFast	((sha256_ctx*)(hashlib_Sha256MBufferFast + 64*4))
 // #define hashlib_RSAVintBufferFast	((vint_t*)(hashlib_Sha256ContextFast + sizeof(sha256_t)))
 #define hashlib_AESKeyScheduleBufferFast	((aes_ctx*)(hashlib_RSAVintBuffer + 257))
@@ -418,16 +418,10 @@ bool hashlib_AESVerifyMAC(const uint8_t *ciphertext, size_t len, const aes_ctx *
         - N length encrypted message
         - 1-block MAC( IV, N, key_mac)
  */
-#define hashlib_AESEncryptWithMAC(plaintext, len, ciphertext, ks_encrypt, ks_mac, pad_schm, iv) \
-            {   \
-                size_t padded_pt_size = hashlib_GetAESPaddedSize((len)); \
-                uint8_t* padded_pt = hashlib_AllocContext(padded_pt_size); \
-                hashlib_AESPadMessage((plaintext), padded_pt_size, padded_pt, (pad_schm)); \
-                hashlib_AESEncrypt(padded_pt, padded_pt_size, (&ciphertext[AES_BLOCKSIZE]), (ks_encrypt), (iv)); \
-                memcpy((ciphertext), (iv), AES_BLOCKSIZE); \
-                hashlib_AESOutputMAC((ciphertext), padded_pt_size+AES_BLOCKSIZE, &ciphertext[padded_pt_size+AES_BLOCKSIZE], (ks_mac)); \
-                free(padded_pt); \
-            }
+bool hashlib_AESAuthEncrypt(const uint8_t *padded_plaintext, size_t len, uint8_t *ciphertext, aes_ctx *ks_encrypt, aes_ctx *ks_mac, uint8_t *iv);
+
+
+bool hashlib_AESAuthDecrypt(const uint8_t *ciphertext, size_t len, uint8_t *plaintext, aes_ctx *ks_decrypt, aes_ctx *ks_mac);
 
 // ###############################
 // #### BASE 64 ENCODE/DECODE ####
