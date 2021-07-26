@@ -114,8 +114,15 @@ hashlib_SPRNGInit:
     jq nz,.test_range_loop
     push ix
     pop hl
-    ld (_sprng_state), hl
+    ld (_sprng_read_addr), hl
+	push hl
+    ld hl,$E30800 ;zero 192 bytes at $E30800
+    ld (hl),l
     push hl
+    pop de
+    inc de
+    ld bc,192
+    ldir
     call hashlib_SPRNGAddEntropy
     pop hl
     pop ix
@@ -201,12 +208,12 @@ _test_bit:
     
 	
 hashlib_SPRNGAddEntropy:
-    ld hl, (_sprng_state)
+    ld hl, (_sprng_read_addr)
     add	hl,de
 	or	a,a
 	sbc	hl,de
     ret z
-    ld de, _sprng_state + 3
+    ld de, _sprng_entropy_pool
     ld b, 192
 .byte_read_loop:
     ld a, (de)
@@ -222,12 +229,12 @@ hashlib_SPRNGRandom:
 	call	ti._frameset
 	ld	e, 0
 	ld	bc, 0
-	ld	iy, -1898496
+	ld	iy, -1898304
 	ld	d, -5
 	lea	hl, ix + -32
 	ld	(ix + -35), hl
 BB2_1:
-	ld	hl, (_sprng_state)
+	ld	hl, (_sprng_read_addr)
 	ld	a, d
 	or	a, a
 	jq	z, BB2_4
@@ -239,7 +246,7 @@ BB2_1:
 	call	hashlib_SPRNGInit
 	ld	d, (ix + -38)
 	ld	e, 0
-	ld	iy, -1898496
+	ld	iy, -1898304
 	ld	bc, 0
 	inc	d
 	jq	BB2_1
@@ -252,7 +259,7 @@ BB2_4:
 BB2_5:
 	ld	(iy), bc
 	ld	(iy + 3), e
-	ld	hl, (_sprng_state)
+	ld	hl, (_sprng_read_addr)
 	ld	(ix + -38), hl
 	add	hl, bc
 	or	a, a
@@ -280,9 +287,9 @@ BB2_7:
 	inc	bc
 	jq	BB2_7
 BB2_8:
-	ld	hl, -1898480
+	ld	hl, -1898288
 	push	hl
-	ld	hl, -1870832
+	ld	hl, -1870640
 	push	hl
 	call	hashlib_Sha256Init
 	pop	hl
@@ -292,9 +299,9 @@ BB2_8:
 	push	hl
 	ld	hl, 128
 	push	hl
-	ld	hl, _sprng_state+3
+	ld	hl, _sprng_entropy_pool
 	push	hl
-	ld	hl, -1870832
+	ld	hl, -1870640
 	push	hl
 	call	hashlib_Sha256Update
 	pop	hl
@@ -303,7 +310,7 @@ BB2_8:
 	pop	hl
 	ld	hl, (ix + -35)
 	push	hl
-	ld	hl, -1870832
+	ld	hl, -1870640
 	push	hl
 	call	hashlib_Sha256Final
 	pop	hl
@@ -323,7 +330,7 @@ BB2_10:
 	pop	iy
 	add	iy, de
 	ld	(ix + -38), iy
-	ld	de, -1898496
+	ld	de, -1898304
 	push	de
 	pop	iy
 	ld	a, (iy)
@@ -339,7 +346,7 @@ BB2_10:
 	pop	iy
 	add	iy, de
 	ld	(ix + -38), iy
-	ld	de, -1898495
+	ld	de, -1898303
 	push	de
 	pop	iy
 	ld	a, (iy)
@@ -357,7 +364,7 @@ BB2_10:
 	pop	iy
 	add	iy, de
 	ld	(ix + -38), iy
-	ld	de, -1898494
+	ld	de, -1898302
 	push	de
 	pop	iy
 	ld	a, (iy)
@@ -375,7 +382,7 @@ BB2_10:
 	pop	iy
 	add	iy, de
 	lea	bc, iy + 0
-	ld	de, -1898493
+	ld	de, -1898301
 	push	de
 	pop	iy
 	ld	a, (iy)
@@ -390,7 +397,7 @@ BB2_10:
 	jq	BB2_10
 BB2_11:
 	call	hashlib_SPRNGAddEntropy
-	ld	hl, -1898496
+	ld	hl, -1898304
 	push	hl
 	pop	iy
 	ld	bc, (iy)
@@ -5952,8 +5959,8 @@ hashlib_AESVerifyMAC:
 	inc	a
 	ret
  
-_sprng_state:		rb 195
-;_sprng_state:	dl 14878720
+_sprng_read_addr:		rb 3
+_sprng_entropy_pool:=	$E30800
 
 _Base64Code:
 	db	"./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",000o

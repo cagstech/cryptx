@@ -54,18 +54,25 @@ typedef struct {
 #define hashlib_RSAPaddedSize(modulus_len)   (modulus_len)
 
 /*
-	## Fast Memory Defines ##
+	## Fast Memory Define ##
 	
-	You can use these defines to store various contexts and memory buffers into
-	the region of fast memory (cursorImage) so that they run faster.
+	You can use FastMem to make some of the write-heavy routines run a bit faster
 	
 	* NOTE This region gets clobbered by LIBLOAD
 	If Libload runs, any contexts in use will be destroyed
+	
+	***************************************************************************************
+		NOTE: The first 557 bytes of FastMem are reserved for use by the SPRNG to
+		accelerate the entropy pool and SHA functions it uses. If you are using the
+		SPRNG for anything in your program, start addressing fast memory
+		buffers at `hashlib_FastMemBufferSafe`.
+		If you are NOT using the SPRNG at all in your program, you can safely start
+		addressing your buffers at `hashlib_FastMemBufferUnsafe`.
+	***************************************************************************************
 */
-#define hashlib_Sha256MBufferFast	((uint8_t*)0xE30969)
-#define hashlib_Sha256ContextFast	((sha256_ctx*)(hashlib_Sha256MBufferFast + 64*4))
-// #define hashlib_RSAVintBufferFast	((vint_t*)(hashlib_Sha256ContextFast + sizeof(sha256_t)))
-#define hashlib_AESKeyScheduleBufferFast	((aes_ctx*)(hashlib_RSAVintBuffer + 257))
+
+#define hashlib_FastMemBufferUnsafe		((void*)0xE30800)
+#define hashlib_FastMemBufferSafe		((void*)0xE30A2D)
 
 
 // ###################################
