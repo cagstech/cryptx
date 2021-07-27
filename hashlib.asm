@@ -123,7 +123,7 @@ hashlib_SPRNGInit:
     inc de
     ld bc,192
     ldir
-    call hashlib_SPRNGAddEntropy
+    ;call hashlib_SPRNGAddEntropy
     pop hl
     pop ix
     ret
@@ -214,7 +214,7 @@ hashlib_SPRNGAddEntropy:
 	sbc	hl,de
     ret z
     ld de, _sprng_entropy_pool
-    ld b, 192
+    ld b, 128
 .byte_read_loop:
     ld a, (de)
     xor a, (hl)
@@ -225,190 +225,70 @@ hashlib_SPRNGAddEntropy:
     
  
 hashlib_SPRNGRandom:
-	ld	hl, -38
-	call	ti._frameset
-	ld	e, 0
-	ld	bc, 0
-	ld	iy, -1898304
-	ld	d, -5
-	lea	hl, ix + -32
-	ld	(ix + -35), hl
-BB2_1:
-	ld	hl, (_sprng_read_addr)
-	ld	a, d
-	or	a, a
-	jq	z, BB2_4
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jq	nz, BB2_4
-	ld	(ix + -38), d
-	call	hashlib_SPRNGInit
-	ld	d, (ix + -38)
-	ld	e, 0
-	ld	iy, -1898304
-	ld	bc, 0
-	inc	d
-	jq	BB2_1
-BB2_4:
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jq	nz, BB2_5
-	jq	BB2_14
-BB2_5:
-	ld	(iy), bc
-	ld	(iy + 3), e
-	ld	hl, (_sprng_read_addr)
-	ld	(ix + -38), hl
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jq	nz, BB2_6
-	jq	BB2_13
-BB2_6:
-	ld	de, 4
-BB2_7:
-	push	bc
-	pop	hl
-	or	a, a
-	sbc	hl, de
-	jq	z, BB2_8
-	ld	hl, (ix + -38)
-	ld	l, (hl)
-	lea	de, iy + 0
-	add	iy, bc
-	ld	a, (iy)
-	xor	a, l
-	ld	(iy), a
-	push	de
-	pop	iy
-	ld	de, 4
-	inc	bc
-	jq	BB2_7
-BB2_8:
-	ld	hl, -1898288
-	push	hl
-	ld	hl, -1870640
-	push	hl
-	call	hashlib_Sha256Init
-	pop	hl
-	pop	hl
-	or	a, a
-	sbc	hl, hl
-	push	hl
-	ld	hl, 128
-	push	hl
-	ld	hl, _sprng_entropy_pool
-	push	hl
-	ld	hl, -1870640
-	push	hl
-	call	hashlib_Sha256Update
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix + -35)
-	push	hl
-	ld	hl, -1870640
-	push	hl
-	call	hashlib_Sha256Final
-	pop	hl
-	pop	hl
-	or	a, a
-	sbc	hl, hl
-BB2_10:
-	ld	bc, 255
-	call	ti._iand
-	ld	a, l
-	cp	a, 32
-	jq	nc, BB2_11
-	push	hl
-	pop	de
-	ld	bc, (ix + -35)
-	push	bc
-	pop	iy
-	add	iy, de
-	ld	(ix + -38), iy
-	ld	de, -1898304
-	push	de
-	pop	iy
-	ld	a, (iy)
-	ld	iy, (ix + -38)
-	xor	a, (iy)
-	push	de
-	pop	iy
-	ld	(iy), a
-	push	hl
-	pop	de
-	inc	de
-	push	bc
-	pop	iy
-	add	iy, de
-	ld	(ix + -38), iy
-	ld	de, -1898303
-	push	de
-	pop	iy
-	ld	a, (iy)
-	ld	iy, (ix + -38)
-	xor	a, (iy)
-	push	de
-	pop	iy
-	ld	(iy), a
-	push	hl
-	pop	iy
-	ld	de, 2
-	add	iy, de
-	lea	de, iy + 0
-	push	bc
-	pop	iy
-	add	iy, de
-	ld	(ix + -38), iy
-	ld	de, -1898302
-	push	de
-	pop	iy
-	ld	a, (iy)
-	ld	iy, (ix + -38)
-	xor	a, (iy)
-	push	de
-	pop	iy
-	ld	(iy), a
-	push	hl
-	pop	iy
-	ld	de, 3
-	add	iy, de
-	lea	de, iy + 0
-	push	bc
-	pop	iy
-	add	iy, de
-	lea	bc, iy + 0
-	ld	de, -1898301
-	push	de
-	pop	iy
-	ld	a, (iy)
-	push	bc
-	pop	iy
-	xor	a, (iy)
-	push	de
-	pop	iy
-	ld	(iy), a
-	ld	de, 4
-	add	hl, de
-	jq	BB2_10
-BB2_11:
-	call	hashlib_SPRNGAddEntropy
-	ld	hl, -1898304
-	push	hl
-	pop	iy
-	ld	bc, (iy)
-	ld	e, (iy + 3)
-BB2_13:
-BB2_14:
-	push	bc
-	pop	hl
-	ld	sp, ix
-	pop	ix
+	ld e,5+1
+	scf
+.init:
+	dec e
+	ret z
+	push de
+	call nc, hashlib_SPRNGInit
+	pop de
+	ld hl, (_sprng_read_addr)
+	add hl,de
+	or a,a
+	sbc hl,de
+	jq z,.init
+	
+.have_addr:
+; set rand to 0
+	ld hl, 0
+	ld a, l
+	ld (_sprng_rand), hl
+	ld (_sprng_rand), a
+	call hashlib_SPRNGAddEntropy
+; hash entropy pool
+	ld hl, _sprng_sha_mbuffer
+	push hl
+	ld hl, _sprng_sha_ctx
+	push hl
+	call hashlib_Sha256Init
+	pop bc, hl
+	ld hl, 128
+	push hl
+	ld hl, _sprng_entropy_pool
+	push hl
+	push bc
+	call hashlib_Sha256Update
+	pop bc, hl, hl
+	ld hl, _sprng_sha_digest
+	push hl
+	push bc
+	call hashlib_Sha256Final
+	pop bc, hl
+	
+; xor hash cyclically into _rand
+	ld hl,_sprng_sha_digest
+	ld de,_sprng_rand
+	ld c,4
+.outer:
+	xor a,a
+	ld b,8
+.inner:
+	xor a,(hl)
+	inc hl
+	djnz .inner
+	ld (de),a
+	inc de
+	dec c
+	jq nz,.outer
+	
+; add entropy
+;	call hashlib_SPRNGAddEntropy
+	ld hl, (_sprng_rand)
+	ld a, (_sprng_rand+3)
+	ld e, a
 	ret
+	
  
  L_.str2:
 	db	"%lu",012o,000o
@@ -5960,7 +5840,11 @@ hashlib_AESVerifyMAC:
 	ret
  
 _sprng_read_addr:		rb 3
-_sprng_entropy_pool:=	$E30800
+_sprng_entropy_pool		:=	$E30800
+_sprng_rand				:=	_sprng_entropy_pool + 128
+_sprng_sha_digest		:=	_sprng_rand + 4
+_sprng_sha_mbuffer		:=	_sprng_sha_digest + 32
+_sprng_sha_ctx			:=	_sprng_sha_mbuffer + (64*4)
 
 _Base64Code:
 	db	"./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",000o

@@ -54,7 +54,7 @@ typedef struct {
 #define hashlib_RSAPaddedSize(modulus_len)   (modulus_len)
 
 /*
-	## Fast Memory Define ##
+	## Fast Memory Defines ##
 	
 	You can use FastMem to make some of the write-heavy routines run a bit faster
 	
@@ -62,7 +62,7 @@ typedef struct {
 	If Libload runs, any contexts in use will be destroyed
 	
 	***************************************************************************************
-		NOTE: The first 557 bytes of FastMem are reserved for use by the SPRNG to
+		NOTE: The first 525 bytes of FastMem are reserved for use by the SPRNG to
 		accelerate the entropy pool and SHA functions it uses. If you are using the
 		SPRNG for anything in your program, start addressing fast memory
 		buffers at `hashlib_FastMemBufferSafe`.
@@ -71,8 +71,8 @@ typedef struct {
 	***************************************************************************************
 */
 
-#define hashlib_FastMemBufferUnsafe		((void*)0xE30800)
-#define hashlib_FastMemBufferSafe		((void*)0xE30A2D)
+#define hashlib_FastMemBufferUnsafe		((void*)0xE30800)	// DO NOT USE IF USING THE SPRNG
+#define hashlib_FastMemBufferSafe		((void*)0xE30A0D)
 
 
 // ###################################
@@ -100,20 +100,6 @@ void hashlib_EraseContext(void *ctx, size_t len);
 
 
 /*
-	Helper macros to generate AES keys for the 3 possible keylengths.
-	
-	# Inputs #
-	<> buffer = A pointer to a buffer to write the key to
-	
-	# Outputs #
-	An AES key of the correct length is written to buffer
- */
-#define hashlib_AESKeygen128(buffer)	hashlib_RandomBytes((buffer), (128>>3))
-#define hashlib_AESKeygen192(buffer)	hashlib_RandomBytes((buffer), (192>>3))
-#define hashlib_AESKeygen256(buffer)	hashlib_RandomBytes((buffer), (256>>3))
-
-
-/*
     Compares the pointed buffers digest1 and digest2 for size len.
     This function is resistant to timing attacks.
     
@@ -124,39 +110,7 @@ void hashlib_EraseContext(void *ctx, size_t len);
  */
 hashlib_CompareDigest(const uint8_t* digest1, const uint8_t* digest2, size_t len);
 
-/*
-    Pads input data for AES encryption according to a selection of standard padding schemes.
-    
-    # Inputs #
-    <> plaintext = pointer to buffer containing data to pad
-    <> len = size of data to pad, in bytes (real size, not block-aligned size)
-    <> outbuf = pointer to buffer large enough to hold padded data (see macros below)
-    <> schm = padding scheme to pad with (see enumerations below)
- */
- 
-size_t hashlib_AESPadMessage(
-    const uint8_t* plaintext,
-    size_t len,
-    uint8_t* outbuf,
-    uint8_t schm);
-    
-/*
-    Reverses the padding on an AES plaintext according to a selection of standard padding schemes.
-    
-    # Inputs #
-    <> plaintext = pointer to buffer containing data to pad
-    <> len = size of data to pad, in bytes (real size, not block-aligned size)
-    <> outbuf = pointer to buffer large enough to hold padded data (see macros below)
-    <> schm = padding scheme to pad with (see enumerations below)
-    
-    * If input SCHM mode is SCHM_ANSIX923, size returned is the same as input size
-        you will need to maintain your own expected unpadded data length
- */
-size_t hashlib_AESStripPadding(
-    const uint8_t* plaintext,
-    size_t len,
-    uint8_t* outbuf,
-    uint8_t schm);
+
     
 /*
     Pads input data in an RSA plaintext according to the Optimal Asymmetric Encryption Padding (OAEP) scheme.
@@ -198,14 +152,6 @@ size_t hashlib_RSAStripPadding(
     size_t len,
     uint8_t* outbuf);
     
-
-enum _padding_schemes {
-    SCHM_DEFAULT,
-    SCHM_PKCS7,         // Pad with padding size        |   (AES)   *Default*
-    SCHM_ISO_M2,        // Pad with 0x80,0x00...0x00    |   (AES)
-    SCHM_ANSIX923,      // Pad with randomness          |   (AES)
-};
-
 /*
 ####################################################
 ### Secure Psuedorandom Number Generator (SPRNG) ###
@@ -250,12 +196,22 @@ enum _padding_schemes {
 //  Returns the address selected as a (void*)
 void* hashlib_SPRNGInit(void);
 
+/*
+	Repairs the entropy state of the SPRNG if it happens to get clobbered with predictable data in certain rare cases.
+	
+	** YOU SHOULD NEVER HAVE TO USE THIS UNLESS FOR SOME REASON LIBLOAD RUNS AND CLOBBERS THE ENTROPY POOL. **
+	If Libload alters the entropy pool, the next output of the RNG will become predictable.
+	Call this function after Libload runs but before the next call to RandomBytes or SPRNGRandom.
+	It will zero out the entropy pool to remove the predictable data and then add entropy.
+*/
+#define hashlib_SPRNGRepairState() \
+	memset(hashlib_FastMemBufferUnsafe, 0, 192)
+
 //  Reads from byte selected 128 times, XORing new reads with existing data in the entropy pool
 bool hashlib_SPRNGAddEntropy(void);
  
 //  Returns a 32-bit integer, derived from the entropy pool
 uint32_t hashlib_SPRNGRandom(void);
-
 
 /*
     Fills a buffer to (size) with random bytes using the internal CSPRNG
@@ -322,8 +278,22 @@ void hashlib_Sha256Final(sha256_ctx *ctx, uint8_t *digest);
 // 32-bit implementation
 // 128, 192, or 256 bit keys
 // 10, 12, or 14 rounds
-// Cipher Block Chaining Mode only
+// CBC, CBC-MAC
         
+/*
+	Helper macros to generate AES keys for the 3 possible keylengths.
+	
+	# Inputs #
+	<> buffer = A pointer to a buffer to write the key to
+	
+	# Outputs #
+	An AES key of the correct length is written to buffer
+ */
+#define hashlib_AESKeygen128(buffer)	hashlib_RandomBytes((buffer), (128>>3))
+#define hashlib_AESKeygen192(buffer)	hashlib_RandomBytes((buffer), (192>>3))
+#define hashlib_AESKeygen256(buffer)	hashlib_RandomBytes((buffer), (256>>3))
+
+
 /*
     AES Import Key
     ** The key can be a user-generated byte sequence, ranging from 32 bits to 448 bits
@@ -353,6 +323,8 @@ bool hashlib_AESEncrypt(
     const uint8_t* iv);
     
 /*
+	AES-CBC Decrypt
+	
     <> ciphertext = pointer to data to decrypt
     <> len = size of data to decrypt
     <> plaintext = pointer to buffer to write decompressed output
@@ -406,29 +378,107 @@ bool hashlib_AESOutputMAC(
  */
 bool hashlib_AESVerifyMAC(const uint8_t *ciphertext, size_t len, const aes_ctx *ks_mac);
 
+
+//	************************************
+//	*** AES Authenticated Encryption ***
+//	************************************
+
 /*
-    A Helper Macro to perform an AES-CBC encryption of a padded plaintext with a MAC added
-    This function follows the IPsec standard for concatenation of ciphertext and MAC
+    Encrypts a pre-padded plaintext using AES-CBC and CBC-MAC as designated in # Outputs #
+    * The input plaintext should already be padded. See padding functions below. *
+    * If len is not a multiple of the block size, the function will return False and fail to encrypt
     
     # Inputs #
-    <> plaintext = pointer to data to encrypt
-    <> len = size of data to encrypt (this is the ACTUAL size, not padded size)
-    <> ciphertext = pointer to buffer to write encrypted message
-    <> ks_encrypt = pointer to the key schedule to use for encryption
+    <> padded_plaintext = pointer to data to encrypt. Should be pre-padded.
+    <> len = size of data to encrypt. Must be a multiple of the block size.
+    <> ciphertext = pointer to buffer to write encrypted message. Should be equal to len + 2 blocks.
+    <> ks_encrypt = pointer to the key schedule to use for encryption.
     <> ks_mac = pointer to the key schedule to use for the MAC  ** MUST BE DIFFERENT THAN KS_ENCRYPT **
-    <> pad_schm = the padding scheme to use for encryption
-    <> iv = the initialization vector (random buffer of size AES_BLOCKSIZE) to use for encryption
+    <> iv = the initialization vector (random buffer of size AES_BLOCKSIZE) to use for encryption.
     
     # Outputs #
     <> A full ciphertext in ciphertext containing:
-        - 1 block IV
-        - N length encrypted message
-        - 1-block MAC( IV, N, key_mac)
+        - 1-block IV
+        - N-block encrypted message
+        - 1-block MAC of IV+ciphertext
  */
-bool hashlib_AESAuthEncrypt(const uint8_t *padded_plaintext, size_t len, uint8_t *ciphertext, aes_ctx *ks_encrypt, aes_ctx *ks_mac, uint8_t *iv);
+bool hashlib_AESAuthEncrypt(
+	const uint8_t *padded_plaintext,
+	size_t len,
+	uint8_t *ciphertext,
+	aes_ctx *ks_encrypt,
+	aes_ctx *ks_mac,
+	uint8_t *iv);
 
+/*
+    Decrypts an AES ciphertext using AES-CBC and CBC-MAC. Will fail to decrypt if:
+		(1) The length of the message to decrypt is not longer than 2 blocks.
+		(2) The MAC of the IV+ciphertext does not match the MAC appended as the last block of the message.
+    * The input plaintext should already be passed. See padding functions below. *
+    * If len is not a multiple of the block size, the function will return False and fail to encrypt
+    
+    # Inputs #
+    <> ciphertext = pointer to data to decrypt (ciphertext should be in same format as returned from AESAuthEncrypt() above).
+    <> len = size of data to decrypt.
+    <> plaintext = pointer to buffer to write decrypted message. Can be 2 blocks less than len.
+    <> ks_decrypt = pointer to the key schedule to use for decryption.
+    <> ks_mac = pointer to the key schedule to use for the MAC  ** MUST BE DIFFERENT THAN KS_ENCRYPT **
+    * IV is not passed here, it should be the first block of the ciphertext *
+    
+    # Outputs #
+    <> False if len is not greater than 2 times the AES blocksize.
+    <> False if the MAC of the IV and ciphertext failed to match the MAC appended to the ciphertext.
+    <> True and *plaintext containing the decrypted message otherwise.
+ */
 
-bool hashlib_AESAuthDecrypt(const uint8_t *ciphertext, size_t len, uint8_t *plaintext, aes_ctx *ks_decrypt, aes_ctx *ks_mac);
+bool hashlib_AESAuthDecrypt(
+	const uint8_t *ciphertext,
+	size_t len,
+	uint8_t *plaintext,
+	aes_ctx *ks_decrypt,
+	aes_ctx *ks_mac);
+
+/*
+    Pads input data for AES encryption according to a selection of standard padding schemes.
+    
+    # Inputs #
+    <> plaintext = pointer to buffer containing data to pad
+    <> len = size of data to pad, in bytes (real size, not block-aligned size)
+    <> outbuf = pointer to buffer large enough to hold padded data (see macros below)
+    <> schm = padding scheme to pad with (see enumerations below)
+ */
+ 
+size_t hashlib_AESPadMessage(
+    const uint8_t* plaintext,
+    size_t len,
+    uint8_t* outbuf,
+    uint8_t schm);
+
+/*
+    Reverses the padding on an AES plaintext according to a selection of standard padding schemes.
+    
+    # Inputs #
+    <> plaintext = pointer to buffer containing data to pad
+    <> len = size of data to pad, in bytes (real size, not block-aligned size)
+    <> outbuf = pointer to buffer large enough to hold padded data (see macros below)
+    <> schm = padding scheme to pad with (see enumerations below)
+    
+    * If input SCHM mode is SCHM_ANSIX923, size returned is the same as input size.
+        You will need to maintain your own expected unpadded data length
+ */
+size_t hashlib_AESStripPadding(
+    const uint8_t* plaintext,
+    size_t len,
+    uint8_t* outbuf,
+    uint8_t schm);
+    
+// AES Padding Scheme Defines
+enum _aes_padding_schemes {
+    SCHM_DEFAULT,
+    SCHM_PKCS7,         // Pad with padding size        |   *Default*
+    SCHM_ISO_M2,        // Pad with 0x80,0x00...0x00
+    SCHM_ANSIX923,      // Pad with randomness
+};
 
 // ###############################
 // #### BASE 64 ENCODE/DECODE ####
