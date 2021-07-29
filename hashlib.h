@@ -308,7 +308,7 @@ void hashlib_MGF1Hash(uint8_t* data, size_t datalen, uint8_t* outbuf, size_t out
      */
 bool hashlib_AESLoadKey(const uint8_t* key, const aes_ctx* ks, size_t bitlen);
 
-enum _aes_key_sizes {
+enum _aes_key_bitlens {
 	AES_128 = 128,
 	AES_192 = 192,
 	AES_256 = 256
