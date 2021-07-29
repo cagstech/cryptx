@@ -82,12 +82,11 @@ uint32_t hashlib_CRC32(const uint8_t *buf, size_t len);
 
 void hashlib_Sha1Init(SHA1_CTX *ctx);
 void hashlib_Sha1Update(SHA1_CTX *ctx, const BYTE data[], uint32_t len);
-void hashlib_Sha1Final(SHA1_CTX *ctx, BYTE hash[]);
 
 void hashlib_Sha256Init(SHA256_CTX *ctx, uint32_t *mbuffer);
 void hashlib_Sha256Update(SHA256_CTX *ctx, const BYTE data[], uint32_t len);
 void hashlib_Sha256Final(SHA256_CTX *ctx, BYTE hash[]);
-
+void hashlib_MGF1Hash(uint8_t* data, size_t datalen, uint8_t* outbuf, size_t outlen);
 bool hashlib_CompareDigest(uint8_t *dig1, uint8_t *dig2, size_t len);
 
 #define RANDBYTES 16
@@ -330,8 +329,6 @@ void hashlib_Sha256Final(SHA256_CTX *ctx, BYTE hash[])
 	}
 }
  */
-
-
 
 
 
@@ -643,7 +640,7 @@ WORD aes_SubWord(WORD word)
 // Performs the action of generating the keys that will be used in every round of
 // encryption. "key" is the user-supplied input key, "w" is the output key schedule,
 // "keysize" is the length in bits of "key", must be 128, 192, or 256.
-void hashlib_AESLoadKey(const BYTE key[], aes_ctx* w, int keysize)
+bool hashlib_AESLoadKey(const BYTE key[], aes_ctx* w, int keysize)
 {
 	int Nb=4,Nr,Nk,idx;
 	WORD temp,Rcon[]={0x01000000,0x02000000,0x04000000,0x08000000,0x10000000,0x20000000,
@@ -651,10 +648,19 @@ void hashlib_AESLoadKey(const BYTE key[], aes_ctx* w, int keysize)
 	                  0xab000000,0x4d000000,0x9a000000};
 
 	switch (keysize) {
-		case 128: Nr = 10; Nk = 4; break;
-		case 192: Nr = 12; Nk = 6; break;
-		case 256: Nr = 14; Nk = 8; break;
-		default: return;
+		case 16:
+			keysize<<=3;
+		case 128:
+			Nr = 10; Nk = 4; break;
+		case 24:
+			keysize<<=3;
+		case 192:
+			Nr = 12; Nk = 6; break;
+		case 32:
+			keysize<<=3;
+		case 256:
+		Nr = 14; Nk = 8; break;
+		default: return false;
 	}
     w->keysize = keysize;
 	for (idx=0; idx < Nk; ++idx) {
@@ -670,6 +676,7 @@ void hashlib_AESLoadKey(const BYTE key[], aes_ctx* w, int keysize)
 			temp = aes_SubWord(temp);
 		w->round_keys[idx] = w->round_keys[idx-Nk] ^ temp;
 	}
+	return true;
 }
 
 /////////////////
@@ -1297,15 +1304,14 @@ size_t hashlib_AESPadMessage(const uint8_t* in, size_t len, uint8_t* out, uint8_
          
 #define RSA_SALT_SIZE 16
 size_t hashlib_RSAPadMessage(const uint8_t* in, size_t len, uint8_t* out, size_t modulus_len){
-	uint32_t mbuffer[80];
-    SHA256_CTX ctx;
     uint8_t salt[RSA_SALT_SIZE];
-    uint8_t sha_digest[32];
+    uint8_t mgf1_digest[256-RSA_SALT_SIZE];
     size_t rsa_n;
     if(in==NULL) return 0;
     if(out==NULL) return 0;
     if(len==0) return 0;
     // ensure that the message length (including the salt) is smaller than the modulus
+    if(modulus_len>256) return 0;
     if((len + RSA_SALT_SIZE) > modulus_len) return 0;
     
     // set N to the modulus size, less the salt
@@ -1316,23 +1322,19 @@ size_t hashlib_RSAPadMessage(const uint8_t* in, size_t len, uint8_t* out, size_t
           
     // Generate salt, SHA-256 hash the salt
     hashlib_RandomBytes(salt, RSA_SALT_SIZE);
-    hashlib_Sha256Init(&ctx, &mbuffer);
-    hashlib_Sha256Update(&ctx, salt, RSA_SALT_SIZE);
-    hashlib_Sha256Final(&ctx, sha_digest);
+    hashlib_MGF1Hash(salt, RSA_SALT_SIZE, mgf1_digest, rsa_n);
                 
     // XOR the hashed salt with the input buffer cyclically to get encoded message
     // write the encoded message (to len_n) to the output buffer
     for(size_t i=0; i < rsa_n; i++)
-        out[i] = in[i] ^ sha_digest[i%32];
+        out[i] = in[i] ^ mgf1_digest[i];
                     
     // SHA-256 hash the encoded message + padding
-    hashlib_Sha256Init(&ctx, 0);
-    hashlib_Sha256Update(&ctx, out, rsa_n);
-    hashlib_Sha256Final(&ctx, sha_digest);
+    hashlib_MGF1Hash(out, rsa_n, mgf1_digest, RSA_SALT_SIZE);
                 
     // XOR the hashed encoded message with the salt to get the encoded salt
     for(size_t i=0; i<RSA_SALT_SIZE; i++)
-        out[rsa_n + i] = salt[i] ^ sha_digest[i];
+        out[rsa_n + i] = salt[i] ^ mgf1_digest[i];
                     
                 // Return the static size of 256
     return modulus_len;
@@ -1364,36 +1366,30 @@ size_t hashlib_AESStripPadding(const uint8_t* in, size_t len, uint8_t* out, uint
 }
 
 size_t hashlib_RSAStripPadding(const uint8_t *in, size_t len, uint8_t* out){
-	uint32_t mbuffer[80];
     if(in==NULL) return 0;
     if(out==NULL) return 0;
     if(len==0) return 0;
     size_t outlen;
-    SHA256_CTX ctx;
     uint8_t salt[RSA_SALT_SIZE];
-    uint8_t sha_digest[32];
+    uint8_t mgf1_digest[256-RSA_SALT_SIZE];
     size_t rsa_n = len - RSA_SALT_SIZE;
                 
     // Copy last 16 bytes of input buf to salt to get encoded salt
     memcpy(salt, &in[len-RSA_SALT_SIZE-1], RSA_SALT_SIZE);
                 
     // SHA-256 hash encoded message + padding
-    hashlib_Sha256Init(&ctx, &mbuffer);
-    hashlib_Sha256Update(&ctx, in, rsa_n);
-    hashlib_Sha256Final(&ctx, sha_digest);
+    hashlib_MGF1Hash(in, rsa_n, mgf1_digest, RSA_SALT_SIZE);
                 
     // XOR hash encoded msg + pad with encoded salt to get decoded salt
     for(size_t i=0; i<RSA_SALT_SIZE; i++)
-        salt[i] ^= sha_digest[i];
+        salt[i] ^= mgf1_digest[i];
                     
     // SHA-256 hash the salt
-    hashlib_Sha256Init(&ctx, 0);
-    hashlib_Sha256Update(&ctx, salt, RSA_SALT_SIZE);
-    hashlib_Sha256Final(&ctx, sha_digest);
+    hashlib_MGF1Hash(salt, RSA_SALT_SIZE, mgf1_digest, rsa_n);
                 
     // XOR SHA-256 of salt with encoded message cyclically to get decoded message
     for(size_t i=0; i < rsa_n; i++)
-        out[i] = in[i] ^ sha_digest[i%32];
+        out[i] = in[i] ^ mgf1_digest[i];
                 
     // Look backwards from out[outlen-1] for the first non-zero byte
     outlen = rsa_n;
@@ -1414,6 +1410,28 @@ bool hashlib_CompareDigest(uint8_t *dig1, uint8_t *dig2, size_t len){
         result |= (dig1[i] ^ dig2[i]);
     return !result;
 }
+
+void hashlib_MGF1Hash(uint8_t* data, size_t datalen, uint8_t* outbuf, size_t outlen){
+	uint32_t mbuffer[64], ctr = 0;
+	size_t copylen;
+	uint8_t sha_digest[32], ctr_data[4];
+	SHA256_CTX ctx_data, ctx_ctr;
+	hashlib_Sha256Init(&ctx_data, mbuffer);
+	hashlib_Sha256Update(&ctx_data, data, datalen);
+	for(size_t printlen=0; printlen<outlen; printlen+=32, ctr++){
+		copylen = (outlen-printlen > 32) ? 32 : outlen-printlen;
+		//memcpy(ctr_data, &ctr, 4);
+		ctr_data[0] = (uint8_t) ((ctr >> 24) & 0xff);
+		ctr_data[1] = (uint8_t) ((ctr >> 16) & 0xff);
+		ctr_data[2] = (uint8_t) ((ctr >> 8) & 0xff);
+		ctr_data[3] = (uint8_t) ((ctr >> 0) & 0xff);
+		memcpy(&ctx_ctr, &ctx_data, sizeof(SHA256_CTX));
+		hashlib_Sha256Update(&ctx_ctr, ctr_data, 4);
+		hashlib_Sha256Final(&ctx_ctr, sha_digest);
+		memcpy(&outbuf[printlen], sha_digest, copylen);
+	}
+}
+
 
 #define RSA_PUB_EXPONENT 65537
 /*

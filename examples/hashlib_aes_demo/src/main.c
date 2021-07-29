@@ -27,7 +27,7 @@ int main(void)
     size_t stripped_len;
     
     size_t msg_len = strlen(str);
-    size_t padded_len = hashlib_GetAESPaddedSize(msg_len);
+    size_t padded_len = hashlib_AESPaddedSize(msg_len);
     uint8_t *padded = hashlib_AllocContext(padded_len);
     uint8_t *out = hashlib_AllocContext(padded_len);
     uint8_t *test = hashlib_AllocContext(padded_len);
@@ -41,7 +41,7 @@ int main(void)
     hashlib_AESPadMessage(str, msg_len, padded, SCHM_DEFAULT);
     
     // load the key into the key schedule
-    hashlib_AESLoadKey(key, &ctx, (KEYSIZE<<3)); // requires size in bits, not bytes
+    hashlib_AESLoadKey(key, &ctx, KEYSIZE); // requires size in bits, not bytes
     
     hashlib_AESEncrypt(padded, padded_len, out, &ctx, iv);
     hashlib_AESDecrypt(out, padded_len, test, &ctx, iv);
