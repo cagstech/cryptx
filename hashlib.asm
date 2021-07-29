@@ -3,7 +3,7 @@ include '../include/library.inc'
 ;include_library 'bigintce.asm'
 
 ;------------------------------------------
-library "HASHLIB", 5
+library "HASHLIB", 6
 
 ;------------------------------------------
 
@@ -17,6 +17,7 @@ library "HASHLIB", 5
     export hashlib_Sha256Init
 	export hashlib_Sha256Update
 	export hashlib_Sha256Final
+	export hashlib_MGF1Hash
  
  ; v3 functions
     export hashlib_AESLoadKey
@@ -1467,74 +1468,85 @@ _aes_SubWord:
 hashlib_AESLoadKey:
 	ld	hl, -25
 	call	ti._frameset
-	ld	de, (ix + 12)
+	ld	hl, (ix + 12)
+	ld	de, 128
 	xor	a, a
 	ld	(ix + -19), a
-	ld	bc, 128
-	push	de
-	pop	hl
+	ld	iy, 44
+	ld	bc, 16
 	or	a, a
 	sbc	hl, bc
-	jq	nz, BB22_2
-	ld	bc, 4
-	ld	hl, 44
-	ld	(ix + -9), hl
-	jq	BB22_6
+	jq	nz, BB22_3
+	ex	de, hl
+	ld	(ix + -12), iy
 BB22_2:
+	ld	de, 4
+	jq	BB22_11
+BB22_3:
+	push	de
+	pop	iy
 	ld	bc, 192
-	push	de
-	pop	hl
-	or	a, a
-	sbc	hl, bc
-	jq	nz, BB22_4
 	ld	hl, 52
-	ld	(ix + -9), hl
-	ld	bc, 6
-	jq	BB22_6
-BB22_4:
-	ld	bc, 256
-	push	de
-	pop	hl
+	ld	(ix + -12), hl
+	ld	de, 24
+	ld	hl, (ix + 12)
 	or	a, a
-	sbc	hl, bc
-	jq	nz, BB22_19
-	ld	bc, 8
+	sbc	hl, de
+	jq	nz, BB22_5
+BB22_10:
+	ld	de, 6
+	push	bc
+	pop	hl
+	jq	BB22_11
+BB22_5:
+	ld	de, 32
+	ld	hl, (ix + 12)
+	or	a, a
+	sbc	hl, de
+	jq	nz, BB22_7
+BB22_6:
+	ld	bc, 256
+	ld	de, 8
 	ld	hl, 60
-	ld	(ix + -9), hl
+	ld	(ix + -12), hl
+	push	bc
+	pop	hl
 	ld	a, 1
 	ld	(ix + -19), a
-BB22_6:
+BB22_11:
+	ld	bc, (ix + 6)
 	ld	iy, (ix + 9)
-	ld	(iy), de
-	ld	(ix + -3), iy
+	ld	(iy), hl
+	ld	(ix + -6), iy
 	lea	hl, iy + 3
-	ld	(ix + -12), hl
-	ld	iy, (ix + 6)
-	lea	iy, iy + 3
+	ld	(ix + -3), hl
 	push	bc
-	pop	de
-	ld	(ix + -6), bc
-BB22_7:
+	pop	iy
+	lea	iy, iy + 3
 	push	de
 	pop	hl
+	push	de
+	pop	bc
+	ld	(ix + -9), de
+BB22_12:
+	ld	(ix + -15), hl
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jq	z, BB22_9
+	jq	z, BB22_14
 	ld	a, (iy + -3)
 	ld	bc, 0
 	ld	c, a
-	ld	h, 0
-	ld	a, h
+	ld	e, 0
+	ld	a, e
 	ld	l, 24
 	call	ti._lshl
 	ld	(ix + -18), bc
-	ld	(ix + -15), de
 	ld	d, a
 	ld	a, (iy + -2)
 	ld	bc, 0
 	ld	c, a
-	ld	a, h
+	ld	a, e
 	ld	l, 16
 	call	ti._lshl
 	push	bc
@@ -1547,7 +1559,8 @@ BB22_7:
 	ld	a, (iy + -1)
 	ld	bc, 0
 	ld	c, a
-	xor	a, a
+	ld	d, 0
+	ld	a, d
 	ld	l, 8
 	call	ti._lshl
 	ld	hl, (ix + -18)
@@ -1555,48 +1568,53 @@ BB22_7:
 	ld	a, (iy)
 	ld	bc, 0
 	ld	c, a
-	xor	a, a
+	ld	a, d
 	call	ti._ladd
-	lea	bc, iy + 0
-	ld	iy, (ix + -12)
+	ld	(ix + -18), iy
+	ld	iy, (ix + -3)
 	ld	(iy), hl
 	ld	(iy + 3), e
-	ld	de, (ix + -15)
-	dec	de
+	ld	bc, (ix + -9)
+	ld	hl, (ix + -15)
+	dec	hl
 	lea	iy, iy + 4
-	ld	(ix + -12), iy
+	ld	(ix + -3), iy
+	ld	iy, (ix + -18)
+	lea	iy, iy + 4
+	jq	BB22_12
+BB22_14:
+	ld	a, 2
 	push	bc
 	pop	iy
-	lea	iy, iy + 4
-	jq	BB22_7
-BB22_9:
-	ld	c, 2
-	ld	hl, (ix + -6)
+	lea	hl, iy + 0
+	ld	c, a
 	call	ti._ishl
-	ld	bc, (ix + -6)
-	dec	hl
-	ld	(ix + -15), hl
-	push	bc
-	pop	de
-	ld	hl, (ix + -9)
-BB22_10:
+	push	hl
+	pop	bc
+	dec	bc
+	ld	(ix + -3), iy
+BB22_15:
+	ld	hl, (ix + -12)
+	ld	de, (ix + -3)
 	or	a, a
 	sbc	hl, de
-	jq	z, BB22_19
-	ld	iy, (ix + -3)
-	ex	de, hl
-	ld	de, (ix + -15)
-	add	iy, de
+	jq	z, BB22_24
+	lea	hl, iy + 0
+	ld	iy, (ix + -6)
+	ld	(ix + -15), bc
+	add	iy, bc
 	ld	de, (iy)
+	push	hl
+	pop	bc
 	ld	a, (iy + 3)
-	ld	(ix + -12), hl
+	ld	hl, (ix + -3)
 	call	ti._iremu
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
 	ld	(ix + -18), iy
-	jq	nz, BB22_13
-	ld	hl, (ix + -12)
+	jq	nz, BB22_18
+	ld	hl, (ix + -3)
 	dec	hl
 	ld	(ix + -22), hl
 	push	de
@@ -1622,7 +1640,7 @@ BB22_10:
 	pop	hl
 	pop	hl
 	ld	hl, (ix + -22)
-	ld	bc, (ix + -6)
+	ld	bc, (ix + -9)
 	call	ti._idivu
 	ld	c, 2
 	call	ti._ishl
@@ -1637,23 +1655,23 @@ BB22_10:
 	push	hl
 	pop	bc
 	ld	a, e
-	jq	BB22_18
-BB22_13:
-	ld	(ix + -25), a
-	ld	(ix + -22), de
+	jq	BB22_23
+BB22_18:
+	ld	(ix + -22), a
+	ld	(ix + -25), de
 	ld	a, (ix + -19)
 	ld	e, 1
 	xor	a, e
 	bit	0, a
-	jq	nz, BB22_17
+	jq	nz, BB22_21
 	ld	bc, 4
 	or	a, a
 	sbc	hl, bc
-	jq	nz, BB22_17
-	ld	a, (ix + -25)
+	ld	a, (ix + -22)
+	jq	nz, BB22_22
 	ld	l, a
 	push	hl
-	ld	hl, (ix + -22)
+	ld	hl, (ix + -25)
 	push	hl
 	call	_aes_SubWord
 	push	hl
@@ -1661,12 +1679,15 @@ BB22_13:
 	ld	a, e
 	pop	hl
 	pop	hl
-	jq	BB22_18
-BB22_17:
-	ld	bc, (ix + -22)
-	ld	a, (ix + -25)
-BB22_18:
-	ld	iy, (ix + -3)
+	jq	BB22_23
+BB22_21:
+	ld	bc, (ix + -25)
+	ld	a, (ix + -22)
+	jq	BB22_23
+BB22_22:
+	ld	bc, (ix + -25)
+BB22_23:
+	ld	iy, (ix + -6)
 	ld	hl, (iy + 3)
 	ld	e, (iy + 6)
 	call	ti._lxor
@@ -1675,18 +1696,44 @@ BB22_18:
 	pop	iy
 	ld	(iy + 4), hl
 	ld	(iy + 7), e
-	ld	de, (ix + -12)
-	inc	de
-	ld	iy, (ix + -3)
+	ld	hl, (ix + -3)
+	inc	hl
+	ld	(ix + -3), hl
+	ld	iy, (ix + -6)
 	lea	iy, iy + 4
-	ld	(ix + -3), iy
-	ld	bc, (ix + -6)
-	ld	hl, (ix + -9)
-	jq	BB22_10
-BB22_19:
+	ld	(ix + -6), iy
+	ld	iy, (ix + -9)
+	ld	bc, (ix + -15)
+	jq	BB22_15
+BB22_24:
+	ld	a, 1
+BB22_25:
 	ld	sp, ix
 	pop	ix
 	ret
+BB22_7:
+	ld	hl, (ix + 12)
+	ld	de, 128
+	or	a, a
+	sbc	hl, de
+	jq	nz, BB22_9
+	ld	hl, 44
+	ld	(ix + -12), hl
+	lea	hl, iy + 0
+	jq	BB22_2
+BB22_9:
+	ld	de, 192
+	ld	hl, (ix + 12)
+	or	a, a
+	sbc	hl, de
+	jq	z, BB22_10
+	ld	bc, 256
+	ld	hl, (ix + 12)
+	or	a, a
+	sbc	hl, bc
+	ld	a, 0
+	jq	z, BB22_6
+	jq	BB22_25
 	
 _aes_AddRoundKey:
 	ld	hl, -3
@@ -5205,7 +5252,7 @@ BB25_20:
 	ret
  
 hashlib_RSAPadMessage:
-	ld	hl, -494
+	ld	hl, -274
 	call	ti._frameset
 	ld	iy, (ix + 9)
 	ld	bc, (ix + 15)
@@ -5218,6 +5265,12 @@ hashlib_RSAPadMessage:
 	or	a, a
 	sbc	hl, de
 	jq	c, BB26_1
+	ld	de, 257
+	push	bc
+	pop	hl
+	or	a, a
+	sbc	hl, de
+	jq	nc, BB26_1
 	lea	hl, iy + 0
 	add	hl, bc
 	or	a, a
@@ -5228,63 +5281,56 @@ hashlib_RSAPadMessage:
 	or	a, a
 	sbc	hl, bc
 	jq	z, BB26_1
-	ld	hl, (ix + 12)
+	ld	de, (ix + 12)
+	push	de
+	pop	hl
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jq	nz, BB26_8
+	jq	nz, BB26_10
 BB26_1:
 	or	a, a
 	sbc	hl, hl
-BB26_15:
+BB26_17:
 	ld	sp, ix
 	pop	ix
 	ret
-BB26_8:
-	push	hl
-	pop	bc
-	ld	de, -482
+BB26_10:
+	ld	bc, -16
+	lea	hl, ix + -22
+	ld	(ix + -3), de
+	ld	de, -271
 	lea	iy, ix + 0
 	add	iy, de
-	ld	de, -16
-	lea	hl, iy + 48
-	ld	(ix + -3), bc
-	push	ix
-	ld	bc, -485
-	add	ix, bc
-	ld	(ix + 0), hl
-	pop	ix
-	lea	hl, iy + 32
-	push	ix
-	ld	bc, -494
-	add	ix, bc
-	ld	(ix + 0), hl
-	pop	ix
-	lea	hl, iy + 0
-	ld	bc, -488
-	lea	iy, ix + 0
-	add	iy, bc
 	ld	(iy + 0), hl
-	ld	hl, (ix + 15)
+	ld	de, -262
+	lea	hl, ix + 0
 	add	hl, de
 	push	ix
-	ld	de, -491
+	ld	de, -265
 	add	ix, de
+	ld	(ix + 0), hl
+	pop	ix
+	ld	hl, (ix + 15)
+	add	hl, bc
+	push	ix
+	ld	bc, -268
+	add	ix, bc
 	ld	(ix + 0), hl
 	pop	ix
 	push	hl
 	or	a, a
 	sbc	hl, hl
 	push	hl
-	ld	bc, (ix + -3)
-	push	bc
+	ld	de, (ix + -3)
+	push	de
 	call	ti._memset
 	pop	hl
 	pop	hl
 	pop	hl
 	ld	hl, 16
 	push	hl
-	ld	bc, -494
+	ld	bc, -271
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
@@ -5292,171 +5338,150 @@ BB26_8:
 	call	hashlib_RandomBytes
 	pop	hl
 	pop	hl
-	ld	bc, -326
+	ld	bc, -268
 	lea	hl, ix + 0
 	add	hl, bc
+	ld	hl, (hl)
 	push	hl
-	push	ix
-	ld	bc, -485
-	add	ix, bc
-	ld	hl, (ix + 0)
-	pop	ix
-	push	hl
-	call	hashlib_Sha256Init
-	pop	hl
-	pop	hl
-	or	a, a
-	sbc	hl, hl
+	ld	bc, -265
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
 	push	hl
 	ld	hl, 16
 	push	hl
-	ld	bc, -494
+	ld	bc, -271
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -485
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	hashlib_Sha256Update
+	call	hashlib_MGF1Hash
 	pop	hl
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -488
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -485
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	hashlib_Sha256Final
-	pop	hl
-	pop	hl
+	ld	iy, (ix + 15)
+	ld	de, -16
+	add	iy, de
 	ld	de, 0
-BB26_9:
-	ld	bc, -491
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
+BB26_11:
+	lea	hl, iy + 0
 	or	a, a
 	sbc	hl, de
-	jq	z, BB26_11
 	ld	hl, (ix + 6)
+	jq	z, BB26_13
 	add	hl, de
-	ld	a, (hl)
-	ld	iyl, a
-	push	de
-	pop	hl
-	ld	bc, 31
-	call	ti._iand
-	push	hl
-	pop	bc
-	ld	(ix + -3), de
-	push	ix
-	ld	de, -488
-	add	ix, de
-	ld	hl, (ix + 0)
-	pop	ix
-	add	hl, bc
-	ld	a, (hl)
-	xor	a, iyl
+	lea	bc, iy + 0
+	ld	(ix + -3), bc
+	ld	bc, -265
+	lea	iy, ix + 0
+	add	iy, bc
+	ld	iy, (iy + 0)
+	add	iy, de
+	ld	a, (iy)
+	ld	bc, (ix + -3)
+	push	bc
+	pop	iy
+	xor	a, (hl)
 	ld	hl, (ix + 12)
-	ld	de, (ix + -3)
 	add	hl, de
 	ld	(hl), a
 	inc	de
-	jq	BB26_9
-BB26_11:
-	ld	hl, 0
+	jq	BB26_11
+BB26_13:
+	ld	hl, 16
 	push	hl
-	ld	bc, -485
+	ld	bc, -265
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hashlib_Sha256Init
-	pop	hl
-	pop	hl
-	or	a, a
-	sbc	hl, hl
-	push	hl
-	ld	bc, -491
+	ld	bc, -268
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
 	ld	hl, (ix + 12)
+	ld	bc, -274
+	lea	iy, ix + 0
+	add	iy, bc
+	ld	(iy + 0), hl
 	push	hl
-	ld	bc, -485
+	call	hashlib_MGF1Hash
+	or	a, a
+	sbc	hl, hl
+	push	ix
+	ld	bc, -268
+	add	ix, bc
+	ld	(ix + 0), hl
+	pop	ix
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	iy, (ix + 15)
+	lea	hl, iy + 0
+	ld	de, -16
+	add	hl, de
+	ex	de, hl
+	ld	bc, -274
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
-	push	hl
-	call	hashlib_Sha256Update
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	bc, -488
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -485
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	hashlib_Sha256Final
-	ld	iy, (ix + 12)
-	pop	hl
-	pop	hl
-	ld	bc, -491
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	de, (hl)
-	add	iy, de
+	add	hl, de
+	push	ix
+	add	ix, bc
+	ld	(ix + 0), hl
+	pop	ix
 	ld	de, 16
-	ld	bc, 0
-BB26_12:
-	push	bc
-	pop	hl
+BB26_14:
+	ld	bc, -268
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	de
+	pop	bc
 	or	a, a
 	sbc	hl, de
-	jq	z, BB26_14
-	lea	de, iy + 0
-	ld	(ix + -3), de
-	ld	de, -494
+	jq	z, BB26_16
+	ld	de, -271
 	lea	hl, ix + 0
 	add	hl, de
 	ld	iy, (hl)
-	add	iy, bc
+	ld	(ix + -3), bc
 	push	ix
-	ld	de, -488
-	add	ix, de
+	ld	bc, -268
+	add	ix, bc
+	ld	de, (ix + 0)
+	pop	ix
+	add	iy, de
+	push	ix
+	ld	bc, -265
+	add	ix, bc
 	ld	hl, (ix + 0)
 	pop	ix
-	add	hl, bc
+	add	hl, de
 	ld	a, (hl)
 	xor	a, (iy)
-	ld	de, (ix + -3)
-	push	de
-	pop	iy
-	ld	de, 16
-	lea	hl, iy + 0
+	ld	iy, (ix + 15)
+	ld	bc, -274
+	lea	hl, ix + 0
 	add	hl, bc
+	ld	hl, (hl)
+	add	hl, de
 	ld	(hl), a
-	inc	bc
-	jq	BB26_12
-BB26_14:
-	ld	hl, (ix + 15)
-	jq	BB26_15
+	inc	de
+	ld	bc, -268
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	(hl), de
+	ld	bc, (ix + -3)
+	push	bc
+	pop	de
+	jq	BB26_14
+BB26_16:
+	lea	hl, iy + 0
+	jq	BB26_17
  
  
 hashlib_AESStripPadding:
@@ -5569,123 +5594,98 @@ BB27_14:
 	ret
  
 hashlib_RSAStripPadding:
-	ld	hl, -494
+	ld	hl, -274
 	call	ti._frameset
-	ld	bc, (ix + 9)
-	ld	de, 0
-	push	bc
+	ld	de, (ix + 9)
+	ld	bc, 0
+	push	de
 	pop	hl
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jq	z, BB28_1
-	ld	hl, (ix + 6)
+	jq	nz, BB28_2
+	push	bc
+	pop	hl
+	jq	BB28_15
+BB28_2:
+	ld	iy, (ix + 6)
+	lea	hl, iy + 0
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jq	z, BB28_1
+	jq	z, BB28_3
 	ld	hl, (ix + 12)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
 	jq	nz, BB28_6
-BB28_1:
-	ex	de, hl
-BB28_15:
-	ld	sp, ix
-	pop	ix
-	ret
+BB28_3:
+	or	a, a
+	sbc	hl, hl
+	jq	BB28_15
 BB28_6:
-	push	bc
-	pop	hl
-	ld	bc, -482
-	lea	iy, ix + 0
-	add	iy, bc
-	lea	de, iy + 48
+	lea	hl, ix + -22
 	push	ix
-	ld	bc, -485
+	ld	bc, -271
 	add	ix, bc
-	ld	(ix + 0), de
+	ld	(ix + 0), hl
 	pop	ix
-	lea	de, iy + 32
-	lea	bc, iy + 0
-	ld	(ix + -3), de
-	ld	de, -488
-	lea	iy, ix + 0
-	add	iy, de
-	ld	(iy + 0), bc
-	push	hl
-	pop	iy
+	ld	bc, -262
+	lea	hl, ix + 0
+	add	hl, bc
+	push	ix
+	ld	bc, -265
+	add	ix, bc
+	ld	(ix + 0), hl
+	pop	ix
+	push	de
+	pop	hl
 	ld	bc, -16
 	add	hl, bc
 	push	ix
-	ld	de, -491
-	add	ix, de
+	ld	bc, -268
+	add	ix, bc
 	ld	(ix + 0), hl
 	pop	ix
-	lea	hl, iy + 0
-	dec	bc
-	add	hl, bc
-	push	hl
-	pop	bc
-	ld	hl, (ix + 6)
-	add	hl, bc
-	ld	bc, 16
-	push	bc
-	push	hl
-	ld	de, (ix + -3)
-	ld	bc, -494
+	ex	de, hl
+	ld	de, -17
+	add	hl, de
+	ex	de, hl
+	add	iy, de
+	ld	de, 16
+	push	de
+	push	iy
+	ld	bc, -271
 	lea	hl, ix + 0
 	add	hl, bc
-	ld	(hl), de
-	push	de
+	ld	hl, (hl)
+	push	hl
 	call	ti._memcpy
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -326
+	ld	hl, 16
+	push	hl
+	ld	bc, -265
 	lea	hl, ix + 0
 	add	hl, bc
+	ld	hl, (hl)
 	push	hl
-	ld	bc, -485
-	lea	iy, ix + 0
-	add	iy, bc
-	ld	hl, (iy + 0)
-	push	hl
-	call	hashlib_Sha256Init
-	pop	hl
-	pop	hl
-	or	a, a
-	sbc	hl, hl
-	push	hl
-	ld	bc, -491
+	ld	bc, -268
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
 	ld	hl, (ix + 6)
+	ld	bc, -274
+	lea	iy, ix + 0
+	add	iy, bc
+	ld	(iy + 0), hl
+	ld	hl, (ix + 6)
 	push	hl
-	ld	bc, -485
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	hashlib_Sha256Update
+	call	hashlib_MGF1Hash
 	pop	hl
 	pop	hl
-	pop	hl
-	pop	hl
-	ld	bc, -488
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -485
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	hashlib_Sha256Final
 	pop	hl
 	pop	hl
 	ld	de, 16
@@ -5697,13 +5697,13 @@ BB28_7:
 	sbc	hl, de
 	jq	z, BB28_9
 	ld	(ix + -3), de
-	ld	de, -488
+	ld	de, -265
 	lea	hl, ix + 0
 	add	hl, de
 	ld	iy, (hl)
 	add	iy, bc
 	push	ix
-	ld	de, -494
+	ld	de, -271
 	add	ix, de
 	ld	hl, (ix + 0)
 	pop	ix
@@ -5715,86 +5715,75 @@ BB28_7:
 	ld	de, (ix + -3)
 	jq	BB28_7
 BB28_9:
-	ld	hl, 0
-	push	hl
-	ld	bc, -485
+	ld	bc, -268
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hashlib_Sha256Init
-	pop	hl
-	pop	hl
-	or	a, a
-	sbc	hl, hl
+	ld	bc, -265
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
 	push	hl
 	ld	hl, 16
 	push	hl
-	ld	bc, -494
+	ld	bc, -271
 	lea	hl, ix + 0
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -485
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	hashlib_Sha256Update
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	bc, -488
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -485
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	hashlib_Sha256Final
-	pop	hl
-	pop	hl
-	ld	bc, 0
-BB28_10:
-	ld	de, -491
+	call	hashlib_MGF1Hash
+	ld	de, -268
 	lea	hl, ix + 0
 	add	hl, de
-	ld	hl, (hl)
+	ld	bc, (hl)
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	ld	iy, (ix + 12)
+	lea	de, iy + 0
+BB28_10:
+	push	bc
+	pop	hl
+	add	hl, bc
 	or	a, a
 	sbc	hl, bc
 	jq	z, BB28_12
-	ld	hl, (ix + 6)
+	ld	(ix + -3), bc
+	ld	bc, -265
+	lea	hl, ix + 0
 	add	hl, bc
+	ld	hl, (hl)
 	ld	a, (hl)
-	ld	iyl, a
-	push	bc
-	pop	hl
-	push	bc
-	pop	de
-	ld	bc, 31
-	call	ti._iand
-	push	hl
-	pop	bc
-	ld	(ix + -3), de
+	ld	bc, -274
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	iy, (hl)
+	xor	a, (iy)
+	ex	de, hl
+	ld	(hl), a
+	ld	bc, (ix + -3)
+	dec	bc
+	inc	iy
 	push	ix
-	ld	de, -488
+	ld	de, -274
 	add	ix, de
-	ld	hl, (ix + 0)
+	ld	(ix + 0), iy
 	pop	ix
-	add	hl, bc
-	ld	de, (ix + -3)
-	push	de
-	pop	bc
-	ld	a, (hl)
-	xor	a, iyl
-	ld	iy, (ix + 12)
+	ld	(ix + -3), bc
+	ld	bc, -265
+	lea	iy, ix + 0
 	add	iy, bc
-	ld	(iy), a
-	inc	bc
+	ld	de, (iy + 0)
+	inc	de
+	push	ix
+	add	ix, bc
+	ld	(ix + 0), de
+	pop	ix
+	inc	hl
+	ex	de, hl
+	ld	bc, (ix + -3)
 	jq	BB28_10
 BB28_12:
 	ld	iy, (ix + 12)
@@ -5812,7 +5801,10 @@ BB28_13:
 	jq	nz, BB28_13
 	ld	de, -15
 	add	hl, de
-	jq	BB28_15
+BB28_15:
+	ld	sp, ix
+	pop	ix
+	ret
 
 hashlib_AESVerifyMAC:
 	ld	hl, -22
@@ -5863,7 +5855,265 @@ hashlib_AESVerifyMAC:
 	sbc	a, a
 	inc	a
 	ret
- 
+	
+hashlib_MGF1Hash:
+	ld	hl, -539
+	call	ti._frameset
+	ld	bc, -298
+	lea	iy, ix + 0
+	add	iy, bc
+	ld	bc, -514
+	lea	hl, ix + 0
+	add	hl, bc
+	push	hl
+	pop	de
+	lea	hl, iy + 4
+	lea	bc, iy + 0
+	ld	(ix + -3), bc
+	ld	bc, -526
+	lea	iy, ix + 0
+	add	iy, bc
+	ld	(iy + 0), hl
+	push	de
+	pop	iy
+	lea	de, iy + 108
+	ld	bc, -529
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	(hl), de
+	lea	hl, iy + 0
+	ld	bc, -520
+	lea	iy, ix + 0
+	add	iy, bc
+	ld	(iy + 0), hl
+	ld	bc, (ix + -3)
+	push	bc
+	pop	iy
+	ld	bc, -523
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	(hl), iy
+	pea	iy + 36
+	push	de
+	call	hashlib_Sha256Init
+	pop	hl
+	pop	hl
+	or	a, a
+	sbc	hl, hl
+	push	hl
+	ld	hl, (ix + 9)
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	ld	bc, -529
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	hashlib_Sha256Update
+	ld	de, (ix + 15)
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	push	de
+	pop	iy
+	xor	a, a
+	or	a, a
+	sbc	hl, hl
+	push	ix
+	ld	bc, -517
+	add	ix, bc
+	ld	(ix + 0), hl
+	pop	ix
+	ld	bc, 0
+BB76_1:
+	push	bc
+	pop	hl
+	or	a, a
+	sbc	hl, de
+	jq	nc, BB76_2
+	ld	de, -532
+	lea	hl, ix + 0
+	add	hl, de
+	ld	(hl), bc
+	lea	hl, iy + 0
+	ld	de, 32
+	or	a, a
+	sbc	hl, de
+	ld	bc, -536
+	lea	hl, ix + 0
+	push	af
+	add	hl, bc
+	pop	af
+	ld	(hl), iy
+	ld	hl, 32
+	jq	c, BB76_5
+	push	hl
+	pop	iy
+BB76_5:
+	ld	bc, -539
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	(hl), iy
+	ld	bc, -517
+	lea	iy, ix + 0
+	add	iy, bc
+	ld	de, (iy + 0)
+	push	de
+	pop	bc
+	ld	(ix + -3), de
+	push	ix
+	ld	de, -533
+	add	ix, de
+	ld	(ix + 0), a
+	pop	ix
+	ld	l, 24
+	call	ti._lshru
+	ld	a, c
+	push	ix
+	ld	bc, -523
+	add	ix, bc
+	ld	iy, (ix + 0)
+	pop	ix
+	ld	(iy + 0), a
+	ld	de, (ix + -3)
+	push	de
+	pop	bc
+	ld	(ix + -3), de
+	push	ix
+	ld	de, -533
+	add	ix, de
+	ld	a, (ix + 0)
+	pop	ix
+	ld	l, 16
+	call	ti._lshru
+	ld	a, c
+	ld	(iy + 1), a
+	ld	de, (ix + -3)
+	push	ix
+	ld	bc, -517
+	add	ix, bc
+	ld	(ix + 0), de
+	pop	ix
+	ld	a, d
+	ld	(iy + 2), a
+	ld	a, e
+	ld	(iy + 3), a
+	ld	hl, 108
+	push	hl
+	ld	bc, -529
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -520
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	ti._memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	or	a, a
+	sbc	hl, hl
+	push	hl
+	ld	hl, 4
+	push	hl
+	ld	bc, -523
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -520
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	hashlib_Sha256Update
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -526
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -520
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	hashlib_Sha256Final
+	pop	hl
+	pop	hl
+	ld	bc, -532
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	de, (hl)
+	ld	hl, (ix + 12)
+	add	hl, de
+	ld	bc, -539
+	lea	iy, ix + 0
+	add	iy, bc
+	ld	de, (iy + 0)
+	push	de
+	push	ix
+	ld	bc, -526
+	add	ix, bc
+	ld	de, (ix + 0)
+	pop	ix
+	push	de
+	push	hl
+	call	ti._memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	de, 32
+	ld	bc, -532
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	iy, (hl)
+	add	iy, de
+	push	ix
+	ld	bc, -517
+	add	ix, bc
+	ld	hl, (ix + 0)
+	pop	ix
+	push	ix
+	ld	bc, -533
+	add	ix, bc
+	ld	e, (ix + 0)
+	pop	ix
+	ld	bc, 1
+	xor	a, a
+	call	ti._ladd
+	ld	(ix + -3), de
+	push	ix
+	ld	de, -517
+	add	ix, de
+	ld	(ix + 0), hl
+	pop	ix
+	lea	bc, iy + 0
+	ld	de, (ix + -3)
+	ld	a, e
+	ld	de, -32
+	ld	(ix + -3), bc
+	ld	bc, -536
+	lea	iy, ix + 0
+	add	iy, bc
+	ld	iy, (iy + 0)
+	add	iy, de
+	ld	de, (ix + 15)
+	ld	bc, (ix + -3)
+	jq	BB76_1
+BB76_2:
+	ld	sp, ix
+	pop	ix
+	ret
+	
 _sprng_read_addr:		rb 3
 _sprng_entropy_pool		:=	$E30800
 _sprng_rand				:=	_sprng_entropy_pool + 119

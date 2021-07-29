@@ -261,13 +261,19 @@ void hashlib_Sha256Update(sha256_ctx *ctx, const uint8_t *buf, uint32_t len);
 void hashlib_Sha256Final(sha256_ctx *ctx, uint8_t *digest);
 
 /*
-    One-Shot SHA-256 Computation
-
-    # Inputs #
-    <> buf = pointer to data to hash
-    <> len = length of data to hash
-    <> digest = pointer to buffer to write digest
-*/
+	Arbitrary Output Length Hashing Function
+	* computes SHA-256 of the data and a counter to generate a hash of length outlen
+	
+	# Inputs #
+	<> data = pointer to data to hash (SHA-256)
+	<> datalen = size of data to hash
+	<> outbuf = pointer to buffer to write arbitrary length hash
+	<> outlen = length of hash needed
+	
+	# Outputs #
+	<> hash written to *outbuf
+ */
+void hashlib_MGF1Hash(uint8_t* data, size_t datalen, uint8_t* outbuf, size_t outlen);
 
 // ##########################################
 // ### ADVANCED ENCRYPTION STANDARD (AES) ###
@@ -298,25 +304,41 @@ void hashlib_Sha256Final(sha256_ctx *ctx, uint8_t *digest);
     # Inputs #
     <> key = pointer to a 128, 192, or 256 bit key
     <> ks = pointer to an AES key schedule context
-    <> keysize = size of the key, in bits. Valid arguments are: 128, 192, and 256.
+    <> keysize = size of the key. Can take bytes or bits (because I know there will be those people who do it wrong because they don't read headers)
+			valid arguments: 16, 24, 32 (bytes) or 128, 192, 256 (bits). You're welcome.
      */
 void hashlib_AESLoadKey(const uint8_t* key, const aes_ctx* ks, size_t keysize);
 
 
 /*
-	AES Single Block ECB Encryptor
+	AES Single Block ECB-Mode Encryptor
+	* ECB-mode ciphers are insecure (see many-time pad)
+	* These functions are exposed in case a user wants to construct a cipher mode other than CBC.
+	* Unless you know what you are doing, please do not use this function.
+			Use hashlib_AESEncrypt() or hashlib_AESAuthEncrypt() below instead.
 	
 	# Inputs #
 	<> block_in = pointer to block of data to encrypt
 	<> block_out = pointer to buffer to write encrypted block
-	<> round_keys = pointer to round keys to use for encryption (pass aes_ctx->round_keys)
-	<> keysize = size of the AES key, in bits
+	<> ks = pointer to AES key schedule context
  */
 bool hashlib_AESEncryptBlock(
     const uint8_t* block_in,
     uint8_t* block_out,
     const aes_ctx* ks);
     
+/*
+	AES Single Block ECB-Mode Decryptor
+	* ECB-mode ciphers are insecure (see many-time pad)
+	* These functions are exposed in case a user wants to construct a cipher mode other than CBC.
+	* Unless you know what you are doing, please do not use this function.
+			Use hashlib_AESEncrypt() or hashlib_AESAuthEncrypt() below instead.
+	
+	# Inputs #
+	<> block_in = pointer to block of data to decrypt
+	<> block_out = pointer to buffer to write decrypted block
+	<> ks = pointer to AES key schedule context
+ */
 bool hashlib_AESDecryptBlock(
     const uint8_t* block_in,
     uint8_t* block_out,
