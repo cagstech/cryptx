@@ -1468,85 +1468,75 @@ _aes_SubWord:
 hashlib_AESLoadKey:
 	ld	hl, -25
 	call	ti._frameset
-	ld	hl, (ix + 12)
-	ld	de, 128
+	ld	de, (ix + 12)
 	xor	a, a
-	ld	(ix + -19), a
-	ld	iy, 44
-	ld	bc, 16
+	ld	bc, 128
+	push	de
+	pop	hl
 	or	a, a
 	sbc	hl, bc
-	jq	nz, BB22_3
-	ex	de, hl
-	ld	(ix + -12), iy
+	jq	nz, BB22_2
+	ld	(ix + -19), a
+	ld	bc, 4
+	ld	hl, 44
+	ld	(ix + -9), hl
+	jq	BB22_6
 BB22_2:
-	ld	de, 4
-	jq	BB22_11
-BB22_3:
-	push	de
-	pop	iy
 	ld	bc, 192
+	push	de
+	pop	hl
+	or	a, a
+	sbc	hl, bc
+	jq	nz, BB22_4
+	ld	(ix + -19), a
 	ld	hl, 52
-	ld	(ix + -12), hl
-	ld	de, 24
-	ld	hl, (ix + 12)
-	or	a, a
-	sbc	hl, de
-	jq	nz, BB22_5
-BB22_10:
-	ld	de, 6
-	push	bc
-	pop	hl
-	jq	BB22_11
-BB22_5:
-	ld	de, 32
-	ld	hl, (ix + 12)
-	or	a, a
-	sbc	hl, de
-	jq	nz, BB22_7
-BB22_6:
+	ld	(ix + -9), hl
+	ld	bc, 6
+	jq	BB22_6
+BB22_4:
 	ld	bc, 256
-	ld	de, 8
-	ld	hl, 60
-	ld	(ix + -12), hl
-	push	bc
+	push	de
 	pop	hl
+	or	a, a
+	sbc	hl, bc
+	jq	nz, BB22_20
+	ld	bc, 8
+	ld	hl, 60
+	ld	(ix + -9), hl
 	ld	a, 1
 	ld	(ix + -19), a
-BB22_11:
-	ld	bc, (ix + 6)
+BB22_6:
 	ld	iy, (ix + 9)
-	ld	(iy), hl
-	ld	(ix + -6), iy
+	ld	(iy), de
+	ld	(ix + -3), iy
 	lea	hl, iy + 3
-	ld	(ix + -3), hl
-	push	bc
-	pop	iy
+	ld	(ix + -12), hl
+	ld	iy, (ix + 6)
 	lea	iy, iy + 3
+	push	bc
+	pop	de
+	ld	(ix + -6), bc
+BB22_7:
 	push	de
 	pop	hl
-	push	de
-	pop	bc
-	ld	(ix + -9), de
-BB22_12:
-	ld	(ix + -15), hl
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jq	z, BB22_14
+	jq	z, BB22_9
 	ld	a, (iy + -3)
 	ld	bc, 0
 	ld	c, a
-	ld	e, 0
-	ld	a, e
+	ld	h, 0
+	ld	a, h
 	ld	l, 24
 	call	ti._lshl
 	ld	(ix + -18), bc
+	ld	(ix + -15), de
 	ld	d, a
 	ld	a, (iy + -2)
 	ld	bc, 0
 	ld	c, a
-	ld	a, e
+	ld	a, h
 	ld	l, 16
 	call	ti._lshl
 	push	bc
@@ -1559,8 +1549,7 @@ BB22_12:
 	ld	a, (iy + -1)
 	ld	bc, 0
 	ld	c, a
-	ld	d, 0
-	ld	a, d
+	xor	a, a
 	ld	l, 8
 	call	ti._lshl
 	ld	hl, (ix + -18)
@@ -1568,53 +1557,48 @@ BB22_12:
 	ld	a, (iy)
 	ld	bc, 0
 	ld	c, a
-	ld	a, d
+	xor	a, a
 	call	ti._ladd
-	ld	(ix + -18), iy
-	ld	iy, (ix + -3)
+	lea	bc, iy + 0
+	ld	iy, (ix + -12)
 	ld	(iy), hl
 	ld	(iy + 3), e
-	ld	bc, (ix + -9)
-	ld	hl, (ix + -15)
-	dec	hl
+	ld	de, (ix + -15)
+	dec	de
 	lea	iy, iy + 4
-	ld	(ix + -3), iy
-	ld	iy, (ix + -18)
-	lea	iy, iy + 4
-	jq	BB22_12
-BB22_14:
-	ld	a, 2
+	ld	(ix + -12), iy
 	push	bc
 	pop	iy
-	lea	hl, iy + 0
-	ld	c, a
+	lea	iy, iy + 4
+	jq	BB22_7
+BB22_9:
+	ld	c, 2
+	ld	hl, (ix + -6)
 	call	ti._ishl
-	push	hl
-	pop	bc
-	dec	bc
-	ld	(ix + -3), iy
-BB22_15:
-	ld	hl, (ix + -12)
-	ld	de, (ix + -3)
+	ld	bc, (ix + -6)
+	dec	hl
+	ld	(ix + -15), hl
+	push	bc
+	pop	de
+	ld	hl, (ix + -9)
+BB22_10:
 	or	a, a
 	sbc	hl, de
-	jq	z, BB22_24
-	lea	hl, iy + 0
-	ld	iy, (ix + -6)
-	ld	(ix + -15), bc
-	add	iy, bc
+	jq	z, BB22_19
+	ld	iy, (ix + -3)
+	ex	de, hl
+	ld	de, (ix + -15)
+	add	iy, de
 	ld	de, (iy)
-	push	hl
-	pop	bc
 	ld	a, (iy + 3)
-	ld	hl, (ix + -3)
+	ld	(ix + -12), hl
 	call	ti._iremu
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
 	ld	(ix + -18), iy
-	jq	nz, BB22_18
-	ld	hl, (ix + -3)
+	jq	nz, BB22_13
+	ld	hl, (ix + -12)
 	dec	hl
 	ld	(ix + -22), hl
 	push	de
@@ -1640,7 +1624,7 @@ BB22_15:
 	pop	hl
 	pop	hl
 	ld	hl, (ix + -22)
-	ld	bc, (ix + -9)
+	ld	bc, (ix + -6)
 	call	ti._idivu
 	ld	c, 2
 	call	ti._ishl
@@ -1655,23 +1639,23 @@ BB22_15:
 	push	hl
 	pop	bc
 	ld	a, e
-	jq	BB22_23
-BB22_18:
-	ld	(ix + -22), a
-	ld	(ix + -25), de
+	jq	BB22_18
+BB22_13:
+	ld	(ix + -25), a
+	ld	(ix + -22), de
 	ld	a, (ix + -19)
 	ld	e, 1
 	xor	a, e
 	bit	0, a
-	jq	nz, BB22_21
+	jq	nz, BB22_17
 	ld	bc, 4
 	or	a, a
 	sbc	hl, bc
-	ld	a, (ix + -22)
-	jq	nz, BB22_22
+	jq	nz, BB22_17
+	ld	a, (ix + -25)
 	ld	l, a
 	push	hl
-	ld	hl, (ix + -25)
+	ld	hl, (ix + -22)
 	push	hl
 	call	_aes_SubWord
 	push	hl
@@ -1679,15 +1663,12 @@ BB22_18:
 	ld	a, e
 	pop	hl
 	pop	hl
-	jq	BB22_23
-BB22_21:
-	ld	bc, (ix + -25)
-	ld	a, (ix + -22)
-	jq	BB22_23
-BB22_22:
-	ld	bc, (ix + -25)
-BB22_23:
-	ld	iy, (ix + -6)
+	jq	BB22_18
+BB22_17:
+	ld	bc, (ix + -22)
+	ld	a, (ix + -25)
+BB22_18:
+	ld	iy, (ix + -3)
 	ld	hl, (iy + 3)
 	ld	e, (iy + 6)
 	call	ti._lxor
@@ -1696,44 +1677,20 @@ BB22_23:
 	pop	iy
 	ld	(iy + 4), hl
 	ld	(iy + 7), e
-	ld	hl, (ix + -3)
-	inc	hl
-	ld	(ix + -3), hl
-	ld	iy, (ix + -6)
+	ld	de, (ix + -12)
+	inc	de
+	ld	iy, (ix + -3)
 	lea	iy, iy + 4
-	ld	(ix + -6), iy
-	ld	iy, (ix + -9)
-	ld	bc, (ix + -15)
-	jq	BB22_15
-BB22_24:
+	ld	(ix + -3), iy
+	ld	bc, (ix + -6)
+	ld	hl, (ix + -9)
+	jq	BB22_10
+BB22_19:
 	ld	a, 1
-BB22_25:
+BB22_20:
 	ld	sp, ix
 	pop	ix
 	ret
-BB22_7:
-	ld	hl, (ix + 12)
-	ld	de, 128
-	or	a, a
-	sbc	hl, de
-	jq	nz, BB22_9
-	ld	hl, 44
-	ld	(ix + -12), hl
-	lea	hl, iy + 0
-	jq	BB22_2
-BB22_9:
-	ld	de, 192
-	ld	hl, (ix + 12)
-	or	a, a
-	sbc	hl, de
-	jq	z, BB22_10
-	ld	bc, 256
-	ld	hl, (ix + 12)
-	or	a, a
-	sbc	hl, bc
-	ld	a, 0
-	jq	z, BB22_6
-	jq	BB22_25
 	
 _aes_AddRoundKey:
 	ld	hl, -3

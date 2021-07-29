@@ -53,7 +53,7 @@ int main(void)
     uint8_t sha256_digest[SHA256_DIGEST_LEN];
 	ti_CloseAll();
 
-	if (!(fp = ti_Open("GRAPHX", "r"))){
+	if (!(fp = ti_Open("HASHLIB", "r"))){
 		return 1;
 	}
 	file_ptr = ti_GetDataPtr(fp);

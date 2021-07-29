@@ -304,11 +304,15 @@ void hashlib_MGF1Hash(uint8_t* data, size_t datalen, uint8_t* outbuf, size_t out
     # Inputs #
     <> key = pointer to a 128, 192, or 256 bit key
     <> ks = pointer to an AES key schedule context
-    <> keysize = size of the key. Can take bytes or bits (because I know there will be those people who do it wrong because they don't read headers)
-			valid arguments: 16, 24, 32 (bytes) or 128, 192, 256 (bits). You're welcome.
+    <> bitlen = the bit length of the AES key supplied. You can use the defines below.
      */
-void hashlib_AESLoadKey(const uint8_t* key, const aes_ctx* ks, size_t keysize);
+bool hashlib_AESLoadKey(const uint8_t* key, const aes_ctx* ks, size_t bitlen);
 
+enum _aes_key_sizes {
+	AES_128 = 128,
+	AES_192 = 192,
+	AES_256 = 256
+};
 
 /*
 	AES Single Block ECB-Mode Encryptor

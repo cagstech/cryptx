@@ -292,7 +292,7 @@ _hexc:
 	section	.rodata,"a",@progbits
 	private	L_.str
 L_.str:
-	db	"GRAPHX",000o
+	db	"HASHLIB",000o
 
 	section	.rodata,"a",@progbits
 	private	L_.str.1
