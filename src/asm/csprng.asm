@@ -2,7 +2,7 @@
 public hashlib_CSPRNGInit
 public hashlib_CSPRNGAddEntropy
 
-hashlib_CSPRNGInit:
+hashlib_SPRNGInit:
 ; ix = selected byte
 ; de = current deviation
 ; hl = starting address
@@ -112,7 +112,7 @@ _test_bit:
     ret
     
 	
-hashlib_CSPRNGAddEntropy:
+hashlib_SPRNGAddEntropy:
     ld hl, (_csprng_state)
     add	hl,de
 	or	a,a
@@ -129,3 +129,99 @@ hashlib_CSPRNGAddEntropy:
     inc de
     djnz .byte_read_loop
     ret
+
+hashlib_SPRNGRandom:
+	ld b, 5
+	
+.init_loop
+	ld hl, (_sprng_read_addr)
+	add hl,de
+	or a,a
+	sbc hl,de
+	jr nz, .have_addr
+	
+	call hashlib_SPRNGInit
+	djnz .init_loop
+	
+	ld hl, (_sprng_read_addr)
+	add hl,de
+	or a,a
+	sbc hl,de
+	jr z, .error
+	
+.have_addr:
+; set rand to 0
+	ld hl, $E40000
+	ld de, _sprng_rand
+	ld bc, 4
+	ldir
+	
+; hash entropy pool
+	ld hl, _sprng_sha_ctx
+	push hl
+	ld hl, _sprng_sha_mbuffer
+	push hl
+	call hashlib_Sha256Init
+	pop hl							; leave the context pointer on the stack
+	ld hl, _sprng_entropy_pool		;  it's arg for next call
+	push hl
+	ld hl, 192
+	push hl
+	call hashlib_Sha256Update
+	pop hl
+	pop hl							; leave context pointer on stack again
+	ld hl, _sprng_sha_digest
+	push hl
+	call hashlib_Sha256Final
+	pop hl
+	pop bc
+	pop bc
+	
+; xor hash cyclically into _rand
+	ld ix, _sprng_rand
+	ld b, 8
+	; hl = hash digest
+.xor_loop:
+	ld a, (ix + 0)
+	xor a, (hl)
+	ld (ix + 0), a
+	inc hl
+	ld a, (ix + 1)
+	xor a, (hl)
+	ld (ix + 1), a
+	inc hl
+	ld a, (ix + 2)
+	xor a, (hl)
+	ld (ix + 2), a
+	inc hl
+	ld a, (ix + 3)
+	xor a, (hl)
+	ld (ix + 3), a
+	inc hl
+	djnz .xor_loop
+	
+; add entropy
+	call hashlib_SPRNGAddEntropy
+	ld hl, (_sprng_rand)
+	ld e, (_sprng_rand+3)
+	ret
+.error:
+	sbc hl, hl
+	ld e, l
+	ret
+	
+	
+	
+
+
+
+
+
+
+_sprng_read_addr:		rb 3
+	
+_sprng_entropy_pool		:=	$E30800
+_sprng_rand				:=	_sprng_entropy_pool + 192
+_sprng_sha_digest		:=	_sprng_rand + 4
+_sprng_sha_mbuffer		:=	_sprng_sha_digest + 32
+_sprng_sha_ctx			:=	_sprng_sha_mbuffer + (64*4)

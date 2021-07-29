@@ -103,6 +103,7 @@ int hashlib_AESEncrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key,
 size_t hashlib_AESDecrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[]);
 size_t hashlib_PadPlaintext(const uint8_t* in, size_t len, uint8_t* out, uint8_t alg, uint8_t schm);
 size_t hashlib_StripPadding(const uint8_t* in, size_t len, uint8_t* out, uint8_t alg, uint8_t schm);
+bool hashlib_AESVerifyMAC(uint8_t *ciphertext, size_t len, aes_ctx *ks_mac);
 /*
     #########################
     ### Math Dependencies ###
@@ -150,23 +151,26 @@ bool hashlib_CSPRNGAddEntropy(void){
     return true;
 }
 
-
+#define rand ((uint8_t*)0xE30800+192)
+#define SHA_MBUFFER ((uint32_t*)rand + 4)
+#define SHA_CTX	(((SHA256_CTX*)SHA_MBUFFER + 64*4))
 uint32_t hashlib_CSPRNGRandom(void){
-	uint32_t mbuffer[80];
+	//uint32_t mbuffer[80];
     uint8_t ctr = 5;
     while((!csprng_state.eread) && ctr--) hashlib_CSPRNGInit();
     if(!csprng_state.eread) return 0;
-    uint8_t rand[4] = {0};    // initialize u32. Don't assign a value so it's filled with garbage
-    uint32_t randint = 0;
+    //uint8_t rand[4] = {0};    // initialize u32. Don't assign a value so it's filled with garbage
+    memset(rand, 0, 4);
+    uint32_t* randint = (uint32_t*)rand;
     uint8_t hash[32];
-    SHA256_CTX ctx;
+    //SHA256_CTX ctx;
     volatile uint8_t* eread = csprng_state.eread;
     if(eread==NULL) return 0;
     for(uint8_t i = 0; i < 4; i++)
         rand[i] ^= *eread;  // read *eread 4 times, XORing the value and writing it into each byte of rand[]
-    hashlib_Sha256Init(&ctx, &mbuffer);
-    hashlib_Sha256Update(&ctx, &csprng_state.epool, EPOOL_SIZE);
-    hashlib_Sha256Final(&ctx, &hash);
+    hashlib_Sha256Init(SHA_CTX, SHA_MBUFFER);
+    hashlib_Sha256Update(SHA_CTX, &csprng_state.epool, EPOOL_SIZE);
+    hashlib_Sha256Final(SHA_CTX, &hash);
     
     for(uint8_t i = 0; i<32; i+=4){ // break the SHA256 into 4-byte segments and XOR it with each block
         rand[0] ^= hash[i];
@@ -175,8 +179,8 @@ uint32_t hashlib_CSPRNGRandom(void){
         rand[3] ^= hash[i+3];
     }
     hashlib_CSPRNGAddEntropy();
-    memcpy(&randint, &rand, 4);
-    return randint;
+    //memcpy(&randint, &rand, 4);
+    return *randint;
 }
 
 void hashlib_RandomBytes(uint8_t* buffer, size_t size){
@@ -1009,8 +1013,10 @@ void aes_InvMixColumns(BYTE state[][4])
 	state[3][3] ^= gf_mul[col[3]][5];
 }
 
-void aes_encrypt_block(const BYTE in[], BYTE out[], const WORD key[], int keysize){
+void aes_encrypt_block(const BYTE in[], BYTE out[], aes_ctx* ks){
     BYTE state[4][4];
+    int keysize = ks->keysize;
+    uint32_t *key = ks->round_keys;
 	// Copy input array (should be 16 bytes long) to a matrix (sequential bytes are ordered
 	// by row, not col) called "state" for processing.
 	// *** Implementation note: The official AES documentation references the state by
@@ -1080,9 +1086,10 @@ void aes_encrypt_block(const BYTE in[], BYTE out[], const WORD key[], int keysiz
 	out[15] = state[3][3];
 }
 
-void aes_decrypt_block(const BYTE in[], BYTE out[], const WORD key[], int keysize){
+void aes_decrypt_block(const BYTE in[], BYTE out[], aes_ctx* ks){
     BYTE state[4][4];
-
+	int keysize = ks->keysize;
+    uint32_t *key = ks->round_keys;
 	// Copy the input to the state.
 	state[0][0] = in[0];
 	state[1][0] = in[1];
@@ -1153,8 +1160,8 @@ void aes_decrypt_block(const BYTE in[], BYTE out[], const WORD key[], int keysiz
 int hashlib_AESEncrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[])
 {
 	BYTE buf_in[AES_BLOCK_SIZE], buf_out[AES_BLOCK_SIZE], iv_buf[AES_BLOCK_SIZE];
-    int keysize = key->keysize;
-    uint32_t *round_keys = key->round_keys;
+    //int keysize = key->keysize;
+    //uint32_t *round_keys = key->round_keys;
 	int blocks, idx;
 
     if(in==NULL) return false;
@@ -1171,8 +1178,8 @@ int hashlib_AESEncrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key,
 	for (idx = 0; idx < blocks; idx++) {
 		memcpy(buf_in, &in[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
 		xor_buf(iv_buf, buf_in, AES_BLOCK_SIZE);
-		aes_encrypt_block(buf_in, buf_out, round_keys, keysize);
-		memcpy(&out[idx * (AES_BLOCK_SIZE)+1], buf_out, AES_BLOCK_SIZE);
+		aes_encrypt_block(buf_in, buf_out, key);
+		memcpy(&out[idx * (AES_BLOCK_SIZE)], buf_out, AES_BLOCK_SIZE);
 		memcpy(iv_buf, buf_out, AES_BLOCK_SIZE);
 	}
 
@@ -1182,8 +1189,8 @@ int hashlib_AESEncrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key,
 size_t hashlib_AESDecrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[])
 {
 	BYTE buf_in[AES_BLOCK_SIZE], buf_out[AES_BLOCK_SIZE], iv_buf[AES_BLOCK_SIZE];
-	int keysize = key->keysize;
-    uint32_t *round_keys = key->round_keys;
+	//int keysize = key->keysize;
+    //uint32_t *round_keys = key->round_keys;
 	int blocks, idx;
 
     if(in==NULL) return false;
@@ -1199,7 +1206,7 @@ size_t hashlib_AESDecrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* k
 
 	for (idx = 0; idx < blocks; idx++) {
 		memcpy(buf_in, &in[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
-		aes_decrypt_block(buf_in, buf_out, round_keys, keysize);
+		aes_decrypt_block(buf_in, buf_out, key);
 		xor_buf(iv_buf, buf_out, AES_BLOCK_SIZE);
 		memcpy(&out[idx * AES_BLOCK_SIZE], buf_out, AES_BLOCK_SIZE);
 		memcpy(iv_buf, buf_in, AES_BLOCK_SIZE);
@@ -1209,8 +1216,8 @@ size_t hashlib_AESDecrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* k
 
 int hashlib_AESOutputMAC(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key){
     BYTE buf_in[AES_BLOCK_SIZE], buf_out[AES_BLOCK_SIZE], iv_buf[AES_BLOCK_SIZE];
-    int keysize = key->keysize;
-    uint32_t *round_keys = key->round_keys;
+    //int keysize = key->keysize;
+    //uint32_t *round_keys = key->round_keys;
 	int blocks, idx;
 
     if(in==NULL) return false;
@@ -1227,11 +1234,30 @@ int hashlib_AESOutputMAC(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* ke
 	for (idx = 0; idx < blocks; idx++) {
 		memcpy(buf_in, &in[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
 		xor_buf(iv_buf, buf_in, AES_BLOCK_SIZE);
-		aes_encrypt_block(buf_in, buf_out, round_keys, keysize);
+		aes_encrypt_block(buf_in, buf_out, key);
 		memcpy(iv_buf, buf_out, AES_BLOCK_SIZE);
 	}
     memcpy(out, buf_out, AES_BLOCK_SIZE);
 
+	return true;
+}
+
+#define AES_IV_SIZE AES_BLOCKSIZE
+#define AES_MAC_SIZE AES_BLOCKSIZE
+bool hashlib_AESAuthEncrypt(const uint8_t *padded_plaintext, size_t len, uint8_t *ciphertext, aes_ctx *ks_encrypt, aes_ctx *ks_mac, uint8_t *iv) {
+	if((len % AES_BLOCKSIZE)) return false;
+	memcpy(ciphertext, iv, AES_BLOCKSIZE);
+	hashlib_AESEncrypt(padded_plaintext, len, &ciphertext[AES_IV_SIZE], ks_encrypt, iv);
+	hashlib_AESOutputMAC(ciphertext, len + AES_IV_SIZE, &ciphertext[len+AES_IV_SIZE], ks_mac);
+	return true;
+}
+
+bool hashlib_AESAuthDecrypt(const uint8_t *ciphertext, size_t len, uint8_t *plaintext, aes_ctx *ks_decrypt, aes_ctx *ks_mac) {
+	uint8_t iv[AES_BLOCKSIZE];
+	if((len>>4)<3) return false;
+	if(!hashlib_AESVerifyMAC(ciphertext, len, ks_mac)) return false;
+	memcpy(iv, ciphertext, AES_BLOCKSIZE);
+	hashlib_AESDecrypt(&ciphertext[AES_BLOCKSIZE], len - AES_MAC_SIZE - AES_IV_SIZE, plaintext, ks_decrypt, iv);
 	return true;
 }
 
@@ -1317,7 +1343,7 @@ size_t hashlib_AESStripPadding(const uint8_t* in, size_t len, uint8_t* out, uint
     if(out==NULL) return 0;
     if(len==0) return 0;
     size_t outlen;
-    memset(out, 0, len);
+    //memset(out, 0, len);
     if(schm == SCHM_DEFAULT) schm = SCHM_PKCS7;
     if(schm > SCHM_ANSIX923) return 0;
     switch(schm){
@@ -1333,6 +1359,7 @@ size_t hashlib_AESStripPadding(const uint8_t* in, size_t len, uint8_t* out, uint
             break;
     }
     memcpy(out, in, outlen);
+	memset(&out[outlen], 0, len-outlen);
     return outlen;
 }
 
