@@ -72,7 +72,7 @@ typedef struct {
 */
 
 #define hashlib_FastMemBufferUnsafe		((void*)0xE30800)	// DO NOT USE IF USING THE SPRNG
-#define hashlib_FastMemBufferSafe		((void*)0xE30A0D)
+#define hashlib_FastMemBufferSafe		((void*)0xE30A04)
 
 
 // ###################################
@@ -161,7 +161,7 @@ size_t hashlib_RSAStripPadding(
     While users can read from it and add entropy to it manually, they cannot modify it
         directly.
     The CSPRNG consists of a single `volatile uint8_t*`, internally called `eread` as well as
-        a 128-byte entropy pool.
+        a 119-byte entropy pool.
    
     ### Polling for Most Entropic Bit ###
         * hashlib_SPRNGInit();
@@ -179,14 +179,12 @@ size_t hashlib_RSAStripPadding(
         
     ### Generation of Random Numbers ###
         * hashlib_SPRNGRandom()
-        <> Allocate but do not assign a uint32_t. This will fill the value with garbage.
-        <> Read from eread 4 times, XOR'ing each read with 8 bits of our partial rand.
+        <> Allocate a uint32_t in FastMem
+        <> Call hashlib_SPRNGAddEntropy()
         <> SHA-256 hash the entropy pool, then XOR the hash with the partial rand in 4-byte blocks.
-        <> Call hashlib_CSPRNGAddEntropy() to scramble the state
         <> Return the uint32_t
         
-    * hashlib_SPRNGAddEntropy() may be called by the user in a loop to provide more dynamic entropy
-        than this lib can provide by default
+    * hashlib_SPRNGAddEntropy() may be called by the user in a loop to provide a more dynamic SPRNG state than can be provided internally.
         
     * This SPRNG passes all dieharder tests for a sample size of 16,384 bytes or more *
 */
@@ -205,7 +203,7 @@ void* hashlib_SPRNGInit(void);
 	It will zero out the entropy pool to remove the predictable data and then add entropy.
 */
 #define hashlib_SPRNGRepairState() \
-	memset(hashlib_FastMemBufferUnsafe, 0, 192)
+	memset(hashlib_FastMemBufferUnsafe, 0, 119)
 
 //  Reads from byte selected 128 times, XORing new reads with existing data in the entropy pool
 bool hashlib_SPRNGAddEntropy(void);
@@ -223,7 +221,6 @@ uint32_t hashlib_SPRNGRandom(void);
     # Outputs #
     <> True if no errors encountered
     <> False if buffer was NULL or size was 0
-    ** It is planned to make this compatible with beck's BIGINT lib
  */
 bool hashlib_RandomBytes(uint8_t *buffer, size_t size);
 
@@ -305,6 +302,26 @@ void hashlib_Sha256Final(sha256_ctx *ctx, uint8_t *digest);
      */
 void hashlib_AESLoadKey(const uint8_t* key, const aes_ctx* ks, size_t keysize);
 
+
+/*
+	AES Single Block ECB Encryptor
+	
+	# Inputs #
+	<> block_in = pointer to block of data to encrypt
+	<> block_out = pointer to buffer to write encrypted block
+	<> round_keys = pointer to round keys to use for encryption (pass aes_ctx->round_keys)
+	<> keysize = size of the AES key, in bits
+ */
+bool hashlib_AESEncryptBlock(
+    const uint8_t* block_in,
+    uint8_t* block_out,
+    const aes_ctx* ks);
+    
+bool hashlib_AESDecryptBlock(
+    const uint8_t* block_in,
+    uint8_t* block_out,
+    const aes_ctx* ks);
+
 /*
     AES-CBC Encrypt
     
@@ -314,6 +331,11 @@ void hashlib_AESLoadKey(const uint8_t* key, const aes_ctx* ks, size_t keysize);
     <> ciphertext = pointer to buffer to write encrypted output
     <> ks = pointer to ks schedule initialized with AESLoadKey
     <> iv = pointer to initialization vector (psuedorandom 16-byte field)
+    * input and output buffers may safely alias, so long as out <= in.
+    
+    # Outputs #
+    False is len not a multiple of the block size
+    True if encryption succeeded
  */
 bool hashlib_AESEncrypt(
     const uint8_t* plaintext,
@@ -327,9 +349,14 @@ bool hashlib_AESEncrypt(
 	
     <> ciphertext = pointer to data to decrypt
     <> len = size of data to decrypt
-    <> plaintext = pointer to buffer to write decompressed output
+    <> plaintext = pointer to buffer to write decompressed output (can be the same as ciphertext)
     <> ks = pointer to initialized key schedule
-    <> iv = pointer to initialization vector 
+    <> iv = pointer to initialization vector
+    * input and output buffers may safely alias, so long as out <= in.
+    
+    # Outputs #
+    False is len not a multiple of the block size
+    True if encryption succeeded
  */
 size_t hashlib_AESDecrypt(
     const uint8_t* ciphertext,
@@ -348,20 +375,18 @@ size_t hashlib_AESDecrypt(
     # Inputs #
     <> plaintext = pointer to data to encrypt (pass through padding helper func first)
     <> len = size of data to encrypt
-    <> ciphertext = pointer to buffer to write encrypted output
+    <> mac = pointer to buffer to write MAC. Must be equal to the AES blocksize.
     <> ks = pointer to ks schedule initialized with AESLoadKey
     
     # NOTICES #
     ** DO NOT use the same key schedule for hashlib_AESOutputMAC() as you would for
         hashlib_AESEncrypt(). This exposes your message to attacks. Generate two keys,
         load them into separate key schedules, and use one for MAC and one for encryption. **
-    ** It is recommended to use SCHM_ISO_M2 to pad the plaintext before passing it
-        to this function. Use hashlib_PadInputPlaintext(). **
  */
 bool hashlib_AESOutputMAC(
     const uint8_t* plaintext,
     size_t len,
-    uint8_t* ciphertext,
+    uint8_t* mac,
     const aes_ctx* ks);
 
 /*
@@ -374,6 +399,10 @@ bool hashlib_AESOutputMAC(
     <> len = size of the ciphertext to verify (should be equal to padded message + 1 block for MAC)
     <> ks_mac = the key schedule with which to verify the MAC
     * Compares the CBC encryption of the ciphertext (excluding the last block) over ks_mac with the last block of the ciphertext
+    
+    # Ouputs #
+    True if last block of ciphertext matches MAC of ciphertext (excluding last block)
+    False otherwise
 
  */
 bool hashlib_AESVerifyMAC(const uint8_t *ciphertext, size_t len, const aes_ctx *ks_mac);
@@ -395,6 +424,9 @@ bool hashlib_AESVerifyMAC(const uint8_t *ciphertext, size_t len, const aes_ctx *
     <> ks_encrypt = pointer to the key schedule to use for encryption.
     <> ks_mac = pointer to the key schedule to use for the MAC  ** MUST BE DIFFERENT THAN KS_ENCRYPT **
     <> iv = the initialization vector (random buffer of size AES_BLOCKSIZE) to use for encryption.
+    * input and output buffers may safely alias, so long as out <= in.
+		** you can write the padded plaintext to &ciphertext[AES_BLOCKSIZE],
+			and then pass that as *padded_plaintext and ciphertext as *ciphertext
     
     # Outputs #
     <> A full ciphertext in ciphertext containing:
@@ -424,6 +456,7 @@ bool hashlib_AESAuthEncrypt(
     <> ks_decrypt = pointer to the key schedule to use for decryption.
     <> ks_mac = pointer to the key schedule to use for the MAC  ** MUST BE DIFFERENT THAN KS_ENCRYPT **
     * IV is not passed here, it should be the first block of the ciphertext *
+    * input and output buffers may safely alias, so long as out <= in.
     
     # Outputs #
     <> False if len is not greater than 2 times the AES blocksize.
@@ -446,6 +479,10 @@ bool hashlib_AESAuthDecrypt(
     <> len = size of data to pad, in bytes (real size, not block-aligned size)
     <> outbuf = pointer to buffer large enough to hold padded data (see macros below)
     <> schm = padding scheme to pad with (see enumerations below)
+    * input and output buffers may safely alias, so long as out <= in.
+    
+    # Outputs #
+    The padded size of the message
  */
  
 size_t hashlib_AESPadMessage(
@@ -462,9 +499,13 @@ size_t hashlib_AESPadMessage(
     <> len = size of data to pad, in bytes (real size, not block-aligned size)
     <> outbuf = pointer to buffer large enough to hold padded data (see macros below)
     <> schm = padding scheme to pad with (see enumerations below)
+    * input and output buffers may safely alias, so long as out <= in.
     
     * If input SCHM mode is SCHM_ANSIX923, size returned is the same as input size.
         You will need to maintain your own expected unpadded data length
+        
+	# Outputs #
+	The unpadded message size
  */
 size_t hashlib_AESStripPadding(
     const uint8_t* plaintext,

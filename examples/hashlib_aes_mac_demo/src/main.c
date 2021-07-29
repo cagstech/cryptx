@@ -38,17 +38,17 @@ int main(void)
     uint8_t key_mac[KEYSIZE];   // ***_MUST_*** use different keys
     uint8_t iv[IV_LEN];
     size_t str_len = strlen(str);
-    size_t pad_pt_len = hashlib_AESPaddedSize(str_len);
-    size_t ct_len = pad_pt_len + AES_IV_SIZE + AES_MAC_SIZE;
-    uint8_t *pad_pt = hashlib_AllocContext(pad_pt_len);
+    size_t padded_len;
+    size_t ct_len = hashlib_AESAuthCiphertextSize(str_len);
+    
     uint8_t* ct = hashlib_AllocContext(ct_len);
-    uint8_t* reverse_ct = hashlib_AllocContext(pad_pt_len);
+    //uint8_t* rev_ct = hashlib_AllocContext(ct_len - (AES_BLOCKSIZE<<1));
+    uint8_t* depad = hashlib_AllocContext(ct_len - (AES_BLOCKSIZE<<1));
+    strcpy(CEMU_CONSOLE, "\n----- AES with MAC AUTH DEMO -----\n");
+    memcpy(&ct[AES_BLOCKSIZE], str, str_len);
+    padded_len = hashlib_AESPadMessage(&ct[AES_BLOCKSIZE], str_len, &ct[AES_BLOCKSIZE], SCHM_DEFAULT);
+    hexdump(&ct[AES_BLOCKSIZE], padded_len, "-- Padded original msg --");
     
-    hashlib_AESPadMessage(str, str_len, pad_pt, SCHM_DEFAULT);
-    hexdump(pad_pt, pad_pt_len, "-- Padded message --");
-    
-    strcpy(CEMU_CONSOLE, "----- AES with MAC AUTH DEMO -----\n");
-    sprintf(CEMU_CONSOLE, "The string length is: %u.\nThe padded size is: %u.\nThe full ciphertext size is: %u.\n", str_len, pad_pt_len, ct_len);
     
     // Load the distinct keys into respective key schedules
     hashlib_RandomBytes(key_aes, KEYSIZE);
@@ -58,20 +58,25 @@ int main(void)
     
     // get random IV
     hashlib_RandomBytes(iv, IV_LEN);
-    hexdump(iv, AES_BLOCKSIZE, "-- Initialization Vector --");
     
     // call the function macro in the library header
-    if(!hashlib_AESAuthEncrypt(pad_pt, pad_pt_len, ct, &ctx_enc, &ctx_mac, iv)){
+    if(!hashlib_AESAuthEncrypt(&ct[AES_BLOCKSIZE], padded_len, ct, &ctx_enc, &ctx_mac, iv)){
 		strcpy(CEMU_CONSOLE, "Encryption Failed for some reason.\n"); return 1;
 	}
     
     // reverse the encryption
     hexdump(ct, ct_len, "-- Result for unmodified message --");
-    if(hashlib_AESAuthDecrypt(ct, ct_len, reverse_ct, &ctx_enc, &ctx_mac))
+    if(hashlib_AESAuthDecrypt(ct, ct_len, ct, &ctx_enc, &ctx_mac))
         strcpy(CEMU_CONSOLE, "Decryption Succeeded, MAC Verified.\n");
     else {strcpy(CEMU_CONSOLE, "Decryption Failed, MAC mismatch.\n"); return 1;}
     
-    sprintf(CEMU_CONSOLE, "The string is '%s'.\n", reverse_ct);
+    hashlib_AESStripPadding(ct, padded_len, depad, SCHM_DEFAULT);
+    hexdump(depad, padded_len, "-- Padded decrypted msg --");
+    sprintf(CEMU_CONSOLE, "The string is '%s'.\n", depad);
+    padded_len = hashlib_AESPadMessage(depad, str_len, &ct[AES_BLOCKSIZE], SCHM_DEFAULT);
+    if(!hashlib_AESAuthEncrypt(&ct[AES_BLOCKSIZE], padded_len, ct, &ctx_enc, &ctx_mac, iv)){
+		strcpy(CEMU_CONSOLE, "Encryption Failed for some reason.\n"); return 1;
+	}
     // calculate the MAC of blocks0:end-1] of the decrypted msg
     // the output should match the MAC computed above
     strcpy(CEMU_CONSOLE, "-- Chosen Ciphertext Attack Demo --\n");
@@ -80,15 +85,15 @@ int main(void)
     hexdump(ct, ct_len, NULL);
     strcpy(CEMU_CONSOLE, "Any key to continue\n");
     os_GetKey();
-    if(hashlib_AESAuthDecrypt(ct, ct_len, reverse_ct, &ctx_enc, &ctx_mac))
+    if(hashlib_AESAuthDecrypt(ct, ct_len, ct, &ctx_enc, &ctx_mac))
         strcpy(CEMU_CONSOLE, "Decryption Succeeded, MAC Verified.\n");
     else {strcpy(CEMU_CONSOLE, "Decryption Failed, MAC mismatch.\n"); return 1;}
         
     strcpy(CEMU_CONSOLE, "\n");
     
     free(ct);
-    free(pad_pt);
-    free(reverse_ct);
+    //free(rev_ct);
+    free(depad);
     return 0;
     
 }
