@@ -1,3 +1,9 @@
+; HASHLIB Cryptography Library:
+; Assembly Re-write
+; code by ACagliano and beckadamtheinventor
+; optimized by beckadamtheinventor
+
+
 export hashlib_Sha256Init
 export hashlib_Sha256Update
 export hashlib_Sha256Final
@@ -34,6 +40,7 @@ u64_addi:
 	djnz .loop
 	ret
 
+;---------------------------------------------------------------
 ; void hashlib_Sha256Init(SHA256_CTX *ctx, uint32_t *mbuffer);
 hashlib_Sha256Init:
 	pop bc,de
@@ -53,6 +60,7 @@ hashlib_Sha256Init:
 	ldir
 	ret
 
+;------------------------------------------------------------------------------
 ; void hashlib_Sha256Update(SHA256_CTX *ctx, const BYTE data[], size_t len);
 hashlib_Sha256Update:
 	call ti._frameset0
@@ -112,6 +120,7 @@ _sha256_update_apply_transform:
 	ld de, (ix + 6)
 	ret
 
+;--------------------------------------------------------
 ; void hashlib_Sha256Final(SHA256_CTX *ctx, BYTE hash[]);
 hashlib_Sha256Final:
 	call ti._frameset0
@@ -210,6 +219,7 @@ _sha256_reverse_endianness:
 	djnz _sha256_reverse_endianness
 	ret
 
+;-------------------------------------------------------------
 ; helper macro to xor [B,C] with [R1,R2] storing into [R1,R2]
 ; destroys: af
 macro _xorbc? R1,R2
@@ -221,6 +231,7 @@ macro _xorbc? R1,R2
 	ld R2,a
 end macro
 
+;-------------------------------------------------------------
 ; helper macro to add [B,C] with [R1,R2] storing into [R1,R2]
 ; destroys: af
 ; note: this will add including the carry flag, so be sure of what the carry flag is before this
@@ -242,6 +253,7 @@ macro _addbchigh? R1,R2
 	ld R1,a
 end macro
 
+;------------------------------------------------------------------------------
 ; helper macro to move [d,e,h,l] <- [l,e,d,h] therefore shifting 8 bits right.
 ; destroys: af
 macro _rotright8?
@@ -252,6 +264,7 @@ macro _rotright8?
 	ld d,a
 end macro
 
+;-----------------------------------------------------------------------------
 ; helper macro to move [d,e,h,l] <- [e,h,l,d] therefore shifting 8 bits left.
 ; destroys: af
 macro _rotleft8?
@@ -262,7 +275,7 @@ macro _rotleft8?
 	ld l,a
 end macro
 
-
+;---------------------------------------------------------
 ; #define ROTLEFT(a,b) (((a) << (b)) | ((a) >> (32-(b))))
 ;input: [d,e,h,l], b
 ;output: [d,e,h,l]
@@ -278,6 +291,7 @@ _ROTLEFT:
 	djnz .
 	ret
 
+;----------------------------------------------------------
 ; #define ROTRIGHT(a,b) (((a) >> (b)) | ((a) << (32-(b))))
 ;input: [d,e,h,l], b
 ;output: [d,e,h,l]
@@ -294,6 +308,7 @@ _ROTRIGHT:
 	djnz .
 	ret
 
+;---------------------------------------------------------------
 ; #define SIG0(x) (ROTRIGHT(x,7) ^ ROTRIGHT(x,18) ^ ((x) >> 3))
 ;input [d,e,h,l]
 ;output [d,e,h,l]
@@ -324,6 +339,7 @@ _SIG0:
 	_xorbc h,l  ;xor first ROTRIGHT result with result of prior xor (lower 16 bits)
 	ret
 
+;-----------------------------------------------------------------
 ; #define SIG1(x) (ROTRIGHT(x,17) ^ ROTRIGHT(x,19) ^ ((x) >> 10))
 ;input: [d,e,h,l]
 ;output: [d,e,h,l]
@@ -354,7 +370,7 @@ _SIG1:
 	_xorbc h,l  ;xor first ROTRIGHT result with result of prior xor (lower 16 bits)
 	ret
 
-
+;------------------------------------------
 ; void _sha256_transform(SHA256_CTX *ctx);
 _sha256_transform:
 ._h := -4
@@ -662,6 +678,8 @@ _sha256_m_buffer_ptr:=$-3
 	pop ix
 	ret
 
+;-----------------
+; sha256 state
 
 _sha256_state_init:
 	dl 648807

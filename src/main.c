@@ -98,8 +98,8 @@ bool hashlib_CompareDigest(uint8_t *dig1, uint8_t *dig2, size_t len);
 size_t hashlib_b64encode(char *b64buffer, const uint8_t *data, size_t len);
 size_t hashlib_b64decode(uint8_t *buffer, size_t len, const char *b64data);
 
-int hashlib_AESEncrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[]);
-size_t hashlib_AESDecrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[]);
+bool hashlib_AESEncrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[], uint8_t ciphermode);
+bool hashlib_AESDecrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[], uint8_t ciphermode);
 size_t hashlib_PadPlaintext(const uint8_t* in, size_t len, uint8_t* out, uint8_t alg, uint8_t schm);
 size_t hashlib_StripPadding(const uint8_t* in, size_t len, uint8_t* out, uint8_t alg, uint8_t schm);
 bool hashlib_AESVerifyMAC(uint8_t *ciphertext, size_t len, aes_ctx *ks_mac);
@@ -648,20 +648,12 @@ bool hashlib_AESLoadKey(const BYTE key[], aes_ctx* w, int keysize)
 	                  0xab000000,0x4d000000,0x9a000000};
 
 	switch (keysize) {
-		case 16:
-			keysize<<=3;
-		case 128:
-			Nr = 10; Nk = 4; break;
-		case 24:
-			keysize<<=3;
-		case 192:
-			Nr = 12; Nk = 6; break;
-		case 32:
-			keysize<<=3;
-		case 256:
-		Nr = 14; Nk = 8; break;
+		case 128: Nr = 10; Nk = 4; break;
+		case 192: Nr = 12; Nk = 6; break;
+		case 256: Nr = 14; Nk = 8; break;
 		default: return false;
 	}
+
     w->keysize = keysize;
 	for (idx=0; idx < Nk; ++idx) {
 		w->round_keys[idx] = ((uint32_t)(key[4 * idx]) << 24) | ((uint32_t)(key[4 * idx + 1]) << 16) |
@@ -1162,9 +1154,24 @@ void aes_decrypt_block(const BYTE in[], BYTE out[], aes_ctx* ks){
 	out[15] = state[3][3];
 }
 
+void increment_iv(BYTE iv[], size_t counter_size)
+{
+	int idx;
 
+	// Use counter_size bytes at the end of the IV as the big-endian integer to increment.
+	for (idx = AES_BLOCK_SIZE - 1; idx >= AES_BLOCK_SIZE - counter_size; idx--) {
+		iv[idx]++;
+		if (iv[idx] != 0 || idx == AES_BLOCK_SIZE - counter_size)
+			break;
+	}
+}
+
+enum _ciphermodes{
+AES_CBC,
+AES_CTR
+};
 #define AES_BLOCKSIZE 16
-int hashlib_AESEncrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[])
+bool hashlib_AESEncrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[], uint8_t ciphermode)
 {
 	BYTE buf_in[AES_BLOCK_SIZE], buf_out[AES_BLOCK_SIZE], iv_buf[AES_BLOCK_SIZE];
     //int keysize = key->keysize;
@@ -1174,26 +1181,46 @@ int hashlib_AESEncrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key,
     if(in==NULL) return false;
     if(out==NULL) return false;
     if(key==NULL) return false;
-
-	if ((in_len % AES_BLOCK_SIZE) != 0)
-		return false;
-
-	blocks = in_len / AES_BLOCK_SIZE;
-
-	memcpy(iv_buf, iv, AES_BLOCK_SIZE);
-
-	for (idx = 0; idx < blocks; idx++) {
-		memcpy(buf_in, &in[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
-		xor_buf(iv_buf, buf_in, AES_BLOCK_SIZE);
-		aes_encrypt_block(buf_in, buf_out, key);
-		memcpy(&out[idx * (AES_BLOCK_SIZE)], buf_out, AES_BLOCK_SIZE);
-		memcpy(iv_buf, buf_out, AES_BLOCK_SIZE);
+    
+    switch(ciphermode){
+		case AES_CBC:
+			if((in_len % AES_BLOCK_SIZE) != 0) return false;
+			blocks = in_len / AES_BLOCK_SIZE;
+			memcpy(iv_buf, iv, AES_BLOCK_SIZE);
+			for (idx = 0; idx < blocks; idx++) {
+				memcpy(buf_in, &in[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
+				xor_buf(iv_buf, buf_in, AES_BLOCK_SIZE);
+				aes_encrypt_block(buf_in, buf_out, key);
+				memcpy(&out[idx * (AES_BLOCK_SIZE)], buf_out, AES_BLOCK_SIZE);
+				memcpy(iv_buf, buf_out, AES_BLOCK_SIZE);
+			}
+			break;
+			
+		case AES_CTR:
+		{
+			size_t idx = 0, last_block_length;
+			BYTE iv_buf[AES_BLOCK_SIZE], out_buf[AES_BLOCK_SIZE];
+			if (in != out) memcpy(out, in, in_len);
+			memcpy(iv_buf, iv, AES_BLOCK_SIZE);
+			last_block_length = in_len - AES_BLOCK_SIZE;
+			if (in_len > AES_BLOCK_SIZE) {
+				for (idx = 0; idx < last_block_length; idx += AES_BLOCK_SIZE) {
+					aes_encrypt_block(iv_buf, out_buf, key);
+					xor_buf(out_buf, &out[idx], AES_BLOCK_SIZE);
+					increment_iv(iv_buf, AES_BLOCKSIZE);
+				}
+			}
+			aes_encrypt_block(iv_buf, out_buf, key);
+			xor_buf(out_buf, &out[idx], in_len - idx);   // Use the Most Significant bytes.
+		}
+			break;
+		default: return false;
+		
 	}
-
 	return true;
 }
 
-size_t hashlib_AESDecrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[])
+bool hashlib_AESDecrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[], uint8_t ciphermode)
 {
 	BYTE buf_in[AES_BLOCK_SIZE], buf_out[AES_BLOCK_SIZE], iv_buf[AES_BLOCK_SIZE];
 	//int keysize = key->keysize;
@@ -1203,21 +1230,27 @@ size_t hashlib_AESDecrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* k
     if(in==NULL) return false;
     if(out==NULL) return false;
     if(key==NULL) return false;
+	
+	switch(ciphermode){
+		case AES_CBC:
+			if((in_len % AES_BLOCK_SIZE) != 0) return false;
+			blocks = in_len / AES_BLOCK_SIZE;
+			memcpy(iv_buf, iv, AES_BLOCK_SIZE);
 
-	if ((in_len % AES_BLOCK_SIZE) != 0)
-		return false;
-
-	blocks = in_len / AES_BLOCK_SIZE;
-
-	memcpy(iv_buf, iv, AES_BLOCK_SIZE);
-
-	for (idx = 0; idx < blocks; idx++) {
-		memcpy(buf_in, &in[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
-		aes_decrypt_block(buf_in, buf_out, key);
-		xor_buf(iv_buf, buf_out, AES_BLOCK_SIZE);
-		memcpy(&out[idx * AES_BLOCK_SIZE], buf_out, AES_BLOCK_SIZE);
-		memcpy(iv_buf, buf_in, AES_BLOCK_SIZE);
+			for (idx = 0; idx < blocks; idx++) {
+				memcpy(buf_in, &in[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
+				aes_decrypt_block(buf_in, buf_out, key);
+				xor_buf(iv_buf, buf_out, AES_BLOCK_SIZE);
+				memcpy(&out[idx * AES_BLOCK_SIZE], buf_out, AES_BLOCK_SIZE);
+				memcpy(iv_buf, buf_in, AES_BLOCK_SIZE);
+			}
+			break;
+		case AES_CTR:
+			hashlib_AESEncrypt(in, in_len, out, key, iv, AES_CTR);
+			break;
+		default: return false;
 	}
+
     return true;
 }
 
@@ -1249,30 +1282,12 @@ int hashlib_AESOutputMAC(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* ke
 	return true;
 }
 
-#define AES_IV_SIZE AES_BLOCKSIZE
-#define AES_MAC_SIZE AES_BLOCKSIZE
-bool hashlib_AESAuthEncrypt(const uint8_t *padded_plaintext, size_t len, uint8_t *ciphertext, aes_ctx *ks_encrypt, aes_ctx *ks_mac, uint8_t *iv) {
-	if((len % AES_BLOCKSIZE)) return false;
-	memcpy(ciphertext, iv, AES_BLOCKSIZE);
-	hashlib_AESEncrypt(padded_plaintext, len, &ciphertext[AES_IV_SIZE], ks_encrypt, iv);
-	hashlib_AESOutputMAC(ciphertext, len + AES_IV_SIZE, &ciphertext[len+AES_IV_SIZE], ks_mac);
-	return true;
-}
 
-bool hashlib_AESAuthDecrypt(const uint8_t *ciphertext, size_t len, uint8_t *plaintext, aes_ctx *ks_decrypt, aes_ctx *ks_mac) {
-	uint8_t iv[AES_BLOCKSIZE];
-	if((len>>4)<3) return false;
-	if(!hashlib_AESVerifyMAC(ciphertext, len, ks_mac)) return false;
-	memcpy(iv, ciphertext, AES_BLOCKSIZE);
-	hashlib_AESDecrypt(&ciphertext[AES_BLOCKSIZE], len - AES_MAC_SIZE - AES_IV_SIZE, plaintext, ks_decrypt, iv);
-	return true;
-}
 
 enum _aes_padding_schemes {
-    SCHM_DEFAULT,
     SCHM_PKCS7,         // Pad with padding size
-    SCHM_ISO_M2,        // Pad with 0x80,0x00...0x00
-    SCHM_ANSIX923,      // Pad with randomness
+    SCHM_DEFAULT = SCHM_PKCS7,
+    SCHM_ISO2,        // Pad with 0x80,0x00...0x00
 };
 
 
@@ -1282,21 +1297,18 @@ size_t hashlib_AESPadMessage(const uint8_t* in, size_t len, uint8_t* out, uint8_
     if(in==NULL) return 0;
     if(out==NULL) return 0;
     if(len==0) return 0;
-    if(schm == SCHM_DEFAULT) schm = SCHM_PKCS7;
-    if(schm > SCHM_ANSIX923) return 0;
     if((len % blocksize) == 0) padded_len = len + blocksize;
     else padded_len = (( len / blocksize ) + 1) * blocksize;
     switch(schm){
         case SCHM_PKCS7:
             memset(&out[len], padded_len-len, padded_len-len);
             break;
-        case SCHM_ISO_M2:
+        case SCHM_ISO2:
             memset(&out[len], 0, padded_len-len);
             out[len] |= 0b10000000;
             break;
-        case SCHM_ANSIX923:
-            hashlib_RandomBytes(&out[len], padded_len-len);
-            break;
+        default:
+            return 0;
     }
     memcpy(out, in, len);
     return padded_len;
@@ -1346,19 +1358,16 @@ size_t hashlib_AESStripPadding(const uint8_t* in, size_t len, uint8_t* out, uint
     if(len==0) return 0;
     size_t outlen;
     //memset(out, 0, len);
-    if(schm == SCHM_DEFAULT) schm = SCHM_PKCS7;
-    if(schm > SCHM_ANSIX923) return 0;
     switch(schm){
         case SCHM_PKCS7:
             outlen = len - in[len-1];
             break;
-        case SCHM_ISO_M2:
+        case SCHM_ISO2:
             for(outlen = len-1; in[outlen] != 0x80; outlen--);
             outlen++;
             break;
-        case SCHM_ANSIX923:
-            outlen=len;
-            break;
+        default:
+            return 0;
     }
     memcpy(out, in, outlen);
 	memset(&out[outlen], 0, len-outlen);

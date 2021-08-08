@@ -1,7 +1,16 @@
+; HASHLIB
+; Secure Random Number Generator (SPRNG)
+; algorithms by ACagliano
+; SPRNGInit code by beckadamtheinventor
+; SPRNGAddEntropy and SPRNGRandom code by Acagliano
+; SPRNRandom code fixed and optimized by jacobly
+
 
 public hashlib_CSPRNGInit
 public hashlib_CSPRNGAddEntropy
 
+;---------------------------
+; hashlib_SPRNGInit();
 hashlib_SPRNGInit:
 ; ix = selected byte
 ; de = current deviation
@@ -110,104 +119,96 @@ _test_bit:
     sbc hl,hl
     sbc hl,de
     ret
-    
-	
+   
+;--------------------------------
+;_hashlib_SPRNGAddEntropy();
 hashlib_SPRNGAddEntropy:
-    ld hl, (_csprng_state)
+    ld hl, (_sprng_read_addr)
     add	hl,de
 	or	a,a
 	sbc	hl,de
     ret z
-    ld de, _csprng_state + 3
-    ld b, 128
+    ld de, _sprng_entropy_pool
+    ld b, 119
 .byte_read_loop:
-    ld a, (de)
-    xor a, (hl)
-    ld (de), a
-    inc de
-    inc de
-    inc de
+	ld a, (hl)
+	xor a, (hl)
+	xor a, (hl)
+	xor a, (hl)
+	xor a, (hl)
+	xor a, (hl)
+	xor a, (hl)
+	ld (de), a
+	inc de
     djnz .byte_read_loop
     ret
 
+
+;--------------------------
+; hashlib_SPRNGRandom();
 hashlib_SPRNGRandom:
-	ld b, 5
-	
-.init_loop
+	ld e,5+1
+	scf
+.init:
+	dec e
+	ret z
+	push de
+	call nc, hashlib_SPRNGInit
+	pop de
 	ld hl, (_sprng_read_addr)
 	add hl,de
 	or a,a
 	sbc hl,de
-	jr nz, .have_addr
-	
-	call hashlib_SPRNGInit
-	djnz .init_loop
-	
-	ld hl, (_sprng_read_addr)
-	add hl,de
-	or a,a
-	sbc hl,de
-	jr z, .error
+	jq z,.init
 	
 .have_addr:
 ; set rand to 0
-	ld hl, $E40000
-	ld de, _sprng_rand
-	ld bc, 4
-	ldir
-	
+	ld hl, 0
+	ld a, l
+	ld (_sprng_rand), hl
+	ld (_sprng_rand), a
+	call hashlib_SPRNGAddEntropy
 ; hash entropy pool
-	ld hl, _sprng_sha_ctx
-	push hl
 	ld hl, _sprng_sha_mbuffer
 	push hl
+	ld hl, _sprng_sha_ctx
+	push hl
 	call hashlib_Sha256Init
-	pop hl							; leave the context pointer on the stack
-	ld hl, _sprng_entropy_pool		;  it's arg for next call
+	pop bc, hl
+	ld hl, 119
 	push hl
-	ld hl, 192
+	ld hl, _sprng_entropy_pool
 	push hl
+	push bc
 	call hashlib_Sha256Update
-	pop hl
-	pop hl							; leave context pointer on stack again
+	pop bc, hl, hl
 	ld hl, _sprng_sha_digest
 	push hl
+	push bc
 	call hashlib_Sha256Final
-	pop hl
-	pop bc
-	pop bc
+	pop bc, hl
 	
 ; xor hash cyclically into _rand
-	ld ix, _sprng_rand
-	ld b, 8
-	; hl = hash digest
-.xor_loop:
-	ld a, (ix + 0)
-	xor a, (hl)
-	ld (ix + 0), a
+	ld hl,_sprng_sha_digest
+	ld de,_sprng_rand
+	ld c,4
+.outer:
+	xor a,a
+	ld b,8
+.inner:
+	xor a,(hl)
 	inc hl
-	ld a, (ix + 1)
-	xor a, (hl)
-	ld (ix + 1), a
-	inc hl
-	ld a, (ix + 2)
-	xor a, (hl)
-	ld (ix + 2), a
-	inc hl
-	ld a, (ix + 3)
-	xor a, (hl)
-	ld (ix + 3), a
-	inc hl
-	djnz .xor_loop
+	djnz .inner
+	ld (de),a
+	inc de
+	dec c
+	jq nz,.outer
 	
 ; add entropy
 	call hashlib_SPRNGAddEntropy
 	ld hl, (_sprng_rand)
-	ld e, (_sprng_rand+3)
-	ret
-.error:
-	sbc hl, hl
-	ld e, l
+	ld a, (_sprng_rand+3)
+	ld e, a
 	ret
 	
 	
@@ -219,9 +220,8 @@ hashlib_SPRNGRandom:
 
 
 _sprng_read_addr:		rb 3
-	
 _sprng_entropy_pool		:=	$E30800
-_sprng_rand				:=	_sprng_entropy_pool + 192
+_sprng_rand				:=	_sprng_entropy_pool + 119
 _sprng_sha_digest		:=	_sprng_rand + 4
 _sprng_sha_mbuffer		:=	_sprng_sha_digest + 32
 _sprng_sha_ctx			:=	_sprng_sha_mbuffer + (64*4)
