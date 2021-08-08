@@ -43,7 +43,8 @@ int main(void)
     uint8_t *buf = hashlib_AllocContext(padded_len);
    // uint8_t *buf2 = hashlib_AllocContext(padded_len);
     uint8_t *stripped = hashlib_AllocContext(padded_len);
-    
+    sprintf(CEMU_CONSOLE, "\n---------------------------\nHASHLIB AES Demo\n");
+    sprintf(CEMU_CONSOLE, "\n----- CBC Mode -----\n");
     // generate random key and IV
     hashlib_RandomBytes(key, KEYSIZE);
     hashlib_RandomBytes(iv, IV_LEN);
@@ -55,28 +56,46 @@ int main(void)
     // load the key into the key schedule
     hashlib_AESLoadKey(key, &ctx, (KEYSIZE<<3)); // requires size in bits, not bytes
     
-	if(hashlib_AESEncrypt(buf, padded_len, buf, &ctx, iv)) {
+	if(hashlib_AESEncrypt(buf, padded_len, buf, &ctx, iv, MODE_CBC)) {
 		sprintf(CEMU_CONSOLE, "encrypt success\n");
 		hexdump(buf, padded_len, "-- Encrypted Message --");
 	}
 	else sprintf(CEMU_CONSOLE, "encrypt failed\n");
     //hashlib_AESEncryptBlock(buf, buf, &ctx);
     
-	if(hashlib_AESDecrypt(buf, padded_len, buf, &ctx, iv)){
+	if(hashlib_AESDecrypt(buf, padded_len, buf, &ctx, iv, MODE_CBC)){
 		sprintf(CEMU_CONSOLE, "decrypt success\n");
 		hexdump(buf, padded_len, "-- Decrypted Message --");
+		stripped_len = hashlib_AESStripPadding(buf, padded_len, buf, SCHM_DEFAULT);
+		sprintf(CEMU_CONSOLE, "%s", buf);
 	}
 	else sprintf(CEMU_CONSOLE, "decrypt failed\n");
     //hashlib_AESDecryptBlock(buf, buf, &ctx);
     
     
-    stripped_len = hashlib_AESStripPadding(buf, padded_len, buf, SCHM_DEFAULT);
-    sprintf(CEMU_CONSOLE, "%s", buf);
+    
     
    // free(padded);
     free(buf);
    // free(buf2);
     free(stripped);
+    sprintf(CEMU_CONSOLE, "\n\n----- CTR Mode -----\n");
+    hexdump(str, msg_len, "-- Original String --");
+    
+    if(hashlib_AESEncrypt(str, msg_len, str, &ctx, iv, MODE_CTR)) {
+		sprintf(CEMU_CONSOLE, "encrypt success\n");
+		hexdump(str, msg_len, "-- Encrypted Message --");
+	}
+	else sprintf(CEMU_CONSOLE, "encrypt failed\n");
+	
+	if(hashlib_AESDecrypt(str, msg_len, str, &ctx, iv, MODE_CTR)){
+		sprintf(CEMU_CONSOLE, "decrypt success\n");
+		hexdump(str, msg_len, "-- Decrypted Message --");
+		sprintf(CEMU_CONSOLE, "%s", str);
+	}
+	else sprintf(CEMU_CONSOLE, "decrypt failed\n");
+	
+    
     return 0;
     
 }
