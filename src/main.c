@@ -1322,7 +1322,7 @@ size_t hashlib_AESPadMessage(const uint8_t* in, size_t len, uint8_t* out, uint8_
 #define ENCODE_PS		(ENCODE_LHASH + RSA_SALT_SIZE)
 size_t hashlib_RSAEncodeOAEP(const uint8_t* in, size_t len, uint8_t* out, size_t modulus_len, const uint8_t *auth){
 
-	size_t min_padding_len = (hash_len<<1) + 2;
+	size_t min_padding_len = (RSA_SALT_SIZE<<1) + 2;
 	size_t ps_len = modulus_len - len - min_padding_len;
 	size_t db_len = modulus_len - RSA_SALT_SIZE - 1;
 	SHA256_CTX ctx;
@@ -1343,7 +1343,7 @@ size_t hashlib_RSAEncodeOAEP(const uint8_t* in, size_t len, uint8_t* out, size_t
 	
 	// hash the authentication string
 	hashlib_Sha256Init(&ctx, mbuffer);
-	if(auth != NULL) hashlib_Sha256Updata(&ctx, auth, strlen(auth));
+	if(auth != NULL) hashlib_Sha256Update(&ctx, auth, strlen(auth));
 	hashlib_Sha256Final(&ctx, &out[ENCODE_LHASH]);	// nothing to actually hash
 	
 	memset(&out[ENCODE_PS], 0, ps_len);		// write padding zeros
@@ -1355,7 +1355,7 @@ size_t hashlib_RSAEncodeOAEP(const uint8_t* in, size_t len, uint8_t* out, size_t
                 
     // XOR hash with db
     for(size_t i=0; i < db_len; i++)
-        out[i] ^= mgf1_digest[i];
+        out[ENCODE_LHASH + i] ^= mgf1_digest[i];
                     
     // hash db with MGF1, return hash length of RSA_SALT_SIZE
     hashlib_MGF1Hash(&out[ENCODE_LHASH], db_len, mgf1_digest, RSA_SALT_SIZE);
@@ -1399,6 +1399,8 @@ size_t hashlib_RSADecodeOAEP(const uint8_t *in, size_t len, uint8_t* out, const 
     uint8_t salt[RSA_SALT_SIZE];
     uint8_t mgf1_digest[RSA_MODULUS_MAX - RSA_SALT_SIZE];
     size_t i;
+    SHA256_CTX ctx;
+	uint32_t mbuffer[64];
                 
     // Copy last 16 bytes of input buf to salt to get encoded salt
    // memcpy(salt, &in[len-RSA_SALT_SIZE-1], RSA_SALT_SIZE);
@@ -1414,22 +1416,20 @@ size_t hashlib_RSADecodeOAEP(const uint8_t *in, size_t len, uint8_t* out, const 
     hashlib_MGF1Hash(salt, RSA_SALT_SIZE, mgf1_digest, db_len);
                 
     // XOR SHA-256 of salt with encoded message cyclically to get decoded message
-    for(i = 0; i < db_len; i++)
-        out[i] = in[ENCODE_LHASH + i] ^ mgf1_digest[i];
-        
-	if(auth != NULL){
-		SHA256_CTX ctx;
-		uint32_t mbuffer[64];
-		hashlib_Sha256Init(&ctx, mbuffer);
-		hashlib_Sha256Update(&ctx, auth, strlen(auth));
-		hashlib_Sha256Final(&ctx, salt);
-		if(!hashlib_CompareDigest(salt, &out[ENCODE_LHASH], RSA_SALT_SIZE)){
-			memset(out, 0, db_len);
-			return 0;
-		}
-	}
+    for(i = 0; i < RSA_SALT_SIZE; i++)
+		out[i] = in[ENCODE_LHASH + i] ^ mgf1_digest[i];
 	
-	for(i = 0; i < db_len; i++)
+	// verify authentication
+	hashlib_Sha256Init(&ctx, mbuffer);
+	if(auth != NULL) hashlib_Sha256Update(&ctx, auth, strlen(auth));
+	hashlib_Sha256Final(&ctx, salt);
+	if(!hashlib_CompareDigest(salt, out, RSA_SALT_SIZE)) return 0;
+	
+	// continue to decode message
+    for(; i < db_len; i++)
+        out[i - RSA_SALT_SIZE] = in[ENCODE_PS + i] ^ mgf1_digest[i];
+	
+	for(i = 0; i < (db_len - RSA_SALT_SIZE); i++)
 		if(out[i] == 0x01) break;
 	if(i==db_len) return 0;
 	i++;
@@ -1503,7 +1503,7 @@ enum _sig_algorithms {
 };
 
 #define MPRIME_START	0
-#define MPRIME_MHASH	(MPRIME_START + 8)
+#define MPRIME_HASH	(MPRIME_START + 8)
 #define	MPRIME_SALT		(MPRIME_HASH + RSA_SALT_SIZE)
 #define MPRIME_LEN		8+(RSA_SALT_SIZE<<1)
 size_t hashlib_RSAEncodePSS(const uint8_t* in, size_t len, uint8_t *out, size_t modulus_len){
@@ -1522,14 +1522,14 @@ size_t hashlib_RSAEncodePSS(const uint8_t* in, size_t len, uint8_t *out, size_t 
 	// populate mprime buffer
 	hashlib_Sha256Init(&ctx, mbuffer);
 	hashlib_Sha256Update(&ctx, in, len);
-	hashlib_Sha256Final(&ctx, &mprime[MPRIME_MHASH]);	// output to mprime->hash
+	hashlib_Sha256Final(&ctx, &mprime[MPRIME_HASH]);	// output to mprime->hash
 	hashlib_RandomBytes(&mprime[MPRIME_SALT], RSA_SALT_SIZE);	// output mprime->salt
 	
 	memset(out, 0, modulus_len);	// deal with padding
 	out[ps_size] = 0x01;			// write 0x01
 	memcpy(&out[ps_size+1], mprime[MPRIME_SALT], RSA_SALT_SIZE);	// copy salt to db
 	
-	// hash mprime buffer, output to fb
+	// hash mprime buffer, output to db
 	hashlib_Sha256Init(&ctx, mbuffer);
 	hashlib_Sha256Update(&ctx, mprime, MPRIME_LEN);
 	hashlib_Sha256Final(&ctx, &out[ps_size+1+RSA_SALT_SIZE]);
@@ -1541,7 +1541,7 @@ size_t hashlib_RSAEncodePSS(const uint8_t* in, size_t len, uint8_t *out, size_t 
 	
 	return modulus_len;
 }
-
+/*
 bool hashlib_SSLVerifySignature(const uint8_t *ca_pubkey, size_t keysize, const uint8_t *cert, size_t certlen, uint8_t sig_alg){
 	if((ca_pubkey == NULL) || (cert == NULL)) return false;
 	switch(sig_alg){
@@ -1564,3 +1564,4 @@ bool hashlib_SSLVerifySignature(const uint8_t *ca_pubkey, size_t keysize, const 
 			return false;
 	}
 }
+*/
