@@ -1313,40 +1313,56 @@ size_t hashlib_AESPadMessage(const uint8_t* in, size_t len, uint8_t* out, uint8_
     memcpy(out, in, len);
     return padded_len;
 }
-         
-#define RSA_SALT_SIZE 16
-size_t hashlib_RSAPadMessage(const uint8_t* in, size_t len, uint8_t* out, size_t modulus_len){
-    uint8_t salt[RSA_SALT_SIZE];
-    uint8_t mgf1_digest[256-RSA_SALT_SIZE];
-    size_t rsa_n;
+     
+#define RSA_MODULUS_MAX	256
+#define RSA_SALT_SIZE	32
+#define	ENCODE_START 	0
+#define ENCODE_SALT 	(1 + ENCODE_START)
+#define ENCODE_LHASH	(ENCODE_SALT + RSA_SALT_SIZE)
+#define ENCODE_PS		(ENCODE_LHASH + RSA_SALT_SIZE)
+size_t hashlib_RSAEncodeOAEP(const uint8_t* in, size_t len, uint8_t* out, size_t modulus_len, const uint8_t *auth){
+
+	size_t min_padding_len = (hash_len<<1) + 2;
+	size_t ps_len = modulus_len - len - min_padding_len;
+	size_t db_len = modulus_len - RSA_SALT_SIZE - 1;
+	SHA256_CTX ctx;
+	uint32_t mbuffer[64];
+	uint8_t mgf1_digest[RSA_MODULUS_MAX - RSA_SALT_SIZE];
+
     if(in==NULL) return 0;
     if(out==NULL) return 0;
     if(len==0) return 0;
-    // ensure that the message length (including the salt) is smaller than the modulus
-    if(modulus_len>256) return 0;
-    if((len + RSA_SALT_SIZE) > modulus_len) return 0;
-    
-    // set N to the modulus size, less the salt
-    rsa_n = modulus_len - RSA_SALT_SIZE;
-    
-    // Zero the output buffer. Quick way to pad
-    memset(out, 0, rsa_n);
-          
-    // Generate salt, SHA-256 hash the salt
-    hashlib_RandomBytes(salt, RSA_SALT_SIZE);
-    hashlib_MGF1Hash(salt, RSA_SALT_SIZE, mgf1_digest, rsa_n);
+    if(modulus_len > RSA_MODULUS_MAX) return 0;
+
+	if((len + min_padding_len) > modulus_len) return 0;
+	
+	// set first byte to 00
+	out[ENCODE_START] = 0x00;
+	// seed next 32 bytes
+	hashlib_RandomBytes(&out[ENCODE_SALT], RSA_SALT_SIZE);
+	
+	// hash the authentication string
+	hashlib_Sha256Init(&ctx, mbuffer);
+	if(auth != NULL) hashlib_Sha256Updata(&ctx, auth, strlen(auth));
+	hashlib_Sha256Final(&ctx, &out[ENCODE_LHASH]);	// nothing to actually hash
+	
+	memset(&out[ENCODE_PS], 0, ps_len);		// write padding zeros
+	out[ENCODE_PS + ps_len] = 0x01;			// write 0x01
+	memcpy(&out[ENCODE_PS + ps_len + 1], in, len);		// write plaintext to end of output
+	
+	// hash the salt with MGF1, return hash length of db
+	hashlib_MGF1Hash(&out[ENCODE_SALT], RSA_SALT_SIZE, mgf1_digest, db_len);
                 
-    // XOR the hashed salt with the input buffer cyclically to get encoded message
-    // write the encoded message (to len_n) to the output buffer
-    for(size_t i=0; i < rsa_n; i++)
-        out[i] = in[i] ^ mgf1_digest[i];
+    // XOR hash with db
+    for(size_t i=0; i < db_len; i++)
+        out[i] ^= mgf1_digest[i];
                     
-    // SHA-256 hash the encoded message + padding
-    hashlib_MGF1Hash(out, rsa_n, mgf1_digest, RSA_SALT_SIZE);
+    // hash db with MGF1, return hash length of RSA_SALT_SIZE
+    hashlib_MGF1Hash(&out[ENCODE_LHASH], db_len, mgf1_digest, RSA_SALT_SIZE);
                 
-    // XOR the hashed encoded message with the salt to get the encoded salt
+    // XOR hash with salt
     for(size_t i=0; i<RSA_SALT_SIZE; i++)
-        out[rsa_n + i] = salt[i] ^ mgf1_digest[i];
+        out[ENCODE_SALT] ^= mgf1_digest[i];
                     
                 // Return the static size of 256
     return modulus_len;
@@ -1374,37 +1390,52 @@ size_t hashlib_AESStripPadding(const uint8_t* in, size_t len, uint8_t* out, uint
     return outlen;
 }
 
-size_t hashlib_RSAStripPadding(const uint8_t *in, size_t len, uint8_t* out){
+size_t hashlib_RSADecodeOAEP(const uint8_t *in, size_t len, uint8_t* out, const uint8_t *auth){
+  
     if(in==NULL) return 0;
     if(out==NULL) return 0;
     if(len==0) return 0;
-    size_t outlen;
+    size_t db_len = len - RSA_SALT_SIZE - 1;
     uint8_t salt[RSA_SALT_SIZE];
-    uint8_t mgf1_digest[256-RSA_SALT_SIZE];
-    size_t rsa_n = len - RSA_SALT_SIZE;
+    uint8_t mgf1_digest[RSA_MODULUS_MAX - RSA_SALT_SIZE];
+    size_t i;
                 
     // Copy last 16 bytes of input buf to salt to get encoded salt
-    memcpy(salt, &in[len-RSA_SALT_SIZE-1], RSA_SALT_SIZE);
+   // memcpy(salt, &in[len-RSA_SALT_SIZE-1], RSA_SALT_SIZE);
                 
-    // SHA-256 hash encoded message + padding
-    hashlib_MGF1Hash(in, rsa_n, mgf1_digest, RSA_SALT_SIZE);
+    // SHA-256 hash db
+    hashlib_MGF1Hash(&in[ENCODE_LHASH], db_len, mgf1_digest, RSA_SALT_SIZE);
                 
-    // XOR hash encoded msg + pad with encoded salt to get decoded salt
+    // XOR hash with encoded salt to return salt
     for(size_t i=0; i<RSA_SALT_SIZE; i++)
-        salt[i] ^= mgf1_digest[i];
+        salt[i] = in[ENCODE_SALT + i] ^ mgf1_digest[i];
                     
     // SHA-256 hash the salt
-    hashlib_MGF1Hash(salt, RSA_SALT_SIZE, mgf1_digest, rsa_n);
+    hashlib_MGF1Hash(salt, RSA_SALT_SIZE, mgf1_digest, db_len);
                 
     // XOR SHA-256 of salt with encoded message cyclically to get decoded message
-    for(size_t i=0; i < rsa_n; i++)
-        out[i] = in[i] ^ mgf1_digest[i];
-                
-    // Look backwards from out[outlen-1] for the first non-zero byte
-    outlen = rsa_n;
-    for(; out[outlen-1] != 0x00; outlen--);
-    // outlen at this point should be the true len of the decoded RSA key + 1
-    return outlen;
+    for(i = 0; i < db_len; i++)
+        out[i] = in[ENCODE_LHASH + i] ^ mgf1_digest[i];
+        
+	if(auth != NULL){
+		SHA256_CTX ctx;
+		uint32_t mbuffer[64];
+		hashlib_Sha256Init(&ctx, mbuffer);
+		hashlib_Sha256Update(&ctx, auth, strlen(auth));
+		hashlib_Sha256Final(&ctx, salt);
+		if(!hashlib_CompareDigest(salt, &out[ENCODE_LHASH], RSA_SALT_SIZE)){
+			memset(out, 0, db_len);
+			return 0;
+		}
+	}
+	
+	for(i = 0; i < db_len; i++)
+		if(out[i] == 0x01) break;
+	if(i==db_len) return 0;
+	i++;
+	memcpy(out, &out[i], len-i);
+   
+    return len-i;
 }
 
 bool hashlib_AESVerifyMAC(uint8_t *ciphertext, size_t len, aes_ctx *ks_mac){
@@ -1443,8 +1474,12 @@ void hashlib_MGF1Hash(uint8_t* data, size_t datalen, uint8_t* outbuf, size_t out
 
 
 #define RSA_PUB_EXPONENT 65537
+enum _rsa_encoding {
+	RSA_NONE,
+	RSA_OAEP
+};
 /*
-bool hashlib_RSAEncrypt(const uint8_t* in, size_t len, uint8_t* out, const uint8_t *key, size_t keysize){
+bool hashlib_RSAEncrypt(const uint8_t* in, size_t len, uint8_t* out, const uint8_t *key, size_t keysize, uint8_t encoding){
     uint8_t output[257], modulus[257], msg[257], exponent[5];
     uint32_t exp = RSA_PUB_EXPONENT;
     vint_t  *var_output = &output,
@@ -1461,3 +1496,71 @@ bool hashlib_RSAEncrypt(const uint8_t* in, size_t len, uint8_t* out, const uint8
     return true;
 }
 */
+
+enum _sig_algorithms {
+	RSA_SHA256,
+	ECDSA		// placeholder for something I may implement in the very distant future
+};
+
+#define MPRIME_START	0
+#define MPRIME_MHASH	(MPRIME_START + 8)
+#define	MPRIME_SALT		(MPRIME_HASH + RSA_SALT_SIZE)
+#define MPRIME_LEN		8+(RSA_SALT_SIZE<<1)
+size_t hashlib_RSAEncodePSS(const uint8_t* in, size_t len, uint8_t *out, size_t modulus_len){
+	uint8_t mprime[MPRIME_LEN] = {0};
+	SHA256_CTX ctx;
+	uint32_t mbuffer[64];
+	size_t db_size = modulus_len - RSA_SALT_SIZE - 1;
+	size_t ps_size = db_size - 1 - RSA_SALT_SIZE;
+	uint8_t mgf1_digest[RSA_MODULUS_MAX - RSA_SALT_SIZE];
+	
+	if(in==NULL) return 0;
+    if(out==NULL) return 0;
+    if(len==0) return 0;
+    if(modulus_len > RSA_MODULUS_MAX) return 0;
+	
+	// populate mprime buffer
+	hashlib_Sha256Init(&ctx, mbuffer);
+	hashlib_Sha256Update(&ctx, in, len);
+	hashlib_Sha256Final(&ctx, &mprime[MPRIME_MHASH]);	// output to mprime->hash
+	hashlib_RandomBytes(&mprime[MPRIME_SALT], RSA_SALT_SIZE);	// output mprime->salt
+	
+	memset(out, 0, modulus_len);	// deal with padding
+	out[ps_size] = 0x01;			// write 0x01
+	memcpy(&out[ps_size+1], mprime[MPRIME_SALT], RSA_SALT_SIZE);	// copy salt to db
+	
+	// hash mprime buffer, output to fb
+	hashlib_Sha256Init(&ctx, mbuffer);
+	hashlib_Sha256Update(&ctx, mprime, MPRIME_LEN);
+	hashlib_Sha256Final(&ctx, &out[ps_size+1+RSA_SALT_SIZE]);
+	out[modulus_len] = 0xbc;
+	
+	hashlib_MGF1Hash(&out[ps_size+1+RSA_SALT_SIZE], RSA_SALT_SIZE, mgf1_digest, db_size);
+	for(size_t i = 0; i < db_size; i++)
+		out[i] ^= mgf1_digest[i];
+	
+	return modulus_len;
+}
+
+bool hashlib_SSLVerifySignature(const uint8_t *ca_pubkey, size_t keysize, const uint8_t *cert, size_t certlen, uint8_t sig_alg){
+	if((ca_pubkey == NULL) || (cert == NULL)) return false;
+	switch(sig_alg){
+		case RSA_SHA256:
+		{
+			uint8_t decrypt_buf[256];
+			uint8_t self_sig_buf[256];
+			uint8_t sha256digest[32];
+			SHA256_CTX ctx;
+			uint8_t mbuffer[64*4];
+			hashlib_RSAEncrypt(&cert[certlen-256-1], 256, decrypt_buf, ca_pubkey, keysize, RSA_NONE);
+			hashlib_Sha256Init(&ctx, mbuffer);
+			hashlib_Sha256Update(&ctx, cert, certlen-256);
+			hashlib_Sha256Final(&ctx, sha256digest);
+			hashlib_RSAEncodePSS(sha256digest, 32, self_sig_buf);
+			if(hashlib_CompareDigest(decrypt_buf, self_sig_buf, keysize)) return true;
+			break;
+		}
+		default:
+			return false;
+	}
+}
