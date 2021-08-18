@@ -1533,7 +1533,7 @@ size_t hashlib_RSAEncodePSS(
 	// hash message, write to MHASH block
 	hashlib_Sha256Init(&ctx, mbuffer);
 	hashlib_Sha256Update(&ctx, in, len);
-	hashlib_Sha256Final(&ctx, &prime_buf[MPRIME_MHASH]);
+	hashlib_Sha256Final(&ctx, &mprime_buf[MPRIME_MHASH]);
 	
 	// write in random oracle passed, or generate one
 	if(salt != NULL)
