@@ -239,10 +239,54 @@ void hashlib_MGF1Hash(uint8_t* data, size_t datalen, uint8_t* outbuf, size_t out
 // 10, 12, or 14 rounds
 // CBC, CTR, CBC-MAC
 
-enum _ciphermodes {
-	MODE_CBC,
-	MODE_CTR
+// Defines and Equates
+
+#define AES128_BITLEN		128
+#define AES128_BYTELEN		(AES128_BITLEN>>3)
+
+#define AES192_BITLEN		192
+#define AES192_BYTELEN		(AES192_BITLEN>>3)
+
+#define AES256_BITLEN		256
+#define AES256_BYTELEN		(AES256_BYTELEN>>3)
+
+// Bit-lengths of AES keys
+enum _aes_key_bitlens {
+	AES_128 = 128,
+	AES_192 = 192,
+	AES_256 = 256
 };
+
+// Use to indicate what builtin cipher mode you would like to encrypt with
+enum _ciphermodes {
+	AES_MODE_CBC,
+	AES_MODE_CTR
+};
+
+// Used to indicate authentication mode for hashlib_AESEncryptPacket()
+enum _aes_auth_modes {
+	AES_AUTH_NONE,
+	AES_AUTH_SHA256,
+	AES_AUTH_CBCMAC
+};
+
+// AES Padding Scheme Defines
+enum _aes_padding_schemes {
+    SCHM_PKCS7, 		 // Pad with padding size | *Default*
+    SCHM_DEFAULT = SCHM_PKCS7,
+    SCHM_ISO2,       	 // Pad with 0x80,0x00...0x00
+    
+};
+
+// A security profile for the AES packet constructor function
+// hashlib_AESEncryptPacket()
+typedef struct _aes_security_profile {
+	aes_ctx *ks_encrypt;
+	aes_ctx *ks_auth;
+	uint8_t ciphermode;
+	uint8_t paddingmode;
+	uint8_t authmode;
+} aes_security_profile_t;
         
 /*
 	Helper macros to generate AES keys for the 3 possible keylengths.
@@ -269,11 +313,6 @@ enum _ciphermodes {
      */
 bool hashlib_AESLoadKey(const uint8_t* key, const aes_ctx* ks, size_t bitlen);
 
-enum _aes_key_bitlens {
-	AES_128 = 128,
-	AES_192 = 192,
-	AES_256 = 256
-};
 
 /*
 	AES Single Block ECB-Mode Encryptor
@@ -443,13 +482,36 @@ size_t hashlib_AESStripPadding(
     uint8_t* outbuf,
     uint8_t schm);
     
-// AES Padding Scheme Defines
-enum _aes_padding_schemes {
-    SCHM_PKCS7,  // Pad with padding size        |   *Default*
-    SCHM_DEFAULT = SCHM_PKCS7,
-    SCHM_ISO2,        // Pad with 0x80,0x00...0x00
-    
-};
+/*
+	Performs encryption of an input plaintext into an output buffer, constructing the packet as specified in the passed security profile (see define above)
+	
+	# Inputs #
+	<> buf			= pointer to an input buffer containing data to encrypt
+	<> len			= the size of the data to encrypt (true size, not padded)
+	<> packet	 	= pointer to a buffer to write the encrypted packet to
+	<> packetlen	= maximum length of the packet, used for error checking
+	<> p			= an AES security profile, containing the following information:
+		ks_encrypt	= pointer to an AES key schedule to use for encryption
+		ks_auth		= pointer to an AES key schedule to use for authentication (can be NULL if p->authmode is set to AES_AUTH_NONE or AES_AUTH_SHA256)
+		ciphermode	= cipher mode to use for encryption, can be AES_MODE_CBC or AES_MODE_CTR
+		paddingmode	= padding mode to be used, can be SCHM_DEFAULT, SCHM_PKCS7, SCHM_ISO2
+		authmode	= authentication mode to use, can be AES_AUTH_NONE to disable,
+						AES_AUTH_CBCMAC or AES_AUTH_SHA256
+						
+	* constructs a packet no more than packetlen bytes in length, formatted like so: *
+	|-----------------------|------------------------------|----------------------------|
+	| initialization vector | 		Encrypted message	   |  CBC-MAC/SHA-256 Auth Tag  |
+	|	(BLOCKSIZE bytes)	|		 (approp. size)		   |   (BLOCKSIZE or 32 bytes)	|
+	|-----------------------|------------------------------|----------------------------|
+	
+ */
+bool hashlib_AESEncryptPacket(
+	const uint8_t *buf,
+	size_t len,
+	uint8_t *packet,
+	size_t packetlen,
+	aes_security_profile_t *p);
+
 
 // #################################
 // ##### RSA PUBKEY ENCRYPTION #####
@@ -459,46 +521,106 @@ enum _aes_padding_schemes {
 // supports modulus size from 1024 to 2048 bits
 // public exponent e = 65537, hardcoded
 
+// Defines and Equates
+
+enum _ssl_sig_modes {	// not yet implemented
+	SSLSIG_RSA_SHA256,
+	SSLSIG_ECDSA		// will likely be a long way off
+};
+
+
 /*
-    Pads input data in an RSA plaintext according to the Optimal Asymmetric Encryption Padding (OAEP) scheme.
+    Pads input data in an RSA plaintext according to the Optimal Asymmetric Encryption Padding (OAEP) scheme as indicated in PKCS#1 v2.2.
+    This is intended for use prior to RSA encryption.
+    * For compatibility with server-side decryption/decode, please make sure your encoding algorithm specs on the host match those indicated below.
+		- Hashing oracle: SHA-256.
+		- Mask Generation Function: MGF1, using SHA-256
     
-    
-    / <------------------ modulus size ------------------> \
-    |---------|--------------------------|-----------------|
-    | Message | 0x00, 0x00,... (Padding) | Salt (16 bytes) |
-    |---------|--------------------------|-----------------|
-                         |                        |
-                        XOR <----MGF1 (SHA256)----|
-                         |                        |
-                         |----MGF1 (SHA256)---=> XOR
-                         |                        |
-    |------------------------------------|-----------------|
-    |     Encoded Message + Padding      |  Encoded Salt   |
-    |------------------------------------|-----------------|
+    / <--------------------- modulus size ---------------------> \
+    |------|------|-----------|-----------------|------|---------|
+    | 0x00 | salt | auth hash | 0x00... padding | 0x01 | Message |
+    |------|------|-----------|-----------------|------|---------|
+		      |   |------------------------|---------------------|
+		      |	     					   |
+			  | ------ MGF1-SHA256 -----> XOR
+			  |							   |
+			 XOR <----- MGF1-SHA256 -------|
+			  |							   |
+    |------|-------|---------------------------------------------|
+    | 0x00 | msalt |     masked message, padding, auth string    |
+    |------|-------|---------------------------------------------|
     
     # Inputs #
-    <> plaintext = pointer to buffer containing data to pad
+    <> plaintext = pointer to buffer containing data to encode
     <> len = size of data to pad, in bytes
     <> outbuf = pointer to buffer large enough to hold padded data (see macros below)
-    <> modulus_len = the bit-length of the modulus, used to determine the padded message length
+    <> modulus_len = the byte-length of the modulus to pad for
+    <> auth = a zero-terminated authentication string.
+		Both sender and recipient must know this string.
+		This can be NULL if you do not wish to provide one.
  */
-size_t hashlib_RSAPadMessage(
+size_t hashlib_RSAEncodeOAEP(
     const uint8_t* plaintext,
     size_t len,
     uint8_t* outbuf,
-    size_t modulus_len);
+    size_t modulus_len,
+    const uint8_t *auth);
     
 /*
     Reverses the padding on an RSA plaintext according to the OAEP padding scheme.
     
     # Inputs #
     <> plaintext = pointer to buffer containing data to pad
-    <> len = size of data to pad, in bytes (real size, not block-aligned size)
+    <> len = size of data to pad, in bytes
     <> outbuf = pointer to buffer large enough to hold padded data (see macros below)
+    <> auth = a zero-terminated authentication string.
+		Both sender and recipient must know this string.
+		This can be NULL, but will still fail if the message was encoded with authentication.
 */
-size_t hashlib_RSAStripPadding(
+size_t hashlib_RSADecodeOAEP(
     const uint8_t* plaintext,
     size_t len,
-    uint8_t* outbuf);
+    uint8_t* outbuf,
+    const uint8_t *auth);
+
+/*
+	Encodes an RSA plaintext according the Probability Signature Scheme (PSS) as indicated in PKCS#1 v1.5.
+	Intended for use prior with RSA signing or signature verification.
+	* For compatibility with signatures generated server-side, please make sure your signature algorithm specs on the host match those indicated below.
+		- Hashing oracle: SHA-256.
+		- Mask Generation Function: MGF1, using SHA-256
+	
+	|---------|
+	| Message |	--------------- SHA-256 -----------------------|
+	|---------|												   |
+					DB							M'			   |
+	|-----------------|------|------|	|-----------------|----------|------|
+	| 0x00... padding | 0x01 | salt |	| 8-byte 0x00 pad | msg hash | salt |
+	|-----------------|------|------|	|-----------------|----------|------|
+					|										|
+					|									 SHA-256
+				   XOR <----------- MGF1-SHA256 ------------|
+					|										|
+					|						|---------------|
+					|						|
+	|-------------------------------|---------------|-----------|
+	| 			masked DB			| 	SHA256(M')	|	0xbc	|
+	|-------------------------------|---------------|-----------|
+	\--------------------- modulus size ------------------------/
+	
+	# Inputs #
+	<> plaintext = pointer to buffer containing data to encode
+	<> len = the size of the data to pad, in bytes
+	<> outbuf = pointer to a buffer to write encoded plaintext
+	<> modulus_len = the byte-length of the modulus to pad for
+	<> salt = pointer to salt to use, or NULL to generate one internally
+ */
+size_t hashlib_RSAEncodePSS(
+	const uint8_t *plaintext,
+	size_t len,
+	uint8_t *outbuf,
+	size_t modulus_len,
+	uint8_t *salt);
+
 
 #endif

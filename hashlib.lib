@@ -15,7 +15,9 @@ library	"HASHLIB", 6
 	export	hashlib_AESVerifyMac ; 39
 	export	hashlib_AESPadMessage ; 42
 	export	hashlib_AESStripPadding ; 45
-	export	hashlib_RSAEncodeOAEP ; 48
-	export	hashlib_RSADecodeOAEP ; 51
-	export	hashlib_EraseContext ; 54
-	export	hashlib_CompareDigest ; 57
+	export	hashlib_AESEncryptPacket ; 48
+	export	hashlib_RSAEncodeOAEP ; 51
+	export	hashlib_RSADecodeOAEP ; 54
+	export	hashlib_RSAEncodePSS ; 57
+	export	hashlib_EraseContext ; 60
+	export	hashlib_CompareDigest ; 63

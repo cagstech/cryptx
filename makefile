@@ -23,6 +23,7 @@ LIB_8XV := hashlib.8xv
 all: $(LIB_8XV)
 
 $(LIB_8XV): $(LIB_SRC)
+	sed -i '' 's/BB.*_/\.lbl_/g' hashlib.asm
 	$(Q)$(FASMG) $< $@
 
 clean:
