@@ -60,8 +60,8 @@ int main(void)
     profile.authmode = AES_AUTH_CBCMAC;
     
     if(hashlib_AESEncryptPacket(str, str_len, packet, 256, &profile)){
-		strcpy(CEMU_CONSOLE, "Encrypt successful\n");
-		hexdump(packet, 256, "-- Encrypted packet -- ");
+		strcpy(CEMU_CONSOLE, "CBC Encrypt successful\n");
+		hexdump(packet, 256, "-- CBC Encrypted packet -- ");
     }
     
     if(hashlib_AESVerifyMac(packet, actual_len, &ks_auth)){
@@ -79,8 +79,8 @@ int main(void)
     profile.ciphermode = AES_MODE_CTR;
     profile.authmode = AES_AUTH_SHA256;
     if(hashlib_AESEncryptPacket(str, str_len, packet, 256, &profile)){
-		strcpy(CEMU_CONSOLE, "Encrypt successful\n");
-		hexdump(packet, 256, "-- Encrypted packet -- ");
+		strcpy(CEMU_CONSOLE, "CTR Encrypt successful\n");
+		hexdump(packet, 256, "-- CTR Encrypted packet -- ");
     }
     
     hashlib_Sha256Init(&ctx, mbuffer);

@@ -54,16 +54,16 @@ int main(void)
     hexdump(buf, padded_len, "-- Padded Message --");
     
     // load the key into the key schedule
-    hashlib_AESLoadKey(key, &ctx, (KEYSIZE<<3)); // requires size in bits, not bytes
+    hashlib_AESLoadKey(key, &ctx, KEYSIZE); // requires size in bits, not bytes
     
-	if(hashlib_AESEncrypt(buf, padded_len, buf, &ctx, iv, MODE_CBC)) {
+	if(hashlib_AESEncrypt(buf, padded_len, buf, &ctx, iv, AES_MODE_CBC)) {
 		sprintf(CEMU_CONSOLE, "encrypt success\n");
 		hexdump(buf, padded_len, "-- Encrypted Message --");
 	}
 	else sprintf(CEMU_CONSOLE, "encrypt failed\n");
     //hashlib_AESEncryptBlock(buf, buf, &ctx);
     
-	if(hashlib_AESDecrypt(buf, padded_len, buf, &ctx, iv, MODE_CBC)){
+	if(hashlib_AESDecrypt(buf, padded_len, buf, &ctx, iv, AES_MODE_CBC)){
 		sprintf(CEMU_CONSOLE, "decrypt success\n");
 		hexdump(buf, padded_len, "-- Decrypted Message --");
 		stripped_len = hashlib_AESStripPadding(buf, padded_len, buf, SCHM_DEFAULT);
@@ -82,13 +82,13 @@ int main(void)
     sprintf(CEMU_CONSOLE, "\n\n----- CTR Mode -----\n");
     hexdump(str, msg_len, "-- Original String --");
     
-    if(hashlib_AESEncrypt(str, msg_len, str, &ctx, iv, MODE_CTR)) {
+    if(hashlib_AESEncrypt(str, msg_len, str, &ctx, iv, AES_MODE_CTR)) {
 		sprintf(CEMU_CONSOLE, "encrypt success\n");
 		hexdump(str, msg_len, "-- Encrypted Message --");
 	}
 	else sprintf(CEMU_CONSOLE, "encrypt failed\n");
 	
-	if(hashlib_AESDecrypt(str, msg_len, str, &ctx, iv, MODE_CTR)){
+	if(hashlib_AESDecrypt(str, msg_len, str, &ctx, iv, AES_MODE_CTR)){
 		sprintf(CEMU_CONSOLE, "decrypt success\n");
 		hexdump(str, msg_len, "-- Decrypted Message --");
 		sprintf(CEMU_CONSOLE, "%s", str);

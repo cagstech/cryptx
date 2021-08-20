@@ -1197,44 +1197,46 @@ _aes_SubWord:
 hashlib_AESLoadKey:
 	ld	hl, -25
 	call	ti._frameset
-	ld	de, (ix + 12)
+	ld	hl, (ix + 12)
 	xor	a, a
+	ld	c, 3
+	call	ti._ishl
+	push	hl
+	pop	de
 	ld	bc, 128
-	push	de
-	pop	hl
 	or	a, a
 	sbc	hl, bc
-	jq	nz, .lbl2
+	jq	nz, .lbl_2
 	ld	(ix + -19), a
 	ld	bc, 4
 	ld	hl, 44
 	ld	(ix + -9), hl
-	jq	.lbl6
-.lbl2:
+	jq	.lbl_6
+.lbl_2:
 	ld	bc, 192
 	push	de
 	pop	hl
 	or	a, a
 	sbc	hl, bc
-	jq	nz, .lbl4
+	jq	nz, .lbl_4
 	ld	(ix + -19), a
 	ld	hl, 52
 	ld	(ix + -9), hl
 	ld	bc, 6
-	jq	.lbl6
-.lbl4:
+	jq	.lbl_6
+.lbl_4:
 	ld	bc, 256
 	push	de
 	pop	hl
 	or	a, a
 	sbc	hl, bc
-	jq	nz, .lbl20
+	jq	nz, .lbl_20
 	ld	bc, 8
 	ld	hl, 60
 	ld	(ix + -9), hl
 	ld	a, 1
 	ld	(ix + -19), a
-.lbl6:
+.lbl_6:
 	ld	iy, (ix + 9)
 	ld	(iy), de
 	ld	(ix + -3), iy
@@ -1245,13 +1247,13 @@ hashlib_AESLoadKey:
 	push	bc
 	pop	de
 	ld	(ix + -6), bc
-.lbl7:
+.lbl_7:
 	push	de
 	pop	hl
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jq	z, .lbl9
+	jq	z, .lbl_9
 	ld	a, (iy + -3)
 	ld	bc, 0
 	ld	c, a
@@ -1299,8 +1301,8 @@ hashlib_AESLoadKey:
 	push	bc
 	pop	iy
 	lea	iy, iy + 4
-	jq	.lbl7
-.lbl9:
+	jq	.lbl_7
+.lbl_9:
 	ld	c, 2
 	ld	hl, (ix + -6)
 	call	ti._ishl
@@ -1310,10 +1312,10 @@ hashlib_AESLoadKey:
 	push	bc
 	pop	de
 	ld	hl, (ix + -9)
-.lbl10:
+.lbl_10:
 	or	a, a
 	sbc	hl, de
-	jq	z, .lbl19
+	jq	z, .lbl_19
 	ld	iy, (ix + -3)
 	ex	de, hl
 	ld	de, (ix + -15)
@@ -1326,7 +1328,7 @@ hashlib_AESLoadKey:
 	or	a, a
 	sbc	hl, bc
 	ld	(ix + -18), iy
-	jq	nz, .lbl13
+	jq	nz, .lbl_13
 	ld	hl, (ix + -12)
 	dec	hl
 	ld	(ix + -22), hl
@@ -1368,19 +1370,19 @@ hashlib_AESLoadKey:
 	push	hl
 	pop	bc
 	ld	a, e
-	jq	.lbl18
-.lbl13:
+	jq	.lbl_18
+.lbl_13:
 	ld	(ix + -25), a
 	ld	(ix + -22), de
 	ld	a, (ix + -19)
 	ld	e, 1
 	xor	a, e
 	bit	0, a
-	jq	nz, .lbl17
+	jq	nz, .lbl_17
 	ld	bc, 4
 	or	a, a
 	sbc	hl, bc
-	jq	nz, .lbl17
+	jq	nz, .lbl_17
 	ld	a, (ix + -25)
 	ld	l, a
 	push	hl
@@ -1392,11 +1394,11 @@ hashlib_AESLoadKey:
 	ld	a, e
 	pop	hl
 	pop	hl
-	jq	.lbl18
-.lbl17:
+	jq	.lbl_18
+.lbl_17:
 	ld	bc, (ix + -22)
 	ld	a, (ix + -25)
-.lbl18:
+.lbl_18:
 	ld	iy, (ix + -3)
 	ld	hl, (iy + 3)
 	ld	e, (iy + 6)
@@ -1413,10 +1415,10 @@ hashlib_AESLoadKey:
 	ld	(ix + -3), iy
 	ld	bc, (ix + -6)
 	ld	hl, (ix + -9)
-	jq	.lbl10
-.lbl19:
+	jq	.lbl_10
+.lbl_19:
 	ld	a, 1
-.lbl20:
+.lbl_20:
 	ld	sp, ix
 	pop	ix
 	ret

@@ -251,10 +251,10 @@ void hashlib_MGF1Hash(uint8_t* data, size_t datalen, uint8_t* outbuf, size_t out
 #define AES256_BYTELEN		(AES256_BYTELEN>>3)
 
 // Bit-lengths of AES keys
-enum _aes_key_bitlens {
-	AES_128 = 128,
-	AES_192 = 192,
-	AES_256 = 256
+enum _aes_keylens {
+	AES_128 = 16,
+	AES_192 = 24,
+	AES_256 = 32
 };
 
 // Use to indicate what builtin cipher mode you would like to encrypt with
@@ -309,9 +309,9 @@ typedef struct _aes_security_profile {
     # Inputs #
     <> key = pointer to a 128, 192, or 256 bit key
     <> ks = pointer to an AES key schedule context
-    <> bitlen = the bit length of the AES key supplied. You can use the defines below.
+    <> keylen = the byte length of the AES key supplied. You can use the defines above.
      */
-bool hashlib_AESLoadKey(const uint8_t* key, const aes_ctx* ks, size_t bitlen);
+bool hashlib_AESLoadKey(const uint8_t* key, const aes_ctx* ks, size_t keylen);
 
 
 /*
@@ -521,6 +521,12 @@ bool hashlib_AESEncryptPacket(
 // supports modulus size from 1024 to 2048 bits
 // public exponent e = 65537, hardcoded
 
+/*
+	For compatibility with server-side decryption/decode, please make sure your encoding algorithm specs on the host match those hardcoded by the library.
+		- Hashing oracle where applicable: SHA-256.
+		- Mask Generation Function where applicable: MGF1, using SHA-256
+*/
+
 // Defines and Equates
 
 enum _ssl_sig_modes {	// not yet implemented
@@ -532,9 +538,6 @@ enum _ssl_sig_modes {	// not yet implemented
 /*
     Pads input data in an RSA plaintext according to the Optimal Asymmetric Encryption Padding (OAEP) scheme as indicated in PKCS#1 v2.2.
     This is intended for use prior to RSA encryption.
-    * For compatibility with server-side decryption/decode, please make sure your encoding algorithm specs on the host match those indicated below.
-		- Hashing oracle: SHA-256.
-		- Mask Generation Function: MGF1, using SHA-256
     
     / <--------------------- modulus size ---------------------> \
     |------|------|-----------|-----------------|------|---------|
