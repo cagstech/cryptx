@@ -30,8 +30,11 @@ jobs:
           working-directory: 'docs/'
           doxyfile-path: '.doxyfile'
 
-      - name: Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload Website Documentation
+        if: github.ref == 'refs/heads/stable'
+        uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          BRANCH: gh-pages
+          FOLDER: docs/
+          CLEAN: true
