@@ -34,7 +34,7 @@ jobs:
         if: github.ref == 'refs/heads/stable'
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
-          GITHUB_TOKEN: ${{secrets.GH_REPO_TOKEN}}
+          GITHUB_TOKEN: $GH_REPO_TOKEN
           BRANCH: gh-pages
           FOLDER: /
           CLEAN: true
