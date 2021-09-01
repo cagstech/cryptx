@@ -36,5 +36,5 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
           BRANCH: gh-pages
-          FOLDER: ${{github.workspace}}/docs
+          FOLDER: ${{github.workspace}}
           CLEAN: true
