@@ -6,7 +6,7 @@ name: Hashlib
 on:
   push:
     branches:
-      - master
+      - stable
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
