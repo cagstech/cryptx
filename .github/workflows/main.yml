@@ -27,7 +27,7 @@ jobs:
       - name: Doxygen
         uses: mattnotmitt/doxygen-action@v1
         with:
-          working-directory: 'docs/'
+          working-directory: '.'
           doxyfile-path: '.doxyfile'
 
       - name: Upload Website Documentation
@@ -36,5 +36,5 @@ jobs:
         with:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           BRANCH: gh-pages
-          FOLDER: docs/
+          FOLDER: /
           CLEAN: true
