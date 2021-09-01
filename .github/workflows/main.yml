@@ -29,12 +29,6 @@ jobs:
         with:
           working-directory: 'docs/'
           doxyfile-path: '.doxyfile'
-        
-        
-        
-        
-          working-directory: 'docs/'
-          doxyfile-path: 'docs/.doxyfile'
 
       - name: Pages
         uses: peaceiris/actions-gh-pages@v3
