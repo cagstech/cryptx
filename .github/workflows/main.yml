@@ -24,7 +24,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           path: ${{github.workspace}}
-          persist-credentials: false
           fetch-depth: 0
       
       # Runs a single command using the runners shell
