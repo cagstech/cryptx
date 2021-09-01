@@ -6,8 +6,8 @@ name: Hashlib
 on:
   # Triggers the workflow on push or pull request events but only for the stable branch
   push:
-    branches: [ stable ]
-  pull_request:
+    branches-ignore:
+      - gh-pages
     branches: [ stable ]
 
   # Allows you to run this workflow manually from the Actions tab
