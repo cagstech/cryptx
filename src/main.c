@@ -58,6 +58,7 @@ typedef struct _aes_keyschedule_ctx {
 //    bigint_t g;
 //} dh_ctx;
 
+
 // Entropy Pool
 #define CEMU_CONSOLE (char*)0xFB0000
 #define EPOOL_SIZE 128
@@ -646,6 +647,7 @@ bool hashlib_AESLoadKey(const BYTE key[], aes_ctx* w, int keysize)
 	WORD temp,Rcon[]={0x01000000,0x02000000,0x04000000,0x08000000,0x10000000,0x20000000,
 	                  0x40000000,0x80000000,0x1b000000,0x36000000,0x6c000000,0xd8000000,
 	                  0xab000000,0x4d000000,0x9a000000};
+	keysize<<=3;
 
 	switch (keysize) {
 		case 128: Nr = 10; Nk = 4; break;
@@ -1313,6 +1315,14 @@ size_t hashlib_AESPadMessage(const uint8_t* in, size_t len, uint8_t* out, uint8_
     memcpy(out, in, len);
     return padded_len;
 }
+
+enum _authmodes{
+	AES_AUTH_NONE,
+	AES_AUTH_SHA256,
+	AES_AUTH_CBCMAC
+};
+
+
      
 #define RSA_MODULUS_MAX	256
 #define RSA_SALT_SIZE	32
@@ -1427,7 +1437,7 @@ size_t hashlib_RSADecodeOAEP(const uint8_t *in, size_t len, uint8_t* out, const 
 	hashlib_Sha256Init(&ctx, mbuffer);
 	if(auth != NULL) hashlib_Sha256Update(&ctx, auth, strlen(auth));
 	hashlib_Sha256Final(&ctx, sha256_digest);
-	//if(!hashlib_CompareDigest(salt, out, RSA_SALT_SIZE)) return 0;
+	if(!hashlib_CompareDigest(salt, out, RSA_SALT_SIZE)) return 0;
 	
 	for(i = ENCODE_PS; i < len; i++)
 		if(tmp[i] == 0x01) break;
@@ -1436,12 +1446,6 @@ size_t hashlib_RSADecodeOAEP(const uint8_t *in, size_t len, uint8_t* out, const 
 	memcpy(out, &tmp[i], len-i);
    
     return len-i;
-}
-
-bool hashlib_AESVerifyMAC(uint8_t *ciphertext, size_t len, aes_ctx *ks_mac){
-    uint8_t mac[AES_BLOCKSIZE];
-    hashlib_AESOutputMAC((ciphertext), len-AES_BLOCKSIZE, mac, (ks_mac));
-    return hashlib_CompareDigest(mac, (&ciphertext[len-AES_BLOCKSIZE]), AES_BLOCKSIZE);
 }
 
 bool hashlib_CompareDigest(uint8_t *dig1, uint8_t *dig2, size_t len){
@@ -1518,7 +1522,7 @@ size_t hashlib_RSAEncodePSS(
 	SHA256_CTX ctx;
 	uint32_t mbuffer[64];
 	uint8_t hMprime[RSA_SALT_SIZE];
-	uint8_t mgf1_digest[RSA_MODULUS_MAX - RSA_SALT_SIZe - 1];
+	uint8_t mgf1_digest[RSA_MODULUS_MAX - RSA_SALT_SIZE - 1];
 	size_t db_len = modulus_len - RSA_SALT_SIZE - 1;
 	size_t ps_len = db_len - RSA_SALT_SIZE - 1;
 	
@@ -1539,9 +1543,9 @@ size_t hashlib_RSAEncodePSS(
 	if(salt != NULL)
 		memcpy(&mprime_buf[MPRIME_SALT], salt, RSA_SALT_SIZE);
 	else
-		hashlib_RandomBytes(&mprime[MPRIME_SALT], RSA_SALT_SIZE);
+		hashlib_RandomBytes(&mprime_buf[MPRIME_SALT], RSA_SALT_SIZE);
 	// copy salt to DB as well
-	memcpy(&out[modulus_len + DB_SALT], &mprime[MPRIME_SALT], RSA_SALT_SIZE);
+	memcpy(&out[modulus_len + DB_SALT], &mprime_buf[MPRIME_SALT], RSA_SALT_SIZE);
 	
 	// write masking and ending bytes
 	out[modulus_len + DB_MASK_BYTE] = 0x01;
@@ -1562,18 +1566,8 @@ size_t hashlib_RSAEncodePSS(
 	for(size_t i = 0; i < db_len; i++)
 		out[i] ^= mgf1_digest[i];
 		
-	return modulus_len;
-	
-	
-	
-	
-	
-	
-		
-	
-	
-	
-	
+	out[0] &= in[0];
+	return modulus_len;	
 }
 
 
