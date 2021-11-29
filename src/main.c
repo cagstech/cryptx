@@ -104,6 +104,10 @@ bool hashlib_AESDecrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key
 size_t hashlib_PadPlaintext(const uint8_t* in, size_t len, uint8_t* out, uint8_t alg, uint8_t schm);
 size_t hashlib_StripPadding(const uint8_t* in, size_t len, uint8_t* out, uint8_t alg, uint8_t schm);
 bool hashlib_AESVerifyMAC(uint8_t *ciphertext, size_t len, aes_ctx *ks_mac);
+
+
+void powmod(uint8_t size, uint8_t *restrict base, uint24_t exp, const uint8_t *restrict mod);
+bool hashlib_RSAEncrypt(const uint8_t* msg, size_t msglen, uint8_t *ct, const uint8_t* pubkey, size_t keylen);
 /*
     #########################
     ### Math Dependencies ###
@@ -1437,7 +1441,7 @@ size_t hashlib_RSADecodeOAEP(const uint8_t *in, size_t len, uint8_t* out, const 
 	hashlib_Sha256Init(&ctx, mbuffer);
 	if(auth != NULL) hashlib_Sha256Update(&ctx, auth, strlen(auth));
 	hashlib_Sha256Final(&ctx, sha256_digest);
-	if(!hashlib_CompareDigest(salt, out, RSA_SALT_SIZE)) return 0;
+	if(!hashlib_CompareDigest(sha256_digest, out, RSA_SALT_SIZE)) return 0;
 	
 	for(i = ENCODE_PS; i < len; i++)
 		if(tmp[i] == 0x01) break;
@@ -1475,31 +1479,6 @@ void hashlib_MGF1Hash(uint8_t* data, size_t datalen, uint8_t* outbuf, size_t out
 		memcpy(&outbuf[printlen], sha_digest, copylen);
 	}
 }
-
-
-#define RSA_PUB_EXPONENT 65537
-enum _rsa_encoding {
-	RSA_NONE,
-	RSA_OAEP
-};
-/*
-bool hashlib_RSAEncrypt(const uint8_t* in, size_t len, uint8_t* out, const uint8_t *key, size_t keysize, uint8_t encoding){
-    uint8_t output[257], modulus[257], msg[257], exponent[5];
-    uint32_t exp = RSA_PUB_EXPONENT;
-    vint_t  *var_output = &output,
-            *var_modulus = &modulus,
-            *var_msg = &msg,
-            *var_exponent = &exponent;
-            
-    if(len > keysize) return false;
-    vint_frombytes(in, len, var_msg);
-    vint_frombytes(key, keysize, var_modulus);
-    vint_frombytes(&exp, sizeof(uint32_t), var_exponent);
-    vint_powmod(var_msg, var_exponent, var_modulus);
-    vint_tobytes(var_msg, out, keysize);
-    return true;
-}
-*/
 
 #define MPRIME_LEN			(8 + RSA_SALT_SIZE + RSA_SALT_SIZE)
 #define MPRIME_OCTETS		0
@@ -1566,37 +1545,69 @@ size_t hashlib_RSAEncodePSS(
 	for(size_t i = 0; i < db_len; i++)
 		out[i] ^= mgf1_digest[i];
 		
-	out[0] &= in[0];
+		
 	return modulus_len;	
 }
 
 
-/*
 enum _sig_algorithms {
 	RSA_SHA256,
 	ECDSA		// placeholder for something I may implement in the very distant future
 };
 
+bool hashlib_ReverseEndianness(const uint8_t* in, uint8_t* out, size_t len){
+    if(in==NULL || out==NULL) return false;
+    if(len==0) return false;
+    for(size_t i=0; i<len; i++)
+        out[len-i-1] = in[i];
+    return true;
+}
+
+#define RSA_PUBLIC_EXP  65537
+bool hashlib_RSAEncrypt(const uint8_t* msg, size_t msglen, uint8_t *ct, const uint8_t* pubkey, size_t keylen){
+    if(msg==NULL || pubkey==NULL || ct==NULL) return false;
+    if(msglen == 0) return false;
+    uint8_t spos = 0;
+    while(pubkey[spos]==0) {ct[spos++] = 0;}
+    if(!hashlib_RSAEncodeOAEP(msg, msglen, &ct[spos], keylen-spos, NULL)) return false;
+    powmod((uint8_t)keylen, ct, RSA_PUBLIC_EXP, pubkey);
+    return true;
+}
+
+bool hashlib_RSAVerifyPSS(const uint8_t *in, size_t len, const uint8_t *expected, size_t modulus_len){
+    uint8_t mgf1_digest[RSA_MODULUS_MAX - RSA_SALT_SIZE - 1];
+    uint8_t self_sig_buf[RSA_MODULUS_MAX];
+    uint8_t salt[32];
+    size_t db_len = modulus_len - RSA_SALT_SIZE - 1;
+    memcpy(self_sig_buf, expected, modulus_len);
+    hashlib_MGF1Hash(&self_sig_buf[modulus_len + DB_MPRIME_HASH], RSA_SALT_SIZE, mgf1_digest, db_len);
+    for(size_t i = 0; i < db_len; i++)
+		self_sig_buf[i] ^= mgf1_digest[i];
+    memcpy(salt, &self_sig_buf[modulus_len + DB_SALT], 32);
+    hashlib_RSAEncodePSS(in, len, self_sig_buf, modulus_len, salt);
+    return hashlib_CompareDigest(self_sig_buf, expected, modulus_len);
+}
+
 bool hashlib_SSLVerifySignature(const uint8_t *ca_pubkey, size_t keysize, const uint8_t *cert, size_t certlen, uint8_t sig_alg){
 	if((ca_pubkey == NULL) || (cert == NULL)) return false;
+    if(certlen <= keysize) return false;
 	switch(sig_alg){
 		case RSA_SHA256:
 		{
-			uint8_t decrypt_buf[256];
-			uint8_t self_sig_buf[256];
+            uint8_t sig_buf[RSA_MODULUS_MAX];
 			uint8_t sha256digest[32];
 			SHA256_CTX ctx;
 			uint8_t mbuffer[64*4];
-			hashlib_RSAEncrypt(&cert[certlen-256-1], 256, decrypt_buf, ca_pubkey, keysize, RSA_NONE);
+            memcpy(sig_buf, &cert[certlen-keysize-1], keysize);
+			//hashlib_RSAEncrypt(sig_buf, keysize, ca_pubkey, keysize);
+            powmod((uint8_t)keysize, sig_buf, RSA_PUBLIC_EXP, ca_pubkey);
 			hashlib_Sha256Init(&ctx, mbuffer);
-			hashlib_Sha256Update(&ctx, cert, certlen-256);
+			hashlib_Sha256Update(&ctx, cert, certlen-keysize);
 			hashlib_Sha256Final(&ctx, sha256digest);
-			hashlib_RSAEncodePSS(sha256digest, 32, self_sig_buf);
-			if(hashlib_CompareDigest(decrypt_buf, self_sig_buf, keysize)) return true;
+            return hashlib_RSAVerifyPSS(sha256digest, 32, sig_buf, keysize);
 			break;
 		}
 		default:
 			return false;
 	}
 }
-*/
