@@ -93,21 +93,37 @@ bool hashlib_CompareDigest(uint8_t *dig1, uint8_t *dig2, size_t len);
 #define RANDBYTES 16
 
 
-    
+typedef enum {
+    AES_OK,
+    AES_INVALID_ARG,
+    AES_INVALID_MSG,
+    AES_INVALID_CIPHERMODE,
+    AES_INVALID_PADDINGMODE,
+    AES_INVALID_CIPHERTEXT
+} aes_error_t;
+
+typedef enum {
+    RSA_OK,
+    RSA_INVALID_ARG,
+    RSA_INVALID_MSG,
+    RSA_INVALID_MODULUS,
+    RSA_ENCODING_ERROR
+} rsa_error_t;
+
 
 
 size_t hashlib_b64encode(char *b64buffer, const uint8_t *data, size_t len);
 size_t hashlib_b64decode(uint8_t *buffer, size_t len, const char *b64data);
 
-bool hashlib_AESEncrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[], uint8_t ciphermode);
-bool hashlib_AESDecrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[], uint8_t ciphermode);
-size_t hashlib_PadPlaintext(const uint8_t* in, size_t len, uint8_t* out, uint8_t alg, uint8_t schm);
-size_t hashlib_StripPadding(const uint8_t* in, size_t len, uint8_t* out, uint8_t alg, uint8_t schm);
-bool hashlib_AESVerifyMAC(uint8_t *ciphertext, size_t len, aes_ctx *ks_mac);
+aes_error_t hashlib_AESEncrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[], uint8_t ciphermode, uint8_t paddingmode);
+aes_error_t hashlib_AESDecrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[], uint8_t ciphermode, uint8_t paddingmode);
+size_t hashlib_AESPadMessage(const uint8_t* in, size_t len, uint8_t* out, uint8_t schm);
+size_t hashlib_AESStripPadding(const uint8_t* in, size_t len, uint8_t* out, uint8_t schm);
+//bool hashlib_AESVerifyMAC(uint8_t *ciphertext, size_t len, aes_ctx *ks_mac);
 
 
 void powmod(uint8_t size, uint8_t *restrict base, uint24_t exp, const uint8_t *restrict mod);
-bool hashlib_RSAEncrypt(const uint8_t* msg, size_t msglen, uint8_t *ct, const uint8_t* pubkey, size_t keylen);
+rsa_error_t hashlib_RSAEncrypt(const uint8_t* msg, size_t msglen, uint8_t *ct, const uint8_t* pubkey, size_t keylen);
 /*
     #########################
     ### Math Dependencies ###
@@ -1172,29 +1188,37 @@ void increment_iv(BYTE iv[], size_t counter_size)
 	}
 }
 
+enum _aes_padding_schemes {
+    SCHM_PKCS7,         // Pad with padding size
+    SCHM_DEFAULT = SCHM_PKCS7,
+    SCHM_ISO2,        // Pad with 0x80,0x00...0x00
+    SCHM_NONE
+};
+
+
 enum _ciphermodes{
 AES_CBC,
 AES_CTR
 };
 #define AES_BLOCKSIZE 16
-bool hashlib_AESEncrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[], uint8_t ciphermode)
+aes_error_t hashlib_AESEncrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[], uint8_t ciphermode, uint8_t paddingmode)
 {
 	BYTE buf_in[AES_BLOCK_SIZE], buf_out[AES_BLOCK_SIZE], iv_buf[AES_BLOCK_SIZE];
     //int keysize = key->keysize;
     //uint32_t *round_keys = key->round_keys;
 	int blocks, idx;
 
-    if(in==NULL) return false;
-    if(out==NULL) return false;
-    if(key==NULL) return false;
+    if(in==NULL || out==NULL || key==NULL || iv== NULL) return AES_INVALID_ARG;
+    if(in_len == 0) return AES_INVALID_MSG;
     
     switch(ciphermode){
 		case AES_CBC:
-			if((in_len % AES_BLOCK_SIZE) != 0) return false;
-			blocks = in_len / AES_BLOCK_SIZE;
+            if(paddingmode>SCHM_ISO2) return AES_INVALID_PADDINGMODE;
+			hashlib_AESPadMessage(in, in_len, out, paddingmode);
+			blocks = (in_len / AES_BLOCK_SIZE) + 1;
 			memcpy(iv_buf, iv, AES_BLOCK_SIZE);
 			for (idx = 0; idx < blocks; idx++) {
-				memcpy(buf_in, &in[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
+				memcpy(buf_in, &out[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
 				xor_buf(iv_buf, buf_in, AES_BLOCK_SIZE);
 				aes_encrypt_block(buf_in, buf_out, key);
 				memcpy(&out[idx * (AES_BLOCK_SIZE)], buf_out, AES_BLOCK_SIZE);
@@ -1220,26 +1244,26 @@ bool hashlib_AESEncrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key
 			xor_buf(out_buf, &out[idx], in_len - idx);   // Use the Most Significant bytes.
 		}
 			break;
-		default: return false;
+		default: return AES_INVALID_CIPHERMODE;
 		
 	}
-	return true;
+	return AES_OK;
 }
 
-bool hashlib_AESDecrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[], uint8_t ciphermode)
+aes_error_t hashlib_AESDecrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[], uint8_t ciphermode, uint8_t paddingmode)
 {
 	BYTE buf_in[AES_BLOCK_SIZE], buf_out[AES_BLOCK_SIZE], iv_buf[AES_BLOCK_SIZE];
 	//int keysize = key->keysize;
     //uint32_t *round_keys = key->round_keys;
 	int blocks, idx;
 
-    if(in==NULL) return false;
-    if(out==NULL) return false;
-    if(key==NULL) return false;
+    if(in==NULL || out==NULL || key==NULL || iv== NULL) return AES_INVALID_ARG;
+    if(in_len == 0) return AES_INVALID_CIPHERTEXT;
 	
 	switch(ciphermode){
 		case AES_CBC:
-			if((in_len % AES_BLOCK_SIZE) != 0) return false;
+            if(paddingmode>SCHM_ISO2) return AES_INVALID_PADDINGMODE;
+			if((in_len % AES_BLOCK_SIZE) != 0) return AES_INVALID_CIPHERTEXT;
 			blocks = in_len / AES_BLOCK_SIZE;
 			memcpy(iv_buf, iv, AES_BLOCK_SIZE);
 
@@ -1250,25 +1274,25 @@ bool hashlib_AESDecrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key
 				memcpy(&out[idx * AES_BLOCK_SIZE], buf_out, AES_BLOCK_SIZE);
 				memcpy(iv_buf, buf_in, AES_BLOCK_SIZE);
 			}
+            hashlib_AESStripPadding(out, in_len, out, paddingmode);
 			break;
 		case AES_CTR:
-			hashlib_AESEncrypt(in, in_len, out, key, iv, AES_CTR);
+			hashlib_AESEncrypt(in, in_len, out, key, iv, AES_CTR, 0);
 			break;
-		default: return false;
+		default: return AES_INVALID_CIPHERMODE;
 	}
 
-    return true;
+    return AES_OK;
 }
 
+/*
 int hashlib_AESOutputMAC(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key){
     BYTE buf_in[AES_BLOCK_SIZE], buf_out[AES_BLOCK_SIZE], iv_buf[AES_BLOCK_SIZE];
     //int keysize = key->keysize;
     //uint32_t *round_keys = key->round_keys;
 	int blocks, idx;
 
-    if(in==NULL) return false;
-    if(out==NULL) return false;
-    if(key==NULL) return false;
+    if(in==NULL || out==NULL || key==NULL) return AES_INVALID_ARG;
 
 	if ((in_len % AES_BLOCK_SIZE) != 0)
 		return false;
@@ -1287,14 +1311,7 @@ int hashlib_AESOutputMAC(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* ke
 
 	return true;
 }
-
-
-
-enum _aes_padding_schemes {
-    SCHM_PKCS7,         // Pad with padding size
-    SCHM_DEFAULT = SCHM_PKCS7,
-    SCHM_ISO2,        // Pad with 0x80,0x00...0x00
-};
+*/
 
 
 
@@ -1564,14 +1581,15 @@ bool hashlib_ReverseEndianness(const uint8_t* in, uint8_t* out, size_t len){
 }
 
 #define RSA_PUBLIC_EXP  65537
-bool hashlib_RSAEncrypt(const uint8_t* msg, size_t msglen, uint8_t *ct, const uint8_t* pubkey, size_t keylen){
-    if(msg==NULL || pubkey==NULL || ct==NULL) return false;
-    if(msglen == 0) return false;
+rsa_error_t hashlib_RSAEncrypt(const uint8_t* msg, size_t msglen, uint8_t *ct, const uint8_t* pubkey, size_t keylen){
     uint8_t spos = 0;
+    if(msg==NULL || pubkey==NULL || ct==NULL) return RSA_INVALID_ARG;
+    if(keylen<128 || keylen>256 || (!(pubkey[keylen-1]&1))) return RSA_INVALID_MODULUS;
     while(pubkey[spos]==0) {ct[spos++] = 0;}
-    if(!hashlib_RSAEncodeOAEP(msg, msglen, &ct[spos], keylen-spos, NULL)) return false;
+    if(msglen == 0 || (msglen + 66 > (keylen-spos))) return RSA_INVALID_MSG;
+    if(!hashlib_RSAEncodeOAEP(msg, msglen, &ct[spos], keylen-spos, NULL)) return RSA_ENCODING_ERROR;
     powmod((uint8_t)keylen, ct, RSA_PUBLIC_EXP, pubkey);
-    return true;
+    return RSA_OK;
 }
 
 bool hashlib_RSAVerifyPSS(const uint8_t *in, size_t len, const uint8_t *expected, size_t modulus_len){
