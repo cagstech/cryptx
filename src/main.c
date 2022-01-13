@@ -1732,7 +1732,7 @@ typedef struct _hmac_ctx {
 
 void hashlib_HMACSha256Init(hmac_ctx *hmac, const uint8_t* key, size_t keylen, uint32_t *mbuf){
     size_t i;
-    unsigned char sum[64] = {0};
+    uint8_t sum[64] = {0};
     if(keylen > 64){
         hashlib_Sha256Init(&hmac->sha256_ctx, mbuf);
         hashlib_Sha256Update(&hmac->sha256_ctx, key, keylen);
