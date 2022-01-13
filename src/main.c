@@ -1732,20 +1732,19 @@ typedef struct _hmac_ctx {
 
 void hashlib_HMACSha256Init(hmac_ctx *hmac, const uint8_t* key, size_t keylen, uint32_t *mbuf){
     size_t i;
-    unsigned char sum[32];
-    uint8_t* usekey = key;
+    unsigned char sum[64] = {0};
     if(keylen > 64){
         hashlib_Sha256Init(&hmac->sha256_ctx, mbuf);
         hashlib_Sha256Update(&hmac->sha256_ctx, key, keylen);
         hashlib_Sha256Final(&hmac->sha256_ctx, sum);
         keylen = 32;
-        usekey = sum;
     }
+    else memcpy(sum, key, keylen);
     memset( hmac->ipad, 0x36, 64 );
     memset( hmac->opad, 0x5C, 64 );
-    for( i = 0; i < keylen; i++ ){
-        hmac->ipad[i] ^= usekey[i];
-        hmac->opad[i] ^= usekey[i];
+    for( i = 0; i < 64; i++ ){
+        hmac->ipad[i] ^= sum[i];
+        hmac->opad[i] ^= sum[i];
     }
     hashlib_Sha256Init(&hmac->sha256_ctx, mbuf);
     hashlib_Sha256Update(&hmac->sha256_ctx, hmac->ipad, 64);
@@ -1773,7 +1772,7 @@ void hashlib_HMACSha256Reset(hmac_ctx *hmac){
 bool hashlib_PBKDF2(const uint8_t* password, size_t plen, uint8_t* out, const uint8_t* salt, size_t salt_len, size_t iter_count, size_t keylen){
 
     uint8_t sha_buffer[SHA256_OUTSIZE];
-    uint8_t sha_comp[SHA256_OUTSIZE];
+    uint8_t sha_composite[SHA256_OUTSIZE];
     hmac_ctx hmac = {0};
     size_t outlen;
     uint32_t mbuffer[64];
@@ -1792,23 +1791,19 @@ bool hashlib_PBKDF2(const uint8_t* password, size_t plen, uint8_t* out, const ui
             //⋮
             //Uc = PRF(Password, Uc)
         size_t copylen = ((keylen-outlen) > SHA256_OUTSIZE) ? SHA256_OUTSIZE : keylen-outlen;
-        uint8_t c[4];
-        c[0] = (counter >> 24) & 0xff;
-		c[1] = (counter >> 16) & 0xff;
-		c[2] = (counter >> 8) & 0xff;
-		c[3] = (counter >> 0) & 0xff;
+        uint32_t c = REVERSE_LONG(counter);
         hashlib_HMACSha256Init(&hmac, password, plen, mbuffer);
         hashlib_HMACSha256Update(&hmac, salt, salt_len);
-        hashlib_HMACSha256Update(&hmac, c, sizeof c);
-        hashlib_HMACSha256Final(&hmac, sha_comp);
+        hashlib_HMACSha256Update(&hmac, (uint8_t*)&counter, sizeof counter);
+        hashlib_HMACSha256Final(&hmac, sha_composite);
         for(size_t ic=1; ic<iter_count; ic++){
             hashlib_HMACSha256Reset(&hmac);
-            hashlib_HMACSha256Update(&hmac, sha_comp, SHA256_OUTSIZE);
+            hashlib_HMACSha256Update(&hmac, sha_composite, SHA256_OUTSIZE);
             hashlib_HMACSha256Final(&hmac, sha_buffer);
             for(uint8_t j=0; j<SHA256_OUTSIZE; j++)
-                sha_comp[j] ^= sha_buffer[j];
+                sha_composite[j] ^= sha_buffer[j];
         }
-        memcpy(&out[outlen], sha_comp, copylen);
+        memcpy(&out[outlen], sha_composite, copylen);
     }
     return true;
 }
