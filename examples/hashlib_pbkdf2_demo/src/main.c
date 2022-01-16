@@ -22,8 +22,6 @@ uint8_t salt[RECD_MIN_SALT_LEN] = {
 uint8_t passwd[] = "testing123";
 
 
-
-
 void hexdump(uint8_t *addr, size_t len, uint8_t *label){
     if(label) sprintf(CEMU_CONSOLE, "\n%s\n", label);
     else sprintf(CEMU_CONSOLE, "\n");
@@ -38,12 +36,6 @@ int main(void)
 {
 	char outbuf[64];
     size_t str_len = strlen(passwd);
-
-	// sprintf(CEMU_CONSOLE, "SHA_CTX Addr: %u\nSHA_CTX EndAddr: %u\n", &sha256, (uint24_t)&sha256 + sizeof(sha256)-1);
-    // (*(uint8_t*)-1) = 2;
-
-    sprintf(CEMU_CONSOLE, "The string is '%s'.\n", passwd);
-    sprintf(CEMU_CONSOLE, "Its size is: %u\n", str_len);
     
     hashlib_PBKDF2(passwd, str_len, outbuf, salt, RECD_MIN_SALT_LEN, 100, 64);
     
