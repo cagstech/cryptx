@@ -1731,13 +1731,14 @@ void hashlib_HMACSha256Update(hmac_ctx *hmac, const uint8_t* msg, size_t len){
 
 void hashlib_HMACSha256Final(hmac_ctx* hmac, uint8_t *output){
     uint8_t tmpbuf[32];
+    hmac_ctx tmp;
+    memcpy(&tmp, hmac, sizeof(tmp));
+    hashlib_Sha256Final( &tmp.sha256_ctx, tmpbuf );
     
-    hashlib_Sha256Final( &hmac->sha256_ctx, tmpbuf );
-    
-    hashlib_Sha256Init( &hmac->sha256_ctx);
-    hashlib_Sha256Update( &hmac->sha256_ctx, hmac->opad, 64 );
-    hashlib_Sha256Update( &hmac->sha256_ctx, tmpbuf, 32);
-    hashlib_Sha256Final( &hmac->sha256_ctx, output );
+    hashlib_Sha256Init( &tmp.sha256_ctx);
+    hashlib_Sha256Update( &tmp.sha256_ctx, hmac->opad, 64 );
+    hashlib_Sha256Update( &tmp.sha256_ctx, tmpbuf, 32);
+    hashlib_Sha256Final( &tmp.sha256_ctx, output );
 }
 
 void hashlib_HMACSha256Reset(hmac_ctx *hmac){
