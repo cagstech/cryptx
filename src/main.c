@@ -13,7 +13,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
 /* Standard headers - it's recommended to leave them included */
 
 /* Other available headers */
@@ -354,92 +353,6 @@ void hashlib_Sha256Final(SHA256_CTX *ctx, BYTE hash[])
 
 
 
-static const uint8_t index_64[128] = {
-	255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-	255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-	255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-	255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-	255, 255, 255, 255, 255, 255, 0, 1, 54, 55,
-	56, 57, 58, 59, 60, 61, 62, 63, 255, 255,
-	255, 255, 255, 255, 255, 2, 3, 4, 5, 6,
-	7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-	17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27,
-	255, 255, 255, 255, 255, 255, 28, 29, 30,
-	31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-	41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
-	51, 52, 53, 255, 255, 255, 255, 255
-};
-#define CHAR64(c)  ( (c) > 127 ? 255 : index_64[(c)])
-
-size_t hashlib_b64decode(uint8_t *buffer, size_t len, const char *b64data)
-{
-	uint8_t *bp = buffer;
-	const uint8_t *p = b64data;
-	uint8_t c1, c2, c3, c4;
-
-	while (bp < buffer + len) {
-		c1 = CHAR64(*p);
-		/* Invalid data */
-		if (c1 == 255)
-			return -1;
-
-		c2 = CHAR64(*(p + 1));
-		if (c2 == 255)
-			return -1;
-
-		*bp++ = (c1 << 2) | ((c2 & 0x30) >> 4);
-		if (bp >= buffer + len)
-			break;
-
-		c3 = CHAR64(*(p + 2));
-		if (c3 == 255)
-			return -1;
-
-		*bp++ = ((c2 & 0x0f) << 4) | ((c3 & 0x3c) >> 2);
-		if (bp >= buffer + len)
-			break;
-
-		c4 = CHAR64(*(p + 3));
-		if (c4 == 255)
-			return -1;
-		*bp++ = ((c3 & 0x03) << 6) | c4;
-
-		p += 4;
-	}
-	return 0;
-}
-
-
-size_t hashlib_b64encode(char *b64buffer, const uint8_t *data, size_t len)
-{
-	uint8_t *bp = b64buffer;
-	const uint8_t *p = data;
-	uint8_t c1, c2;
-
-	while (p < data + len) {
-		c1 = *p++;
-		*bp++ = Base64Code[(c1 >> 2)];
-		c1 = (c1 & 0x03) << 4;
-		if (p >= data + len) {
-			*bp++ = Base64Code[c1];
-			break;
-		}
-		c2 = *p++;
-		c1 |= (c2 >> 4) & 0x0f;
-		*bp++ = Base64Code[c1];
-		c1 = (c2 & 0x0f) << 2;
-		if (p >= data + len) {
-			*bp++ = Base64Code[c1];
-			break;
-		}
-		c2 = *p++;
-		c1 |= (c2 >> 6) & 0x03;
-		*bp++ = Base64Code[c1];
-		*bp++ = Base64Code[c2 & 0x3f];
-	}
-	*bp = '\0';
-	return 0;
-}
 
 /****************************** MACROS ******************************/
 // The least significant byte of the word is rotated to the end.
@@ -1325,7 +1238,27 @@ int hashlib_AESOutputMAC(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* ke
 }
 */
 
-
+size_t hashlib_AESStripPadding(const uint8_t* in, size_t len, uint8_t* out, uint8_t schm){
+    if(in==NULL) return 0;
+    if(out==NULL) return 0;
+    if(len==0) return 0;
+    size_t outlen;
+    //memset(out, 0, len);
+    switch(schm){
+        case SCHM_PKCS7:
+            outlen = len - in[len-1];
+            break;
+        case SCHM_ISO2:
+            for(outlen = len-1; in[outlen] != 0x80; outlen--);
+            outlen++;
+            break;
+        default:
+            return 0;
+    }
+    memcpy(out, in, outlen);
+	memset(&out[outlen], 0, len-outlen);
+    return outlen;
+}
 
 size_t hashlib_AESPadMessage(const uint8_t* in, size_t len, uint8_t* out, uint8_t schm){
     size_t blocksize=16, padded_len;
@@ -1357,224 +1290,6 @@ enum _authmodes{
 
 
      
-#define RSA_MODULUS_MAX	256
-#define RSA_SALT_SIZE	32
-#define	ENCODE_START 	0
-#define ENCODE_SALT 	(1 + ENCODE_START)
-#define ENCODE_LHASH	(ENCODE_SALT + RSA_SALT_SIZE)
-#define ENCODE_PS		(ENCODE_LHASH + RSA_SALT_SIZE)
-size_t hashlib_RSAEncodeOAEP(const uint8_t* in, size_t len, uint8_t* out, size_t modulus_len, const uint8_t *auth){
-
-	size_t min_padding_len = (RSA_SALT_SIZE<<1) + 2;
-	size_t ps_len = modulus_len - len - min_padding_len;
-	size_t db_len = modulus_len - RSA_SALT_SIZE - 1;
-	SHA256_CTX ctx;
-	uint8_t mgf1_digest[RSA_MODULUS_MAX - RSA_SALT_SIZE];
-
-    if(in==NULL) return 0;
-    if(out==NULL) return 0;
-    if(len==0) return 0;
-    if(modulus_len > RSA_MODULUS_MAX) return 0;
-
-	if((len + min_padding_len) > modulus_len) return 0;
-	
-	// set first byte to 00
-	out[ENCODE_START] = 0x00;
-	// seed next 32 bytes
-	hashlib_RandomBytes(&out[ENCODE_SALT], RSA_SALT_SIZE);
-	
-	// hash the authentication string
-	hashlib_Sha256Init(&ctx);
-	if(auth != NULL) hashlib_Sha256Update(&ctx, auth, strlen(auth));
-	hashlib_Sha256Final(&ctx, &out[ENCODE_LHASH]);	// nothing to actually hash
-	
-	memset(&out[ENCODE_PS], 0, ps_len);		// write padding zeros
-	out[ENCODE_PS + ps_len] = 0x01;			// write 0x01
-	memcpy(&out[ENCODE_PS + ps_len + 1], in, len);		// write plaintext to end of output
-	
-	// hash the salt with MGF1, return hash length of db
-	hashlib_MGF1Hash(&out[ENCODE_SALT], RSA_SALT_SIZE, mgf1_digest, db_len);
-                
-    // XOR hash with db
-    for(size_t i=0; i < db_len; i++)
-        out[ENCODE_LHASH + i] ^= mgf1_digest[i];
-                    
-    // hash db with MGF1, return hash length of RSA_SALT_SIZE
-    hashlib_MGF1Hash(&out[ENCODE_LHASH], db_len, mgf1_digest, RSA_SALT_SIZE);
-                
-    // XOR hash with salt
-    for(size_t i=0; i<RSA_SALT_SIZE; i++)
-        out[ENCODE_SALT + i] ^= mgf1_digest[i];
-                    
-                // Return the static size of 256
-    return modulus_len;
-}
-
-size_t hashlib_AESStripPadding(const uint8_t* in, size_t len, uint8_t* out, uint8_t schm){
-    if(in==NULL) return 0;
-    if(out==NULL) return 0;
-    if(len==0) return 0;
-    size_t outlen;
-    //memset(out, 0, len);
-    switch(schm){
-        case SCHM_PKCS7:
-            outlen = len - in[len-1];
-            break;
-        case SCHM_ISO2:
-            for(outlen = len-1; in[outlen] != 0x80; outlen--);
-            outlen++;
-            break;
-        default:
-            return 0;
-    }
-    memcpy(out, in, outlen);
-	memset(&out[outlen], 0, len-outlen);
-    return outlen;
-}
-
-size_t hashlib_RSADecodeOAEP(const uint8_t *in, size_t len, uint8_t* out, const uint8_t *auth){
-  
-    if(in==NULL) return 0;
-    if(out==NULL) return 0;
-    if(len==0) return 0;
-    if(len > 256) return 0;
-    size_t db_len = len - RSA_SALT_SIZE - 1;
-    uint8_t sha256_digest[RSA_SALT_SIZE];
-    uint8_t mgf1_digest[RSA_MODULUS_MAX - RSA_SALT_SIZE];
-    size_t i;
-    SHA256_CTX ctx;
-	uint8_t tmp[256];
-	
-	memcpy(tmp, in, len);
-                
-    // Copy last 16 bytes of input buf to salt to get encoded salt
-   // memcpy(salt, &in[len-RSA_SALT_SIZE-1], RSA_SALT_SIZE);
-                
-    // SHA-256 hash db
-    hashlib_MGF1Hash(&tmp[ENCODE_LHASH], db_len, mgf1_digest, RSA_SALT_SIZE);
-                
-    // XOR hash with encoded salt to return salt
-    for(i = 0; i < RSA_SALT_SIZE; i++)
-		tmp[ENCODE_SALT + i] ^= mgf1_digest[i];
-                    
-    // MGF1 hash the salt
-    hashlib_MGF1Hash(&tmp[ENCODE_SALT], RSA_SALT_SIZE, mgf1_digest, db_len);
-                
-    // XOR MGF1 of salt with encoded message to get decoded message
-    for(i = 0; i < db_len; i++)
-		tmp[ENCODE_LHASH + i] ^= mgf1_digest[i];
-	
-	// verify authentication
-	hashlib_Sha256Init(&ctx);
-	if(auth != NULL) hashlib_Sha256Update(&ctx, auth, strlen(auth));
-	hashlib_Sha256Final(&ctx, sha256_digest);
-	if(!hashlib_CompareDigest(sha256_digest, out, RSA_SALT_SIZE)) return 0;
-	
-	for(i = ENCODE_PS; i < len; i++)
-		if(tmp[i] == 0x01) break;
-	if(i==len) return 0;
-	i++;
-	memcpy(out, &tmp[i], len-i);
-   
-   
-    return len-i;
-}
-
-bool hashlib_CompareDigest(uint8_t *dig1, uint8_t *dig2, size_t len){
-    bool result = false;
-    for(size_t i=0; i<len; i++)
-        result |= (dig1[i] ^ dig2[i]);
-    return !result;
-}
-
-void hashlib_MGF1Hash(uint8_t* data, size_t datalen, uint8_t* outbuf, size_t outlen){
-	uint32_t ctr = 0;
-	size_t copylen;
-	uint8_t sha_digest[32], ctr_data[4];
-	SHA256_CTX ctx_data, ctx_ctr;
-	hashlib_Sha256Init(&ctx_data);
-	hashlib_Sha256Update(&ctx_data, data, datalen);
-	for(size_t printlen=0; printlen<outlen; printlen+=32, ctr++){
-		copylen = (outlen-printlen > 32) ? 32 : outlen-printlen;
-		//memcpy(ctr_data, &ctr, 4);
-		ctr_data[0] = (uint8_t) ((ctr >> 24) & 0xff);
-		ctr_data[1] = (uint8_t) ((ctr >> 16) & 0xff);
-		ctr_data[2] = (uint8_t) ((ctr >> 8) & 0xff);
-		ctr_data[3] = (uint8_t) ((ctr >> 0) & 0xff);
-		memcpy(&ctx_ctr, &ctx_data, sizeof(SHA256_CTX));
-		hashlib_Sha256Update(&ctx_ctr, ctr_data, 4);
-		hashlib_Sha256Final(&ctx_ctr, sha_digest);
-		memcpy(&outbuf[printlen], sha_digest, copylen);
-	}
-}
-
-#define MPRIME_LEN			(8 + RSA_SALT_SIZE + RSA_SALT_SIZE)
-#define MPRIME_OCTETS		0
-#define MPRIME_MHASH		(MPRIME_OCTETS + 8)
-#define MPRIME_SALT			(MPRIME_MHASH + RSA_SALT_SIZE)
-
-#define DB_END				(-1)
-#define DB_MPRIME_HASH		((DB_END) + (-RSA_SALT_SIZE))
-#define DB_SALT				((DB_MPRIME_HASH) + (-RSA_SALT_SIZE))
-#define DB_MASK_BYTE		((DB_SALT) + (-1))
-#define DB_PADDING_END		((DB_MASK_BYTE) + (-1))
-size_t hashlib_RSAEncodePSS(
-	const uint8_t* in,
-	size_t len,
-	uint8_t *out,
-	size_t modulus_len,
-	uint8_t *salt){
-	
-	uint8_t mprime_buf[MPRIME_LEN];
-	SHA256_CTX ctx;
-	uint8_t hMprime[RSA_SALT_SIZE];
-	uint8_t mgf1_digest[RSA_MODULUS_MAX - RSA_SALT_SIZE - 1];
-	size_t db_len = modulus_len - RSA_SALT_SIZE - 1;
-	size_t ps_len = db_len - RSA_SALT_SIZE - 1;
-	
-	// errors
-	if((in == NULL) || (out == NULL)) return 0;
-	if((modulus_len > 256) || (modulus_len < 128)) return 0;
-	if(len==0) return 0;
-	
-	// init buffers to 0
-	memset(out, 0, modulus_len);
-	memset(mprime_buf, 0, MPRIME_LEN);
-	// hash message, write to MHASH block
-	hashlib_Sha256Init(&ctx);
-	hashlib_Sha256Update(&ctx, in, len);
-	hashlib_Sha256Final(&ctx, &mprime_buf[MPRIME_MHASH]);
-	
-	// write in random oracle passed, or generate one
-	if(salt != NULL)
-		memcpy(&mprime_buf[MPRIME_SALT], salt, RSA_SALT_SIZE);
-	else
-		hashlib_RandomBytes(&mprime_buf[MPRIME_SALT], RSA_SALT_SIZE);
-	// copy salt to DB as well
-	memcpy(&out[modulus_len + DB_SALT], &mprime_buf[MPRIME_SALT], RSA_SALT_SIZE);
-	
-	// write masking and ending bytes
-	out[modulus_len + DB_MASK_BYTE] = 0x01;
-	out[modulus_len + DB_END] = 0xbc;
-		
-	// hash M' buffer
-	hashlib_Sha256Init(&ctx);
-	hashlib_Sha256Update(&ctx, mprime_buf, MPRIME_LEN);
-	hashlib_Sha256Final(&ctx, hMprime);
-	
-	// write hash to output hash block
-	memcpy(&out[modulus_len + DB_MPRIME_HASH], hMprime, RSA_SALT_SIZE);
-	
-	// MGF1 the hash
-	hashlib_MGF1Hash(hMprime, RSA_SALT_SIZE, mgf1_digest, db_len);
-	
-	// xor the hash with the output db block
-	for(size_t i = 0; i < db_len; i++)
-		out[i] ^= mgf1_digest[i];
-		
-		
-	return modulus_len;	
-}
 
 
 enum _sig_algorithms {
@@ -1590,105 +1305,10 @@ bool hashlib_ReverseEndianness(const uint8_t* in, uint8_t* out, size_t len){
     return true;
 }
 
-#define RSA_PUBLIC_EXP  65537
-rsa_error_t hashlib_RSAEncrypt(const uint8_t* msg, size_t msglen, uint8_t *ct, const uint8_t* pubkey, size_t keylen){
-    uint8_t spos = 0;
-    if(msg==NULL || pubkey==NULL || ct==NULL) return RSA_INVALID_ARG;
-    if(keylen<128 || keylen>256 || (!(pubkey[keylen-1]&1))) return RSA_INVALID_MODULUS;
-    while(pubkey[spos]==0) {ct[spos++] = 0;}
-    if(msglen == 0 || (msglen + 66 > (keylen-spos))) return RSA_INVALID_MSG;
-    if(!hashlib_RSAEncodeOAEP(msg, msglen, &ct[spos], keylen-spos, NULL)) return RSA_ENCODING_ERROR;
-    powmod((uint8_t)keylen, ct, RSA_PUBLIC_EXP, pubkey);
-    return RSA_OK;
-}
-
-bool hashlib_RSAVerifyPSS(const uint8_t *in, size_t len, const uint8_t *expected, size_t modulus_len){
-    uint8_t mgf1_digest[RSA_MODULUS_MAX - RSA_SALT_SIZE - 1];
-    uint8_t self_sig_buf[RSA_MODULUS_MAX];
-    uint8_t salt[32];
-    size_t db_len = modulus_len - RSA_SALT_SIZE - 1;
-    memcpy(self_sig_buf, expected, modulus_len);
-    hashlib_MGF1Hash(&self_sig_buf[modulus_len + DB_MPRIME_HASH], RSA_SALT_SIZE, mgf1_digest, db_len);
-    for(size_t i = 0; i < db_len; i++)
-		self_sig_buf[i] ^= mgf1_digest[i];
-    memcpy(salt, &self_sig_buf[modulus_len + DB_SALT], 32);
-    hashlib_RSAEncodePSS(in, len, self_sig_buf, modulus_len, salt);
-    memset(mgf1_digest, 0, sizeof mgf1_digest);
-    memset(salt, 0, sizeof salt);
-    return hashlib_CompareDigest(self_sig_buf, expected, modulus_len);
-}
-
-bool hashlib_SSLVerifySignature(const uint8_t *ca_pubkey, size_t keysize, const uint8_t *cert, size_t certlen, uint8_t sig_alg){
-	if((ca_pubkey == NULL) || (cert == NULL)) return false;
-    if(certlen <= keysize) return false;
-	switch(sig_alg){
-		case RSA_SHA256:
-		{
-            uint8_t sig_buf[RSA_MODULUS_MAX];
-			uint8_t sha256digest[32];
-			SHA256_CTX ctx;
-            memcpy(sig_buf, &cert[certlen-keysize-1], keysize);
-			//hashlib_RSAEncrypt(sig_buf, keysize, ca_pubkey, keysize);
-            powmod((uint8_t)keysize, sig_buf, RSA_PUBLIC_EXP, ca_pubkey);
-			hashlib_Sha256Init(&ctx);
-			hashlib_Sha256Update(&ctx, cert, certlen-keysize);
-			hashlib_Sha256Final(&ctx, sha256digest);
-            return hashlib_RSAVerifyPSS(sha256digest, 32, sig_buf, keysize);
-			break;
-		}
-		default:
-			return false;
-	}
-}
 
 
-//hashlib_AESEncrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[], uint8_t ciphermode, uint8_t paddingmode)
-aes_error_t hashlib_AESAuthEncrypt(const uint8_t* in, size_t in_len, uint8_t* out, aes_ctx* key, const uint8_t* iv, uint8_t ciphermode, size_t encr_start, size_t encr_len){
-    aes_error_t error;
-    SHA256_CTX ctx;
-   
-    if(encr_start+encr_len > in_len) return AES_INVALID_ARG;
-    if(in==NULL || out==NULL || key==NULL || iv==NULL) return AES_INVALID_ARG;
-    if(in!=out) memcpy(out, in, in_len);
-    
-    if((error = hashlib_AESEncrypt(&out[encr_start], encr_len, &out[encr_start], key, iv, ciphermode, SCHM_DEFAULT)))
-        return error;
-   
-    hashlib_Sha256Init(&ctx);
-    hashlib_Sha256Update(&ctx, out, in_len);
-    hashlib_Sha256Final(&ctx, &out[in_len]);
-    return AES_OK;
-}
 
-// aes_error_t hashlib_AESDecrypt(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key, const BYTE iv[], uint8_t ciphermode, uint8_t paddingmode)
-aes_error_t hashlib_AESAuthDecrypt(const uint8_t* in, size_t in_len, uint8_t* out, aes_ctx* key, const uint8_t* iv, uint8_t ciphermode, size_t encr_start, size_t encr_len){
-    SHA256_CTX ctx;
-    uint8_t sha_digest[32];
-    
-    if(encr_start+encr_len > in_len) return AES_INVALID_ARG;
-    if(in==NULL || out==NULL || key==NULL || iv==NULL) return AES_INVALID_ARG;
-    if(in!=out) memcpy(out, in, in_len-32);
-    
-    hashlib_Sha256Init(&ctx);
-    hashlib_Sha256Update(&ctx, in, in_len-32);
-    hashlib_Sha256Final(&ctx, sha_digest);
-    if(!hashlib_CompareDigest(&in[in_len-32], sha_digest, 32))
-        return AES_INVALID_CIPHERTEXT;
-        
-    return hashlib_AESDecrypt(&out[encr_start], encr_len, &out[encr_start], key, iv, ciphermode, SCHM_DEFAULT);
-}
 
-rsa_error_t hashlib_RSAAuthEncrypt(const uint8_t* msg, size_t msglen, uint8_t *ct, const uint8_t* pubkey, size_t keylen){
-    rsa_error_t error;
-    SHA256_CTX ctx;
-    if((error = hashlib_RSAEncrypt(msg, msglen, ct, pubkey, keylen)))
-        return error;
-    
-    hashlib_Sha256Init(&ctx);
-    hashlib_Sha256Update(&ctx, ct, keylen);
-    hashlib_Sha256Final(&ctx, &ct[keylen]);
-    return RSA_OK;
-}
 
 
 #define PBKDF2_SALT_LEN 16
@@ -1699,12 +1319,31 @@ rsa_error_t hashlib_RSAAuthEncrypt(const uint8_t* msg, size_t msglen, uint8_t *c
                                           ((n & 0xff000000) >> 24)))
                                           
 
+typedef struct _sha256hmac_ctx {
+    uint8_t ipad[64];       /**< holds the key xored with a magic value to be hashed with the inner digest */
+    uint8_t opad[64];       /**< holds the key xored with a magic value to be hashed with the outer digest */
+    uint8_t data[64];		/**< holds sha-256 block for transformation */
+	uint8_t datalen;		/**< holds the current length of data in data[64] */
+	uint8_t bitlen[8];		/**< holds the current length of transformed data */
+	uint32_t state[8];		/**< holds hash state for transformed data */
+} sha256hmac_ctx;
+
+/*******************************************************************************************************************
+ * @typedef hmac_ctx
+ * Defines hash-state data for an instance of SHA-256-HMAC.
+ * @note If you are hashing multiple data streams concurrently, allocate a seperate context for each.
+ ********************************************************************************************************************/
 typedef struct _hmac_ctx {
-    unsigned char ipad[64];
-    unsigned char opad[64];
-    SHA256_CTX sha256_ctx;
+    uint24_t fn_init;       /**< pointer to an initialization method for the given hash algorithm */
+    uint24_t fn_update;     /**< pointer to the update method for the given hash algorithm */
+    uint24_t fn_final;      /**< pointer to the digest output method for the given hash algorithm */
+    union _hmac {           /**< a union of computational states for various hashes */
+        sha256hmac_ctx sha256hmac;
+    } Hmac;
 } hmac_ctx;
+
 #define CEMU_CONSOLE ((char*)0xFB0000)
+/*
 void hashlib_HMACSha256Init(hmac_ctx *hmac, const uint8_t* key, size_t keylen){
     size_t i;
     uint8_t sum[64] = {0};
@@ -1741,10 +1380,7 @@ void hashlib_HMACSha256Final(hmac_ctx* hmac, uint8_t *output){
     hashlib_Sha256Final( &tmp.sha256_ctx, output );
 }
 
-void hashlib_HMACSha256Reset(hmac_ctx *hmac){
-    hashlib_Sha256Init(&hmac->sha256_ctx);
-    hashlib_Sha256Update(&hmac->sha256_ctx, hmac->ipad, 64);
-}
+*/
 
 void hexdump(uint8_t *addr, size_t len, uint8_t *label){
     if(label) sprintf(CEMU_CONSOLE, "\n%s\n", label);
@@ -1756,53 +1392,7 @@ void hexdump(uint8_t *addr, size_t len, uint8_t *label){
     sprintf(CEMU_CONSOLE, "\n");
 }
 
-#define MIN(x, y)   ((x) < (y)) ? (x) : (y)
 
-bool hashlib_PBKDF2(const uint8_t* password, size_t plen, uint8_t* out, const uint8_t* salt, size_t salt_len, size_t iter_count, size_t keylen){
-
-    uint8_t sha_buffer[SHA256_OUTSIZE];
-    uint8_t sha_composite[SHA256_OUTSIZE];
-    uint8_t c[4];
-    hmac_ctx hmac = {0};
-    hmac_ctx bck;
-    size_t outlen;
-    uint32_t counter = 1;
-    
-    if(password==NULL || out==NULL) return false;
-    if(plen==0) return false;
-    if(iter_count<1) return false;
-    if(keylen==0) return false;
-    //HASH = sha256
-    // DK = T(i) for i in 0 => (keylen/HASH), concat
-    hashlib_HMACSha256Init(&hmac, password, plen);
-    memcpy(&bck, &hmac, sizeof bck);
-    for(outlen = 0; outlen < keylen; outlen+=SHA256_OUTSIZE, counter++){
-        //T(i) = F(password, salt, c, i) = U1 xor U2 xor ... xor Uc
-            //U1 = PRF1(Password, Salt + INT_32_BE(i))
-            //U2 = PRF(Password, U1)
-            //⋮
-            //Uc = PRF(Password, Uc)
-        size_t copylen = MIN(keylen-outlen, SHA256_OUTSIZE);
-        c[0] = (counter >> 24) & 0xff;
-		c[1] = (counter >> 16) & 0xff;
-		c[2] = (counter >> 8) & 0xff;
-		c[3] = counter & 0xff;
-        hashlib_HMACSha256Update(&hmac, salt, salt_len);
-        hashlib_HMACSha256Update(&hmac, c, sizeof c);
-        hashlib_HMACSha256Final(&hmac, sha_buffer);
-        memcpy(sha_composite, sha_buffer, sizeof sha_composite);
-        for(size_t ic=1; ic<iter_count; ic++){
-            memcpy(&hmac, &bck, sizeof hmac);
-            hashlib_HMACSha256Update(&hmac, sha_buffer, sizeof sha_buffer);
-            hashlib_HMACSha256Final(&hmac, sha_buffer);
-            for(uint8_t j=0; j < (sizeof sha_composite); j++)
-                sha_composite[j] ^= sha_buffer[j];
-        }
-        memcpy(&out[outlen], sha_composite, copylen);
-        memcpy(&hmac, &bck, sizeof hmac);
-    }
-    return true;
-}
     
     
 char hexc[16] = "0123456789ABCDEF";
@@ -1815,4 +1405,11 @@ bool hashlib_DigestToHexStr(const uint8_t* digest, size_t len, uint8_t* hexstr){
     }
     hexstr[j] = 0;
     return true;
+}
+
+bool hashlib_CompareDigest(uint8_t *dig1, uint8_t *dig2, size_t len){
+    bool result = false;
+    for(size_t i=0; i<len; i++)
+        result |= (dig1[i] ^ dig2[i]);
+    return !result;
 }
