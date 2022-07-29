@@ -432,7 +432,7 @@ typedef enum {
  *      is used like so: the first 8 bytes (64 bits) of the IV is a fixed nonce that should be securely pseudorandom.
  *      The last 8 bytes (64 bits) of the IV acts as a counter. To change this behavior, you can manually set the
  *      @b ctr_counter_len field of the AES context after init. Valid values are 0 < counter_size <= AES_BLOCKSIZE.
- *      It is not recommended to edit this field once you have started encrypting a data stream with the cipher context. This
+ *      It is not recommended to edit this field once you have started encrypting/decrypting a data stream with the cipher context. This
  *      may render the output unreadable under certain circumstances.
  *      @code
  *          aes_init(&ctx, key, keylen, ciphermode);
