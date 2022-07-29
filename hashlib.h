@@ -434,6 +434,8 @@ typedef enum {
  *          aes_init(&ctx, key, keylen, ciphermode);
  *          ctx.ctr_counter_len = 4;    // sets the counter to 4 bytes in length
  *      @endcode
+ * @warning Do not manually edit the @b cipher_mode field of the context structure. There is a fair chance this
+ *          will break the cipher configuration. If you want to change cipher modes, do so by calling @b aes_init again.
  * @return aes_error_t
  * @note It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.
 ***********************************************************************************************************************/
