@@ -415,7 +415,7 @@ typedef enum {
 } aes_error_t;
 
 /*********************************************************************************************************************
- * @brief AES import key to key schedule context
+ * @brief Initializes AES cipher configuration from a key and ciphermode.
  * @param ctx Pointer to an AES cipher context to initialize..
  * @param key Pointer to an 128, 192, or 256 bit key to load into the AES context.
  * @param keylen The size, in bytes, of the key to load.
