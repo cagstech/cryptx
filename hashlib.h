@@ -335,7 +335,9 @@ the advent of quantum computing.
 */
 /***************************************************************************************************
  * @typedef aes_ctx
- * Stores AES key instance data: key size and round keys generated from an AES key.
+ * Stores AES cipher configuration data, s.t. passing it to aes_encrypt/decrypt provides
+ * data about cipher mode, padding mode (CBC), and counter length (CTR) without
+ * requiring any additional arguments.
  ***************************************************************************************************/
 typedef struct _aes_ctx {
     uint24_t keysize;				/**< the size of the key, in bits */
