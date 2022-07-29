@@ -421,7 +421,7 @@ typedef enum {
  * @param ctx Pointer to an AES cipher context to initialize..
  * @param key Pointer to an 128, 192, or 256 bit key to load into the AES context.
  * @param keylen The size, in bytes, of the key to load.
- * @param ciphermode The operational mode of the AES cipher. Valid arguments: @see aes_padding_schemes.
+ * @param mode The operational mode of the AES cipher. Valid arguments: @see aes_padding_schemes.
  * @note @b ctx.padding_mode: If CBC mode is specified as the cipher mode, the padding mode is silently set to
  *      @b SCHM_DEFAULT. To change this you can manually set this field of the AES context after init.
  *      @code
@@ -445,7 +445,7 @@ typedef enum {
  *          If you want to change cipher modes, do so by calling @b aes_init again.
  * @return aes_error_t
 ***********************************************************************************************************************/
-aes_error_t aes_init(aes_ctx* ctx, const void* key, size_t keylen, uint8_t ciphermode);
+aes_error_t aes_init(aes_ctx* ctx, const void* key, size_t keylen, uint8_t mode);
 
 /**********************************************************************************************************************************************************************
  * @brief General-Purpose AES Encryption
