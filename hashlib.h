@@ -440,10 +440,10 @@ typedef enum {
  *      @endcode
  * @note Cipher configuration elements that do not apply to the current cipher mode are ignored. Ex: Changing @b ctr_counter_len
  *      while in AES_MODE_CBC mode will have no effect on the cipher's operation.
- * @warning Do not manually edit the @b cipher_mode field of the context structure. There is a fair chance this
- *          will break the cipher configuration. If you want to change cipher modes, do so by calling @b aes_init again.
- * @return aes_error_t
  * @note It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.
+ * @warning Do not manually edit the @b cipher_mode field of the context structure. This will break the cipher configuration.
+ *          If you want to change cipher modes, do so by calling @b aes_init again.
+ * @return aes_error_t
 ***********************************************************************************************************************/
 aes_error_t aes_init(aes_ctx* ctx, const void* key, size_t keylen, uint8_t ciphermode);
 
