@@ -425,7 +425,7 @@ typedef enum {
  * @note @b ctx.padding_mode: If CBC mode is specified as the cipher mode, the padding mode is silently set to
  *      @b SCHM_DEFAULT. To change this you can manually set this field of the AES context after init.
  *      @code
- *          aes_init(&ctx, key, keylen, ciphermode);
+ *          aes_init(&ctx, key, keylen, AES_MODE_CBC);
  *          ctx.padding_mode = SCHM_ISO2;
  *      @endcode
  * @note @b ctx.ctr_counter_len If CTR mode is specified as the cipher mode, the iniitalization vector you pass to encrypt and decrypt
@@ -435,9 +435,11 @@ typedef enum {
  *      It is not recommended to edit this field once you have started encrypting/decrypting a data stream with the cipher context. This
  *      may render the output unreadable under certain circumstances.
  *      @code
- *          aes_init(&ctx, key, keylen, ciphermode);
+ *          aes_init(&ctx, key, keylen, AES_MODE_CTR);
  *          ctx.ctr_counter_len = 4;    // sets the counter to 4 bytes in length
  *      @endcode
+ * @note Cipher configuration elements that do not apply to the current cipher mode are ignored. Ex: Changing @b ctr_counter_len
+ *      while in AES_MODE_CBC mode will have no effect on the cipher's operation.
  * @warning Do not manually edit the @b cipher_mode field of the context structure. There is a fair chance this
  *          will break the cipher configuration. If you want to change cipher modes, do so by calling @b aes_init again.
  * @return aes_error_t
