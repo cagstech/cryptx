@@ -422,16 +422,18 @@ typedef enum {
  * @param key Pointer to an 128, 192, or 256 bit key to load into the AES context.
  * @param keylen The size, in bytes, of the key to load.
  * @param ciphermode The operational mode of the AES cipher. Valid arguments: @see aes_padding_schemes.
- * @note If CBC mode is specified as the cipher mode, the padding mode is silently set to @b SCHM_DEFAULT.
- *      To change this you can manually set the @b padding_mode field of the AES context after init.
+ * @note @b ctx.padding_mode: If CBC mode is specified as the cipher mode, the padding mode is silently set to
+ *      @b SCHM_DEFAULT. To change this you can manually set this field of the AES context after init.
  *      @code
  *          aes_init(&ctx, key, keylen, ciphermode);
  *          ctx.padding_mode = SCHM_ISO2;
  *      @endcode
- * @note If CTR mode is specified as the cipher mode, the iniitalization vector you pass to encrypt and decrypt
+ * @note @b ctx.ctr_counter_len If CTR mode is specified as the cipher mode, the iniitalization vector you pass to encrypt and decrypt
  *      is used like so: the first 8 bytes (64 bits) of the IV is a fixed nonce that should be securely pseudorandom.
  *      The last 8 bytes (64 bits) of the IV acts as a counter. To change this behavior, you can manually set the
  *      @b ctr_counter_len field of the AES context after init. Valid values are 0 < counter_size <= AES_BLOCKSIZE.
+ *      It is not recommended to edit this field once you have started encrypting a data stream with the cipher context. This
+ *      may render the output unreadable under certain circumstances.
  *      @code
  *          aes_init(&ctx, key, keylen, ciphermode);
  *          ctx.ctr_counter_len = 4;    // sets the counter to 4 bytes in length
