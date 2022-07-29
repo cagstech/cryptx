@@ -49,26 +49,35 @@ int main(void)
     
     // generate random key and IV
     if(!csrand_init()) return 1;          // <<<----- DONT FORGET THIS
+    // !!!! NEVER PROCEED WITH ANYTHING CRYPTOGRAPHIC !!!!
+    // !!!! IF THE CSRNG FAILS TO INIT !!!!
+    
     csrand_fill(key, KEYSIZE);		// this aliases hashlib_RandomBytes()
     csrand_fill(iv, AES_IVSIZE);
     
-    // load the key into the key schedule
-    aes_loadkey(key, &ctx, KEYSIZE); // requires size in bits, not bytes
+    // initialize the AES key schedule for CBC mode
+    aes_init(&ctx, key, KEYSIZE, AES_MODE_CBC); // requires size in bytes
     
-	sprintf(CEMU_CONSOLE, "CBC encrypt done, exit code %u\n", aes_encrypt(str, msg_len, buf, &ctx, iv, AES_MODE_CBC, SCHM_DEFAULT));
+	sprintf(CEMU_CONSOLE, "CBC encrypt done, exit code %u\n", aes_encrypt(&ctx, str, msg_len, buf, iv));
     hexdump(buf, padded_len, "-- Encrypted Message --");
     
-	sprintf(CEMU_CONSOLE, "CBC decrypt done, exit code %u\n", aes_decrypt(buf, padded_len, stripped, &ctx, iv, AES_MODE_CBC, SCHM_DEFAULT));
+	sprintf(CEMU_CONSOLE, "CBC decrypt done, exit code %u\n", aes_decrypt(&ctx, buf, padded_len, stripped, iv));
     hexdump(stripped, msg_len, "-- Decrypted Message --");
 
 
-	// free *buf and *stripped.
-	// CTR mode doesn't need them.
+    // this may just be a demo, but NEVER reuse key for different streams
+    csrand_fill(key, KEYSIZE);
     
-    sprintf(CEMU_CONSOLE, "CTR encrypt done, exit code %u\n", aes_encrypt(str, msg_len, buf, &ctx, iv, AES_MODE_CTR, 0));
+    // this may just be a demo, but NEVER reuse IV.
+    csrand_fill(iv, AES_IVSIZE);
+    
+    // initialize the AES key schedule for CTR mode
+    aes_init(&ctx, key, KEYSIZE, AES_MODE_CTR); // requires size in bytes
+    
+    sprintf(CEMU_CONSOLE, "CTR encrypt done, exit code %u\n", aes_encrypt(&ctx, str, msg_len, buf, iv));
     hexdump(buf, padded_len, "-- Encrypted Message --");
 	
-	sprintf(CEMU_CONSOLE, "CTR decrypt done, exit code %u\n", aes_decrypt(buf, msg_len, stripped, &ctx, iv, AES_MODE_CTR, 0));
+	sprintf(CEMU_CONSOLE, "CTR decrypt done, exit code %u\n", aes_decrypt(&ctx, buf, msg_len, stripped, iv));
     hexdump(stripped, msg_len, "-- Decrypted Message --");
 
 	free(buf);

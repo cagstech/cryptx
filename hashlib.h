@@ -340,6 +340,9 @@ the advent of quantum computing.
 typedef struct _aes_ctx {
     uint24_t keysize;				/**< the size of the key, in bits */
     uint32_t round_keys[60];		/**< round keys */
+    uint8_t cipher_mode;            /**< selected operational mode of the cipher */
+    uint8_t padding_mode;           /**< selected padding mode of the cipher (only for CBC mode) */
+    uint8_t ctr_counter_len;        /**< length of counter portion of IV (only for CTR mode) */
 } aes_ctx;
 
 /************************************************
@@ -397,20 +400,10 @@ enum aes_padding_schemes {
 #define aes_extoutsize(len) \
 	(aes_outsize((len)) + AES_IVSIZE)
 
-/*********************************************************************************************************************
- * @brief AES import key to key schedule context
- * @param key Pointer to a buffer containing the AES key.
- * @param ks Pointer to an AES key schedule context.
- * @param keylen The size, in bytes, of the key to load.
- * @return True if the key was successfully loaded. False otherwise.
- * @note It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.
-***********************************************************************************************************************/
-bool aes_init(const void* key, const aes_ctx* ks, size_t keylen);
-
 /***************************************************
  * @enum aes_error_t
  * AES Error Codes
- * (returned by hashlib_AESEncrypt/Decrypt)
+ * (returned by AES functions)
  ***************************************************/
 typedef enum {
     AES_OK,                             /**< AES operation completed successfully */
@@ -421,15 +414,38 @@ typedef enum {
     AES_INVALID_CIPHERTEXT              /**< AES operation failed, ciphertext error */
 } aes_error_t;
 
+/*********************************************************************************************************************
+ * @brief AES import key to key schedule context
+ * @param ctx Pointer to an AES cipher context to initialize..
+ * @param key Pointer to an 128, 192, or 256 bit key to load into the AES context.
+ * @param keylen The size, in bytes, of the key to load.
+ * @param ciphermode The operational mode of the AES cipher. Valid arguments: @see aes_padding_schemes.
+ * @note If CBC mode is specified as the cipher mode, the padding mode is silently set to @b SCHM_DEFAULT.
+ *      To change this you can manually set the @b padding_mode field of the AES context after init.
+ *      @code
+ *          aes_init(&ctx, key, keylen, ciphermode);
+ *          ctx.padding_mode = SCHM_ISO2;
+ *      @endcode
+ * @note If CTR mode is specified as the cipher mode, the iniitalization vector you pass to encrypt and decrypt
+ *      is used like so: the first 8 bytes (64 bits) of the IV is a fixed nonce that should be securely pseudorandom.
+ *      The last 8 bytes (64 bits) of the IV acts as a counter. To change this behavior, you can manually set the
+ *      @b ctr_counter_len field of the AES context after init. Valid values are 0 < counter_size <= AES_BLOCKSIZE.
+ *      @code
+ *          aes_init(&ctx, key, keylen, ciphermode);
+ *          ctx.ctr_counter_len = 4;    // sets the counter to 4 bytes in length
+ *      @endcode
+ * @return aes_error_t
+ * @note It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.
+***********************************************************************************************************************/
+aes_error_t aes_init(aes_ctx* ctx, const void* key, size_t keylen, uint8_t ciphermode);
+
 /**********************************************************************************************************************************************************************
  * @brief General-Purpose AES Encryption
+ * @param ctx Pointer to an AES cipher context.
  * @param plaintext Pointer to data to encrypt.
  * @param len Length of data at @b plaintext to encrypt. This can be the output of hashlib_AESCiphertextSize().
  * @param ciphertext Pointer to buffer to write encrypted data to.
- * @param ks Pointer to an AES key schedule context.
  * @param iv Pointer to an initialization vector (a nonce of length equal to the block size).
- * @param ciphermode The cipher mode to use. Can be either @e AES_MODE_CBC or @e AES_MODE_CTR.
- * @param paddingmode The padding mode to use. Choose one of the padding modes in @b enum aes_padding_schemes.
  * @note @b ciphertext should large enough to hold the encrypted message.
  *          For CBC mode, this is the smallest multiple of the blocksize that will hold the plaintext,
  *              plus 1 block if the blocksize divides the plaintext evenly.
@@ -440,7 +456,7 @@ typedef enum {
  * 		Otherwise you will have to join the IV and the ciphertext into a single larger buffer before sending it through
  * 		whatever networking protocol you use.
  * 		@code
- * 		aes_encrypt(plaintext, len, &ciphertext[AES_IV_SIZE], ks, iv, <cipher_mode>, <padding_mode>);
+ * 		aes_encrypt(ctx, plaintext, len, &ciphertext[AES_IVSIZE], iv);
  * 		memcpy(ciphertext, iv, AES_IV_SIZE);
  * 		send_packet(ciphertext);
  * 		@endcode
@@ -448,35 +464,29 @@ typedef enum {
  * @return aes_error_t
  *************************************************************************************************************************************************************************/
 aes_error_t aes_encrypt(
+    const aes_ctx* ctx,
     const void* plaintext,
     size_t len,
     void* ciphertext,
-    const aes_ctx* ks,
-    const void* iv,
-    uint8_t ciphermode,
-    uint8_t paddingmode);
+    const void* iv);
 
 /**************************************************************************************************************************************************
  * @brief General-Purpose AES Decryption
+ * @param ctx Pointer to AES cipher context.
  * @param ciphertext Pointer to data to decrypt.
  * @param len Length of data at @b ciphertext to decrypt.
  * @param plaintext Pointer to buffer to write decryped data to.
- * @param ks Pointer to an AES key schedule context.
  * @param iv Pointer to an initialization vector (a nonce of length equal to the block size).
- * @param ciphermode The cipher mode to use. Can be either  @e AES_MODE_CBC or  @e AES_MODE_CTR.
- * @param paddingmode The padding mode to use. Choose one of the padding modes in @b enum aes_padding_schemes.
  * @note @b plaintext and @b ciphertext are aliasable.
  * @note @b IV should be the same as what is used for encryption.
  * @return aes_error_t
  **************************************************************************************************************************************************/
 aes_error_t aes_decrypt(
+    const aes_ctx* ctx,
     const void* ciphertext,
     size_t len,
     void* plaintext,
-    const aes_ctx* ks,
-    const void* iv,
-    uint8_t ciphermode,
-    uint8_t paddingmode);
+    const void* iv);
 
 /*
  RSA Public Key Encryption

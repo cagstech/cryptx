@@ -1,24 +1,25 @@
-library	"HASHLIB", 9
-	export	csrand_init ; 0
-	export	csrand_get ; 3
-	export	csrand_fill ; 6
-	export	hash_init ; 9
-	export	hash_update ; 12
-	export	hash_final ; 15
-	export	hash_mgf1 ; 18
-	export	hmac_init ; 21
-	export	hmac_update ; 24
-	export	hmac_final ; 27
-	export	hmac_pbkdf2 ; 30
-	export	aes_init ; 33
-	export	aes_encrypt ; 36
-	export	aes_decrypt ; 39
-	export	rsa_encrypt ; 42
-	export	digest_tostring ; 45
-	export	digest_compare ; 48
-	export	aes_ecb_unsafe_encrypt ; 51
-	export	aes_ecb_unsafe_decrypt ; 54
-	export	oaep_encode ; 57
-	export	oaep_decode ; 60
-	export	pss_encode ; 63
-	export	powmod ; 66
+	library	HASHLIB, 9
+
+	export	csrand_init
+	export	csrand_get
+	export	csrand_fill
+	export	hash_init
+	export	hash_update
+	export	hash_final
+	export	hash_mgf1
+	export	hmac_init
+	export	hmac_update
+	export	hmac_final
+	export	hmac_pbkdf2
+	export	aes_init
+	export	aes_encrypt
+	export	aes_decrypt
+	export	rsa_encrypt
+	export	digest_tostring
+	export	digest_compare
+	export	aes_ecb_unsafe_encrypt
+	export	aes_ecb_unsafe_decrypt
+	export	oaep_encode
+	export	oaep_decode
+	export	pss_encode
+	export	powmod
