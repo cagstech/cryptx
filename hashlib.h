@@ -93,6 +93,7 @@ The SRNG previded by HASHLIB solves both tests like so:
  * @note Catch and respond to a @b False return from this function. Do not proceed with generating nonces
  *      and encryption keys without ensuring the initialization was successful.
  * @note It may be a good idea to call this function in any program that uses hashlib functions for good measure.
+ * @note The SRNG is not reliably entropic on CEmu, due to the emulation of bus noise using a deterministic RNG.
  ***************************************************************************************************************************/
 bool csrand_init(void);
 
@@ -443,7 +444,7 @@ typedef enum {
  * @note It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.
  * @warning Do not manually edit the @b cipher_mode field of the context structure. This will break the cipher configuration.
  *          If you want to change cipher modes, do so by calling @b aes_init again.
- * @return aes_error_t
+ * @return AES_OK if success, non-zero if failed. See aes_error_t.
 ***********************************************************************************************************************/
 aes_error_t aes_init(aes_ctx* ctx, const void* key, size_t keylen, uint8_t mode);
 
@@ -469,14 +470,16 @@ aes_error_t aes_init(aes_ctx* ctx, const void* key, size_t keylen, uint8_t mode)
  * 		send_packet(ciphertext);
  * 		@endcode
  * 		This will require a buffer at least as large as the size returned by cipher_aes_extoutsize().
- * @return aes_error_t
+ * @returns AES_OK if success, non-zero if failed. See aes_error_t.
+ * @returns @b param @b iv in state to be used for encrypting more data on the same stream.
+ * @note The original state of @b iv will be lost. Copy it elsewhere if you need it after calling this function.
  *************************************************************************************************************************************************************************/
 aes_error_t aes_encrypt(
     const aes_ctx* ctx,
     const void* plaintext,
     size_t len,
     void* ciphertext,
-    const void* iv);
+    void* iv);
 
 /**************************************************************************************************************************************************
  * @brief General-Purpose AES Decryption
@@ -487,14 +490,16 @@ aes_error_t aes_encrypt(
  * @param iv Pointer to an initialization vector (a nonce of length equal to the block size).
  * @note @b plaintext and @b ciphertext are aliasable.
  * @note @b IV should be the same as what is used for encryption.
- * @return aes_error_t
+ * @returns AES_OK if success, non-zero if failed. See aes_error_t.
+ * @returns @b param @b iv in state to be used for decrypting more data on the same stream.
+ * @note The original state of @b iv will be lost. Copy it elsewhere if you need it after calling this function.
  **************************************************************************************************************************************************/
 aes_error_t aes_decrypt(
     const aes_ctx* ctx,
     const void* ciphertext,
     size_t len,
     void* plaintext,
-    const void* iv);
+    void* iv);
 
 /*
  RSA Public Key Encryption
