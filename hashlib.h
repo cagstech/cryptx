@@ -471,8 +471,9 @@ aes_error_t aes_init(aes_ctx* ctx, uint8_t mode, const void* key, size_t keylen,
  *              plus 1 block if the blocksize divides the plaintext evenly.
  *          For CTR mode, this is the same size as the plaintext.
  * @note @b plaintext and @b ciphertext are aliasable.
- * @note Encrypt is streamable, such that encrypt(msg1) + encrypt(msg2) is functionally identical to encrypt(msg1+msg2) with the exception
- *      of intervening padding in CBC mode.
+ * @note Encrypt is streamable, such that encrypt(msg1) + encrypt(msg2) is functionally identical to encrypt(msg1+msg2)
+ * with the exception of intervening padding in CBC mode.
+ * @note Once a  context is used for encryption, a stateful flag is set preventing the same context from being used for decryption.
  * @returns AES_OK if success, non-zero if failed. See aes_error_t.
  *************************************************************************************************************************************************************************/
 aes_error_t aes_encrypt(
@@ -488,9 +489,10 @@ aes_error_t aes_encrypt(
  * @param len Length of data at @b ciphertext to decrypt.
  * @param plaintext Pointer to buffer to write decryped data to.
  * @note @b plaintext and @b ciphertext are aliasable.
+ * @note Decrypt is streamable, such that decrypt(msg1) + decrypt(msg2) is functionally identical to decrypt(msg1+msg2)
+ * with the exception of intervening padding in CBC mode.
+ * @note Once a context is used for decryption, a stateful flag is set preventing the same context from being used for encryption.
  * @returns AES_OK if success, non-zero if failed. See aes_error_t.
- * @returns @b param @b iv in state to be used for decrypting more data on the same stream.
- * @note The original state of @b iv will be lost. Copy it elsewhere if you need it after calling this function.
  **************************************************************************************************************************************************/
 aes_error_t aes_decrypt(
     const aes_ctx* ctx,
