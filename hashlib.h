@@ -344,7 +344,7 @@ the advent of quantum computing.
 typedef struct _aes_cbc { uint8_t padding_mode; } aes_cbc_t;
 typedef struct _aes_ctr { uint8_t counter_len; uint8_t last_block_stop; uint8_t last_block[16]; } aes_ctr_t;
 
-typedef struct _aes_keyschedule_ctx {
+typedef struct _aes_ctx {
     uint24_t keysize;                       /**< the size of the key, in bits */
     uint32_t round_keys[60];                /**< round keys */
     uint8_t iv[16];                         /**< IV state for next block */
