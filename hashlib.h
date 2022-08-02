@@ -451,7 +451,7 @@ typedef enum {
  *          ctx.mode.ctr.counter_len = 4;    // sets the counter to 4 bytes in length
  *      @endcode
  * @note Do not edit parameters for a cipher mode you are not using, this may corrupt your context state.
- * @note Contexts are not bidirectional due to being stateful. If you need process do both encryption and decryption, initialize seperate contexts
+ * @note Contexts are not bidirectional due to being stateful. If you need to process both encryption and decryption, initialize seperate contexts
  *      for encryption and decryption. Both contexts will use the same key, but different initialization vectors.
  * @warning It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.
  * @warning Do not manually edit the @b ctx.mode field of the context structure. This will break the cipher configuration.
