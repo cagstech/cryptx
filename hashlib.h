@@ -348,7 +348,7 @@ typedef struct _aes_keyschedule_ctx {
     uint24_t keysize;                       /**< the size of the key, in bits */
     uint32_t round_keys[60];                /**< round keys */
     uint8_t iv[16];                         /**< IV state for next block */
-    uint8_t cipher_mode;                    /**< selected operational mode of the cipher */
+    uint8_t mode;                           /**< selected operational mode of the cipher */
     union {
         aes_ctr_t ctr;                      /**< metadata for counter mode */
         aes_cbc_t cbc;                      /**< metadata for cbc mode */
@@ -427,7 +427,7 @@ typedef enum {
 } aes_error_t;
 
 /*********************************************************************************************************************
- * @brief Initializes AES cipher configuration from a key and ciphermode.
+ * @brief Initializes a stateful AES cipher context to be used for encryption or decryption.
  * @param ctx Pointer to an AES cipher context to initialize..
  * @param key Pointer to an 128, 192, or 256 bit key to load into the AES context.
  * @param keylen The size, in bytes, of the key to load.
@@ -454,7 +454,7 @@ typedef enum {
  * @note Contexts are not bidirectional due to being stateful. If you need process do both encryption and decryption, initialize seperate contexts
  *      for encryption and decryption. Both contexts will use the same key, but different initialization vectors.
  * @warning It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.
- * @warning Do not manually edit the @b cipher_mode field of the context structure. This will break the cipher configuration.
+ * @warning Do not manually edit the @b ctx.mode field of the context structure. This will break the cipher configuration.
  *          If you want to change cipher modes, do so by calling @b aes_init again.
  * @return AES_OK if success, non-zero if failed. See aes_error_t.
 ***********************************************************************************************************************/
