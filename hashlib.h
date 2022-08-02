@@ -340,12 +340,20 @@ the advent of quantum computing.
  * data about cipher mode, padding mode (CBC), and counter length (CTR) without
  * requiring any additional arguments.
  ***************************************************************************************************/
-typedef struct _aes_ctx {
-    uint24_t keysize;				/**< the size of the key, in bits */
-    uint32_t round_keys[60];		/**< round keys */
-    uint8_t cipher_mode;            /**< selected operational mode of the cipher */
-    uint8_t padding_mode;           /**< selected padding mode of the cipher (only for CBC mode) */
-    uint8_t ctr_counter_len;        /**< length of counter portion of IV (only for CTR mode) */
+
+typedef struct _aes_cbc { uint8_t padding_mode; } aes_cbc_t;
+typedef struct _aes_ctr { uint8_t counter_len; uint8_t last_block_stop; uint8_t last_block[16]; } aes_ctr_t;
+
+typedef struct _aes_keyschedule_ctx {
+    uint24_t keysize;                       /**< the size of the key, in bits */
+    uint32_t round_keys[60];                /**< round keys */
+    uint8_t iv[16];                         /**< IV state for next block */
+    uint8_t cipher_mode;                    /**< selected operational mode of the cipher */
+    union {
+        aes_ctr_t ctr;                      /**< metadata for counter mode */
+        aes_cbc_t cbc;                      /**< metadata for cbc mode */
+    } mode;
+    uint8_t op_assoc;
 } aes_ctx;
 
 /************************************************
@@ -414,7 +422,8 @@ typedef enum {
     AES_INVALID_MSG,                    /**< AES operation failed, message invalid */
     AES_INVALID_CIPHERMODE,             /**< AES operation failed, cipher mode undefined */
     AES_INVALID_PADDINGMODE,            /**< AES operation failed, padding mode undefined */
-    AES_INVALID_CIPHERTEXT              /**< AES operation failed, ciphertext error */
+    AES_INVALID_CIPHERTEXT,             /**< AES operation failed, ciphertext error */
+    AES_INVALID_OPERATION               /**< AES operation failed, used encrypt context for decrypt or vice versa */
 } aes_error_t;
 
 /*********************************************************************************************************************
@@ -446,7 +455,7 @@ typedef enum {
  *          If you want to change cipher modes, do so by calling @b aes_init again.
  * @return AES_OK if success, non-zero if failed. See aes_error_t.
 ***********************************************************************************************************************/
-aes_error_t aes_init(aes_ctx* ctx, const void* key, size_t keylen, uint8_t mode);
+aes_error_t aes_init(aes_ctx* ctx, uint8_t mode, const void* key, size_t keylen, const void* iv);
 
 /**********************************************************************************************************************************************************************
  * @brief General-Purpose AES Encryption
@@ -478,8 +487,7 @@ aes_error_t aes_encrypt(
     const aes_ctx* ctx,
     const void* plaintext,
     size_t len,
-    void* ciphertext,
-    void* iv);
+    void* ciphertext);
 
 /**************************************************************************************************************************************************
  * @brief General-Purpose AES Decryption
@@ -498,8 +506,7 @@ aes_error_t aes_decrypt(
     const aes_ctx* ctx,
     const void* ciphertext,
     size_t len,
-    void* plaintext,
-    void* iv);
+    void* plaintext);
 
 /*
  RSA Public Key Encryption
