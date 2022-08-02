@@ -54,8 +54,8 @@ typedef struct _aes_cbc {
 
 typedef struct _aes_ctr {
     uint8_t counter_len;
-    uint8_t block_pos;
-    uint8_t prev_block[16];
+    uint8_t last_block_stop;
+    uint8_t last_block[16];
 } aes_ctr_t;
 
 typedef struct _aes_keyschedule_ctx {
@@ -67,6 +67,7 @@ typedef struct _aes_keyschedule_ctx {
         aes_ctr_t ctr;
         aes_cbc_t cbc;
     } mode;
+    uint8_t op_assoc;
 } aes_ctx;
 //typdef struct {
 //    bigint_t p;
@@ -114,7 +115,8 @@ typedef enum {
     AES_INVALID_MSG,
     AES_INVALID_CIPHERMODE,
     AES_INVALID_PADDINGMODE,
-    AES_INVALID_CIPHERTEXT
+    AES_INVALID_CIPHERTEXT,
+    AES_INVALID_OPERATION
 } aes_error_t;
 
 typedef enum {
@@ -1188,74 +1190,77 @@ typedef struct _aes_keyschedule_ctx {
 } aes_ctx;
  */
 
-
+enum _aes_op_assoc {
+    AES_OP_NONE,
+    AES_OP_ENCRYPT,
+    AES_OP_DECRYPT
+};
 
 #define MIN(x, y) ((x) < (y)) ? (x) : (y)
 #define AES_BLOCKSIZE 16
 static const char iso_pad[] = {0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 aes_error_t hashlib_AESEncrypt(aes_ctx* ctx, const BYTE in[], size_t in_len, BYTE out[])
 {
-	BYTE buf_in[AES_BLOCK_SIZE];
+	BYTE buf[AES_BLOCK_SIZE];
     uint8_t* iv = ctx->iv;
     //int keysize = key->keysize;
     //uint32_t *round_keys = key->round_keys;
 	int blocks, idx;
+ 
+    if(ctx->op_assoc == AES_OP_DECRYPT) return AES_INVALID_OPERATION;
+    ctx->op_assoc = AES_OP_ENCRYPT;
 
     if(in==NULL || out==NULL || ctx==NULL) return AES_INVALID_ARG;
     if(in_len == 0) return AES_INVALID_MSG;
+    blocks = (in_len / AES_BLOCK_SIZE);
     
     switch(ctx->cipher_mode){
-		case AES_CBC:
-			//hashlib_AESPadMessage(in, in_len, out, ctx->padding_mode);
-			blocks = in_len / AES_BLOCK_SIZE;
-			//memcpy(iv_buf, iv, AES_BLOCK_SIZE);
-   
-            // deal with all blocks up but not including final block
-			for (idx = 0; idx < blocks; idx++) {
-				memcpy(buf_in, &in[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
-				xor_buf(iv, buf_in, AES_BLOCK_SIZE);
-				aes_encrypt_block(buf_in, &out[idx * AES_BLOCK_SIZE], ctx);
-				//memcpy(&out[idx * (AES_BLOCK_SIZE)], buf_out, AES_BLOCK_SIZE);
-				memcpy(iv, &out[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
-			}
-            
-            // deal with final block or padding block
-            uint8_t to_copy = in_len - (idx * AES_BLOCK_SIZE);
-            uint8_t to_pad = AES_BLOCK_SIZE - to_copy;
-            memcpy(buf_in, &in[idx * AES_BLOCK_SIZE], to_copy);
-            if(ctx->mode.cbc.padding_mode==SCHM_DEFAULT)memset(&buf_in[to_copy], to_pad, to_pad);
-            if(ctx->mode.cbc.padding_mode==SCHM_ISO2)memcpy(&buf_in[to_copy], iso_pad, to_pad);
-            xor_buf(iv, buf_in, AES_BLOCK_SIZE);
-            aes_encrypt_block(buf_in, &out[idx * AES_BLOCK_SIZE], ctx);
-            memcpy(iv, &out[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
-			break;
-			
-		case AES_CTR:
-		{
-			size_t idx = 0, start_pos = 0;
-            uint8_t last_pos = ctx->mode.ctr.block_pos;
-			BYTE encr_iv[AES_BLOCK_SIZE];
-			if (in != out) memcpy(out, in, in_len);
-			//memcpy(iv_buf, iv, AES_BLOCK_SIZE);
-            
-            if(last_pos) {
-                start_pos = AES_BLOCK_SIZE - last_pos;
-                xor_buf(&ctx->mode.ctr.prev_block[last_pos], out, start_pos);
-            }
-            size_t stop_pos = in_len - AES_BLOCK_SIZE;
-            if((in_len-start_pos) > AES_BLOCK_SIZE)
-                for(idx = start_pos; idx < stop_pos; idx+=16){
-                    aes_encrypt_block(iv, encr_iv, ctx);
-                    xor_buf(encr_iv, &out[idx], AES_BLOCK_SIZE);
-                    increment_iv(iv, ctx->mode.ctr.counter_len);
+        case AES_CBC:
+        {
+            size_t bytes_to_copy, bytes_to_pad;
+            for(idx = 0; idx <= blocks; idx++){
+                bytes_to_copy = MIN(AES_BLOCK_SIZE, in_len - (idx * AES_BLOCK_SIZE));
+                bytes_to_pad = AES_BLOCK_SIZE-bytes_to_copy;
+                memcpy(buf, &in[idx*AES_BLOCK_SIZE], bytes_to_copy);
+                if(idx==blocks){
+                    if(ctx->mode.cbc.padding_mode == SCHM_PKCS7) memset(&buf[bytes_to_copy], bytes_to_pad, bytes_to_pad);   // applies PKCS7 padding scheme
+                    if(ctx->mode.cbc.padding_mode == SCHM_ISO2) memcpy(&buf[bytes_to_copy], iso_pad, bytes_to_pad);          // applies ISO-9797 M2 padding scheme
                 }
-   
-			aes_encrypt_block(iv, encr_iv, ctx);
-            memcpy(&ctx->mode.ctr.prev_block, encr_iv, AES_BLOCK_SIZE);
-            ctx->mode.ctr.block_pos = AES_BLOCK_SIZE - (in_len - idx);
-			xor_buf(encr_iv, &out[idx], in_len - idx);   // Use the Most Significant bytes.
-		}
-			break;
+                xor_buf(iv, buf, AES_BLOCK_SIZE);
+                aes_encrypt_block(buf, &out[idx * AES_BLOCK_SIZE], ctx);
+                memcpy(iv, &out[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);         // iv needs to update for continued use
+            }
+            break;
+        }
+        case AES_CTR:
+        {
+            size_t bytes_to_copy = ctx->mode.ctr.last_block_stop;
+            size_t bytes_offset = 0;
+            
+            // xor remaining bytes from last encrypt operation into new plaintext
+            if(bytes_to_copy%AES_BLOCK_SIZE){
+                bytes_offset = AES_BLOCK_SIZE - bytes_to_copy;
+                memcpy(out, in, bytes_offset);
+                xor_buf(&ctx->mode.ctr.last_block[bytes_to_copy], out, bytes_offset);
+                blocks = ((in_len - bytes_offset) / AES_BLOCK_SIZE);
+                
+            }
+            // encrypt message in CTR mode
+            for(idx = 0; idx <= blocks; idx++){
+                bytes_to_copy = MIN(AES_BLOCK_SIZE, in_len - (idx * AES_BLOCK_SIZE));
+                //bytes_to_pad = AES_BLOCK_SIZE-bytes_to_copy;
+                memcpy(&out[idx*AES_BLOCK_SIZE+bytes_offset], &in[idx*AES_BLOCK_SIZE+bytes_offset], bytes_to_copy);
+                // memset(&buf[bytes_to_copy], 0, bytes_to_pad);        // if bytes_to_copy is less than blocksize, do nothing, since msg is truncated anyway
+                aes_encrypt_block(iv, buf, ctx);
+                xor_buf(buf, &out[idx*AES_BLOCK_SIZE+bytes_offset], bytes_to_copy);
+                increment_iv(iv, ctx->mode.ctr.counter_len);        // increment iv for continued use
+                if(idx==blocks){
+                    memcpy(ctx->mode.ctr.last_block, buf, AES_BLOCK_SIZE);
+                    ctx->mode.ctr.last_block_stop = bytes_to_copy;
+                }
+            }
+            break;
+        }
 		default: return AES_INVALID_CIPHERMODE;
 		
 	}
@@ -1270,6 +1275,9 @@ aes_error_t hashlib_AESDecrypt(aes_ctx* ctx, const BYTE in[], size_t in_len, BYT
 	//int keysize = key->keysize;
     //uint32_t *round_keys = key->round_keys;
 	int blocks, idx;
+
+    if(ctx->op_assoc == AES_OP_ENCRYPT) return AES_INVALID_OPERATION;
+    ctx->op_assoc = AES_OP_DECRYPT;
 
     if(in==NULL || out==NULL || ctx==NULL) return AES_INVALID_ARG;
     if(in_len == 0) return AES_INVALID_CIPHERTEXT;
