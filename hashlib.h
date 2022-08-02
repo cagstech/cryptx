@@ -353,7 +353,7 @@ typedef struct _aes_keyschedule_ctx {
         aes_ctr_t ctr;                      /**< metadata for counter mode */
         aes_cbc_t cbc;                      /**< metadata for cbc mode */
     } mode;
-    uint8_t op_assoc;
+    uint8_t op_assoc;                       /**< state-flag indicating if context is for encryption or decryption*/
 } aes_ctx;
 
 /************************************************
@@ -432,25 +432,28 @@ typedef enum {
  * @param key Pointer to an 128, 192, or 256 bit key to load into the AES context.
  * @param keylen The size, in bytes, of the key to load.
  * @param mode The operational mode of the AES cipher. Valid arguments: @see aes_padding_schemes.
- * @note @b ctx.padding_mode: If CBC mode is specified as the cipher mode, the padding mode is silently set to
- *      @b SCHM_DEFAULT. To change this you can manually set this field of the AES context after init.
+ * @param iv Initialization vector, a buffer equal to the block size that is pseudo-random.
+ * @note @b ctx.mode.cbc.padding_mode: If CBC mode is specified as the cipher mode, the padding mode is silently set to
+ *      @b SCHM_DEFAULT which is equivalent to @b SCHM_PKCS7.
+ *      While it is not recommended to edit the AES context after initialization, it is safe to change the padding mode like so:
  *      @code
- *          aes_init(&ctx, key, keylen, AES_MODE_CBC);
- *          ctx.padding_mode = SCHM_ISO2;
+ *          aes_init(&ctx, AES_MODE_CBC, key, keylen, iv);
+ *          ctx.mode.cbc.padding_mode = SCHM_ISO2;
  *      @endcode
- * @note @b ctx.ctr_counter_len If CTR mode is specified as the cipher mode, the iniitalization vector you pass to encrypt and decrypt
+ * @note @b ctx.mode.ctr.counter_len If CTR mode is specified as the cipher mode, the iniitalization vector you pass to encrypt and decrypt
  *      is used like so: the first 8 bytes (64 bits) of the IV is a fixed nonce that should be securely pseudorandom.
  *      The last 8 bytes (64 bits) of the IV acts as a counter. To change this behavior, you can manually set the
- *      @b ctr_counter_len field of the AES context after init. Valid values are 0 < counter_size <= AES_BLOCKSIZE.
+ *      @b counter_len field of the AES context after init. Valid values are 0 < counter_size <= AES_BLOCKSIZE.
  *      It is not recommended to edit this field once you have started encrypting/decrypting a data stream with the cipher context. This
  *      may render the output unreadable under certain circumstances.
  *      @code
  *          aes_init(&ctx, key, keylen, AES_MODE_CTR);
- *          ctx.ctr_counter_len = 4;    // sets the counter to 4 bytes in length
+ *          ctx.mode.ctr.counter_len = 4;    // sets the counter to 4 bytes in length
  *      @endcode
- * @note Cipher configuration elements that do not apply to the current cipher mode are ignored. Ex: Changing @b ctr_counter_len
- *      while in AES_MODE_CBC mode will have no effect on the cipher's operation.
- * @note It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.
+ * @note Do not edit parameters for a cipher mode you are not using, this may corrupt your context state.
+ * @note Contexts are not bidirectional due to being stateful. If you need process do both encryption and decryption, initialize seperate contexts
+ *      for encryption and decryption. Both contexts will use the same key, but different initialization vectors.
+ * @warning It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.
  * @warning Do not manually edit the @b cipher_mode field of the context structure. This will break the cipher configuration.
  *          If you want to change cipher modes, do so by calling @b aes_init again.
  * @return AES_OK if success, non-zero if failed. See aes_error_t.
@@ -463,25 +466,14 @@ aes_error_t aes_init(aes_ctx* ctx, uint8_t mode, const void* key, size_t keylen,
  * @param plaintext Pointer to data to encrypt.
  * @param len Length of data at @b plaintext to encrypt. This can be the output of hashlib_AESCiphertextSize().
  * @param ciphertext Pointer to buffer to write encrypted data to.
- * @param iv Pointer to an initialization vector (a nonce of length equal to the block size).
  * @note @b ciphertext should large enough to hold the encrypted message.
  *          For CBC mode, this is the smallest multiple of the blocksize that will hold the plaintext,
  *              plus 1 block if the blocksize divides the plaintext evenly.
  *          For CTR mode, this is the same size as the plaintext.
  * @note @b plaintext and @b ciphertext are aliasable.
- * @note @b IV is not written to the ciphertext buffer by this function, only the encrypted message. However, if
- * 		your ciphertext buffer is large enough, you can do the following to get the IV prepended to the ciphertext.
- * 		Otherwise you will have to join the IV and the ciphertext into a single larger buffer before sending it through
- * 		whatever networking protocol you use.
- * 		@code
- * 		aes_encrypt(ctx, plaintext, len, &ciphertext[AES_IVSIZE], iv);
- * 		memcpy(ciphertext, iv, AES_IV_SIZE);
- * 		send_packet(ciphertext);
- * 		@endcode
- * 		This will require a buffer at least as large as the size returned by cipher_aes_extoutsize().
+ * @note Encrypt is streamable, such that encrypt(msg1) + encrypt(msg2) is functionally identical to encrypt(msg1+msg2) with the exception
+ *      of intervening padding in CBC mode.
  * @returns AES_OK if success, non-zero if failed. See aes_error_t.
- * @returns @b param @b iv in state to be used for encrypting more data on the same stream.
- * @note The original state of @b iv will be lost. Copy it elsewhere if you need it after calling this function.
  *************************************************************************************************************************************************************************/
 aes_error_t aes_encrypt(
     const aes_ctx* ctx,
@@ -495,9 +487,7 @@ aes_error_t aes_encrypt(
  * @param ciphertext Pointer to data to decrypt.
  * @param len Length of data at @b ciphertext to decrypt.
  * @param plaintext Pointer to buffer to write decryped data to.
- * @param iv Pointer to an initialization vector (a nonce of length equal to the block size).
  * @note @b plaintext and @b ciphertext are aliasable.
- * @note @b IV should be the same as what is used for encryption.
  * @returns AES_OK if success, non-zero if failed. See aes_error_t.
  * @returns @b param @b iv in state to be used for decrypting more data on the same stream.
  * @note The original state of @b iv will be lost. Copy it elsewhere if you need it after calling this function.

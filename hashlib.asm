@@ -3,7 +3,7 @@ include '../include/library.inc'
 ;include_library 'bigintce.asm'
 
 ;------------------------------------------
-library HASHLIB, 9
+library HASHLIB, 10
 
 ;------------------------------------------
 
@@ -5013,15 +5013,12 @@ aes_decrypt:
 
 	ld	hl, -50
 	call	ti._frameset
-	ld	bc, (ix + 6)
+	ld	iy, (ix + 6)
 	ld	de, 243
-	push	bc
-	pop	hl
+	lea	hl, iy
 	add	hl, de
 	ld	(ix - 35), hl
 	ld	de, 278
-	push	bc
-	pop	iy
 	add	iy, de
 	ld	a, (iy)
 	cp	a, d
@@ -5032,64 +5029,65 @@ aes_decrypt:
 	ld	hl, (ix + 9)
 	ld	de, 1
 	ld	(iy), 2
-	ld	(ix - 38), hl
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
 	jp	z, .lbl_14
+	ld	(ix - 38), hl
 	ld	hl, (ix + 15)
 	ld	(ix - 41), hl
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
 	jp	z, .lbl_14
-	ld	hl, (ix + 12)
+	ld	iy, (ix + 12)
 	ld	de, 5
+	lea	hl, iy
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
 	jp	z, .lbl_14
-	push	bc
-	pop	iy
+	ld	hl, (ix + 6)
 	ld	bc, 259
-	add	iy, bc
-	ld	c, (iy)
-	ld	a, c
+	add	hl, bc
+	ld	l, (hl)
+	ld	a, l
 	or	a, a
 	jp	nz, .lbl_10
-	ld	a, l
+	ld	a, iyl
 	and	a, 15
 	or	a, a
 	jp	nz, .lbl_14
-	lea	de, ix - 16
-	ld	(ix - 47), de
-	lea	de, ix - 32
-	ld	(ix - 44), de
+	lea	hl, ix - 16
+	ld	(ix - 44), hl
+	lea	hl, ix - 32
+	ld	(ix - 47), hl
 	ld	c, 4
+	lea	hl, iy
 	call	ti._ishru
 .lbl_8:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
+	ld	iy, (ix + 6)
 	jp	z, .lbl_12
-	ld	iy, (ix - 47)
 	ld	(ix - 50), hl
-	lea	de, iy
+	ld	de, (ix - 44)
 	ld	hl, (ix - 38)
 	ld	bc, 16
 	ldir
-	ld	hl, (ix + 6)
+	push	iy
+	ld	hl, (ix - 47)
 	push	hl
 	ld	hl, (ix - 44)
 	push	hl
-	push	iy
 	call	aes_ecb_unsafe_decrypt
 	pop	hl
 	pop	hl
 	pop	hl
 	ld	hl, 16
 	push	hl
-	ld	hl, (ix - 44)
+	ld	hl, (ix - 47)
 	push	hl
 	ld	hl, (ix - 35)
 	push	hl
@@ -5098,12 +5096,12 @@ aes_decrypt:
 	pop	hl
 	pop	hl
 	ld	de, (ix - 41)
-	ld	hl, (ix - 44)
+	ld	hl, (ix - 47)
 	ld	iy, 16
 	lea	bc, iy
 	ldir
 	ld	de, (ix - 35)
-	ld	hl, (ix - 47)
+	ld	hl, (ix - 44)
 	lea	bc, iy
 	ldir
 	ld	hl, (ix - 50)
@@ -5116,14 +5114,19 @@ aes_decrypt:
 	dec	hl
 	jr	.lbl_8
 .lbl_10:
-	ld	a, c
+	ld	a, l
 	cp	a, 1
 	jr	nz, .lbl_13
+	ld	hl, (ix + 6)
+	ld	de, 278
+	add	hl, de
+	ld	(ix - 35), hl
+	ld	(hl), d
 	ld	de, (ix + 15)
 	push	de
-	push	hl
-	ld	hl, (ix + 9)
-	push	hl
+	push	iy
+	ld	de, (ix + 9)
+	push	de
 	ld	hl, (ix + 6)
 	push	hl
 	call	aes_encrypt
@@ -5131,6 +5134,8 @@ aes_decrypt:
 	pop	hl
 	pop	hl
 	pop	hl
+	ld	hl, (ix - 35)
+	ld	(hl), 2
 .lbl_12:
 	ld	de, 0
 	jr	.lbl_14

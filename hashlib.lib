@@ -1,4 +1,4 @@
-	library	HASHLIB, 9
+	library	HASHLIB, 10
 
 	export	csrand_init
 	export	csrand_get
