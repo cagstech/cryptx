@@ -447,7 +447,7 @@ typedef enum {
  *      It is not recommended to edit this field once you have started encrypting/decrypting a data stream with the cipher context. This
  *      may render the output unreadable under certain circumstances.
  *      @code
- *          aes_init(&ctx, key, keylen, AES_MODE_CTR);
+ *          aes_init(&ctx, AES_MODE_CTR, key, keylen, iv);
  *          ctx.mode.ctr.counter_len = 4;    // sets the counter to 4 bytes in length
  *      @endcode
  * @note Do not edit parameters for a cipher mode you are not using, this may corrupt your context state.
