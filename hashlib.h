@@ -431,7 +431,7 @@ typedef enum {
  * @param ctx Pointer to an AES cipher context to initialize..
  * @param key Pointer to an 128, 192, or 256 bit key to load into the AES context.
  * @param keylen The size, in bytes, of the key to load.
- * @param mode The operational mode of the AES cipher. Valid arguments: @see aes_padding_schemes.
+ * @param mode The operational mode of the AES cipher. Valid arguments: aes_padding_schemes.
  * @param iv Initialization vector, a buffer equal to the block size that is pseudo-random.
  * @note @b ctx.mode.cbc.padding_mode: If CBC mode is specified as the cipher mode, the padding mode is silently set to
  *      @b SCHM_DEFAULT which is equivalent to @b SCHM_PKCS7.
