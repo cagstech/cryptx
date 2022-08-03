@@ -37,8 +37,6 @@ int main(void)
     // reserve key schedule and key buffer, IV.
     aes_ctx ctx;
     aes_error_t error;
-    uint8_t key[KEYSIZE];
-    uint8_t iv[AES_IVSIZE];
     
     size_t msg1_len = strlen(str1);
     size_t msg2_len = strlen(str2);
@@ -58,8 +56,8 @@ int main(void)
     // !!!! IF THE CSRNG FAILS TO INIT !!!!
     
     // generate key and IV
-    csrand_fill(key, KEYSIZE);
-    csrand_fill(iv, AES_IVSIZE);
+    uint8_t key[] = {0xEE,0x89,0x19,0xC3,0x8D,0x53,0x7A,0xD6,0x04,0x19,0x9E,0x77,0x0B,0xE0,0xE0,0x4C,0x4C,0x70,0xDB,0xE1,0x22,0x79,0xE1,0x90,0x06,0x1B,0xAF,0x99,0x49,0x8E,0x66,0x73};
+   uint8_t iv[] = {0x79,0xA6,0xDE,0xDF,0xF0,0xA2,0x7C,0x7F,0xEE,0x0B,0x8E,0xF5,0x12,0x63,0xA4,0x8A};
     
     // show the IV and key for testing purposes
     hexdump(key, KEYSIZE, "-- AES secret --");
@@ -67,12 +65,12 @@ int main(void)
     
     // initialize the AES key schedule and set cipher mode
     #ifdef CBC_MODE
-    aes_init(&ctx, AES_MODE_CBC, key, KEYSIZE, iv);
+    error = aes_init(&ctx, key, KEYSIZE, iv, PAD_ISO2);
     #endif
     #ifdef CTR_MODE
-    aes_init(&ctx, AES_MODE_CTR, key, KEYSIZE, iv);
+    error = aes_init(&ctx, key, KEYSIZE, iv, AES_MODE_CTR | AES_CTR_NONCELEN(12) | AES_CTR_COUNTERLEN(4));
     #endif
-    sprintf(CEMU_CONSOLE, "init complete\n");
+    sprintf(CEMU_CONSOLE, "aes ctx init done, exit code %u\n", error);
     
     // encrypt message 1 and output return code and encrypted data for testing
     error = aes_encrypt(&ctx, str1, msg1_len, buf1);

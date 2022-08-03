@@ -342,13 +342,15 @@ the advent of quantum computing.
  ***************************************************************************************************/
 
 typedef struct _aes_cbc { uint8_t padding_mode; } aes_cbc_t;
-typedef struct _aes_ctr { uint8_t counter_len; uint8_t last_block_stop; uint8_t last_block[16]; } aes_ctr_t;
+typedef struct _aes_ctr {
+    uint8_t counter_pos_start; uint8_t counter_len;
+    uint8_t last_block_stop; uint8_t last_block[16]; } aes_ctr_t;
 
 typedef struct _aes_ctx {
     uint24_t keysize;                       /**< the size of the key, in bits */
     uint32_t round_keys[60];                /**< round keys */
     uint8_t iv[16];                         /**< IV state for next block */
-    uint8_t mode;                           /**< selected operational mode of the cipher */
+    uint8_t ciphermode;                     /**< selected operational mode of the cipher */
     union {
         aes_ctr_t ctr;                      /**< metadata for counter mode */
         aes_cbc_t cbc;                      /**< metadata for cbc mode */
@@ -359,35 +361,44 @@ typedef struct _aes_ctx {
 /************************************************
  * @enum aes_cipher_modes
  * Supported AES cipher modes
+ * Defaults to AES_MODE_CBC if unset.
+ * @see aes_init
  ************************************************/
 enum aes_cipher_modes {
-	AES_MODE_CBC,		/**< selects CBC mode */
-	AES_MODE_CTR		/**< selects CTR mode */
+	AES_MODE_CBC,       /**< selects CBC mode */
+	AES_MODE_CTR        /**< selects CTR mode */
 };
 
 /***************************************************
  * @enum aes_padding_schemes
  * Supported AES padding schemes
+ * Defaults to PAD_PKCS7 if unset.
+ * @see aes_init
  ***************************************************/
 enum aes_padding_schemes {
-    SCHM_PKCS7, 		 		/**< PKCS#7 padding | DEFAULT */
-    SCHM_DEFAULT = SCHM_PKCS7,	/**< selects the scheme marked DEFAULT.
+    PAD_PKCS7,                  /**< PKCS#7 padding | DEFAULT */
+    PAD_DEFAULT = PAD_PKCS7,	/**< selects the scheme marked DEFAULT.
 									Using this is recommended in case a change to the standards
 									would set a stronger padding scheme as default */
-    SCHM_ISO2,       	 	/**< ISO-9797 M2 padding */
+    PAD_ISO2 = 4,               /**< ISO-9797 M2 padding */
 };
 
-/****************************************************************************
- * @typedef aes_flags_t
- * A series of flags that define characteristics of the AES context.
- ****************************************************************************/
-typedef uint24_t aes_flags_t;
+/*****************************************************************************************
+ * @define AES_CTR_NONCELEN
+ * Only has an effect when cipher is initialized to CTR mode.
+ * Sets the length of the fixed prefix of the iniitalization vector.
+ * The prefix does not change as the counter increments.
+ * Defaults to 8 bytes (64 bits) if not passed in @b flags to aes_init().
+ *****************************************************************************************/
+#define AES_CTR_NONCELEN(len)   ((len)<<4)
 
-// See notes for defaults if 0 is passed for flags.
-#define AESFLAGS_CIPHER_MODE(mode)      ((mode))        /**< Sets the cipher mode. Defaults to AES_MODE_CBC. */
-#define AESFLAGS_PADDING_MODE(mode)     ((mode)<<2)     /**< Sets the padding mode. Defaults to SCHM_PKCS7. CBC mode only. */
-#define AESFLAGS_CTR_NONCELEN(len)      ((len)<<4)      /**< Sets the length of the fixed nonce portion of IV. Defaults to 8 bytes. CTR mode only. */
-#define AESFLAGS_CTR_COUNTERLEN(len)    ((len)<<8)      /**< Sets the length of the counter portion of IV. Defaults to 8 bytes. CTR mode only. */
+/****************************************************************************************
+ * @define AES_CTR_COUNTERLEN
+ * Only has an effect when cipher is initialized to CTR mode.
+ * Sets the length of the counter portion of the initialization vector.
+ * Defaults to 8 bytes (64 bits) if not passed in @b flags to aes_init().
+ ****************************************************************************************/
+#define AES_CTR_COUNTERLEN(len) ((len)<<8)
 
 
 /********************************************************
@@ -443,10 +454,12 @@ typedef enum {
  * @param ctx Pointer to an AES cipher context to initialize..
  * @param key Pointer to an 128, 192, or 256 bit key to load into the AES context.
  * @param keylen The size, in bytes, of the key to load.
- * @param mode The operational mode of the AES cipher. Valid arguments: aes_padding_schemes.
  * @param iv Initialization vector, a buffer equal to the block size that is pseudo-random.
- * @param flags A series of flags to configure the AES context with. See aes_flags_t.
- * @note Do not edit parameters for a cipher mode you are not using, this may corrupt your context state.
+ * @param flags A series of flags to configure the AES context with. This is the bitwise OR of any non-default cipher options. Ex:
+ *      @code
+ *          aes_init(ctx, key, sizeof key, iv, AES_MODE_CTR | PAD_ISO2);
+ *      @endcode
+ * @note Do not edit a context manually. You may corrupt the cipher state.
  * @note Contexts are not bidirectional due to being stateful. If you need to process both encryption and decryption, initialize seperate contexts
  *      for encryption and decryption. Both contexts will use the same key, but different initialization vectors.
  * @warning It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.
@@ -458,7 +471,7 @@ typedef enum {
  *          message and use an application secret or unique key generated using a CSRNG and share with RSA to key the HMAC at both endpoints.
  * @return AES_OK if success, non-zero if failed. See aes_error_t.
 ************************************************************************************************************************************************************************/
-aes_error_t aes_init(aes_ctx* ctx, const void* key, size_t keylen, const void* iv, aes_flags_t flags);
+aes_error_t aes_init(aes_ctx* ctx, const void* key, size_t keylen, const void* iv, uint24_t flags);
 
 /**********************************************************************************************************************************************************************
  * @brief General-Purpose AES Encryption

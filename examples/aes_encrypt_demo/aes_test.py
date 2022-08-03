@@ -18,7 +18,7 @@ ct2 =b"\x27\xDC\x0E\x7A\x57\x48\xE0\x72\x78\x33\xA9\xFE\x99\x13\x12\xCF\xE6\xBA\
 if MODE==CipherMode.CBC:
     cipher = AES.new(key, AES.MODE_CBC, iv=iv)
 elif MODE==CipherMode.CTR:
-    counter = Counter.new(64, prefix=iv[0:8], suffix=b'', initial_value=int.from_bytes(iv[8:], 'big'), little_endian=False, allow_wraparound=False)
+    counter = Counter.new(32, prefix=iv[0:12], suffix=b'', initial_value=int.from_bytes(iv[12:], 'big'), little_endian=False, allow_wraparound=False)
     cipher = AES.new(key, AES.MODE_CTR, counter=counter)
 pt1 = cipher.decrypt(ct1)
 pt2 = cipher.decrypt(ct2)
