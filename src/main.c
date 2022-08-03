@@ -635,7 +635,6 @@ aes_error_t hashlib_AESLoadKey(aes_ctx* ctx, const BYTE key[], size_t keysize, u
 	WORD temp,Rcon[]={0x01000000,0x02000000,0x04000000,0x08000000,0x10000000,0x20000000,
 	                  0x40000000,0x80000000,0x1b000000,0x36000000,0x6c000000,0xd8000000,
 	                  0xab000000,0x4d000000,0x9a000000};
-	keysize<<=3;
     uint8_t mode = (cipher_flags & 3);
     if(mode>AES_CTR) return AES_INVALID_CIPHERMODE;
     memset(ctx, 0, sizeof(aes_ctx));
@@ -649,6 +648,7 @@ aes_error_t hashlib_AESLoadKey(aes_ctx* ctx, const BYTE key[], size_t keysize, u
         ctx->mode.ctr.counter_pos_start = ctr_pos;
         ctx->mode.ctr.counter_len = ctr_len;
     }
+    keysize<<=3;
 	switch (keysize) {
 		case 128: Nr = 10; Nk = 4; break;
 		case 192: Nr = 12; Nk = 6; break;
