@@ -53,6 +53,7 @@ typedef struct _aes_cbc {
 } aes_cbc_t;
 
 typedef struct _aes_ctr {
+    uint8_t counter_pos_start;
     uint8_t counter_len;
     uint8_t last_block_stop;
     uint8_t last_block[16];
@@ -69,10 +70,7 @@ typedef struct _aes_keyschedule_ctx {
     } mode;
     uint8_t op_assoc;
 } aes_ctx;
-//typdef struct {
-//    bigint_t p;
-//    bigint_t g;
-//} dh_ctx;
+
 
 
 // Entropy Pool
@@ -595,9 +593,11 @@ enum _ciphermodes{
 enum _aes_padding_schemes {
     SCHM_PKCS7,         // Pad with padding size
     SCHM_DEFAULT = SCHM_PKCS7,
-    SCHM_ISO2,        // Pad with 0x80,0x00...0x00
-    SCHM_NONE
+    SCHM_ISO2        // Pad with 0x80,0x00...0x00
 };
+
+// AES_FLAG_CTR_IVNONCELEN(len) = ((len)<<4)
+// AES_FLAG_CTR_IVCOUNTERLEN(len) = ((len)<<8)
 
 /*
 typedef struct _aes_cbc {
@@ -621,24 +621,34 @@ typedef struct _aes_keyschedule_ctx {
     } mode;
 } aes_ctx;
  */
+#define FLAGS_GET_LSB2 3
+#define FLAGS_GET_LSB4 15
 
+// flag definition  [unused][ 0000 counter len ][ 0000 counter start pos ][ 00 padding mode][ 00 cipher mode ]
 
 // Performs the action of generating the keys that will be used in every round of
 // encryption. "key" is the user-supplied input key, "w" is the output key schedule,
 // "keysize" is the length in bits of "key", must be 128, 192, or 256.
-aes_error_t hashlib_AESLoadKey(aes_ctx* ctx, uint8_t mode, const BYTE key[], size_t keysize, uint8_t* iv)
+aes_error_t hashlib_AESLoadKey(aes_ctx* ctx, const BYTE key[], size_t keysize, uint8_t* iv, uint24_t cipher_flags)
 {
 	int Nb=4,Nr,Nk,idx;
 	WORD temp,Rcon[]={0x01000000,0x02000000,0x04000000,0x08000000,0x10000000,0x20000000,
 	                  0x40000000,0x80000000,0x1b000000,0x36000000,0x6c000000,0xd8000000,
 	                  0xab000000,0x4d000000,0x9a000000};
 	keysize<<=3;
+    uint8_t mode = (cipher_flags & 3);
     if(mode>AES_CTR) return AES_INVALID_CIPHERMODE;
     memset(ctx, 0, sizeof(aes_ctx));
     ctx->cipher_mode = mode;
-    if(mode == AES_CBC) ctx->mode.cbc.padding_mode = SCHM_DEFAULT;
-    if(mode == AES_CTR) ctx->mode.ctr.counter_len = AES_BLOCK_SIZE>>1;
-
+    if(mode == AES_CBC) ctx->mode.cbc.padding_mode = ((uint8_t)(cipher_flags>>2) & FLAGS_GET_LSB2);
+    if(mode == AES_CTR) {
+        uint8_t ctr_pos = ((uint8_t)(cipher_flags>>4) & FLAGS_GET_LSB4);
+        uint8_t ctr_len = ((uint8_t)(cipher_flags>>8) & FLAGS_GET_LSB4);
+        ctr_len = (ctr_len == 0) ? 8 : ctr_len;
+        ctr_pos = (ctr_len == 0) ? 8 : ctr_pos;
+        ctx->mode.ctr.counter_pos_start = ctr_pos;
+        ctx->mode.ctr.counter_len = ctr_len;
+    }
 	switch (keysize) {
 		case 128: Nr = 10; Nk = 4; break;
 		case 192: Nr = 12; Nk = 6; break;
@@ -1154,15 +1164,14 @@ void aes_decrypt_block(const BYTE in[], BYTE out[], aes_ctx* ks){
     memset(state, 0, state);
 }
 
-void increment_iv(BYTE iv[], size_t counter_size)
+void increment_iv(BYTE iv[], size_t counter_start, size_t counter_size)
 {
 	int idx;
 
 	// Use counter_size bytes at the end of the IV as the big-endian integer to increment.
-	for (idx = AES_BLOCK_SIZE - 1; idx >= AES_BLOCK_SIZE - counter_size; idx--) {
+	for (idx = counter_start + counter_size - 1; idx >= counter_start; idx--) {
 		iv[idx]++;
-		if (iv[idx] != 0 || idx == AES_BLOCK_SIZE - counter_size)
-			break;
+		if (iv[idx] != 0) break;
 	}
 }
 
@@ -1253,7 +1262,7 @@ aes_error_t hashlib_AESEncrypt(aes_ctx* ctx, const BYTE in[], size_t in_len, BYT
                 // memset(&buf[bytes_to_copy], 0, bytes_to_pad);        // if bytes_to_copy is less than blocksize, do nothing, since msg is truncated anyway
                 aes_encrypt_block(iv, buf, ctx);
                 xor_buf(buf, &out[idx*AES_BLOCK_SIZE+bytes_offset], bytes_to_copy);
-                increment_iv(iv, ctx->mode.ctr.counter_len);        // increment iv for continued use
+                increment_iv(iv, ctx->mode.ctr.counter_pos_start, ctx->mode.ctr.counter_len);        // increment iv for continued use
                 if(idx==blocks){
                     memcpy(ctx->mode.ctr.last_block, buf, AES_BLOCK_SIZE);
                     ctx->mode.ctr.last_block_stop = bytes_to_copy;
@@ -1299,7 +1308,9 @@ aes_error_t hashlib_AESDecrypt(aes_ctx* ctx, const BYTE in[], size_t in_len, BYT
             //memcpy(iv, iv_buf, sizeof iv_buf);
 			break;
 		case AES_CTR:
+            ctx->op_assoc = AES_OP_ENCRYPT;
 			hashlib_AESEncrypt(ctx, in, in_len, out);
+            ctx->op_assoc = AES_OP_DECRYPT;         
 			break;
 		default: return AES_INVALID_CIPHERMODE;
 	}
