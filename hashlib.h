@@ -361,8 +361,8 @@ typedef struct _aes_ctx {
  * Supported AES cipher modes
  ************************************************/
 enum aes_cipher_modes {
-	MODE_CBC,		/**< selects CBC mode */
-	MODE_CTR		/**< selects CTR mode */
+	AES_MODE_CBC,		/**< selects CBC mode */
+	AES_MODE_CTR		/**< selects CTR mode */
 };
 
 /***************************************************
