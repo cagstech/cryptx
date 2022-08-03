@@ -465,10 +465,10 @@ typedef enum {
  * @warning It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.
  * @warning Do not manually edit the @b ctx.mode field of the context structure. This will break the cipher configuration.
  *          If you want to change cipher modes, do so by calling @b aes_init again.
- * @warning AES-CBC and CTR modes ensure confidentiality but do not guard against tampering. AES-OCB/GCM are a bit computationallty-
- *          intensive for this platform, but HASHLIB provides means other of authenticating messages. You can use the hash and hmac
- *          functions. HMAC is generally more secure for this purpose. If you want a truly secure scheme, always append an HMAC to your
- *          message and use an application secret or unique key generated using a CSRNG and share with RSA to key the HMAC at both endpoints.
+ * @warning AES-CBC and CTR modes ensure confidentiality but do not guard against tampering. AES-OCB/GCM are a bit computationallty-intensive
+ *          for this platform, but HASHLIB provides hash and hmac functions in their stead. HMAC is generally more secure for this purpose.
+ *          If you want a truly secure scheme, always append an HMAC to your message and use an application secret or unique key
+ *          generated using a CSRNG to key the HMAC at both endpoints.
  * @return AES_OK if success, non-zero if failed. See aes_error_t.
 ************************************************************************************************************************************************************************/
 aes_error_t aes_init(aes_ctx* ctx, const void* key, size_t keylen, const void* iv, uint24_t flags);
