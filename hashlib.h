@@ -377,6 +377,18 @@ enum aes_padding_schemes {
     SCHM_ISO2,       	 	/**< ISO-9797 M2 padding */
 };
 
+/****************************************************************************
+ * @typedef aes_flags_t
+ * A series of flags that define characteristics of the AES context.
+ ****************************************************************************/
+typedef uint24_t aes_flags_t;
+
+// See notes for defaults if 0 is passed for flags.
+#define AESFLAGS_CIPHER_MODE(mode)      ((mode))        /**< Sets the cipher mode. Defaults to AES_MODE_CBC. */
+#define AESFLAGS_PADDING_MODE(mode)     ((mode)<<2)     /**< Sets the padding mode. Defaults to SCHM_PKCS7. CBC mode only. */
+#define AESFLAGS_CTR_NONCELEN(len)      ((len)<<4)      /**< Sets the length of the fixed nonce portion of IV. Defaults to 8 bytes. CTR mode only. */
+#define AESFLAGS_CTR_COUNTERLEN(len)    ((len)<<8)      /**< Sets the length of the counter portion of IV. Defaults to 8 bytes. CTR mode only. */
+
 
 /********************************************************
  * @def AES_BLOCKSIZE
@@ -433,23 +445,7 @@ typedef enum {
  * @param keylen The size, in bytes, of the key to load.
  * @param mode The operational mode of the AES cipher. Valid arguments: aes_padding_schemes.
  * @param iv Initialization vector, a buffer equal to the block size that is pseudo-random.
- * @note @b ctx.mode.cbc.padding_mode: If CBC mode is specified as the cipher mode, the padding mode is silently set to
- *      @b SCHM_DEFAULT which is equivalent to @b SCHM_PKCS7.
- *      While it is not recommended to edit the AES context after initialization, it is safe to change the padding mode like so:
- *      @code
- *          aes_init(&ctx, AES_MODE_CBC, key, keylen, iv);
- *          ctx.mode.cbc.padding_mode = SCHM_ISO2;
- *      @endcode
- * @note @b ctx.mode.ctr.counter_len If CTR mode is specified as the cipher mode, the iniitalization vector you pass to encrypt and decrypt
- *      is used like so: the first 8 bytes (64 bits) of the IV is a fixed nonce that should be securely pseudorandom.
- *      The last 8 bytes (64 bits) of the IV acts as a counter. To change this behavior, you can manually set the
- *      @b counter_len field of the AES context after init. Valid values are 0 < counter_size <= AES_BLOCKSIZE.
- *      It is not recommended to edit this field once you have started encrypting/decrypting a data stream with the cipher context. This
- *      may render the output unreadable under certain circumstances.
- *      @code
- *          aes_init(&ctx, AES_MODE_CTR, key, keylen, iv);
- *          ctx.mode.ctr.counter_len = 4;    // sets the counter to 4 bytes in length
- *      @endcode
+ * @param flags A series of flags to configure the AES context with. See aes_flags_t.
  * @note Do not edit parameters for a cipher mode you are not using, this may corrupt your context state.
  * @note Contexts are not bidirectional due to being stateful. If you need to process both encryption and decryption, initialize seperate contexts
  *      for encryption and decryption. Both contexts will use the same key, but different initialization vectors.
@@ -462,7 +458,7 @@ typedef enum {
  *          message and use an application secret or unique key generated using a CSRNG and share with RSA to key the HMAC at both endpoints.
  * @return AES_OK if success, non-zero if failed. See aes_error_t.
 ************************************************************************************************************************************************************************/
-aes_error_t aes_init(aes_ctx* ctx, uint8_t mode, const void* key, size_t keylen, const void* iv);
+aes_error_t aes_init(aes_ctx* ctx, const void* key, size_t keylen, const void* iv, aes_flags_t flags);
 
 /**********************************************************************************************************************************************************************
  * @brief General-Purpose AES Encryption
