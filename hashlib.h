@@ -361,8 +361,8 @@ typedef struct _aes_ctx {
  * Supported AES cipher modes
  ************************************************/
 enum aes_cipher_modes {
-	AES_MODE_CBC,		/**< selects CBC mode */
-	AES_MODE_CTR		/**< selects CTR mode */
+	MODE_CBC,		/**< selects CBC mode */
+	MODE_CTR		/**< selects CTR mode */
 };
 
 /***************************************************
@@ -426,7 +426,7 @@ typedef enum {
     AES_INVALID_OPERATION               /**< AES operation failed, used encrypt context for decrypt or vice versa */
 } aes_error_t;
 
-/*********************************************************************************************************************
+/*****************************************************************************************************************************************************************
  * @brief Initializes a stateful AES cipher context to be used for encryption or decryption.
  * @param ctx Pointer to an AES cipher context to initialize..
  * @param key Pointer to an 128, 192, or 256 bit key to load into the AES context.
@@ -456,8 +456,12 @@ typedef enum {
  * @warning It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.
  * @warning Do not manually edit the @b ctx.mode field of the context structure. This will break the cipher configuration.
  *          If you want to change cipher modes, do so by calling @b aes_init again.
+ * @warning AES-CBC and CTR modes ensure confidentiality but do not guard against tampering. AES-OCB/GCM are a bit computationallty-
+ *          intensive for this platform, but HASHLIB provides means other of authenticating messages. You can use the hash and hmac
+ *          functions. HMAC is generally more secure for this purpose. If you want a truly secure scheme, always append an HMAC to your
+ *          message and use an application secret or unique key generated using a CSRNG and share with RSA to key the HMAC at both endpoints.
  * @return AES_OK if success, non-zero if failed. See aes_error_t.
-***********************************************************************************************************************/
+************************************************************************************************************************************************************************/
 aes_error_t aes_init(aes_ctx* ctx, uint8_t mode, const void* key, size_t keylen, const void* iv);
 
 /**********************************************************************************************************************************************************************
