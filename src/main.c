@@ -44,31 +44,31 @@ typedef struct {
 
 typedef union
 {
-    uint8_t c[64];
-    uint32_t l[16];
+	uint8_t c[64];
+	uint32_t l[16];
 } CHAR64LONG16;
 
 typedef struct _aes_cbc {
-    uint8_t padding_mode;
+	uint8_t padding_mode;
 } aes_cbc_t;
 
 typedef struct _aes_ctr {
-    uint8_t counter_pos_start;
-    uint8_t counter_len;
-    uint8_t last_block_stop;
-    uint8_t last_block[16];
+	uint8_t counter_pos_start;
+	uint8_t counter_len;
+	uint8_t last_block_stop;
+	uint8_t last_block[16];
 } aes_ctr_t;
 
 typedef struct _aes_keyschedule_ctx {
-    uint24_t keysize;
-    uint32_t round_keys[60];
-    uint8_t iv[16];
-    uint8_t cipher_mode;
-    union {
-        aes_ctr_t ctr;
-        aes_cbc_t cbc;
-    } mode;
-    uint8_t op_assoc;
+	uint24_t keysize;
+	uint32_t round_keys[60];
+	uint8_t iv[16];
+	uint8_t cipher_mode;
+	union {
+		aes_ctr_t ctr;
+		aes_cbc_t cbc;
+	} mode;
+	uint8_t op_assoc;
 } aes_ctx;
 
 
@@ -77,8 +77,8 @@ typedef struct _aes_keyschedule_ctx {
 #define CEMU_CONSOLE (char*)0xFB0000
 #define EPOOL_SIZE 128
 typedef struct _csprng_state {
-    volatile uint8_t* eread;
-    uint8_t epool[EPOOL_SIZE];
+	volatile uint8_t* eread;
+	uint8_t epool[EPOOL_SIZE];
 } csprng_state_t;
 csprng_state_t csprng_state={NULL, {}};
 bool prng_init = false;
@@ -108,21 +108,21 @@ bool hashlib_CompareDigest(uint8_t *dig1, uint8_t *dig2, size_t len);
 
 
 typedef enum {
-    AES_OK,
-    AES_INVALID_ARG,
-    AES_INVALID_MSG,
-    AES_INVALID_CIPHERMODE,
-    AES_INVALID_PADDINGMODE,
-    AES_INVALID_CIPHERTEXT,
-    AES_INVALID_OPERATION
+	AES_OK,
+	AES_INVALID_ARG,
+	AES_INVALID_MSG,
+	AES_INVALID_CIPHERMODE,
+	AES_INVALID_PADDINGMODE,
+	AES_INVALID_CIPHERTEXT,
+	AES_INVALID_OPERATION
 } aes_error_t;
 
 typedef enum {
-    RSA_OK,
-    RSA_INVALID_ARG,
-    RSA_INVALID_MSG,
-    RSA_INVALID_MODULUS,
-    RSA_ENCODING_ERROR
+	RSA_OK,
+	RSA_INVALID_ARG,
+	RSA_INVALID_MSG,
+	RSA_INVALID_MODULUS,
+	RSA_ENCODING_ERROR
 } rsa_error_t;
 
 
@@ -138,50 +138,50 @@ size_t hashlib_AESStripPadding(const uint8_t* in, size_t len, uint8_t* out, uint
 
 rsa_error_t hashlib_RSAEncrypt(const uint8_t* msg, size_t msglen, uint8_t *ct, const uint8_t* pubkey, size_t keylen);
 /*
-    #########################
-    ### Math Dependencies ###
-    #########################
+ #########################
+ ### Math Dependencies ###
+ #########################
  */
+
+/*
  
- /*
-    
-    First the uint32_t value of the address is read
-    Then we do 50 rounds of XOR'ing the value at the address with the existing value
-    The RNG is seeded using the resulting value
-  */
+ First the uint32_t value of the address is read
+ Then we do 50 rounds of XOR'ing the value at the address with the existing value
+ The RNG is seeded using the resulting value
+ */
 
 #define NUM_BIT_TESTS 2000
 #define MAX_DEVIATION (NUM_BIT_TESTS / 3)
 #define BUS_MEM_START (0xD65800)
 #define BUS_MEM_STOP (0xD66000)
 bool hashlib_CSPRNGInit(void){
-    // run 2000 tests
-    // allow +/- 800
-    volatile uint8_t *addr = NULL;
-    size_t lowest_deviation = MAX_DEVIATION, current_deviation;
-    for(volatile uint8_t* byte = BUS_MEM_START; byte < BUS_MEM_STOP; byte++){
-        for(uint8_t k=0; k<8; k++){
-            size_t count = 0;
-            for(uint24_t j=0; j<NUM_BIT_TESTS; j++)
-                if(((*byte) >> k) & 1) count++;
-            current_deviation = (count > 1000) ? count - 1000 : 1000 - count;
-            if(current_deviation < lowest_deviation){
-                lowest_deviation = current_deviation;
-                addr = byte;
-            }
-        }
-    }
-    csprng_state.eread = addr;//some address
-    return hashlib_CSPRNGAddEntropy();
+	// run 2000 tests
+	// allow +/- 800
+	volatile uint8_t *addr = NULL;
+	size_t lowest_deviation = MAX_DEVIATION, current_deviation;
+	for(volatile uint8_t* byte = BUS_MEM_START; byte < BUS_MEM_STOP; byte++){
+		for(uint8_t k=0; k<8; k++){
+			size_t count = 0;
+			for(uint24_t j=0; j<NUM_BIT_TESTS; j++)
+				if(((*byte) >> k) & 1) count++;
+			current_deviation = (count > 1000) ? count - 1000 : 1000 - count;
+			if(current_deviation < lowest_deviation){
+				lowest_deviation = current_deviation;
+				addr = byte;
+			}
+		}
+	}
+	csprng_state.eread = addr;//some address
+	return hashlib_CSPRNGAddEntropy();
 }
 
 bool hashlib_CSPRNGAddEntropy(void){
-    //
-    volatile uint8_t* eread = csprng_state.eread;
-    if(eread==NULL) return false;
-    for(uint24_t i=0; i < EPOOL_SIZE; i++)
-        csprng_state.epool[i] ^= *eread;
-    return true;
+	//
+	volatile uint8_t* eread = csprng_state.eread;
+	if(eread==NULL) return false;
+	for(uint24_t i=0; i < EPOOL_SIZE; i++)
+		csprng_state.epool[i] ^= *eread;
+	return true;
 }
 
 #define rand ((uint8_t*)0xE30800+192)
@@ -189,179 +189,179 @@ bool hashlib_CSPRNGAddEntropy(void){
 #define SHA_CTX	(((SHA256_CTX*)SHA_MBUFFER + 64*4))
 uint32_t hashlib_CSPRNGRandom(void){
 	//uint32_t mbuffer[80];
-    uint8_t ctr = 5;
-    while((!csprng_state.eread) && ctr--) hashlib_CSPRNGInit();
-    if(!csprng_state.eread) return 0;
-    //uint8_t rand[4] = {0};    // initialize u32. Don't assign a value so it's filled with garbage
-    memset(rand, 0, 4);
-    uint32_t* randint = (uint32_t*)rand;
-    uint8_t hash[32];
-    //SHA256_CTX ctx;
-    volatile uint8_t* eread = csprng_state.eread;
-    if(eread==NULL) return 0;
-    for(uint8_t i = 0; i < 4; i++)
-        rand[i] ^= *eread;  // read *eread 4 times, XORing the value and writing it into each byte of rand[]
-    hashlib_Sha256Init(SHA_CTX);
-    hashlib_Sha256Update(SHA_CTX, &csprng_state.epool, EPOOL_SIZE);
-    hashlib_Sha256Final(SHA_CTX, &hash);
-    
-    for(uint8_t i = 0; i<32; i+=4){ // break the SHA256 into 4-byte segments and XOR it with each block
-        rand[0] ^= hash[i];
-        rand[1] ^= hash[i+1];
-        rand[2] ^= hash[i+2];
-        rand[3] ^= hash[i+3];
-    }
-    hashlib_CSPRNGAddEntropy();
-    //memcpy(&randint, &rand, 4);
-    return *randint;
+	uint8_t ctr = 5;
+	while((!csprng_state.eread) && ctr--) hashlib_CSPRNGInit();
+	if(!csprng_state.eread) return 0;
+	//uint8_t rand[4] = {0};    // initialize u32. Don't assign a value so it's filled with garbage
+	memset(rand, 0, 4);
+	uint32_t* randint = (uint32_t*)rand;
+	uint8_t hash[32];
+	//SHA256_CTX ctx;
+	volatile uint8_t* eread = csprng_state.eread;
+	if(eread==NULL) return 0;
+	for(uint8_t i = 0; i < 4; i++)
+		rand[i] ^= *eread;  // read *eread 4 times, XORing the value and writing it into each byte of rand[]
+	hashlib_Sha256Init(SHA_CTX);
+	hashlib_Sha256Update(SHA_CTX, &csprng_state.epool, EPOOL_SIZE);
+	hashlib_Sha256Final(SHA_CTX, &hash);
+	
+	for(uint8_t i = 0; i<32; i+=4){ // break the SHA256 into 4-byte segments and XOR it with each block
+		rand[0] ^= hash[i];
+		rand[1] ^= hash[i+1];
+		rand[2] ^= hash[i+2];
+		rand[3] ^= hash[i+3];
+	}
+	hashlib_CSPRNGAddEntropy();
+	//memcpy(&randint, &rand, 4);
+	return *randint;
 }
 
 void hashlib_RandomBytes(uint8_t* buffer, size_t size){
-    for(size_t i = 0; i<size; i+=4){
-        uint32_t r = hashlib_CSPRNGRandom();
-        memcpy(buffer+i, &r, ((size-i)>4) ? 4 : size-i);
-    }
+	for(size_t i = 0; i<size; i+=4){
+		uint32_t r = hashlib_CSPRNGRandom();
+		memcpy(buffer+i, &r, ((size-i)>4) ? 4 : size-i);
+	}
 }
 
 
 /* #define ROTLEFT(a,b) (((a) << (b)) | ((a) >> (32-(b))))
-#define ROTRIGHT(a,b) (((a) >> (b)) | ((a) << (32-(b))))
-
-#define CH(x,y,z) (((x) & (y)) ^ (~(x) & (z)))
-#define MAJ(x,y,z) (((x) & (y)) ^ ((x) & (z)) ^ ((y) & (z)))
-#define EP0(x) (ROTRIGHT(x,2) ^ ROTRIGHT(x,13) ^ ROTRIGHT(x,22))
-#define EP1(x) (ROTRIGHT(x,6) ^ ROTRIGHT(x,11) ^ ROTRIGHT(x,25))
-#define SIG0(x) (ROTRIGHT(x,7) ^ ROTRIGHT(x,18) ^ ((x) >> 3))
-#define SIG1(x) (ROTRIGHT(x,17) ^ ROTRIGHT(x,19) ^ ((x) >> 10))
+ #define ROTRIGHT(a,b) (((a) >> (b)) | ((a) << (32-(b))))
+ 
+ #define CH(x,y,z) (((x) & (y)) ^ (~(x) & (z)))
+ #define MAJ(x,y,z) (((x) & (y)) ^ ((x) & (z)) ^ ((y) & (z)))
+ #define EP0(x) (ROTRIGHT(x,2) ^ ROTRIGHT(x,13) ^ ROTRIGHT(x,22))
+ #define EP1(x) (ROTRIGHT(x,6) ^ ROTRIGHT(x,11) ^ ROTRIGHT(x,25))
+ #define SIG0(x) (ROTRIGHT(x,7) ^ ROTRIGHT(x,18) ^ ((x) >> 3))
+ #define SIG1(x) (ROTRIGHT(x,17) ^ ROTRIGHT(x,19) ^ ((x) >> 10))
  */
 /**************************** VARIABLES *****************************/
 /* static const WORD k[64] = {
-	0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
-	0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
-	0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
-	0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
-	0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
-	0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
-	0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
-	0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
-}; */
+ 0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+ 0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+ 0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+ 0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+ 0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+ 0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+ 0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+ 0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
+ }; */
 
 /*********************** FUNCTION DEFINITIONS ***********************/
 /* void sha256_transform(SHA256_CTX *ctx, const BYTE data[])
-{
-	WORD a, b, c, d, e, f, g, h, i, j, tmp1, tmp2, m[64];
-
-	for (i = 0, j = 0; i < 16; ++i, j += 4){
-		WORD d1 = data[j];
-        WORD d2 = data[j + 1];
-        WORD d3 = data[j + 2];
-        WORD d4 = data[j + 3];
-        m[i] = (d1 << 24) + (d2 << 16) + (d3 << 8) + d4;
-    }
-	for ( ; i < 64; ++i)
-		m[i] = SIG1(m[i - 2]) + m[i - 7] + SIG0(m[i - 15]) + m[i - 16];
-
-	a = ctx->state[0];
-	b = ctx->state[1];
-	c = ctx->state[2];
-	d = ctx->state[3];
-	e = ctx->state[4];
-	f = ctx->state[5];
-	g = ctx->state[6];
-	h = ctx->state[7];
-
-	for (i = 0; i < 64; ++i) {
-		tmp1 = h + EP1(e) + CH(e,f,g) + k[i] + m[i];
-		tmp2 = EP0(a) + MAJ(a,b,c);
-		h = g;
-		g = f;
-		f = e;
-		e = d + tmp1;
-		d = c;
-		c = b;
-		b = a;
-		a = tmp1 + tmp2;
-	}
-
-	ctx->state[0] += a;
-	ctx->state[1] += b;
-	ctx->state[2] += c;
-	ctx->state[3] += d;
-	ctx->state[4] += e;
-	ctx->state[5] += f;
-	ctx->state[6] += g;
-	ctx->state[7] += h;
-} */
+ {
+ WORD a, b, c, d, e, f, g, h, i, j, tmp1, tmp2, m[64];
+ 
+ for (i = 0, j = 0; i < 16; ++i, j += 4){
+ WORD d1 = data[j];
+ WORD d2 = data[j + 1];
+ WORD d3 = data[j + 2];
+ WORD d4 = data[j + 3];
+ m[i] = (d1 << 24) + (d2 << 16) + (d3 << 8) + d4;
+ }
+ for ( ; i < 64; ++i)
+ m[i] = SIG1(m[i - 2]) + m[i - 7] + SIG0(m[i - 15]) + m[i - 16];
+ 
+ a = ctx->state[0];
+ b = ctx->state[1];
+ c = ctx->state[2];
+ d = ctx->state[3];
+ e = ctx->state[4];
+ f = ctx->state[5];
+ g = ctx->state[6];
+ h = ctx->state[7];
+ 
+ for (i = 0; i < 64; ++i) {
+ tmp1 = h + EP1(e) + CH(e,f,g) + k[i] + m[i];
+ tmp2 = EP0(a) + MAJ(a,b,c);
+ h = g;
+ g = f;
+ f = e;
+ e = d + tmp1;
+ d = c;
+ c = b;
+ b = a;
+ a = tmp1 + tmp2;
+ }
+ 
+ ctx->state[0] += a;
+ ctx->state[1] += b;
+ ctx->state[2] += c;
+ ctx->state[3] += d;
+ ctx->state[4] += e;
+ ctx->state[5] += f;
+ ctx->state[6] += g;
+ ctx->state[7] += h;
+ } */
 
 /* void hashlib_Sha256Init(SHA256_CTX *ctx)
-{
-	ctx->datalen = 0;
-	zero64(ctx->bitlen);
-	ctx->state[0] = 0x6a09e667;
-	ctx->state[1] = 0xbb67ae85;
-	ctx->state[2] = 0x3c6ef372;
-	ctx->state[3] = 0xa54ff53a;
-	ctx->state[4] = 0x510e527f;
-	ctx->state[5] = 0x9b05688c;
-	ctx->state[6] = 0x1f83d9ab;
-	ctx->state[7] = 0x5be0cd19;
-}
-
-void hashlib_Sha256Update(SHA256_CTX *ctx, const BYTE data[], uint32_t len)
-{
-	WORD i;
-
-	for (i = 0; i < len; ++i) {
-		ctx->data[ctx->datalen] = data[i];
-		ctx->datalen++;
-		if (ctx->datalen == 64) {
-			sha256_transform(ctx, ctx->data);
-			add64iu(&ctx->bitlen, 512);
-			ctx->datalen = 0;
-		}
-	}
-}
-
-void hashlib_Sha256Final(SHA256_CTX *ctx, BYTE hash[])
-{
-	WORD i;
-    int x;
-	i = ctx->datalen;
-
-	// Pad whatever data is left in the buffer.
-	if (ctx->datalen < 56) {
-		ctx->data[i++] = 0x80;
-		while (i < 56)
-			ctx->data[i++] = 0x00;
-	}
-	else {
-		ctx->data[i++] = 0x80;
-		while (i < 64)
-			ctx->data[i++] = 0x00;
-		sha256_transform(ctx, ctx->data);
-		memset(ctx->data, 0, 56);
-	}
-
-	// Append to the padding the total message's length in bits and transform.
-	add64iu(&ctx->bitlen,ctx->datalen * 8);
-	for (x=0;x<8;x++){ //put this in a loop for efficiency
-		ctx->data[63-x] = ctx->bitlen[x];
-	}
-	sha256_transform(ctx, ctx->data);
-
-	// Since this implementation uses little endian byte ordering and SHA uses big endian,
-	// reverse all the bytes when copying the final state to the output hash.
-	for (i = 0; i < 4; ++i) {
-		hash[i]      = (ctx->state[0] >> (24 - i * 8)) & 0x000000ff;
-		hash[i + 4]  = (ctx->state[1] >> (24 - i * 8)) & 0x000000ff;
-		hash[i + 8]  = (ctx->state[2] >> (24 - i * 8)) & 0x000000ff;
-		hash[i + 12] = (ctx->state[3] >> (24 - i * 8)) & 0x000000ff;
-		hash[i + 16] = (ctx->state[4] >> (24 - i * 8)) & 0x000000ff;
-		hash[i + 20] = (ctx->state[5] >> (24 - i * 8)) & 0x000000ff;
-		hash[i + 24] = (ctx->state[6] >> (24 - i * 8)) & 0x000000ff;
-		hash[i + 28] = (ctx->state[7] >> (24 - i * 8)) & 0x000000ff;
-	}
-}
+ {
+ ctx->datalen = 0;
+ zero64(ctx->bitlen);
+ ctx->state[0] = 0x6a09e667;
+ ctx->state[1] = 0xbb67ae85;
+ ctx->state[2] = 0x3c6ef372;
+ ctx->state[3] = 0xa54ff53a;
+ ctx->state[4] = 0x510e527f;
+ ctx->state[5] = 0x9b05688c;
+ ctx->state[6] = 0x1f83d9ab;
+ ctx->state[7] = 0x5be0cd19;
+ }
+ 
+ void hashlib_Sha256Update(SHA256_CTX *ctx, const BYTE data[], uint32_t len)
+ {
+ WORD i;
+ 
+ for (i = 0; i < len; ++i) {
+ ctx->data[ctx->datalen] = data[i];
+ ctx->datalen++;
+ if (ctx->datalen == 64) {
+ sha256_transform(ctx, ctx->data);
+ add64iu(&ctx->bitlen, 512);
+ ctx->datalen = 0;
+ }
+ }
+ }
+ 
+ void hashlib_Sha256Final(SHA256_CTX *ctx, BYTE hash[])
+ {
+ WORD i;
+ int x;
+ i = ctx->datalen;
+ 
+ // Pad whatever data is left in the buffer.
+ if (ctx->datalen < 56) {
+ ctx->data[i++] = 0x80;
+ while (i < 56)
+ ctx->data[i++] = 0x00;
+ }
+ else {
+ ctx->data[i++] = 0x80;
+ while (i < 64)
+ ctx->data[i++] = 0x00;
+ sha256_transform(ctx, ctx->data);
+ memset(ctx->data, 0, 56);
+ }
+ 
+ // Append to the padding the total message's length in bits and transform.
+ add64iu(&ctx->bitlen,ctx->datalen * 8);
+ for (x=0;x<8;x++){ //put this in a loop for efficiency
+ ctx->data[63-x] = ctx->bitlen[x];
+ }
+ sha256_transform(ctx, ctx->data);
+ 
+ // Since this implementation uses little endian byte ordering and SHA uses big endian,
+ // reverse all the bytes when copying the final state to the output hash.
+ for (i = 0; i < 4; ++i) {
+ hash[i]      = (ctx->state[0] >> (24 - i * 8)) & 0x000000ff;
+ hash[i + 4]  = (ctx->state[1] >> (24 - i * 8)) & 0x000000ff;
+ hash[i + 8]  = (ctx->state[2] >> (24 - i * 8)) & 0x000000ff;
+ hash[i + 12] = (ctx->state[3] >> (24 - i * 8)) & 0x000000ff;
+ hash[i + 16] = (ctx->state[4] >> (24 - i * 8)) & 0x000000ff;
+ hash[i + 20] = (ctx->state[5] >> (24 - i * 8)) & 0x000000ff;
+ hash[i + 24] = (ctx->state[6] >> (24 - i * 8)) & 0x000000ff;
+ hash[i + 28] = (ctx->state[7] >> (24 - i * 8)) & 0x000000ff;
+ }
+ }
  */
 
 
@@ -564,7 +564,7 @@ static const BYTE gf_mul[256][6] = {
 void xor_buf(const BYTE in[], BYTE out[], size_t len)
 {
 	size_t idx;
-
+	
 	for (idx = 0; idx < len; idx++)
 		out[idx] ^= in[idx];
 }
@@ -577,7 +577,7 @@ void xor_buf(const BYTE in[], BYTE out[], size_t len)
 WORD aes_SubWord(WORD word)
 {
 	WORD result;
-
+	
 	result = (uint32_t)aes_sbox[(word >> 4) & 0x0000000F][word & 0x0000000F];
 	result += (uint32_t)aes_sbox[(word >> 12) & 0x0000000F][(word >> 8) & 0x0000000F] << 8;
 	result += (uint32_t)aes_sbox[(word >> 20) & 0x0000000F][(word >> 16) & 0x0000000F] << 16;
@@ -586,40 +586,40 @@ WORD aes_SubWord(WORD word)
 }
 
 enum _ciphermodes{
-    AES_CBC,
-    AES_CTR
+	AES_CBC,
+	AES_CTR
 };
 
 enum _aes_padding_schemes {
-    SCHM_PKCS7,         // Pad with padding size
-    SCHM_DEFAULT = SCHM_PKCS7,
-    SCHM_ISO2        // Pad with 0x80,0x00...0x00
+	SCHM_PKCS7,         // Pad with padding size
+	SCHM_DEFAULT = SCHM_PKCS7,
+	SCHM_ISO2        // Pad with 0x80,0x00...0x00
 };
 
 // AES_FLAG_CTR_IVNONCELEN(len) = ((len)<<4)
 // AES_FLAG_CTR_IVCOUNTERLEN(len) = ((len)<<8)
 
 /*
-typedef struct _aes_cbc {
-    uint8_t padding_mode;
-} aes_cbc_t;
-
-typedef struct _aes_ctr {
-    uint8_t ctr_len;
-    uint8_t block_pos;
-    uint8_t prev_block[16];
-} aes_ctr_t;
-
-typedef struct _aes_keyschedule_ctx {
-    uint24_t keysize;
-    uint32_t round_keys[60];
-    uint8_t iv[16];
-    uint8_t cipher_mode;
-    union {
-        aes_ctr_t ctr;
-        aes_cbc_t cbc;
-    } mode;
-} aes_ctx;
+ typedef struct _aes_cbc {
+ uint8_t padding_mode;
+ } aes_cbc_t;
+ 
+ typedef struct _aes_ctr {
+ uint8_t ctr_len;
+ uint8_t block_pos;
+ uint8_t prev_block[16];
+ } aes_ctr_t;
+ 
+ typedef struct _aes_keyschedule_ctx {
+ uint24_t keysize;
+ uint32_t round_keys[60];
+ uint8_t iv[16];
+ uint8_t cipher_mode;
+ union {
+ aes_ctr_t ctr;
+ aes_cbc_t cbc;
+ } mode;
+ } aes_ctx;
  */
 #define FLAGS_GET_LSB2 3
 #define FLAGS_GET_LSB4 15
@@ -633,36 +633,36 @@ aes_error_t hashlib_AESLoadKey(aes_ctx* ctx, const BYTE key[], size_t keysize, u
 {
 	int Nb=4,Nr,Nk,idx;
 	WORD temp,Rcon[]={0x01000000,0x02000000,0x04000000,0x08000000,0x10000000,0x20000000,
-	                  0x40000000,0x80000000,0x1b000000,0x36000000,0x6c000000,0xd8000000,
-	                  0xab000000,0x4d000000,0x9a000000};
-    uint8_t mode = (cipher_flags & 3);
-    if(mode>AES_CTR) return AES_INVALID_CIPHERMODE;
-    memset(ctx, 0, sizeof(aes_ctx));
-    ctx->cipher_mode = mode;
-    if(mode == AES_CBC) ctx->mode.cbc.padding_mode = ((uint8_t)(cipher_flags>>2) & FLAGS_GET_LSB2);
-    if(mode == AES_CTR) {
-        uint8_t ctr_pos = ((uint8_t)(cipher_flags>>4) & FLAGS_GET_LSB4);
-        uint8_t ctr_len = ((uint8_t)(cipher_flags>>8) & FLAGS_GET_LSB4);
-        ctr_len = (ctr_len == 0) ? 8 : ctr_len;
-        ctr_pos = (ctr_len == 0) ? 8 : ctr_pos;
-        ctx->mode.ctr.counter_pos_start = ctr_pos;
-        ctx->mode.ctr.counter_len = ctr_len;
-    }
-    keysize<<=3;
+		0x40000000,0x80000000,0x1b000000,0x36000000,0x6c000000,0xd8000000,
+		0xab000000,0x4d000000,0x9a000000};
+	uint8_t mode = (cipher_flags & 3);
+	if(mode>AES_CTR) return AES_INVALID_CIPHERMODE;
+	memset(ctx, 0, sizeof(aes_ctx));
+	ctx->cipher_mode = mode;
+	if(mode == AES_CBC) ctx->mode.cbc.padding_mode = ((uint8_t)(cipher_flags>>2) & FLAGS_GET_LSB2);
+	if(mode == AES_CTR) {
+		uint8_t ctr_pos = ((uint8_t)(cipher_flags>>4) & FLAGS_GET_LSB4);
+		uint8_t ctr_len = ((uint8_t)(cipher_flags>>8) & FLAGS_GET_LSB4);
+		ctr_len = (ctr_len == 0) ? 8 : ctr_len;
+		ctr_pos = (ctr_len == 0) ? 8 : ctr_pos;
+		ctx->mode.ctr.counter_pos_start = ctr_pos;
+		ctx->mode.ctr.counter_len = ctr_len;
+	}
+	keysize<<=3;
 	switch (keysize) {
 		case 128: Nr = 10; Nk = 4; break;
 		case 192: Nr = 12; Nk = 6; break;
 		case 256: Nr = 14; Nk = 8; break;
 		default: return AES_INVALID_ARG;
 	}
-
-    memcpy(ctx->iv, iv, 16);
-    ctx->keysize = keysize;
+	
+	memcpy(ctx->iv, iv, 16);
+	ctx->keysize = keysize;
 	for (idx=0; idx < Nk; ++idx) {
 		ctx->round_keys[idx] = ((uint32_t)(key[4 * idx]) << 24) | ((uint32_t)(key[4 * idx + 1]) << 16) |
-				   ((uint32_t)(key[4 * idx + 2]) << 8) | ((uint32_t)(key[4 * idx + 3]));
+		((uint32_t)(key[4 * idx + 2]) << 8) | ((uint32_t)(key[4 * idx + 3]));
 	}
-
+	
 	for (idx = Nk; idx < Nb * (Nr+1); ++idx) {
 		temp = ctx->round_keys[idx - 1];
 		if ((idx % Nk) == 0)
@@ -685,7 +685,7 @@ aes_error_t hashlib_AESLoadKey(aes_ctx* ctx, const BYTE key[], size_t keysize, u
 void aes_AddRoundKey(BYTE state[][4], const WORD w[])
 {
 	BYTE subkey[4];
-
+	
 	// memcpy(subkey,&w[idx],4); // Not accurate for big endian machines
 	// Subkey 1
 	subkey[0] = w[0] >> 24;
@@ -723,7 +723,7 @@ void aes_AddRoundKey(BYTE state[][4], const WORD w[])
 	state[1][3] ^= subkey[1];
 	state[2][3] ^= subkey[2];
 	state[3][3] ^= subkey[3];
-    memset(subkey, 0, sizeof subkey);
+	memset(subkey, 0, sizeof subkey);
 }
 
 /////////////////
@@ -780,7 +780,7 @@ void aes_InvSubBytes(BYTE state[][4])
 void aes_ShiftRows(BYTE state[][4])
 {
 	int t;
-
+	
 	// Shift left by 1
 	t = state[1][0];
 	state[1][0] = state[1][1];
@@ -800,14 +800,14 @@ void aes_ShiftRows(BYTE state[][4])
 	state[3][3] = state[3][2];
 	state[3][2] = state[3][1];
 	state[3][1] = t;
-    t = 0;
+	t = 0;
 }
 
 // All rows are shifted cylindrically to the right.
 void aes_InvShiftRows(BYTE state[][4])
 {
 	int t;
-
+	
 	// Shift right by 1
 	t = state[1][3];
 	state[1][3] = state[1][2];
@@ -827,7 +827,7 @@ void aes_InvShiftRows(BYTE state[][4])
 	state[3][0] = state[3][1];
 	state[3][1] = state[3][2];
 	state[3][2] = t;
-    t = 0;
+	t = 0;
 }
 
 /////////////////
@@ -841,7 +841,7 @@ void aes_InvShiftRows(BYTE state[][4])
 void aes_MixColumns(BYTE state[][4])
 {
 	BYTE col[4];
-
+	
 	// Column 1
 	col[0] = state[0][0];
 	col[1] = state[1][0];
@@ -926,13 +926,13 @@ void aes_MixColumns(BYTE state[][4])
 	state[3][3] ^= col[1];
 	state[3][3] ^= col[2];
 	state[3][3] ^= gf_mul[col[3]][0];
-    memset(col, 0, sizeof col);
+	memset(col, 0, sizeof col);
 }
 
 void aes_InvMixColumns(BYTE state[][4])
 {
 	BYTE col[4];
-
+	
 	// Column 1
 	col[0] = state[0][0];
 	col[1] = state[1][0];
@@ -1017,13 +1017,13 @@ void aes_InvMixColumns(BYTE state[][4])
 	state[3][3] ^= gf_mul[col[1]][4];
 	state[3][3] ^= gf_mul[col[2]][2];
 	state[3][3] ^= gf_mul[col[3]][5];
-    memset(col, 0, sizeof col);
+	memset(col, 0, sizeof col);
 }
 
 void aes_encrypt_block(const BYTE in[], BYTE out[], aes_ctx* ks){
-    BYTE state[4][4];
-    int keysize = ks->keysize;
-    uint32_t *key = ks->round_keys;
+	BYTE state[4][4];
+	int keysize = ks->keysize;
+	uint32_t *key = ks->round_keys;
 	// Copy input array (should be 16 bytes long) to a matrix (sequential bytes are ordered
 	// by row, not col) called "state" for processing.
 	// *** Implementation note: The official AES documentation references the state by
@@ -1045,7 +1045,7 @@ void aes_encrypt_block(const BYTE in[], BYTE out[], aes_ctx* ks){
 	state[1][3] = in[13];
 	state[2][3] = in[14];
 	state[3][3] = in[15];
-
+	
 	// Perform the necessary number of rounds. The round key is added first.
 	// The last round does not perform the aes_MixColumns step.
 	aes_AddRoundKey(state,&key[0]);
@@ -1073,7 +1073,7 @@ void aes_encrypt_block(const BYTE in[], BYTE out[], aes_ctx* ks){
 	else {
 		aes_SubBytes(state); aes_ShiftRows(state); aes_AddRoundKey(state,&key[40]);
 	}
-
+	
 	// Copy the state to the output array.
 	out[0] = state[0][0];
 	out[1] = state[1][0];
@@ -1091,13 +1091,13 @@ void aes_encrypt_block(const BYTE in[], BYTE out[], aes_ctx* ks){
 	out[13] = state[1][3];
 	out[14] = state[2][3];
 	out[15] = state[3][3];
-    memset(state, 0, sizeof state);
+	memset(state, 0, sizeof state);
 }
 
 void aes_decrypt_block(const BYTE in[], BYTE out[], aes_ctx* ks){
-    BYTE state[4][4];
+	BYTE state[4][4];
 	int keysize = ks->keysize;
-    uint32_t *key = ks->round_keys;
+	uint32_t *key = ks->round_keys;
 	// Copy the input to the state.
 	state[0][0] = in[0];
 	state[1][0] = in[1];
@@ -1115,7 +1115,7 @@ void aes_decrypt_block(const BYTE in[], BYTE out[], aes_ctx* ks){
 	state[1][3] = in[13];
 	state[2][3] = in[14];
 	state[3][3] = in[15];
-
+	
 	// Perform the necessary number of rounds. The round key is added first.
 	// The last round does not perform the aes_MixColumns step.
 	if (keysize > 128) {
@@ -1143,7 +1143,7 @@ void aes_decrypt_block(const BYTE in[], BYTE out[], aes_ctx* ks){
 	aes_InvShiftRows(state);aes_InvSubBytes(state);aes_AddRoundKey(state,&key[8]);aes_InvMixColumns(state);
 	aes_InvShiftRows(state);aes_InvSubBytes(state);aes_AddRoundKey(state,&key[4]);aes_InvMixColumns(state);
 	aes_InvShiftRows(state);aes_InvSubBytes(state);aes_AddRoundKey(state,&key[0]);
-
+	
 	// Copy the state to the output array.
 	out[0] = state[0][0];
 	out[1] = state[1][0];
@@ -1161,13 +1161,13 @@ void aes_decrypt_block(const BYTE in[], BYTE out[], aes_ctx* ks){
 	out[13] = state[1][3];
 	out[14] = state[2][3];
 	out[15] = state[3][3];
-    memset(state, 0, state);
+	memset(state, 0, state);
 }
 
 void increment_iv(BYTE iv[], size_t counter_start, size_t counter_size)
 {
 	int idx;
-
+	
 	// Use counter_size bytes at the end of the IV as the big-endian integer to increment.
 	for (idx = counter_start + counter_size - 1; idx >= counter_start; idx--) {
 		iv[idx]++;
@@ -1177,32 +1177,32 @@ void increment_iv(BYTE iv[], size_t counter_start, size_t counter_size)
 
 
 /*
-typedef struct _aes_cbc {
-    uint8_t padding_mode;
-} aes_cbc_t;
-
-typedef struct _aes_ctr {
-    uint8_t ctr_len;
-    uint8_t block_pos;
-    uint8_t prev_block[16];
-} aes_ctr_t;
-
-typedef struct _aes_keyschedule_ctx {
-    uint24_t keysize;
-    uint32_t round_keys[60];
-    uint8_t iv[16];
-    uint8_t cipher_mode;
-    union {
-        aes_ctr_t ctr;
-        aes_cbc_t cbc;
-    } mode;
-} aes_ctx;
+ typedef struct _aes_cbc {
+ uint8_t padding_mode;
+ } aes_cbc_t;
+ 
+ typedef struct _aes_ctr {
+ uint8_t ctr_len;
+ uint8_t block_pos;
+ uint8_t prev_block[16];
+ } aes_ctr_t;
+ 
+ typedef struct _aes_keyschedule_ctx {
+ uint24_t keysize;
+ uint32_t round_keys[60];
+ uint8_t iv[16];
+ uint8_t cipher_mode;
+ union {
+ aes_ctr_t ctr;
+ aes_cbc_t cbc;
+ } mode;
+ } aes_ctx;
  */
 
 enum _aes_op_assoc {
-    AES_OP_NONE,
-    AES_OP_ENCRYPT,
-    AES_OP_DECRYPT
+	AES_OP_NONE,
+	AES_OP_ENCRYPT,
+	AES_OP_DECRYPT
 };
 
 #define MIN(x, y) ((x) < (y)) ? (x) : (y)
@@ -1211,92 +1211,92 @@ static const char iso_pad[] = {0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
 aes_error_t hashlib_AESEncrypt(aes_ctx* ctx, const BYTE in[], size_t in_len, BYTE out[])
 {
 	BYTE buf[AES_BLOCK_SIZE];
-    uint8_t* iv = ctx->iv;
-    //int keysize = key->keysize;
-    //uint32_t *round_keys = key->round_keys;
+	uint8_t* iv = ctx->iv;
+	//int keysize = key->keysize;
+	//uint32_t *round_keys = key->round_keys;
 	int blocks, idx;
- 
-    if(ctx->op_assoc == AES_OP_DECRYPT) return AES_INVALID_OPERATION;
-    ctx->op_assoc = AES_OP_ENCRYPT;
-
-    if(in==NULL || out==NULL || ctx==NULL) return AES_INVALID_ARG;
-    if(in_len == 0) return AES_INVALID_MSG;
-    blocks = (in_len / AES_BLOCK_SIZE);
-    
-    switch(ctx->cipher_mode){
-        case AES_CBC:
-        {
-            size_t bytes_to_copy, bytes_to_pad;
-            for(idx = 0; idx <= blocks; idx++){
-                bytes_to_copy = MIN(AES_BLOCK_SIZE, in_len - (idx * AES_BLOCK_SIZE));
-                bytes_to_pad = AES_BLOCK_SIZE-bytes_to_copy;
-                memcpy(buf, &in[idx*AES_BLOCK_SIZE], bytes_to_copy);
-                if(idx==blocks){
-                    if(ctx->mode.cbc.padding_mode == SCHM_PKCS7) memset(&buf[bytes_to_copy], bytes_to_pad, bytes_to_pad);   // applies PKCS7 padding scheme
-                    if(ctx->mode.cbc.padding_mode == SCHM_ISO2) memcpy(&buf[bytes_to_copy], iso_pad, bytes_to_pad);          // applies ISO-9797 M2 padding scheme
-                }
-                xor_buf(iv, buf, AES_BLOCK_SIZE);
-                aes_encrypt_block(buf, &out[idx * AES_BLOCK_SIZE], ctx);
-                memcpy(iv, &out[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);         // iv needs to update for continued use
-            }
-            break;
-        }
-        case AES_CTR:
-        {
-            size_t bytes_to_copy = ctx->mode.ctr.last_block_stop;
-            size_t bytes_offset = 0;
-            
-            // xor remaining bytes from last encrypt operation into new plaintext
-            if(bytes_to_copy%AES_BLOCK_SIZE){
-                bytes_offset = AES_BLOCK_SIZE - bytes_to_copy;
-                memcpy(out, in, bytes_offset);
-                xor_buf(&ctx->mode.ctr.last_block[bytes_to_copy], out, bytes_offset);
-                blocks = ((in_len - bytes_offset) / AES_BLOCK_SIZE);
-                
-            }
-            // encrypt message in CTR mode
-            for(idx = 0; idx <= blocks; idx++){
-                bytes_to_copy = MIN(AES_BLOCK_SIZE, in_len - (idx * AES_BLOCK_SIZE));
-                //bytes_to_pad = AES_BLOCK_SIZE-bytes_to_copy;
-                memcpy(&out[idx*AES_BLOCK_SIZE+bytes_offset], &in[idx*AES_BLOCK_SIZE+bytes_offset], bytes_to_copy);
-                // memset(&buf[bytes_to_copy], 0, bytes_to_pad);        // if bytes_to_copy is less than blocksize, do nothing, since msg is truncated anyway
-                aes_encrypt_block(iv, buf, ctx);
-                xor_buf(buf, &out[idx*AES_BLOCK_SIZE+bytes_offset], bytes_to_copy);
-                increment_iv(iv, ctx->mode.ctr.counter_pos_start, ctx->mode.ctr.counter_len);        // increment iv for continued use
-                if(idx==blocks){
-                    memcpy(ctx->mode.ctr.last_block, buf, AES_BLOCK_SIZE);
-                    ctx->mode.ctr.last_block_stop = bytes_to_copy;
-                }
-            }
-            break;
-        }
+	
+	if(ctx->op_assoc == AES_OP_DECRYPT) return AES_INVALID_OPERATION;
+	ctx->op_assoc = AES_OP_ENCRYPT;
+	
+	if(in==NULL || out==NULL || ctx==NULL) return AES_INVALID_ARG;
+	if(in_len == 0) return AES_INVALID_MSG;
+	blocks = (in_len / AES_BLOCK_SIZE);
+	
+	switch(ctx->cipher_mode){
+		case AES_CBC:
+		{
+			size_t bytes_to_copy, bytes_to_pad;
+			for(idx = 0; idx <= blocks; idx++){
+				bytes_to_copy = MIN(AES_BLOCK_SIZE, in_len - (idx * AES_BLOCK_SIZE));
+				bytes_to_pad = AES_BLOCK_SIZE-bytes_to_copy;
+				memcpy(buf, &in[idx*AES_BLOCK_SIZE], bytes_to_copy);
+				if(idx==blocks){
+					if(ctx->mode.cbc.padding_mode == SCHM_PKCS7) memset(&buf[bytes_to_copy], bytes_to_pad, bytes_to_pad);   // applies PKCS7 padding scheme
+					if(ctx->mode.cbc.padding_mode == SCHM_ISO2) memcpy(&buf[bytes_to_copy], iso_pad, bytes_to_pad);          // applies ISO-9797 M2 padding scheme
+				}
+				xor_buf(iv, buf, AES_BLOCK_SIZE);
+				aes_encrypt_block(buf, &out[idx * AES_BLOCK_SIZE], ctx);
+				memcpy(iv, &out[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);         // iv needs to update for continued use
+			}
+			break;
+		}
+		case AES_CTR:
+		{
+			size_t bytes_to_copy = ctx->mode.ctr.last_block_stop;
+			size_t bytes_offset = 0;
+			
+			// xor remaining bytes from last encrypt operation into new plaintext
+			if(bytes_to_copy%AES_BLOCK_SIZE){
+				bytes_offset = AES_BLOCK_SIZE - bytes_to_copy;
+				memcpy(out, in, bytes_offset);
+				xor_buf(&ctx->mode.ctr.last_block[bytes_to_copy], out, bytes_offset);
+				blocks = ((in_len - bytes_offset) / AES_BLOCK_SIZE);
+				
+			}
+			// encrypt message in CTR mode
+			for(idx = 0; idx <= blocks; idx++){
+				bytes_to_copy = MIN(AES_BLOCK_SIZE, in_len - (idx * AES_BLOCK_SIZE));
+				//bytes_to_pad = AES_BLOCK_SIZE-bytes_to_copy;
+				memcpy(&out[idx*AES_BLOCK_SIZE+bytes_offset], &in[idx*AES_BLOCK_SIZE+bytes_offset], bytes_to_copy);
+				// memset(&buf[bytes_to_copy], 0, bytes_to_pad);        // if bytes_to_copy is less than blocksize, do nothing, since msg is truncated anyway
+				aes_encrypt_block(iv, buf, ctx);
+				xor_buf(buf, &out[idx*AES_BLOCK_SIZE+bytes_offset], bytes_to_copy);
+				increment_iv(iv, ctx->mode.ctr.counter_pos_start, ctx->mode.ctr.counter_len);        // increment iv for continued use
+				if(idx==blocks){
+					memcpy(ctx->mode.ctr.last_block, buf, AES_BLOCK_SIZE);
+					ctx->mode.ctr.last_block_stop = bytes_to_copy;
+				}
+			}
+			break;
+		}
 		default: return AES_INVALID_CIPHERMODE;
-		
+			
 	}
-    //memcpy(iv, iv_buf, sizeof iv_buf);
+	//memcpy(iv, iv_buf, sizeof iv_buf);
 	return AES_OK;
 }
 
 aes_error_t hashlib_AESDecrypt(aes_ctx* ctx, const BYTE in[], size_t in_len, BYTE out[])
 {
 	BYTE buf_in[AES_BLOCK_SIZE], buf_out[AES_BLOCK_SIZE];
-    uint8_t* iv = ctx->iv;
+	uint8_t* iv = ctx->iv;
 	//int keysize = key->keysize;
-    //uint32_t *round_keys = key->round_keys;
+	//uint32_t *round_keys = key->round_keys;
 	int blocks, idx;
-
-    if(ctx->op_assoc == AES_OP_ENCRYPT) return AES_INVALID_OPERATION;
-    ctx->op_assoc = AES_OP_DECRYPT;
-
-    if(in==NULL || out==NULL || ctx==NULL) return AES_INVALID_ARG;
-    if(in_len == 0) return AES_INVALID_CIPHERTEXT;
+	
+	if(ctx->op_assoc == AES_OP_ENCRYPT) return AES_INVALID_OPERATION;
+	ctx->op_assoc = AES_OP_DECRYPT;
+	
+	if(in==NULL || out==NULL || ctx==NULL) return AES_INVALID_ARG;
+	if(in_len == 0) return AES_INVALID_CIPHERTEXT;
 	
 	switch(ctx->cipher_mode){
 		case AES_CBC:
 			if((in_len % AES_BLOCK_SIZE) != 0) return AES_INVALID_CIPHERTEXT;
 			blocks = in_len / AES_BLOCK_SIZE;
 			//memcpy(iv_buf, iv, AES_BLOCK_SIZE);
-
+			
 			for (idx = 0; idx < blocks; idx++) {
 				memcpy(buf_in, &in[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
 				aes_decrypt_block(buf_in, buf_out, ctx);
@@ -1304,91 +1304,91 @@ aes_error_t hashlib_AESDecrypt(aes_ctx* ctx, const BYTE in[], size_t in_len, BYT
 				memcpy(&out[idx * AES_BLOCK_SIZE], buf_out, AES_BLOCK_SIZE);
 				memcpy(iv, buf_in, AES_BLOCK_SIZE);
 			}
-            //hashlib_AESStripPadding(out, in_len, out, ctx->padding_mode);
-            //memcpy(iv, iv_buf, sizeof iv_buf);
+			//hashlib_AESStripPadding(out, in_len, out, ctx->padding_mode);
+			//memcpy(iv, iv_buf, sizeof iv_buf);
 			break;
 		case AES_CTR:
-            ctx->op_assoc = AES_OP_ENCRYPT;
+			ctx->op_assoc = AES_OP_ENCRYPT;
 			hashlib_AESEncrypt(ctx, in, in_len, out);
-            ctx->op_assoc = AES_OP_DECRYPT;         
+			ctx->op_assoc = AES_OP_DECRYPT;
 			break;
 		default: return AES_INVALID_CIPHERMODE;
 	}
-    memset(buf_in, 0, sizeof buf_in);
-    memset(buf_out, 0, sizeof buf_out);
-    return AES_OK;
+	memset(buf_in, 0, sizeof buf_in);
+	memset(buf_out, 0, sizeof buf_out);
+	return AES_OK;
 }
 
 /*
-int hashlib_AESOutputMAC(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key){
-    BYTE buf_in[AES_BLOCK_SIZE], buf_out[AES_BLOCK_SIZE], iv_buf[AES_BLOCK_SIZE];
-    //int keysize = key->keysize;
-    //uint32_t *round_keys = key->round_keys;
-	int blocks, idx;
-
-    if(in==NULL || out==NULL || key==NULL) return AES_INVALID_ARG;
-
-	if ((in_len % AES_BLOCK_SIZE) != 0)
-		return false;
-
-	blocks = in_len / AES_BLOCK_SIZE;
-
-	memset(iv_buf, 0, AES_BLOCK_SIZE);
-
-	for (idx = 0; idx < blocks; idx++) {
-		memcpy(buf_in, &in[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
-		xor_buf(iv_buf, buf_in, AES_BLOCK_SIZE);
-		aes_encrypt_block(buf_in, buf_out, key);
-		memcpy(iv_buf, buf_out, AES_BLOCK_SIZE);
-	}
-    memcpy(out, buf_out, AES_BLOCK_SIZE);
-
-	return true;
-}
-*/
+ int hashlib_AESOutputMAC(const BYTE in[], size_t in_len, BYTE out[], aes_ctx* key){
+ BYTE buf_in[AES_BLOCK_SIZE], buf_out[AES_BLOCK_SIZE], iv_buf[AES_BLOCK_SIZE];
+ //int keysize = key->keysize;
+ //uint32_t *round_keys = key->round_keys;
+ int blocks, idx;
+ 
+ if(in==NULL || out==NULL || key==NULL) return AES_INVALID_ARG;
+ 
+ if ((in_len % AES_BLOCK_SIZE) != 0)
+ return false;
+ 
+ blocks = in_len / AES_BLOCK_SIZE;
+ 
+ memset(iv_buf, 0, AES_BLOCK_SIZE);
+ 
+ for (idx = 0; idx < blocks; idx++) {
+ memcpy(buf_in, &in[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
+ xor_buf(iv_buf, buf_in, AES_BLOCK_SIZE);
+ aes_encrypt_block(buf_in, buf_out, key);
+ memcpy(iv_buf, buf_out, AES_BLOCK_SIZE);
+ }
+ memcpy(out, buf_out, AES_BLOCK_SIZE);
+ 
+ return true;
+ }
+ */
 
 size_t hashlib_AESStripPadding(const uint8_t* in, size_t len, uint8_t* out, uint8_t schm){
-    if(in==NULL) return 0;
-    if(out==NULL) return 0;
-    if(len==0) return 0;
-    size_t outlen;
-    //memset(out, 0, len);
-    switch(schm){
-        case SCHM_PKCS7:
-            outlen = len - in[len-1];
-            break;
-        case SCHM_ISO2:
-            for(outlen = len-1; in[outlen] != 0x80; outlen--);
-            outlen++;
-            break;
-        default:
-            return 0;
-    }
-    memcpy(out, in, outlen);
+	if(in==NULL) return 0;
+	if(out==NULL) return 0;
+	if(len==0) return 0;
+	size_t outlen;
+	//memset(out, 0, len);
+	switch(schm){
+		case SCHM_PKCS7:
+			outlen = len - in[len-1];
+			break;
+		case SCHM_ISO2:
+			for(outlen = len-1; in[outlen] != 0x80; outlen--);
+			outlen++;
+			break;
+		default:
+			return 0;
+	}
+	memcpy(out, in, outlen);
 	memset(&out[outlen], 0, len-outlen);
-    return outlen;
+	return outlen;
 }
 
 size_t hashlib_AESPadMessage(const uint8_t* in, size_t len, uint8_t* out, uint8_t schm){
-    size_t blocksize=16, padded_len;
-    if(in==NULL) return 0;
-    if(out==NULL) return 0;
-    if(len==0) return 0;
-    if((len % blocksize) == 0) padded_len = len + blocksize;
-    else padded_len = (( len / blocksize ) + 1) * blocksize;
-    switch(schm){
-        case SCHM_PKCS7:
-            memset(&out[len], padded_len-len, padded_len-len);
-            break;
-        case SCHM_ISO2:
-            memset(&out[len], 0, padded_len-len);
-            out[len] |= 0b10000000;
-            break;
-        default:
-            return 0;
-    }
-    memcpy(out, in, len);
-    return padded_len;
+	size_t blocksize=16, padded_len;
+	if(in==NULL) return 0;
+	if(out==NULL) return 0;
+	if(len==0) return 0;
+	if((len % blocksize) == 0) padded_len = len + blocksize;
+	else padded_len = (( len / blocksize ) + 1) * blocksize;
+	switch(schm){
+		case SCHM_PKCS7:
+			memset(&out[len], padded_len-len, padded_len-len);
+			break;
+		case SCHM_ISO2:
+			memset(&out[len], 0, padded_len-len);
+			out[len] |= 0b10000000;
+			break;
+		default:
+			return 0;
+	}
+	memcpy(out, in, len);
+	return padded_len;
 }
 
 enum _authmodes{
@@ -1398,7 +1398,7 @@ enum _authmodes{
 };
 
 
-     
+
 
 
 enum _sig_algorithms {
@@ -1407,11 +1407,11 @@ enum _sig_algorithms {
 };
 
 bool hashlib_ReverseEndianness(const uint8_t* in, uint8_t* out, size_t len){
-    if(in==NULL || out==NULL) return false;
-    if(len==0) return false;
-    for(size_t i=0; i<len; i++)
-        out[len-i-1] = in[i];
-    return true;
+	if(in==NULL || out==NULL) return false;
+	if(len==0) return false;
+	for(size_t i=0; i<len; i++)
+		out[len-i-1] = in[i];
+	return true;
 }
 
 
@@ -1423,15 +1423,15 @@ bool hashlib_ReverseEndianness(const uint8_t* in, uint8_t* out, size_t len){
 #define PBKDF2_SALT_LEN 16
 #define SHA256_OUTSIZE  32
 #define REVERSE_LONG(n) ((unsigned long) (((n & 0xff) << 24) | \
-                                          ((n & 0xff00) << 8) | \
-                                          ((n & 0xff0000) >> 8) | \
-                                          ((n & 0xff000000) >> 24)))
-                                          
+((n & 0xff00) << 8) | \
+((n & 0xff0000) >> 8) | \
+((n & 0xff000000) >> 24)))
+
 
 typedef struct _sha256hmac_ctx {
-    uint8_t ipad[64];       /**< holds the key xored with a magic value to be hashed with the inner digest */
-    uint8_t opad[64];       /**< holds the key xored with a magic value to be hashed with the outer digest */
-    uint8_t data[64];		/**< holds sha-256 block for transformation */
+	uint8_t ipad[64];       /**< holds the key xored with a magic value to be hashed with the inner digest */
+	uint8_t opad[64];       /**< holds the key xored with a magic value to be hashed with the outer digest */
+	uint8_t data[64];		/**< holds sha-256 block for transformation */
 	uint8_t datalen;		/**< holds the current length of data in data[64] */
 	uint8_t bitlen[8];		/**< holds the current length of transformed data */
 	uint32_t state[8];		/**< holds hash state for transformed data */
@@ -1443,82 +1443,83 @@ typedef struct _sha256hmac_ctx {
  * @note If you are hashing multiple data streams concurrently, allocate a seperate context for each.
  ********************************************************************************************************************/
 typedef struct _hmac_ctx {
-    uint24_t fn_init;       /**< pointer to an initialization method for the given hash algorithm */
-    uint24_t fn_update;     /**< pointer to the update method for the given hash algorithm */
-    uint24_t fn_final;      /**< pointer to the digest output method for the given hash algorithm */
-    union _hmac {           /**< a union of computational states for various hashes */
-        sha256hmac_ctx sha256hmac;
-    } Hmac;
+	uint24_t fn_init;       /**< pointer to an initialization method for the given hash algorithm */
+	uint24_t fn_update;     /**< pointer to the update method for the given hash algorithm */
+	uint24_t fn_final;      /**< pointer to the digest output method for the given hash algorithm */
+	union _hmac {           /**< a union of computational states for various hashes */
+		sha256hmac_ctx sha256hmac;
+	} Hmac;
 } hmac_ctx;
 
 #define CEMU_CONSOLE ((char*)0xFB0000)
 /*
-void hashlib_HMACSha256Init(hmac_ctx *hmac, const uint8_t* key, size_t keylen){
-    size_t i;
-    uint8_t sum[64] = {0};
-    if(keylen > 64){
-        hashlib_Sha256Init(&hmac->sha256_ctx);
-        hashlib_Sha256Update(&hmac->sha256_ctx, key, keylen);
-        hashlib_Sha256Final(&hmac->sha256_ctx, sum);
-        keylen = 32;
-    }
-    else memcpy(sum, key, keylen);
-    memset( hmac->ipad, 0x36, 64 );
-    memset( hmac->opad, 0x5C, 64 );
-    for( i = 0; i < 64; i++ ){
-        hmac->ipad[i] ^= sum[i];
-        hmac->opad[i] ^= sum[i];
-    }
-    hashlib_Sha256Init(&hmac->sha256_ctx);
-    hashlib_Sha256Update(&hmac->sha256_ctx, hmac->ipad, 64);
-}
-
-void hashlib_HMACSha256Update(hmac_ctx *hmac, const uint8_t* msg, size_t len){
-    hashlib_Sha256Update(&hmac->sha256_ctx, msg, len);
-}
-
-void hashlib_HMACSha256Final(hmac_ctx* hmac, uint8_t *output){
-    uint8_t tmpbuf[32];
-    hmac_ctx tmp;
-    memcpy(&tmp, hmac, sizeof(tmp));
-    hashlib_Sha256Final( &tmp.sha256_ctx, tmpbuf );
-    
-    hashlib_Sha256Init( &tmp.sha256_ctx);
-    hashlib_Sha256Update( &tmp.sha256_ctx, hmac->opad, 64 );
-    hashlib_Sha256Update( &tmp.sha256_ctx, tmpbuf, 32);
-    hashlib_Sha256Final( &tmp.sha256_ctx, output );
-}
-
-*/
+ void hashlib_HMACSha256Init(hmac_ctx *hmac, const uint8_t* key, size_t keylen){
+ size_t i;
+ uint8_t sum[64] = {0};
+ if(keylen > 64){
+ hashlib_Sha256Init(&hmac->sha256_ctx);
+ hashlib_Sha256Update(&hmac->sha256_ctx, key, keylen);
+ hashlib_Sha256Final(&hmac->sha256_ctx, sum);
+ keylen = 32;
+ }
+ else memcpy(sum, key, keylen);
+ memset( hmac->ipad, 0x36, 64 );
+ memset( hmac->opad, 0x5C, 64 );
+ for( i = 0; i < 64; i++ ){
+ hmac->ipad[i] ^= sum[i];
+ hmac->opad[i] ^= sum[i];
+ }
+ hashlib_Sha256Init(&hmac->sha256_ctx);
+ hashlib_Sha256Update(&hmac->sha256_ctx, hmac->ipad, 64);
+ }
+ 
+ void hashlib_HMACSha256Update(hmac_ctx *hmac, const uint8_t* msg, size_t len){
+ hashlib_Sha256Update(&hmac->sha256_ctx, msg, len);
+ }
+ 
+ void hashlib_HMACSha256Final(hmac_ctx* hmac, uint8_t *output){
+ uint8_t tmpbuf[32];
+ hmac_ctx tmp;
+ memcpy(&tmp, hmac, sizeof(tmp));
+ hashlib_Sha256Final( &tmp.sha256_ctx, tmpbuf );
+ 
+ hashlib_Sha256Init( &tmp.sha256_ctx);
+ hashlib_Sha256Update( &tmp.sha256_ctx, hmac->opad, 64 );
+ hashlib_Sha256Update( &tmp.sha256_ctx, tmpbuf, 32);
+ hashlib_Sha256Final( &tmp.sha256_ctx, output );
+ }
+ 
+ */
 
 void hexdump(uint8_t *addr, size_t len, uint8_t *label){
-    if(label) sprintf(CEMU_CONSOLE, "\n%s\n", label);
-    else sprintf(CEMU_CONSOLE, "\n");
-    for(size_t rem_len = len, ct=1; rem_len>0; rem_len--, addr++, ct++){
-        sprintf(CEMU_CONSOLE, "%02X ", *addr);
-        if(!(ct%AES_BLOCKSIZE)) sprintf(CEMU_CONSOLE, "\n");
-    }
-    sprintf(CEMU_CONSOLE, "\n");
+	if(label) sprintf(CEMU_CONSOLE, "\n%s\n", label);
+	else sprintf(CEMU_CONSOLE, "\n");
+	for(size_t rem_len = len, ct=1; rem_len>0; rem_len--, addr++, ct++){
+		sprintf(CEMU_CONSOLE, "%02X ", *addr);
+		if(!(ct%AES_BLOCKSIZE)) sprintf(CEMU_CONSOLE, "\n");
+	}
+	sprintf(CEMU_CONSOLE, "\n");
 }
 
 
-    
-    
+
+
 char hexc[16] = "0123456789ABCDEF";
 bool hashlib_DigestToHexStr(const uint8_t* digest, size_t len, uint8_t* hexstr){
-    if(digest==NULL || hexstr==NULL || len==0) return false;
-    size_t j = 0;
-    for (size_t i=0; i<len; i++) {
-        hexstr[j++] = hexc[digest[i]>>4];
-        hexstr[j++] = hexc[digest[i]&15];
-    }
-    hexstr[j] = 0;
-    return true;
+	if(digest==NULL || hexstr==NULL || len==0) return false;
+	size_t j = 0;
+	for (size_t i=0; i<len; i++) {
+		hexstr[j++] = hexc[digest[i]>>4];
+		hexstr[j++] = hexc[digest[i]&15];
+	}
+	hexstr[j] = 0;
+	return true;
 }
 
 bool hashlib_CompareDigest(uint8_t *dig1, uint8_t *dig2, size_t len){
-    bool result = false;
-    for(size_t i=0; i<len; i++)
-        result |= (dig1[i] ^ dig2[i]);
-    return !result;
+	bool result = false;
+	for(size_t i=0; i<len; i++)
+		result |= (dig1[i] ^ dig2[i]);
+	return !result;
 }
+
