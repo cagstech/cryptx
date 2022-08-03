@@ -457,7 +457,10 @@ typedef enum {
  * @param iv Initialization vector, a buffer equal to the block size that is pseudo-random.
  * @param flags A series of flags to configure the AES context with. This is the bitwise OR of any non-default cipher options. Ex:
  *      @code
- *          aes_init(ctx, key, sizeof key, iv, AES_MODE_CTR | PAD_ISO2);
+ *          aes_init(ctx, key, sizeof key, iv, AES_MODE_CTR | AES_CTR_COUNTERLEN(4));
+ *          // this sets CTR mode and sets the counter to 4 bytes (32 bits)
+ *          // since the nonce length is 8 bytes by default, this actually means the IV format is:
+ *          // [nonce 8 bytes] [counter 4 bytes] [suffix 4 bytes]
  *      @endcode
  * @note Do not edit a context manually. You may corrupt the cipher state.
  * @note Contexts are not bidirectional due to being stateful. If you need to process both encryption and decryption, initialize seperate contexts
