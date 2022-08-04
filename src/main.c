@@ -150,79 +150,8 @@ rsa_error_t hashlib_RSAEncrypt(const uint8_t* msg, size_t msglen, uint8_t *ct, c
  The RNG is seeded using the resulting value
  */
 
-#define NUM_BIT_TESTS 2000
-#define MAX_DEVIATION (NUM_BIT_TESTS / 3)
-#define BUS_MEM_START (0xD65800)
-#define BUS_MEM_STOP (0xD66000)
-bool hashlib_CSPRNGInit(void){
-	// run 2000 tests
-	// allow +/- 800
-	volatile uint8_t *addr = NULL;
-	size_t lowest_deviation = MAX_DEVIATION, current_deviation;
-	for(volatile uint8_t* byte = BUS_MEM_START; byte < BUS_MEM_STOP; byte++){
-		for(uint8_t k=0; k<8; k++){
-			size_t count = 0;
-			for(uint24_t j=0; j<NUM_BIT_TESTS; j++)
-				if(((*byte) >> k) & 1) count++;
-			current_deviation = (count > 1000) ? count - 1000 : 1000 - count;
-			if(current_deviation < lowest_deviation){
-				lowest_deviation = current_deviation;
-				addr = byte;
-			}
-		}
-	}
-	csprng_state.eread = addr;//some address
-	return hashlib_CSPRNGAddEntropy();
-}
 
-bool hashlib_CSPRNGAddEntropy(void){
-	//
-	volatile uint8_t* eread = csprng_state.eread;
-	if(eread==NULL) return false;
-	for(uint24_t i=0; i < EPOOL_SIZE; i++)
-		csprng_state.epool[i] ^= *eread;
-	return true;
-}
-
-#define rand ((uint8_t*)0xE30800+192)
-#define SHA_MBUFFER ((uint32_t*)rand + 4)
-#define SHA_CTX	(((SHA256_CTX*)SHA_MBUFFER + 64*4))
-uint32_t hashlib_CSPRNGRandom(void){
-	//uint32_t mbuffer[80];
-	uint8_t ctr = 5;
-	while((!csprng_state.eread) && ctr--) hashlib_CSPRNGInit();
-	if(!csprng_state.eread) return 0;
-	//uint8_t rand[4] = {0};    // initialize u32. Don't assign a value so it's filled with garbage
-	memset(rand, 0, 4);
-	uint32_t* randint = (uint32_t*)rand;
-	uint8_t hash[32];
-	//SHA256_CTX ctx;
-	volatile uint8_t* eread = csprng_state.eread;
-	if(eread==NULL) return 0;
-	for(uint8_t i = 0; i < 4; i++)
-		rand[i] ^= *eread;  // read *eread 4 times, XORing the value and writing it into each byte of rand[]
-	hashlib_Sha256Init(SHA_CTX);
-	hashlib_Sha256Update(SHA_CTX, &csprng_state.epool, EPOOL_SIZE);
-	hashlib_Sha256Final(SHA_CTX, &hash);
-	
-	for(uint8_t i = 0; i<32; i+=4){ // break the SHA256 into 4-byte segments and XOR it with each block
-		rand[0] ^= hash[i];
-		rand[1] ^= hash[i+1];
-		rand[2] ^= hash[i+2];
-		rand[3] ^= hash[i+3];
-	}
-	hashlib_CSPRNGAddEntropy();
-	//memcpy(&randint, &rand, 4);
-	return *randint;
-}
-
-void hashlib_RandomBytes(uint8_t* buffer, size_t size){
-	for(size_t i = 0; i<size; i+=4){
-		uint32_t r = hashlib_CSPRNGRandom();
-		memcpy(buffer+i, &r, ((size-i)>4) ? 4 : size-i);
-	}
-}
-
+// sprng stuff done in asm, removed from C
 
 /* #define ROTLEFT(a,b) (((a) << (b)) | ((a) >> (32-(b))))
  #define ROTRIGHT(a,b) (((a) >> (b)) | ((a) << (32-(b))))
@@ -1523,3 +1452,6 @@ bool hashlib_CompareDigest(uint8_t *dig1, uint8_t *dig2, size_t len){
 	return !result;
 }
 
+int main(void){
+	
+}
