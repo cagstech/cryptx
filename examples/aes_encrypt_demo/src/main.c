@@ -68,9 +68,11 @@ int main(void)
     error = aes_init(&ctx, key, KEYSIZE, iv, PAD_ISO2);
     #endif
     #ifdef CTR_MODE
-    error = aes_init(&ctx, key, KEYSIZE, iv, AES_MODE_CTR | AES_CTR_NONCELEN(12) | AES_CTR_COUNTERLEN(4));
+	error = aes_init(&ctx, key, KEYSIZE, iv, AES_MODE_CTR | AES_CTR_NONCELEN(4) | AES_CTR_COUNTERLEN(8));
     #endif
     sprintf(CEMU_CONSOLE, "aes ctx init done, exit code %u\n", error);
+	sprintf(CEMU_CONSOLE, "nonce len, %u\n", ctx.mode.ctr.counter_pos_start);
+	sprintf(CEMU_CONSOLE, "counter len, %u\n", ctx.mode.ctr.counter_len);
     
     // encrypt message 1 and output return code and encrypted data for testing
     error = aes_encrypt(&ctx, str1, msg1_len, buf1);
