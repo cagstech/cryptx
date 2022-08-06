@@ -28,9 +28,10 @@ int main(void)
     // initialize the secure RNG. Do not forget this!!!
     if(!csrand_init()) return 1;
     
+	// generate a single uint32_t
 	sprintf(CEMU_CONSOLE, "The rand is %lu.\n", csrand_get());
     
-    // or fill a buffer to size with random
+    // or fill a buffer to size with random bytes
     csrand_fill(salt, SALT_LEN);
     strcpy(CEMU_CONSOLE, "The buffer contents are: \n");
     for(uint8_t i=0; i<SALT_LEN; i++)

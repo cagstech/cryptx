@@ -32,19 +32,20 @@ int main(void)
     uint8_t str[] = "The daring fox jumped over the dog.";
 	uint8_t ciphertext[MODSIZE];
     uint8_t pubkey[MODSIZE];
+	rsa_error_t error;
     
-    // this is for testing purposes, but this is not how you generate an RSA key.
-    // such a key should be odd and prime.
-    // may output encryption error
-    
+    // Always check for false return value from csrand_init()
     if(!csrand_init()) return 1;
+	
+	// RSA public keys are not generated in this manner
+	// you would generally receive said key from a remote host
     csrand_fill(pubkey, MODSIZE);
     pubkey[MODSIZE-1] |= 1;
     
 	sprintf(CEMU_CONSOLE, "\n\n----------------------------------\nHashlib RSA Demo\n");
 	hexdump(str, strlen(str), "---Original String---");
-	if(rsa_encrypt(str, strlen(str), ciphertext, pubkey, MODSIZE, SHA256)==RSA_OK)
-        hexdump(ciphertext, MODSIZE, "---RSA Encrypted---");
-    else sprintf(CEMU_CONSOLE, "encryption error");
+	error = rsa_encrypt(str, strlen(str), ciphertext, pubkey, MODSIZE, SHA256)
+	sprintf(CEMU_CONSOLE, "RSA encrypt done, exit code %u: \n", errror);
+	if(!error) hexdump(ciphertext, MODSIZE, "---RSA Encrypted---");
     return 0;
 }
