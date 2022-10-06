@@ -1,0 +1,168 @@
+	section	.text,"ax",@progbits
+	assume	adl = 1
+	section	.text,"ax",@progbits
+	public	_hexdump
+_hexdump:
+	ld	hl, -4
+	call	__frameset
+	ld	hl, (ix + 12)
+	ld	bc, -327680
+	ld	de, L_.str.1
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jq	nz, BB0_2
+	push	de
+	push	bc
+	call	_sprintf
+	jq	BB0_3
+BB0_2:
+	ld	de, L_.str
+	push	hl
+	push	de
+	push	bc
+	call	_sprintf
+	pop	hl
+BB0_3:
+	pop	hl
+	pop	hl
+	ld	iy, (ix + 6)
+	ld	hl, (ix + 9)
+	ld	de, -327680
+	ld	bc, 0
+BB0_5:
+	ld	a, c
+	inc	a
+	or	a, a
+	sbc	hl, bc
+	jq	z, BB0_9
+	lea	hl, iy + 0
+	ld	(ix + -3), bc
+	add	hl, bc
+	ld	(ix + -4), a
+	ld	a, (hl)
+	or	a, a
+	sbc	hl, hl
+	ld	l, a
+	push	hl
+	ld	hl, L_.str.2
+	push	hl
+	push	de
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	a, (ix + -4)
+	and	a, 15
+	or	a, a
+	ld	hl, L_.str.1
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	z, _sprintf
+	pop	hl
+	pop	hl
+	ld	bc, (ix + -3)
+	inc	bc
+	ld	de, -327680
+	ld	iy, (ix + 6)
+	ld	hl, (ix + 9)
+	jq	BB0_5
+BB0_9:
+	ld	hl, L_.str.1
+	push	hl
+	push	de
+	call	_sprintf
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_main
+_main:
+	ld	hl, -67
+	call	__frameset
+	ld	hl, _passwd
+	lea	de, ix + -64
+	ld	(ix + -67), de
+	push	hl
+	call	_strlen
+	pop	de
+	ld	de, 0
+	push	de
+	ld	de, 10
+	push	de
+	ld	de, 16
+	push	de
+	ld	de, _salt
+	push	de
+	ld	de, 64
+	push	de
+	ld	de, (ix + -67)
+	push	de
+	push	hl
+	ld	hl, _passwd
+	push	hl
+	call	_hmac_pbkdf2
+	ld	hl, 24
+	add	hl, sp
+	ld	sp, hl
+	ld	hl, L_.str.3
+	push	hl
+	ld	hl, 64
+	push	hl
+	ld	hl, (ix + -67)
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	pop	hl
+	ld.sis	hl, 10
+	ld	iy, -327680
+	ld	(iy), l
+	ld	(iy + 1), h
+	or	a, a
+	sbc	hl, hl
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.data,"aw",@progbits
+	public	_salt
+_salt:
+	db	"",352o,"S",255o,265o,"4",226o,334o,335o,331o,330o,361o,"PL",235o,373o,"M"
+
+	section	.data,"aw",@progbits
+	public	_passwd
+_passwd:
+	db	"testing123",000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str
+L_.str:
+	db	"",012o,"%s",012o,000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.1
+L_.str.1:
+	db	"",012o,000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.2
+L_.str.2:
+	db	"%02X ",000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.3
+L_.str.3:
+	db	"-PBKDF2 output-",000o
+
+	ident	"clang version 12.0.0 (https://github.com/jacobly0/llvm-project 170be88120e3aa88c20eea5615ba76b8f1d6c647)"
+	extern	__Unwind_SjLj_Register
+	extern	__Unwind_SjLj_Unregister
+	extern	_hmac_pbkdf2
+	extern	__frameset
+	extern	_sprintf
+	extern	_strlen

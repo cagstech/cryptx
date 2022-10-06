@@ -1,0 +1,230 @@
+	section	.text,"ax",@progbits
+	assume	adl = 1
+	section	.text,"ax",@progbits
+	public	_hexdump
+_hexdump:
+	ld	hl, -4
+	call	__frameset
+	ld	hl, (ix + 12)
+	ld	bc, -327680
+	ld	de, _.str.1
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	nz, BB0_2
+	push	de
+	push	bc
+	call	_sprintf
+	jr	BB0_3
+BB0_2:
+	ld	de, _.str
+	push	hl
+	push	de
+	push	bc
+	call	_sprintf
+	pop	hl
+BB0_3:
+	pop	hl
+	pop	hl
+	ld	iy, (ix + 6)
+	ld	de, (ix + 9)
+	ld	bc, -327680
+	or	a, a
+	sbc	hl, hl
+	ld	(ix - 3), hl
+	ex	de, hl
+BB0_4:
+	ld	de, (ix - 3)
+	ld	a, e
+	inc	a
+	or	a, a
+	sbc	hl, de
+	jr	z, BB0_6
+	lea	hl, iy
+	ld	de, (ix - 3)
+	add	hl, de
+	ld	de, 0
+	ld	e, (hl)
+	push	de
+	ld	hl, _.str.2
+	push	hl
+	push	bc
+	ld	(ix - 4), a
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	a, (ix - 4)
+	and	a, 15
+	or	a, a
+	ld	hl, _.str.1
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	z, _sprintf
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 3)
+	inc	hl
+	ld	(ix - 3), hl
+	ld	bc, -327680
+	ld	iy, (ix + 6)
+	ld	hl, (ix + 9)
+	jr	BB0_4
+BB0_6:
+	ld	hl, _.str.1
+	push	hl
+	push	bc
+	call	_sprintf
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_main
+_main:
+	ld	hl, -229
+	call	__frameset
+	ld	hl, _str
+	lea	de, ix - 120
+	ld	bc, -220
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), de
+	push	hl
+	call	_strlen
+	ld	bc, -226
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	pop	hl
+	or	a, a
+	sbc	hl, hl
+	push	hl
+	ld	bc, -220
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hash_init
+	pop	hl
+	pop	hl
+	bit	0, a
+	jp	z, BB1_2
+	ld	bc, -217
+	lea	iy, ix
+	add	iy, bc
+	lea	hl, iy + 65
+	push	ix
+	ld	bc, -229
+	add	ix, bc
+	ld	(ix), hl
+	pop	ix
+	lea	hl, iy
+	ld	bc, -223
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	ld	bc, -226
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, _str
+	push	hl
+	ld	bc, -220
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hash_update
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -229
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -220
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hash_final
+	pop	hl
+	pop	hl
+	ld	bc, -223
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, 32
+	push	hl
+	ld	bc, -229
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_digest_tostring
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -223
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_strcpy
+	pop	hl
+	pop	hl
+	ld	hl, -327680
+	ld.sis	de, 10
+	ld	(hl), e
+	inc	hl
+	ld	(hl), d
+	or	a, a
+	sbc	hl, hl
+	jr	BB1_3
+BB1_2:
+	ld	hl, 1
+BB1_3:
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.data,"aw",@progbits
+	public	_str
+_str:
+	db	"The daring fox jumped over the rabid kitten and is sleeping inside.", 0
+
+	section	.rodata,"a",@progbits
+	private	_.str
+_.str:
+	db	10, "%s", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.1
+_.str.1:
+	db	10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.2
+_.str.2:
+	db	"%02X ", 0
+
+	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"
+	extern	__Unwind_SjLj_Register
+	extern	__Unwind_SjLj_Unregister
+	extern	__frameset
+	extern	_hash_init
+	extern	_strcpy
+	extern	_sprintf
+	extern	_hash_final
+	extern	_hash_update
+	extern	_strlen
+	extern	_digest_tostring

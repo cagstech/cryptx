@@ -1,0 +1,195 @@
+	section	.text,"ax",@progbits
+	assume	adl = 1
+	section	.text,"ax",@progbits
+	public	_hexdump
+_hexdump:
+	ld	hl, -4
+	call	__frameset
+	ld	hl, (ix + 12)
+	ld	bc, -327680
+	ld	de, L_.str.1
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jq	nz, BB0_2
+	push	de
+	push	bc
+	call	_sprintf
+	jq	BB0_3
+BB0_2:
+	ld	de, L_.str
+	push	hl
+	push	de
+	push	bc
+	call	_sprintf
+	pop	hl
+BB0_3:
+	pop	hl
+	pop	hl
+	ld	iy, (ix + 6)
+	ld	hl, (ix + 9)
+	ld	de, -327680
+	ld	bc, 0
+BB0_5:
+	ld	a, c
+	inc	a
+	or	a, a
+	sbc	hl, bc
+	jq	z, BB0_9
+	lea	hl, iy + 0
+	ld	(ix + -3), bc
+	add	hl, bc
+	ld	(ix + -4), a
+	ld	a, (hl)
+	or	a, a
+	sbc	hl, hl
+	ld	l, a
+	push	hl
+	ld	hl, L_.str.2
+	push	hl
+	push	de
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	a, (ix + -4)
+	and	a, 15
+	or	a, a
+	ld	hl, L_.str.1
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	z, _sprintf
+	pop	hl
+	pop	hl
+	ld	bc, (ix + -3)
+	inc	bc
+	ld	de, -327680
+	ld	iy, (ix + 6)
+	ld	hl, (ix + 9)
+	jq	BB0_5
+BB0_9:
+	ld	hl, L_.str.1
+	push	hl
+	push	de
+	call	_sprintf
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_main
+_main:
+	ld	hl, -53
+	call	__frameset
+	ld	de, _str
+	lea	hl, ix + -50
+	ld	(ix + -53), hl
+	push	de
+	call	_strlen
+	pop	de
+	ld	de, 0
+	push	de
+	ld	de, 50
+	push	de
+	ld	de, (ix + -53)
+	push	de
+	push	hl
+	ld	hl, _str
+	push	hl
+	call	_hash_mgf1
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, L_.str.3
+	push	hl
+	ld	hl, 50
+	push	hl
+	ld	hl, (ix + -53)
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 50
+	push	hl
+	ld	hl, _mgf1_test
+	push	hl
+	ld	hl, (ix + -53)
+	push	hl
+	call	_digest_compare
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	l, 1
+	xor	a, l
+	bit	0, a
+	ld	hl, 13
+	push	hl
+	ld	hl, L_.str.4
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	z, _memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, -327680
+	ld.sis	de, 10
+	ld	(hl), e
+	inc	hl
+	ld	(hl), d
+	or	a, a
+	sbc	hl, hl
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.data,"aw",@progbits
+	public	_str
+_str:
+	db	"The daring fox jumped over the dog.",000o
+
+	section	.data,"aw",@progbits
+	public	_mgf1_test
+_mgf1_test:
+	db	"Z",222o,030o,304o,"]",206o,"b",253o,"+a",004o,"pU",005o,024o,":",004o,"bo",357o,354o,224o,033o,"ID",303o,270o,"![",317o,";",230o,"u",330o,"t4A",266o,"=3",313o,350o,"(",321o,";",274o,300o,";:",370o
+
+	section	.rodata,"a",@progbits
+	private	L_.str
+L_.str:
+	db	"",012o,"%s",012o,000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.1
+L_.str.1:
+	db	"",012o,000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.2
+L_.str.2:
+	db	"%02X ",000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.3
+L_.str.3:
+	db	"-MGF1 output-",000o
+
+	section	.rodata,"a",@progbits
+	private	L_.str.4
+L_.str.4:
+	db	"MGF1 correct",000o
+
+	ident	"clang version 12.0.0 (https://github.com/jacobly0/llvm-project 170be88120e3aa88c20eea5615ba76b8f1d6c647)"
+	extern	__Unwind_SjLj_Register
+	extern	__Unwind_SjLj_Unregister
+	extern	__frameset
+	extern	_sprintf
+	extern	_hash_mgf1
+	extern	_digest_compare
+	extern	_strlen
+	extern	_memcpy

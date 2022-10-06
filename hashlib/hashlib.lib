@@ -1,0 +1,12 @@
+	library	HASHLIB, 10
+
+	export	hash_init
+	export	hash_update
+	export	hash_final
+	export	hash_mgf1
+	export	hmac_init
+	export	hmac_update
+	export	hmac_final
+	export	hmac_pbkdf2
+	export	digest_compare
+	export	digest_tostring

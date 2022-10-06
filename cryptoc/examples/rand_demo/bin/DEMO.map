@@ -1,0 +1,99 @@
+Section          Base   Top    High   Length
+---------------- ------ ------ ------ -------
+.icon            D1A882 D1A99D           11Bh
+.init.libs       D1A99D D1A9F5            58h
+.libs            D1A9F5 D1AA0B            16h
+.init.clock      D1AA0B D1AA0B             0h
+.init.reruncheck D1AA0B D1AA0B             0h
+.init            D1AA0B D1AA2B            20h
+.fini            D1AA2B D1AA5F            34h
+.text            D1AA5F D1C564          1B05h
+.data            D1C564 D1C564             0h
+.rodata          D1C564 D1C65C            F8h
+.init_array      000000 000000             0h
+.ctors           000000 000000             0h
+.dtors           000000 000000             0h
+.fini_array      000000 000000             0h
+.bss             D052C6 D052C6 D13FD8      0h
+.header          D1A87F D1A882             3h
+
+Label                       Value
+-------------------------   ------
+___low_bss                = D052C6
+___len_bss                = 000000
+___heaptop                = D13FD8
+___heapbot                = D052C6
+___libs                   = D1A9F5
+___init_array_count       = 000000
+___ctors_count            = 000000
+___dtors_count            = 000000
+___fini_array_count       = 000000
+__stack                   = D1A87E
+_os_DisableHomeTextBuffer = D1AA5F
+_os_EnableHomeTextBuffer  = D1AA71
+__vsnprintf               = D1AA83
+LJTI1_0                   = D1C564
+LJTI1_1                   = D1C582
+_sprintf                  = D1BA79
+__out_buffer              = D1BAA8
+__out_null                = D1BAC4
+__atoi                    = D1BACB
+__ntoa_long               = D1BB23
+__ftoa                    = D1BE5B
+__out_rev                 = D1C3A4
+L_.str                    = D1C5C7
+__ftoa.pow10              = D1C5CD
+L_.str.1                  = D1C5F5
+L_.str.2                  = D1C5F9
+L_.str.3                  = D1C5FE
+L_.str.4                  = D1C603
+__fneg                    = D1C4AE
+__frameset                = D1C4BB
+__frameset0               = D1C4C9
+__indcallhl               = D1C4D4
+__fadd                    = 000270
+__fcmp                    = 000274
+__fdiv                    = 000278
+__fmul                    = 000288
+__fsub                    = 000290
+__ftol                    = 00027C
+__iand                    = 000134
+__idivs                   = 00013C
+__imulu                   = 000158
+__indcall                 = 00015C
+__ior                     = 000168
+__ishl                    = 000174
+__ishrs                   = 00017C
+__ishru                   = 000184
+__ixor                    = 000198
+__ladd                    = 00019C
+__land                    = 0001A4
+__lcmpu                   = 0001AC
+__lcmpzero                = 0001B0
+__ldivu                   = 0001B8
+__lmulu                   = 0001CC
+__lor                     = 0001D8
+__lshrs                   = 0001E8
+__ltof                    = 000284
+__lxor                    = 0001FC
+__setflag                 = 000218
+__ultof                   = 000280
+_memcpy                   = 0000A4
+.missingappvar            = D1C607
+.libloadname              = D1C60C
+.libloadnamelen           = 000007
+.webaddress               = D1C614
+__start                   = D1AA0B
+___exithl                 = D1AA2B
+skip._exit                = D1AA2B
+skip.__Exit               = D1AA2B
+skip._abort               = D1AA2B
+_exit.sp                  = D1AA2C
+_exit.flash_wait_states   = D1AA36
+_main                     = D1C4D5
+L_.str                    = D1C629
+L_.str.1                  = D1C63B
+L_.str.2                  = D1C656
+_#csrand_init             = D1A9FF
+_#csrand_get              = D1AA03
+_#csrand_fill             = D1AA07
