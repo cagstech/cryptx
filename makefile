@@ -16,15 +16,24 @@
 
 include $(CURDIR)/../common.mk
 
-LIB_SRC := hashlib.asm
-LIB_LIB := hashlib.lib
-LIB_8XV := hashlib.8xv
-LIB_H   := hashlib.h
+LIB_SRC := hashlib/hashlib.asm cryptoc/cryptoc.asm
+LIB_LIB := hashlib/hashlib.lib cryptoc/cryptoc.lib
+LIB_8XV := hashlib/hashlib.8xv cryptoc/cryptoc.8xv
+LIB_H   := hashlib/hashlib.h cryptoc/cryptoc.h
+PKG_INC := -i hashlib/hashlib.8xv -i cryptoc/cryptoc.8xv
 
-all: $(LIB_8XV)
+all: hashlib cryptoc
 
-$(LIB_8XV): $(LIB_SRC)
-	sed -i '' 's/BB.*_/\.lbl_/g' hashlib.asm
+hashlib: hashlib/hashlib.8xv
+
+cryptoc: cryptoc/cryptoc.8xv
+
+hashlib/hashlib.8xv: hashlib/hashlib.asm
+	sed -i '' 's/BB.*_/\.lbl_/g' hashlib/hashlib.asm
+	$(Q)$(FASMG) $< $@
+
+cryptoc/cryptoc.8xv: cryptoc/cryptoc.asm
+	sed -i '' 's/BB.*_/\.lbl_/g' cryptoc/cryptoc.asm
 	$(Q)$(FASMG) $< $@
 
 clean:
@@ -37,8 +46,7 @@ install: all
 	$(Q)$(call COPY,$(LIB_H),$(INSTALL_H))
 	
 package: all
-	mkdir -p packages
-	git archive --output packages/hashlib_$(shell git rev-parse --short HEAD).zip HEAD .
+	convbin $(PKG_INC) -j 8x -o cryptx.8xg -k 8xg -name CryptX
 
 .PHONY: all clean install
 
