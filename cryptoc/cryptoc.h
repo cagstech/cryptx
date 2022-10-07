@@ -14,6 +14,7 @@
 
 #ifndef CRYPTOC_H
 #define CRYPTOC_H
+#include <hashlib.h>
 
 /*
  Cryptographically-Secure Random Number Generator (CS-RNG)
