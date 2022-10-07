@@ -59,38 +59,23 @@
  unmapped memory, this SRNG can also be considered a _hardware-based RNG_ (HWRNG).
  */
 
-/**
- * @brief Initializes the crypto-safe random number generator.
- *
- * The SRNG is initialized by polling the 512-bytes from address 0xD65800 to 0xD66000.
- * This region consists of unmapped memory that contains bus noise.
- * Each bit in that region is polled 1024 times and the address with the bit that is the least biased is selected.
- * That will be the byte the SRNG uses to generate entropy.
- * @return boolean: True if a sufficient entropy source was identified. False otherwise.
- * @note Catch and respond to a @b False return from this function. Do not proceed with generating nonces
- *      and encryption keys without ensuring the initialization was successful.
- * @note It may be a good idea to call this function in any program that uses hashlib functions for good measure.
- * @note The SRNG is not reliably entropic on CEmu, due to the emulation of bus noise using a deterministic RNG.
- -------------------------------------------*/
+/*********************************************
+ * @brief Initializes the secure psuedo-random generator
+ * @return [bool] True if init succeeded, False otherwise
+ */
 bool csrand_init(void);
 
-/**
- * @brief Generates a random 32-bit number.
- *
- * - Populates a 119-byte entropy pool by xor'ing 7 distinct reads from the unmapped address together per byte.
- * - Hashes the entropy pool using SHA-256.
- * - Breaks the SHA-256 hash into 8-byte blocks, then xor's all 8 bytes each block together, leaving four (4) composite bytes.
- * @return A psuedo random 32-bit integer.
- -------------------------------------------------------------*/
+/***********************************************
+ * @brief Returns a securely psuedo-random 32-bit integer
+ * @return [uint32_t] A 32-bit random number.
+ */
 uint32_t csrand_get(void);
 
-/**
- * @brief Fills a buffer to size with random bytes.
- *
- * @param buffer A pointer to a buffer to write random data to.
- * @param size Number of bytes to write.
- * @note @b buffer must be at least @b size bytes large.
- ---------------------------------------------------------------------------------*/
+/**************************************************
+ * @brief Fills a buffer with securely pseduo-random bytes
+ * @param buffer Pointer to a buffer to fill with random bytes
+ * @param size Size of the buffer to fill
+ */
 bool csrand_fill(void* buffer, size_t size);
 
 /*
@@ -108,13 +93,10 @@ bool csrand_fill(void* buffer, size_t size);
  the advent of quantum computing.
  */
 
-/**
+/*******************************
  * @typedef aes_ctx
- * Stores AES cipher configuration data, s.t. passing it to aes_encrypt/decrypt provides
- * data about cipher mode, padding mode (CBC), and counter length (CTR) without
- * requiring any additional arguments.
- -------------------------------------------------------------------------------------------------------------------*/
-
+ * Stores AES cipher configuration data.
+ */
 typedef struct _aes_cbc { uint8_t padding_mode; } aes_cbc_t;
 typedef struct _aes_ctr {
 	uint8_t counter_pos_start; uint8_t counter_len;
@@ -132,23 +114,20 @@ typedef struct _aes_ctx {
 	uint8_t op_assoc;                       /**< state-flag indicating if context is for encryption or decryption*/
 } aes_ctx;
 
-/**
+
+/*************************
  * @enum aes_cipher_modes
  * Supported AES cipher modes
- * Defaults to AES_MODE_CBC if unset.
- * @see aes_init
- -------------------------------------------*/
+ */
 enum aes_cipher_modes {
 	AES_MODE_CBC,       /**< selects CBC mode */
 	AES_MODE_CTR        /**< selects CTR mode */
 };
 
-/**
+/****************************
  * @enum aes_padding_schemes
  * Supported AES padding schemes
- * Defaults to PAD_PKCS7 if unset.
- * @see aes_init
- ------------------------------------------------*/
+ */
 enum aes_padding_schemes {
 	PAD_PKCS7,                  /**< PKCS#7 padding | DEFAULT */
 	PAD_DEFAULT = PAD_PKCS7,	/**< selects the scheme marked DEFAULT.
@@ -157,13 +136,13 @@ enum aes_padding_schemes {
 	PAD_ISO2 = 4,               /**< ISO-9797 M2 padding */
 };
 
-/**
+/*********************************************
  * @define AES_CTR_NONCELEN
  * Only has an effect when cipher is initialized to CTR mode.
  * Sets the length of the fixed prefix of the iniitalization vector.
  * Vaiid lengths: 1 <= len < block size
  * The prefix does not change as the counter increments.
- -----------------------------------------------------------------------------------*/
+ */
 #define AES_CTR_NONCELEN(len)   ((0x0f & len)<<4)
 
 /**
@@ -185,10 +164,11 @@ enum aes_padding_schemes {
 #define AES_CTR_COUNTERLEN(len) ((0x0f & len)<<8)
 
 
-/**
+
+/*******************************************
  * @def AES_BLOCKSIZE
- * Defines the blocksize of the AES cipher.
- -----------------------------------------------*/
+ * Defines the blocksize of the AES cipher
+ ******************************************************************/
 #define AES_BLOCKSIZE	16
 
 /**
@@ -197,12 +177,10 @@ enum aes_padding_schemes {
  -------------------------------------------------------------------------*/
 #define AES_IVSIZE		AES_BLOCKSIZE
 
-/**
+/**********************************
  * @def aes_outsize()
- *
  * Defines a macro to return the size of an AES ciphertext given a plaintext length.
  * Does not include space for an IV-prepend. See @b aes_extoutsize(len) for that.
- *
  * @param len The length of the plaintext.
  ------------------------------------------------------------*/
 #define aes_outsize(len) \
