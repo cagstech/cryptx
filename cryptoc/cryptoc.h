@@ -136,12 +136,12 @@ enum aes_padding_schemes {
 	PAD_ISO2 = 4,               /**< ISO-9797 M2 padding */
 };
 
-/*********************************************
+
+/********************************************
  * @define AES_CTR_NONCELEN
  * Only has an effect when cipher is initialized to CTR mode.
- * Sets the length of the fixed prefix of the iniitalization vector.
- * Vaiid lengths: 1 <= len < block size
- * The prefix does not change as the counter increments.
+ * Sets the length of the fixed prefix portion of the IV
+ * Valid lengths: 1<= len < block size
  */
 #define AES_CTR_NONCELEN(len)   ((0x0f & len)<<4)
 
