@@ -1,6 +1,6 @@
 /**
  *	@file cryptoc.h
- *	@brief	Cryptography Library for the TI-84+ CE
+ *	@brief	Provides standard encryption for the TI-84+ CE
  *
  *	Industry-Standard Cryptography for the TI-84+ CE
  *	- Secure Random Number Generator (SRNG)
