@@ -138,6 +138,7 @@ enum aes_padding_schemes {
 
 
 /********************************************
+ * @def AES_CTR_NONCELEN
  * Only has an effect when cipher is initialized to CTR mode.
  * Sets the length of the fixed prefix portion of the IV
  * Valid lengths: 1<= len < block size
@@ -145,6 +146,7 @@ enum aes_padding_schemes {
 #define AES_CTR_NONCELEN(len)   ((0x0f & len)<<4)
 
 /***********************************************
+ * @def AES_CTR_COUNTERLEN
  * Only has an effect when cipher is initialized to CTR mode.
  * Stores the length of the counter portion of the IV.
  * Valid lengths: 1 <= len < block size.
