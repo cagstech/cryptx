@@ -138,29 +138,17 @@ enum aes_padding_schemes {
 
 
 /********************************************
- * @define AES_CTR_NONCELEN
  * Only has an effect when cipher is initialized to CTR mode.
  * Sets the length of the fixed prefix portion of the IV
  * Valid lengths: 1<= len < block size
  */
 #define AES_CTR_NONCELEN(len)   ((0x0f & len)<<4)
 
-/**
- * @define AES_CTR_COUNTERLEN
+/***********************************************
  * Only has an effect when cipher is initialized to CTR mode.
- * Sets the length of the counter portion of the initialization vector.
- * Valid lengths: 1 <= len < block size
- * The counter increments by 1 with every block encrypted.
- * @b AES_CTR_COUNTERLEN and @b AES_CTR_NONCELEN work together to
- * define the behavior of the IV block in CTR mode. Defining the nonce as a field of
- * length N, the counter as a field of length C, and the suffix as a field of length S, the
- * IV behavior is defined as:
- * [ N-byte NONCE ] [ C-byte COUNTER ] [ S-byte SUFFIX].
- * The nonce and suffix are fixed portions of the IV.
- * The suffix will only exist if you explicitly define a length for the counter and the nonce
- * and they add up to less than the IV size.
- * Some libraries refer to the nonce as a "prefix"..
- --------------------------------------------------------------------*/
+ * Stores the length of the counter portion of the IV.
+ * Valid lengths: 1 <= len < block size.
+ */
 #define AES_CTR_COUNTERLEN(len) ((0x0f & len)<<8)
 
 
