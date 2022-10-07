@@ -71,6 +71,7 @@ typedef struct _hash_ctx {
     union _hash {           /**< a union of computational states for various hashes */
         sha256_ctx sha256;
     } Hash;
+	uint8_t digest_len;
 } hash_ctx;
  
  /*******************************
@@ -142,11 +143,10 @@ parties as part of the hash initialization. Thus, while normal hashes can be
 verified by anyone, only the parties with the key can validate using a HMAC hash.
 */
 
-/**
+/*******************************************
  * @typedef sha256hmac_ctx
  * Defines hash-state data for an instance of SHA-256.
- * @note This is internal to the struct hmac_ctx. You should never need to use this.
- -----------------------------------------------------------------------------------------------------------------*/
+ */
 typedef struct _sha256hmac_ctx {
     uint8_t ipad[64];       /**< holds the key xored with a magic value to be hashed with the inner digest */
     uint8_t opad[64];       /**< holds the key xored with a magic value to be hashed with the outer digest */
@@ -156,11 +156,10 @@ typedef struct _sha256hmac_ctx {
 	uint32_t state[8];		/**< holds hash state for transformed data */
 } sha256hmac_ctx;
 
-/**
+/*************************************
  * @typedef hmac_ctx
- * Defines hash-state data for an instance of SHA-256-HMAC.
- * @note If you are hashing multiple data streams concurrently, allocate a seperate context for each.
- --------------------------------------------------------------------------------------------------------------------------------------*/
+ * Defines hash-state data for an HMAC instance.
+ */
 typedef struct _hmac_ctx {
     bool (*init)(void* ctx, const void* key, size_t keylen);     /**< pointer to an initialization method for the given hash algorithm */
     void (*update)(void* ctx, const void* data, size_t len);     /**< pointer to the update method for the given hash algorithm */
@@ -170,7 +169,7 @@ typedef struct _hmac_ctx {
     } Hmac;
 } hmac_ctx;
 
-/**
+/*************************************************************
  *	@brief Context Initializer for HMAC
  *
  *	Initializes the given context with the starting state for the given HMAC algorithm.
@@ -180,10 +179,10 @@ typedef struct _hmac_ctx {
  *	@param keylen Length of @b key, in bytes.
  *  @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.
  *  @return Boolean. True if hash initialization succeeded. False if hash ID invalid.
- ----------------------------------------------------------------------------------------------------------------------------------------*/
+ */
 bool hmac_init(hmac_ctx* ctx, const void* key, size_t keylen, uint8_t hash_alg);
 
-/**
+/*********************************************
  *	@brief Updates the hmac context for the given data.
  *	@param ctx Pointer to an HMAC context.
  *	@param data Pointer to data to hash.
@@ -191,10 +190,10 @@ bool hmac_init(hmac_ctx* ctx, const void* key, size_t keylen, uint8_t hash_alg);
  *  @note You may use @b ctx.update() as an alternative to this function.
  *      If doing so, you must pass @b &ctx.Hmac instead of @b &ctx.
  *	@warning You must have an initialized hash context or a crash will ensue.
- -------------------------------------------------------------------------------------------------------------*/
+ */
 void hmac_update(hmac_ctx* ctx, const void* data, size_t len);
 
-/**
+/*************************************************
  *	@brief Finalize Context and Render Digest for HMAC
  *	@param ctx Pointer to an HMAC context.
  *	@param digest Pointer to a buffer to write the hash to.
@@ -202,10 +201,10 @@ void hmac_update(hmac_ctx* ctx, const void* data, size_t len);
  *  @note You may use @b ctx.final() as an alternative to this function.
  *      If doing so, you must pass @b &ctx.Hmac instead of @b &ctx.
  *  @warning You must have an initialized hash context or a crash will ensue.
- -----------------------------------------------------------------------------------------------------------*/
+ */
 void hmac_final(hmac_ctx* ctx, void* output);
 
-/**
+/*********************************************
  * @brief Password-Based Key Derivation Function
  *
  * Computes a key derived from a password, a 16-byte salt, and a given number of rounds.
@@ -223,7 +222,7 @@ void hmac_final(hmac_ctx* ctx, void* output);
  * hashing algorithms secure is the time needed to generate a rainbow table attack against it. More rounds means
  * a more secure key, but more time spent generating it. Current cryptography standards recommend in excess of 1000
  * rounds but that may not be feasible on the CE.
- -------------------------------------------------------------------*/
+ */
 bool hmac_pbkdf2(
     const char* password,
     size_t passlen,
@@ -237,16 +236,16 @@ bool hmac_pbkdf2(
 
 // Miscellaneous Functions
 
-/**
+/*********************************************
  * @brief Convert a digest to a valid hex string.
  * @param digest Pointer to a buffer or digest to convert.
  * @param len Number of bytes at @b digest to convert.
  * @param hexstr A buffer to write the output hex string to. Must be at least 2 * len + 1 bytes large.
- --------------------------------------------------------------------------------------------------------------------------------*/
+ */
 bool digest_tostring(const void* digest, size_t len, char* hexstr);
 
 
-/**
+/*********************************************
  * @brief Secure buffer comparison
  *
  * Evaluates the equality of two buffers using a method that offers resistance to timing attacks.
@@ -255,7 +254,7 @@ bool digest_tostring(const void* digest, size_t len, char* hexstr);
  * @param digest2 The second buffer to compare.
  * @param len The number of bytes to compare.
  * @return True if the buffers were equal. False if not equal.
- ----------------------------------------------------------------------------------------*/
+ */
 bool digest_compare(const void* digest1, const void* digest2, size_t len);
 
 
