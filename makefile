@@ -46,7 +46,7 @@ install: all
 	$(Q)$(call COPY,$(LIB_H),$(INSTALL_H))
 	
 package: all
-	convbin $(PKG_INC) -j 8x -o cryptx.8xg -k 8xg -name CryptX
+	convbin $(PKG_INC) -j 8x -o CryptX.8xg -k 8xg -name CryptX
 
 .PHONY: all clean install
 
