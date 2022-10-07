@@ -12,9 +12,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-#include <hashlib.h>
 #include <tice.h>
-#include <fileioc.h>
+#include <cryptoc.h>
 
 #define CEMU_CONSOLE ((char*)0xFB0000)
 #define SALT_LEN 16     // for example, a salt that is an IV for AES is 16 bytes long
@@ -22,7 +21,6 @@
 int main(void)
 {
     // reserve key schedule and key buffer, IV, and encrypt/decrypt buffers
-    ti_var_t fp;
     uint8_t salt[SALT_LEN];
 
     // initialize the secure RNG. Do not forget this!!!

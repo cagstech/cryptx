@@ -12,7 +12,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-#include <hashlib.h>
+#include <cryptoc.h>
 
 #define CEMU_CONSOLE ((char*)0xFB0000)
 char *str1 = "The lazy fox jumped over the dog!";
@@ -68,10 +68,10 @@ int main(void)
     
     // initialize the AES key schedule and set cipher mode
     #ifdef CBC_MODE
-    aes_init(&ctx, AES_MODE_CBC, key, KEYSIZE, iv);
+    aes_init(&ctx, key, KEYSIZE, iv, AES_MODE_CBC);
     #endif
     #ifdef CTR_MODE
-    aes_init(&ctx, AES_MODE_CTR, key, KEYSIZE, iv);
+    aes_init(&ctx, key, KEYSIZE, iv, AES_MODE_CTR);
     #endif
     sprintf(CEMU_CONSOLE, "init complete\n");
     
