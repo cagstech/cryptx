@@ -1,8 +1,7 @@
 /**
  *	@file hashlib.h
- *	@brief	Cryptography Library for the TI-84+ CE
+ *	@brief	Provides cryptographic hashing for the TI--84+ CE
  *
- *	Industry-Standard Cryptography for the TI-84+ CE
  *	- hash_sha256, hash_mgf1
  *  - hmac_sha256, hmac_pbkdf2
  *  - secure buffer comparison
@@ -20,20 +19,18 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-/**
+/**********************************************
  * @def fastRam_Safe
- *		Pointer to a region of fast RAM that is generally safe to use so long as you don't call Libload.
- * @warning Fast Memory gets clobbered by LibLoad. Don't keep long-term storage here if you plan to call LibLoad.
- -------------------------------------------------------------------------------------*/
+ * Pointer to a region of fast RAM that is generally safe to use
+ * as long as you don't call Libload.
+ */
 #define fastRam_Safe		((void*)0xE30A04)
  
- /**
+ /*********************************************
   * @def fastRam_Unsafe
-  *		Pointer to the start of the region of fast RAM, including the safe region above as well as
-  *		a region used by the library's csrng.
-  *	@warning Fast Memory gets clobbered by LibLoad. Don't keep long-term storage here if you plan to call LibLoad.
-  *	@warning If the CSRNG is run, anything you have stored here will be destroyed.
-  ----------------------------------------------------------------------------------*/
+  *	Pointer to the start of the region of fast RAM, including the safe region above as well as
+  *	a region used by the library's csrng.
+  */
 #define fastRam_Unsafe		((void*)0xE30800)
  
  
@@ -49,11 +46,12 @@ themselves and then compares that hash to the one included in the message. If th
 the message is complete and unaltered. If the hashes do not match, the message is incomplete
 or has been tampered with.
 */
-/**
+
+/**********************************************
  * @typedef sha256_ctx
  * Defines hash-state data for an instance of SHA-256.
- * @note This is internal to the struct hash_ctx. You should never need to use this.
- --------------------------------------------------------------------------------------------------------------------------*/
+ * This structure is internal. You should never need to use this.
+ */
 typedef struct _sha256_ctx {
 	uint8_t data[64];		/**< holds sha-256 block for transformation */
 	uint8_t datalen;		/**< holds the current length of data in data[64] */
@@ -61,47 +59,45 @@ typedef struct _sha256_ctx {
 	uint32_t state[8];		/**< holds hash state for transformed data */
 } sha256_ctx;
 
-/**
+/**************************************
  * @typedef hash_ctx
  * Defines universal hash-state data, including pointer to algorithm-specific handling methods and
  * a union of computational states for various hashes.
- * @note Allocate a seperate context for each seperate data stream you are hashing.
- -----------------------------------------------------------------------*/
+ */
 typedef struct _hash_ctx {
-    bool (*init)(void* ctx);                    				/**< pointer to an initialization method for the given hash algorithm */
+    bool (*init)(void* ctx);                    /**< pointer to an initialization method for the given hash algorithm */
     void (*update)(void* ctx, const void* data, size_t len);	/**< pointer to the update method for the given hash algorithm */
-    void (*final)(void* ctx, void* output);                     /**< pointer to the digest output method for the given hash algorithm */
+    void (*final)(void* ctx, void* output);		/**< pointer to the digest output method for the given hash algorithm */
     union _hash {           /**< a union of computational states for various hashes */
         sha256_ctx sha256;
     } Hash;
 } hash_ctx;
  
- /**
+ /*******************************
   * @enum hash_algorithms
   * Idenitifiers for selecting hash types.
-  * see hash_init()
-  -----------------------------------------------------*/
+  */
 enum hash_algorithms {
     SHA256,             /**< algorithm type identifier for SHA-256 */
 };
 
-/**
+/*********************************
  * @def SHA256_DIGEST_LEN
  * Binary length of the SHA-256 hash output.
- -------------------------------------------------------*/
+ */
 #define SHA256_DIGEST_LEN   32
 
-/**
+/**************************************************************
  *	@brief Hash initializer.
  *	Initializes the given context with the starting state for the given hash algorithm and
  *  populates pointers to the methods for update and final for the given hash..
  *	@param ctx Pointer to a hash context (hash_ctx).
  *  @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.
  *  @return Boolean. True if hash initialization succeeded. False if hash ID invalid.
- --------------------------------------------------------------------------------------------*/
+ */
 bool hash_init(hash_ctx* ctx, uint8_t hash_alg);
 
-/**
+/*********************************************************
  *	@brief Updates the hash context for the given data.
  *	@param ctx Pointer to a hash context.
  *	@param data Pointer to data to hash.
@@ -109,10 +105,10 @@ bool hash_init(hash_ctx* ctx, uint8_t hash_alg);
  *  @note You can use @b ctx.update() as an alternative to this function.
  *      If doing so, you must pass @b &ctx.Hash instead of @b &ctx.
  *	@warning You must have an initialized hash context or a crash will ensue.
- --------------------------------------------------------------------------------------------------------------*/
+ */
 void hash_update(hash_ctx* ctx, const void* data, size_t len);
 
-/**
+/*****************************************************
  *	@brief Finalize context and render digest for hash
  *	@param ctx Pointer to a hash context.
  *	@param digest Pointer to a buffer to write the hash to.
@@ -120,10 +116,10 @@ void hash_update(hash_ctx* ctx, const void* data, size_t len);
  *  @note You can use @b ctx.final() as an alternative to this function.
  *      If doing so, you must pass @b &ctx.Hash instead of @b &ctx.
  *  @warning You must have an initialized hash context or a crash will ensue.
- -----------------------------------------------------------------------------------*/
+ */
 void hash_final(hash_ctx* ctx, void* digest);
 
-/**
+/*************************************************
  *	@brief Arbitrary Length Hashing Function
  *
  *	Computes an arbitrary length hash from the given data using the given hashing algorithm.
@@ -134,7 +130,7 @@ void hash_final(hash_ctx* ctx, void* digest);
  *	@param outlen Number of bytes to write to @b outbuf.
  *  @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.
  *	@note @b outbuf must be at least @b outlen bytes large.
- ---------------------------------------------------------------------------------------------------------------------------------------*/
+ */
 bool hash_mgf1(const void* data, size_t datalen, void* outbuf, size_t outlen, uint8_t hash_alg);
 
 
