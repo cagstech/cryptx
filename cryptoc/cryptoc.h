@@ -153,26 +153,23 @@ enum aes_padding_schemes {
  */
 #define AES_CTR_COUNTERLEN(len) ((0x0f & len)<<8)
 
-
-
-/*******************************************
+/**********************************
  * @def AES_BLOCKSIZE
- * Defines the blocksize of the AES cipher
- ******************************************************************/
+ * Defines the block size of the AES cipher.
+ */
 #define AES_BLOCKSIZE	16
 
-/**
+/*****************************************
  * @def AES_IVSIZE
- * Defines the length of the AES initalization vector (IV).
- -------------------------------------------------------------------------*/
+ * Defines the length of the AES initialization vector (IV)
+ */
 #define AES_IVSIZE		AES_BLOCKSIZE
 
 /**********************************
  * @def aes_outsize()
  * Defines a macro to return the size of an AES ciphertext given a plaintext length.
  * Does not include space for an IV-prepend. See @b aes_extoutsize(len) for that.
- * @param len The length of the plaintext.
- ------------------------------------------------------------*/
+ */
 #define aes_outsize(len) \
 ((((len)%AES_BLOCKSIZE)==0) ? (len) + AES_BLOCKSIZE : (((len)>>4) + 1)<<4)
 
