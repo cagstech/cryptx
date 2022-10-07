@@ -165,7 +165,7 @@ enum aes_padding_schemes {
  */
 #define AES_IVSIZE		AES_BLOCKSIZE
 
-/**********************************
+/**********************************************************
  * @def aes_outsize()
  * Defines a macro to return the size of an AES ciphertext given a plaintext length.
  * Does not include space for an IV-prepend. See @b aes_extoutsize(len) for that.
@@ -173,21 +173,17 @@ enum aes_padding_schemes {
 #define aes_outsize(len) \
 ((((len)%AES_BLOCKSIZE)==0) ? (len) + AES_BLOCKSIZE : (((len)>>4) + 1)<<4)
 
-/**
+/***********************************************************************
  * @def aes_extoutsize()
- *
  * Defines a macro to return the size of an AES ciphertext with with an extra block added for the IV.
- *
- * @param len The length of the plaintext.
- ------------------------------------------------------------*/
+ */
 #define aes_extoutsize(len) \
 (aes_outsize((len)) + AES_IVSIZE)
 
-/**
+/*******************
  * @enum aes_error_t
- * AES Error Codes
- * (returned by AES functions)
- -----------------------------------------*/
+ * AES error codes
+ */
 typedef enum {
 	AES_OK,                             /**< AES operation completed successfully */
 	AES_INVALID_ARG,                    /**< AES operation failed, bad argument */
@@ -198,7 +194,7 @@ typedef enum {
 	AES_INVALID_OPERATION               /**< AES operation failed, used encrypt context for decrypt or vice versa */
 } aes_error_t;
 
-/**
+/********************************************************************
  * @brief Initializes a stateful AES cipher context to be used for encryption or decryption.
  * @param ctx Pointer to an AES cipher context to initialize..
  * @param key Pointer to an 128, 192, or 256 bit key to load into the AES context.
@@ -222,7 +218,7 @@ typedef enum {
  *          If you want a truly secure scheme, always append an HMAC to your message and use an application secret or unique key
  *          generated using a CSRNG to key the HMAC at both endpoints.
  * @return AES_OK if success, non-zero if failed. See aes_error_t.
- -----------------------------------------------------------------------------------------------*/
+ */
 aes_error_t aes_init(
 				aes_ctx* ctx,
 				const void* key,
@@ -230,7 +226,7 @@ aes_error_t aes_init(
 				const void* iv,
 				uint24_t flags);
 
-/**
+/*****************************************************
  * @brief General-Purpose AES Encryption
  * @param ctx Pointer to an AES cipher context.
  * @param plaintext Pointer to data to encrypt.
@@ -245,14 +241,14 @@ aes_error_t aes_init(
  * with the exception of intervening padding in CBC mode.
  * @note Once a  context is used for encryption, a stateful flag is set preventing the same context from being used for decryption.
  * @returns AES_OK if success, non-zero if failed. See aes_error_t.
- ---------------------------------------------------------------------------------------------*/
+ */
 aes_error_t aes_encrypt(
 					const aes_ctx* ctx,
 					const void* plaintext,
 					size_t len,
 					void* ciphertext);
 
-/**
+/******************************************************
  * @brief General-Purpose AES Decryption
  * @param ctx Pointer to AES cipher context.
  * @param ciphertext Pointer to data to decrypt.
@@ -263,7 +259,7 @@ aes_error_t aes_encrypt(
  * with the exception of intervening padding in CBC mode.
  * @note Once a context is used for decryption, a stateful flag is set preventing the same context from being used for encryption.
  * @returns AES_OK if success, non-zero if failed. See aes_error_t.
- ----------------------------------------------------------------------------------------------*/
+ */
 aes_error_t aes_decrypt(
 					const aes_ctx* ctx,
 					const void* ciphertext,
@@ -292,10 +288,10 @@ aes_error_t aes_decrypt(
  
  */
 
-/**
+/*************************
  * @enum rsa_error_t
- * RSA Encryption Error Codes
- -------------------------------------------*/
+ * RSA error codes
+ */
 typedef enum {
 	RSA_OK,                         /**< RSA encryption completed successfully */
 	RSA_INVALID_ARG,                /**< RSA encryption failed, bad argument */
