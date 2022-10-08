@@ -1,6 +1,6 @@
 /**
  *	@file cryptoc.h
- *	@brief	Cryptography Library for the TI-84+ CE
+ *	@brief	Provides standard encryption for the TI-84+ CE
  *
  *	Industry-Standard Cryptography for the TI-84+ CE
  *	- Secure Random Number Generator (SRNG)
@@ -14,6 +14,7 @@
 
 #ifndef CRYPTOC_H
 #define CRYPTOC_H
+#include <hashlib.h>
 
 /*
  Cryptographically-Secure Random Number Generator (CS-RNG)
@@ -288,7 +289,7 @@ aes_error_t aes_decrypt(
  
  */
 
-/*************************
+/******************
  * @enum rsa_error_t
  * RSA error codes
  */
@@ -300,7 +301,7 @@ typedef enum {
 	RSA_ENCODING_ERROR              /**< RSA encryption failed, OAEP encoding error */
 } rsa_error_t;
 
-/**
+/*****************************************************
  * @brief RSA Encryption
  *
  * Performs an in-place RSA encryption of a message
@@ -318,7 +319,7 @@ typedef enum {
  * @note The @b msg will be encoded using OAEP before encryption.
  * @note msg and pubkey are both treated as byte arrays.
  * @return rsa_error_t
- ---------------------------------------------------------------*/
+ */
 rsa_error_t rsa_encrypt(
 					const void* msg,
 					size_t msglen,
@@ -342,7 +343,7 @@ rsa_error_t rsa_encrypt(
  or signature algorithms, a few internal functions are exposed here.
  */
 
-/**
+/*****************************************************
  * @brief AES single-block ECB mode encryption function
  * @param block_in Block of data to encrypt.
  * @param block_out Buffer to write encrypted block of data.
@@ -350,10 +351,10 @@ rsa_error_t rsa_encrypt(
  * @note @b block_in and @b block_out are aliasable.
  * @warning ECB mode encryption is insecure (see many-time pad vulnerability).
  *     Use ECB-mode block encryptors as a constructor for custom cipher modes only.
- -----------------------------------------------------------------------------------------------------------------------------*/
+ */
 void aes_ecb_unsafe_encrypt(const void *block_in, void *block_out, aes_ctx *ks);
 
-/**
+/*****************************************************
  * @brief AES single-block ECB mode decryption function
  * @param block_in Block of data to encrypt.
  * @param block_out Buffer to write encrypted block of data.
@@ -361,10 +362,10 @@ void aes_ecb_unsafe_encrypt(const void *block_in, void *block_out, aes_ctx *ks);
  * @note @b block_in and @b block_out are aliasable.
  * @warning ECB mode encryption is insecure (see many-time pad vulnerability).
  *     Use ECB-mode block encryptors as a constructor for custom cipher modes only.
- -----------------------------------------------------------------------------------------------------------------------------*/
+ */
 void aes_ecb_unsafe_decrypt(const void *block_in, void *block_out, aes_ctx *ks);
 
-/**
+/*************************************************************
  * @brief Optimal Asymmetric Encryption Padding (OAEP) encoder for RSA
  * @param plaintext Pointer to the plaintext message to encode.
  * @param len Lengfh of the message to encode.
@@ -374,7 +375,7 @@ void aes_ecb_unsafe_decrypt(const void *block_in, void *block_out, aes_ctx *ks);
  * @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.
  * @return Boolean | True if encoding succeeded, False if encoding failed.
  * @note @b plaintext and @b encoded are aliasable.
- ----------------------------------------------------------------*/
+ */
 bool oaep_encode(
 			const void *plaintext,
 			size_t len,
@@ -383,7 +384,7 @@ bool oaep_encode(
 			const uint8_t *auth,
 			uint8_t hash_alg);
 
-/**
+/************************************************
  * @brief OAEP decoder for RSA
  * @param encoded Pointer to the plaintext message to decode.
  * @param len Lengfh of the message to decode.
@@ -392,7 +393,7 @@ bool oaep_encode(
  * @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.
  * @return Boolean | True if encoding succeeded, False if encoding failed.
  * @note @b plaintext and @b encoded are aliasable.
- ------------------------------------------------------------*/
+ */
 bool oaep_decode(
 			const void *encoded,
 			size_t len,
@@ -400,7 +401,7 @@ bool oaep_decode(
 			const uint8_t *auth,
 			uint8_t hash_alg);
 
-/**
+/*****************************************************
  * @brief Probabilistic Sisgnature Scheme (PSS) encoder for RSA
  * @param plaintext Pointer to the plaintext message to encode.
  * @param len Lengfh of the message to encode.
@@ -411,7 +412,7 @@ bool oaep_decode(
  * @return Boolean | True if encoding succeeded, False if encoding failed.
  * @note Generally, to encode a message, pass NULL as salt.
  *      To verify a message, pass a pointer to the salt field in the message you are looking to verify.
- -------------------------------------------------------------*/
+ */
 bool pss_encode(
 			const void *plaintext,
 			size_t len,
@@ -420,7 +421,7 @@ bool pss_encode(
 			void *salt,
 			uint8_t hash_alg);
 
-/**
+/***********************************************************
  * @brief Modular Exponentiation function for RSA (and other implementations)
  * @param size The length, in bytes, of the @b base and @b modulus.
  * @param base Pointer to buffer containing the base, in bytearray (big endian) format.
@@ -430,7 +431,7 @@ bool pss_encode(
  * @note @b size must not be 1.
  * @note @b exp must be non-zero.
  * @note @b modulus must be odd.
- ----------------------------------------------------------*/
+ */
 void powmod(
 		uint8_t size,
 		uint8_t *restrict base,

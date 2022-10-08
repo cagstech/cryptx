@@ -84,7 +84,7 @@ BB0_6:
 	section	.text,"ax",@progbits
 	public	_main
 _main:
-	ld	hl, -924
+	ld	hl, -925
 	call	__frameset
 	ld	de, -327680
 	ld	hl, _.str.5
@@ -103,58 +103,58 @@ _main:
 	call	_csrand_init
 	bit	0, a
 	jp	z, BB1_2
-	ld	de, -903
+	ld	de, -904
 	lea	iy, ix
 	add	iy, de
 	ld	bc, 32
 	ld	(ix - 3), bc
-	ld	bc, -285
+	ld	bc, -286
 	lea	hl, ix
 	add	hl, bc
 	push	hl
 	pop	de
 	push	ix
-	ld	bc, -906
+	ld	bc, -907
 	add	ix, bc
 	ld	(ix), de
 	pop	ix
 	push	ix
-	ld	bc, -541
+	ld	bc, -542
 	add	ix, bc
 	lea	de, ix
 	pop	ix
 	push	ix
-	ld	bc, -915
+	ld	bc, -916
 	add	ix, bc
 	ld	(ix), de
 	pop	ix
 	lea	de, iy + 106
 	push	ix
-	ld	bc, -912
+	ld	bc, -913
 	add	ix, bc
 	ld	(ix), de
 	pop	ix
 	lea	hl, iy + 74
 	push	ix
-	ld	bc, -921
+	ld	bc, -922
 	add	ix, bc
 	ld	(ix), hl
 	pop	ix
 	lea	de, iy + 58
 	push	ix
-	ld	bc, -909
+	ld	bc, -910
 	add	ix, bc
 	ld	(ix), de
 	pop	ix
 	lea	de, iy + 25
 	push	ix
-	ld	bc, -918
+	ld	bc, -919
 	add	ix, bc
 	ld	(ix), de
 	pop	ix
 	lea	iy, iy
 	push	ix
-	ld	bc, -924
+	ld	bc, -925
 	add	ix, bc
 	ld	(ix), iy
 	pop	ix
@@ -162,14 +162,14 @@ _main:
 	ld	hl, ___const.main.key
 	ld	bc, (ix - 3)
 	ldir
-	ld	bc, -909
+	ld	bc, -910
 	lea	hl, ix
 	add	hl, bc
 	ld	de, (hl)
 	ld	hl, ___const.main.iv
 	ld	bc, 16
 	ldir
-	ld	bc, -918
+	ld	bc, -919
 	lea	hl, ix
 	add	hl, bc
 	ld	de, (hl)
@@ -184,7 +184,7 @@ _main:
 	push	hl
 	ld	hl, 32
 	push	hl
-	ld	bc, -921
+	ld	bc, -922
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -197,7 +197,7 @@ _main:
 	push	hl
 	ld	hl, 16
 	push	hl
-	ld	bc, -909
+	ld	bc, -910
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -206,21 +206,21 @@ _main:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -909
+	ld	hl, 1
+	push	hl
+	ld	bc, -910
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
 	ld	hl, 32
 	push	hl
-	ld	bc, -921
+	ld	bc, -922
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	hl, 1
-	push	hl
-	ld	bc, -906
+	ld	bc, -907
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -238,19 +238,19 @@ _main:
 	call	_sprintf
 	pop	hl
 	pop	hl
-	ld	bc, -915
+	ld	bc, -916
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
 	ld	hl, 33
 	push	hl
-	ld	bc, -918
+	ld	bc, -919
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -906
+	ld	bc, -907
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -269,19 +269,19 @@ _main:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -912
+	ld	bc, -913
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
 	ld	hl, 25
 	push	hl
-	ld	bc, -924
+	ld	bc, -925
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -906
+	ld	bc, -907
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -304,7 +304,7 @@ _main:
 	push	hl
 	ld	hl, 33
 	push	hl
-	ld	bc, -915
+	ld	bc, -916
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -317,7 +317,7 @@ _main:
 	push	hl
 	ld	hl, 25
 	push	hl
-	ld	bc, -912
+	ld	bc, -913
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
