@@ -91,8 +91,7 @@ enum ASN1_FORMS {
 
 /****************************************************************
  * @brief Parses ASN.1 encoded data and returns metadata into an array of structs.
- * @note This function self-calls if it encounters an object of @b constructed type.
- * In this case, any contained elements overwrite the containing element.
+ * @note This function is recursive for any element of @b constructed type.
  * @note For DER-formatted RSA public keys, you will need to call this function twice.
  * The second time should be on the @b ANS1_BITSTRING that encodes the modulus
  * and public exponent.
