@@ -18,7 +18,7 @@
 // ##########################
  
 /*************************************************
- * @typedef asn1_obj_t
+ * @typedef asn1\_obj\_t
  * Defines a struct type for extracting ASN.1 element metadata
  * See asn1_decode()
  */
