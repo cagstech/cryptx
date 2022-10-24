@@ -20,7 +20,7 @@
 /*************************************************
  * @typedef asn1\_obj\_t
  * Defines a struct type for extracting ASN.1 element metadata
- * See asn1_decode()
+ * See @b asn1_decode.
  */
 typedef struct _asn1_obj_t {
 	uint8_t tag;			/**< Defines the ASN.1 element tag (low 5 bits of the id) */
@@ -33,7 +33,7 @@ typedef struct _asn1_obj_t {
 /*********************************
  * @enum ASN1\_TYPES
  * Defines tag identifiers for ASN.1 encoding
- * See @b asn1_obj_t.tag
+ * See @b asn1_obj_t.tag.
  */
 enum ASN1_TYPES {
 	ANS1_RESVD = 0,
@@ -70,7 +70,7 @@ enum ASN1_TYPES {
 /**********************************
  * @enum ASN1\_CLASSES
  * Defines class identifiers for ASN.1 encoding.
- * See @b asn1_obj_t.f_class
+ * See @b asn1_obj_t.f_class.
  */
 enum ASN1_CLASSES {
 	ASN1_UNIVERSAL,
@@ -82,7 +82,7 @@ enum ASN1_CLASSES {
 /********************
  * @enum ASN1\_FORMS
  * Defines form identifiers for ASN.1 encoding.
- * See @b asn1_obj_t.f_form
+ * See @b asn1_obj_t.f_form.
  */
 enum ASN1_FORMS {
 	ASN1_PRIMATIVE,
