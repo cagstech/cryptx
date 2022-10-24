@@ -91,14 +91,16 @@ enum ASN1_FORMS {
 
 /****************************************************************
  * @brief Parses ASN.1 encoded data and returns metadata into an array of structs.
- * @note This function is recursive for any element of @b constructed type.
- * @note For DER-formatted RSA public keys, you will need to call this function twice.
- * The second time should be on the @b ANS1_BITSTRING that encodes the modulus
- * and public exponent.
+ * @note This function is recursive for any element of @b constructed form.
+ * @note For DER-formatted RSA public keys, you will need to call this function twice to
+ * unpack the modulus and exponent. The second time should be on the
+ * @b ANS1_BITSTRING that encodes the modulus
+ * and public exponent. See the ans1\_decode demo for details.
  * @param asn1_data Pointer to ASN.1-encoded data
  * @param asn1_len The length of the encoded data
  * @param objs Pointer to an array of @b asn1_obj_t structs to fill with decoded data
  * @param iter_count Maximum number of ASN.1 elements to process before returning
+ * @returns The number of objects returned by the parser. Zero indicates an error.
  */
 size_t asn1_decode(void *asn1_data, size_t asn1_len, asn1_obj_t *objs, size_t iter_count);
 

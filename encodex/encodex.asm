@@ -9,9 +9,37 @@ library ENCODEX, 1
 ;v1 functions
     export asn1_decode
     
+    
+_rmemcpy:
+	call	ti._frameset0
+	ld	bc, (ix + 6)
+	ld	iy, (ix + 9)
+	ld	de, (ix + 12)
+.lbl_1:
+	push	de
+	pop	hl
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	z, .lbl_3
+	ld	a, (iy)
+	lea	hl, iy
+	push	bc
+	pop	iy
+	add	iy, de
+	ld	(iy - 1), a
+	push	hl
+	pop	iy
+	dec	de
+	inc	iy
+	jr	.lbl_1
+.lbl_3:
+	pop	ix
+	ret
+
 
 asn1_decode:
-	ld	hl, -21
+	ld	hl, -18
 	call	ti._frameset
 	ld	iy, (ix + 6)
 	ld	de, (ix + 9)
@@ -28,106 +56,78 @@ asn1_decode:
 .lbl_3:
 	ld	(ix - 3), hl
 	add	iy, de
-	ld	de, (ix + 15)
 .lbl_4:
+	ld	de, (ix + 15)
 	push	bc
 	pop	hl
 	or	a, a
 	sbc	hl, de
-	jp	nc, .lbl_15
+	jp	nc, .lbl_14
 	lea	hl, iy
 	ld	de, (ix - 3)
 	or	a, a
 	sbc	hl, de
-	jp	nc, .lbl_15
+	jp	nc, .lbl_14
+	ld	(ix - 6), bc
 	push	bc
 	pop	hl
-	ld	(ix - 6), bc
-	ld	de, 9
-	push	de
-	pop	bc
+	ld	bc, 9
 	call	ti._imulu
 	push	hl
 	pop	de
 	ld	hl, (ix + 12)
-	lea	bc, iy
-	push	hl
-	pop	iy
-	add	iy, de
-	ld	(ix - 12), iy
-	push	bc
-	pop	iy
-	ld	e, (iy)
-	lea	hl, iy + 2
-	ld	a, (iy + 1)
-	cp	a, 0
-	call	pe, ti._setflag
-	ld	(ix - 15), e
-	jp	m, .lbl_8
-	ld	de, 0
-	ld	e, a
-	push	hl
-	pop	iy
-	ld	hl, (ix - 6)
-	ld	bc, 9
-	call	ti._imulu
-	push	hl
-	pop	bc
-	ld	(ix - 9), iy
-	ld	iy, (ix + 12)
-	add	iy, bc
-	ld	(ix - 18), de
-	ld	(iy + 3), de
-	jr	.lbl_10
-.lbl_8:
-	ld	bc, (ix - 6)
-	and	a, 127
-	cp	a, 4
-	ld	de, 0
-	jp	nc, .lbl_14
-	ld	(ix - 18), de
-	ex	de, hl
-	ld	hl, (ix - 18)
-	ld	l, a
-	ld	(ix - 18), hl
-	push	bc
-	pop	hl
+	add	hl, de
+	ld	c, (iy)
+	lea	de, iy + 2
 	ld	(ix - 9), de
-	ld	de, 9
-	push	de
-	pop	bc
-	call	ti._imulu
+	ld	a, (iy + 1)
 	push	hl
-	pop	de
-	ld	iy, (ix + 12)
-	add	iy, de
-	ld	(ix - 21), iy
+	pop	iy
 	or	a, a
 	sbc	hl, hl
 	ld	(iy + 3), hl
-	ld	hl, (ix - 18)
+	cp	a, b
+	call	pe, ti._setflag
+	ld	(ix - 12), iy
+	jp	m, .lbl_8
+	or	a, a
+	sbc	hl, hl
+	ld	l, a
+	ld	(ix - 15), hl
+	ld	(iy + 3), hl
+	jr	.lbl_10
+.lbl_8:
+	ld	(ix - 18), c
+	and	a, 127
+	cp	a, 4
+	ld	bc, (ix - 6)
+	jp	nc, .lbl_14
+	or	a, a
+	sbc	hl, hl
+	ld	l, a
+	ld	(ix - 15), hl
 	push	hl
 	ld	hl, (ix - 9)
 	push	hl
 	pea	iy + 3
-	call	ti._memcpy
+	call	_rmemcpy
+	ld	iy, (ix - 12)
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	de, (ix - 18)
+	ld	de, (ix - 15)
 	ld	hl, (ix - 9)
 	add	hl, de
 	ld	(ix - 9), hl
-	ld	iy, (ix - 21)
 	ld	hl, (iy + 3)
-	ld	(ix - 18), hl
+	ld	(ix - 15), hl
+	ld	c, (ix - 18)
 .lbl_10:
-	ld	e, (ix - 15)
-	ld	a, e
+	ld	a, c
 	and	a, 31
-	ld	hl, (ix - 12)
-	ld	(hl), a
+	ld	(iy), a
 	ld	hl, (ix - 6)
+	ld	e, c
 	ld	bc, 9
 	call	ti._imulu
 	push	hl
@@ -138,8 +138,8 @@ asn1_decode:
 	ld	b, 5
 	call	ti._bshru
 	and	a, 1
-	ld	(ix - 21), a
-	ld	(iy + 2), a
+	ld	d, a
+	ld	(iy + 2), d
 	ld	a, e
 	inc	b
 	call	ti._bshru
@@ -147,15 +147,13 @@ asn1_decode:
 	ld	bc, (ix - 9)
 	ld	(iy + 6), bc
 	push	bc
-	pop	hl
-	ld	de, (ix - 18)
-	push	de
 	pop	iy
-	add	hl, de
-	ld	(ix - 15), hl
-	bit	0, (ix - 21)
+	lea	hl, iy
+	ld	bc, (ix - 15)
+	add	hl, bc
+	ld	(ix - 18), hl
+	bit	0, d
 	jr	nz, .lbl_12
-	ld	de, (ix + 15)
 	ld	bc, (ix - 6)
 	jr	.lbl_13
 .lbl_12:
@@ -168,26 +166,22 @@ asn1_decode:
 	push	hl
 	ld	hl, (ix - 12)
 	push	hl
-	push	iy
 	push	bc
+	push	iy
 	call	asn1_decode
 	pop	de
 	pop	de
 	pop	de
 	pop	de
-	ld	de, (ix + 15)
-	ld	bc, (ix - 6)
-	add	hl, bc
+	ld	de, (ix - 6)
+	add	hl, de
 	push	hl
 	pop	bc
 .lbl_13:
-	ld	iy, (ix - 15)
 	inc	bc
+	ld	iy, (ix - 18)
 	jp	.lbl_4
 .lbl_14:
-	push	de
-	pop	bc
-.lbl_15:
 	push	bc
 	pop	hl
 	ld	sp, ix
