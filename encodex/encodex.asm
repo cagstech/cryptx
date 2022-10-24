@@ -11,6 +11,7 @@ library ENCODEX, 1
     
     
 _rmemcpy:
+; optimized by calc84maniac
     ld  iy, -3
     add iy, sp
     ld  bc, (iy + 12)
