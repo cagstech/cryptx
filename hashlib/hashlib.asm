@@ -134,6 +134,7 @@ hmac_func_lookup:
 
 
 ; probably better to just add the one u64 function used by hashlib rather than screw with dependencies
+; void u64_addi(uint64_t *a, uint64_t *b);
 u64_addi:
 	pop bc,hl,de
 	push de,hl,bc
