@@ -131,10 +131,6 @@ hmac_func_lookup:
     dl hmac_sha256_update
     dl hmac_sha256_final
 
-;------------------
-; hash digest lens
-hash_digest_lens:
-	db 32
 
 
 ; probably better to just add the one u64 function used by hashlib rather than screw with dependencies

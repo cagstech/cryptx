@@ -3,12 +3,12 @@ include '../../include/library.inc'
 include '../../include/include_library.inc'
 
 ;------------------------------------------
-library CRYPTOC, 10
+library CRYPTOC, 1
 include_library '../hashlib/hashlib.asm'
 
 ;------------------------------------------
 
-;v6 functions
+;v1 functions
     export csrand_init
     export csrand_get
     export csrand_fill

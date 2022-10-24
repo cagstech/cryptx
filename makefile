@@ -16,17 +16,17 @@
 
 include $(CURDIR)/../common.mk
 
-LIB_SRC := hashlib/hashlib.asm cryptoc/cryptoc.asm
-LIB_LIB := hashlib/hashlib.lib cryptoc/cryptoc.lib
-LIB_8XV := hashlib/hashlib.8xv cryptoc/cryptoc.8xv
-LIB_H   := hashlib/hashlib.h cryptoc/cryptoc.h
-PKG_INC := -i hashlib/hashlib.8xv -i cryptoc/cryptoc.8xv
+LIBS := hashlib cryptoc encodex
+TOOLS := fasmg convbin convimg convfont cedev-config
 
-all: hashlib cryptoc
+
+SRCDIR = $(call NATIVEPATH,$1)
+
+all: $(LIBS)
 
 hashlib: hashlib/hashlib.8xv
-
 cryptoc: cryptoc/cryptoc.8xv
+encodex: encodex/encodex.8xv
 
 hashlib/hashlib.8xv: hashlib/hashlib.asm
 	sed -i '' 's/BB.*_/\.lbl_/g' hashlib/hashlib.asm
@@ -35,18 +35,32 @@ hashlib/hashlib.8xv: hashlib/hashlib.asm
 cryptoc/cryptoc.8xv: cryptoc/cryptoc.asm
 	sed -i '' 's/BB.*_/\.lbl_/g' cryptoc/cryptoc.asm
 	$(Q)$(FASMG) $< $@
+	
+encodex/encodex.8xv: encodex/encodex.asm
+	sed -i '' 's/BB.*_/\.lbl_/g' encodex/encodex.asm
+	$(Q)$(FASMG) $< $@
+
 
 clean:
-	$(Q)$(call REMOVE,$(LIB_LIB) $(LIB_8XV))
+	$(foreach library,$(LIBS),$(call REMOVE, $(call SRCDIR,$(library))/$(library).lib $(call SRCDIR,$(library))/$(library).8xv))
 
 install: all
 	$(Q)$(call MKDIR,$(INSTALL_LIB))
-	$(Q)$(call COPY,$(LIB_LIB),$(INSTALL_LIB))
 	$(Q)$(call MKDIR,$(INSTALL_H))
-	$(Q)$(call COPY,$(LIB_H),$(INSTALL_H))
+	cp hashlib/hashlib.lib $(INSTALL_LIB)
+	cp cryptoc/cryptoc.lib $(INSTALL_LIB)
+	cp encodex/encodex.lib $(INSTALL_LIB)
+	cp hashlib/hashlib.h $(INSTALL_H)
+	cp cryptoc/cryptoc.h $(INSTALL_H)
+	cp encodex/encodex.h $(INSTALL_H)
 	
-package: all
-	convbin $(PKG_INC) -j 8x -o CryptX.8xg -k 8xg -name CryptX
+group: $(LIBS)
+	convbin --iformat 8x --oformat 8xg-auto-extract \
+		$(foreach library,$(LIBS),$(addprefix --input ,$(call SRCDIR,$(library))/$(library).8xv)) --output $(call NATIVEPATH,CryptX.8xg)
+	
+check:
+	$(Q)$(EZCC) --version || ( echo Please install ez80-clang && exit 1 )
+	$(Q)$(FASMG) $(NULL) $(NULL) || ( echo Please install fasmg && exit 1 )
 
 .PHONY: all clean install
 

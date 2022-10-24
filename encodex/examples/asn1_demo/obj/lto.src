@@ -1,0 +1,109 @@
+	section	.text,"ax",@progbits
+	assume	adl = 1
+	section	.text,"ax",@progbits
+	public	_main
+_main:
+	ld	hl, -79
+	call	__frameset
+	ld	de, -327680
+	ld	hl, _.str
+	lea	bc, ix - 70
+	ld	(ix - 73), bc
+	push	hl
+	push	de
+	call	_sprintf
+	pop	hl
+	pop	hl
+	ld	hl, 10
+	push	hl
+	ld	hl, (ix - 73)
+	push	hl
+	ld	hl, 162
+	push	hl
+	ld	hl, _asn1_demo
+	push	hl
+	call	_asn1_decode
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	ld	(ix - 76), hl
+	push	hl
+	ld	hl, _.str.1
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	de, 0
+BB0_1:
+	ld	hl, (ix - 76)
+	or	a, a
+	sbc	hl, de
+	jr	z, BB0_3
+	or	a, a
+	sbc	hl, hl
+	ld	iy, (ix - 73)
+	ld	(ix - 73), iy
+	ld	l, (iy)
+	ld	(ix - 79), de
+	ld	de, (iy + 1)
+	ld	bc, (iy + 4)
+	push	bc
+	push	de
+	push	hl
+	ld	hl, (ix - 79)
+	push	hl
+	ld	hl, _.str.2
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	ld	de, (ix - 79)
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	inc	de
+	ld	iy, (ix - 73)
+	lea	iy, iy + 7
+	ld	(ix - 73), iy
+	jr	BB0_1
+BB0_3:
+	or	a, a
+	sbc	hl, hl
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.data,"aw",@progbits
+	public	_asn1_demo
+_asn1_demo:
+	db	"0Ÿ0", 13, "	*†H†÷", 13, "", 0, "", 0, "0‰", 0, "´Gçÿ¯ZÓdêä°0™n/‘ı\-XüŸ(%ìmVZ;é$û®Ù$\	_1Ÿ—:WWó€à3¹4tÚfxHuq›™ûZû¬hßÅÉ*5¢WÏã¶Z‘€€TÎ", 0, "F@ò^öåêKÕL|W¾,€aGKˆæÚ¢(Eù", 0, ""
+
+	section	.rodata,"a",@progbits
+	private	_.str
+_.str:
+	db	10, 10, "----------------------------------", 10, "ENCODEX ASN.1 Decoder Demo", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.1
+_.str.1:
+	db	"Decode complete, %u objects parsed.", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.2
+_.str.2:
+	db	"Obj %u, Tag Id: %u, Size: %u, Addr: %u", 10, 0
+
+	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"
+	extern	__Unwind_SjLj_Register
+	extern	__Unwind_SjLj_Unregister
+	extern	__frameset
+	extern	_sprintf
+	extern	_asn1_decode
