@@ -20,12 +20,19 @@ uint8_t asn1_demo[] = {0x30,0x81,0x9f,0x30,0x0d,0x06,0x09,0x2a,0x86,0x48,0x86,0x
 
 int main(void)
 {
-	asn1_obj_t output[10];
+	asn1_obj_t output[10] = {0};
+	asn1_obj_t output2[10] = {0};
 	sprintf(CEMU_CONSOLE, "\n\n----------------------------------\nENCODEX ASN.1 Decoder Demo\n");
 
+	// decode root node of asn1 data
 	size_t obj_ct = asn1_decode(asn1_demo, sizeof asn1_demo, output, 10);
 	sprintf(CEMU_CONSOLE, "Decode complete, %u objects parsed.\n", obj_ct);
 	for(int i=0; i<obj_ct; i++)
 		sprintf(CEMU_CONSOLE, "Obj %u, Tag Id: %u, Size: %u, Addr: %u\n", i, output[i].tag, output[i].len, output[i].data);
+	
+	obj_ct = asn1_decode(output[2].data, output[2].len, output2, 10);
+	for(int i=0; i<obj_ct; i++)
+		sprintf(CEMU_CONSOLE, "Obj %u, Tag Id: %u, Size: %u, Addr: %u\n", i, output2[i].tag, output2[i].len, output2[i].data);
+	
     return 0;
 }

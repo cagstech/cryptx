@@ -3,20 +3,66 @@
 	section	.text,"ax",@progbits
 	public	_main
 _main:
-	ld	hl, -79
+	ld	hl, -198
 	call	__frameset
-	ld	de, -327680
-	ld	hl, _.str
-	lea	bc, ix - 70
-	ld	(ix - 73), bc
+	ld	bc, -186
+	lea	iy, ix
+	add	iy, bc
+	ld	bc, -195
+	lea	hl, ix
+	add	hl, bc
+	ld	(hl), iy
+	lea	hl, ix - 96
+	push	ix
+	ld	bc, -189
+	add	ix, bc
+	ld	(ix), hl
+	pop	ix
+	lea	hl, iy
+	ld	bc, -192
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	ld	(ix - 96), 0
+	ld	bc, -189
+	lea	hl, ix
+	add	hl, bc
+	ld	iy, (hl)
+	inc	iy
+	lea	de, iy
+	lea	iy, ix
+	add	iy, bc
+	ld	hl, (iy)
+	ld	bc, 89
+	ldir
+	ld	bc, -195
+	lea	hl, ix
+	add	hl, bc
+	ld	iy, (hl)
+	ld	(iy), 0
+	ld	bc, -192
+	lea	iy, ix
+	add	iy, bc
+	ld	hl, (iy)
 	push	hl
-	push	de
+	pop	iy
+	inc	iy
+	lea	de, iy
+	ld	bc, 89
+	ldir
+	ld	hl, _.str
+	push	hl
+	ld	hl, -327680
+	push	hl
 	call	_sprintf
 	pop	hl
 	pop	hl
 	ld	hl, 10
 	push	hl
-	ld	hl, (ix - 73)
+	ld	bc, -189
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
 	push	hl
 	ld	hl, 162
 	push	hl
@@ -27,7 +73,10 @@ _main:
 	pop	de
 	pop	de
 	pop	de
-	ld	(ix - 76), hl
+	ld	bc, -195
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
 	push	hl
 	ld	hl, _.str.1
 	push	hl
@@ -37,31 +86,57 @@ _main:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	de, 0
+	ld	bc, -189
+	lea	hl, ix
+	add	hl, bc
+	ld	iy, (hl)
+	lea	iy, iy + 3
+	or	a, a
+	sbc	hl, hl
+	ex	de, hl
 BB0_1:
-	ld	hl, (ix - 76)
+	ld	bc, -195
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
 	or	a, a
 	sbc	hl, de
 	jr	z, BB0_3
 	or	a, a
 	sbc	hl, hl
-	ld	iy, (ix - 73)
-	ld	(ix - 73), iy
-	ld	l, (iy)
-	ld	(ix - 79), de
-	ld	de, (iy + 1)
-	ld	bc, (iy + 4)
+	ld	l, (iy - 3)
+	push	ix
+	ld	bc, -189
+	add	ix, bc
+	ld	(ix), de
+	pop	ix
+	ld	de, (iy)
+	ld	bc, (iy + 3)
 	push	bc
 	push	de
 	push	hl
-	ld	hl, (ix - 79)
+	ld	bc, -189
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
 	push	hl
 	ld	hl, _.str.2
 	push	hl
 	ld	hl, -327680
 	push	hl
+	ld	bc, -198
+	lea	hl, ix
+	add	hl, bc
+	ld	(hl), iy
 	call	_sprintf
-	ld	de, (ix - 79)
+	ld	bc, -189
+	lea	hl, ix
+	add	hl, bc
+	ld	de, (hl)
+	ld	bc, -198
+	lea	iy, ix
+	add	iy, bc
+	ld	iy, (iy)
 	pop	hl
 	pop	hl
 	pop	hl
@@ -69,11 +144,105 @@ BB0_1:
 	pop	hl
 	pop	hl
 	inc	de
-	ld	iy, (ix - 73)
-	lea	iy, iy + 7
-	ld	(ix - 73), iy
+	lea	iy, iy + 9
 	jr	BB0_1
 BB0_3:
+	ld	hl, (ix - 72)
+	ld	de, (ix - 75)
+	ld	bc, 10
+	push	bc
+	ld	(ix - 3), de
+	ld	de, -192
+	lea	iy, ix
+	add	iy, de
+	ld	bc, (iy)
+	push	bc
+	ld	de, (ix - 3)
+	push	de
+	push	hl
+	call	_asn1_decode
+	push	hl
+	pop	de
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -192
+	lea	hl, ix
+	add	hl, bc
+	ld	iy, (hl)
+	lea	iy, iy + 3
+	or	a, a
+	sbc	hl, hl
+	push	hl
+	pop	bc
+BB0_4:
+	push	de
+	pop	hl
+	or	a, a
+	sbc	hl, bc
+	jp	z, BB0_6
+	or	a, a
+	sbc	hl, hl
+	ld	l, (iy - 3)
+	ld	(ix - 3), bc
+	push	ix
+	ld	bc, -192
+	add	ix, bc
+	ld	(ix), de
+	pop	ix
+	ld	de, (iy)
+	ld	bc, (ix - 3)
+	ld	(ix - 3), de
+	push	ix
+	ld	de, -189
+	add	ix, de
+	ld	(ix), bc
+	pop	ix
+	ld	bc, (iy + 3)
+	push	bc
+	ld	de, (ix - 3)
+	push	de
+	push	hl
+	ld	bc, -189
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, _.str.2
+	push	hl
+	ld	hl, -327680
+	push	hl
+	ld	bc, -195
+	lea	hl, ix
+	add	hl, bc
+	ld	(hl), iy
+	call	_sprintf
+	ld	de, -189
+	lea	hl, ix
+	add	hl, de
+	ld	bc, (hl)
+	ld	de, -195
+	lea	iy, ix
+	add	iy, de
+	ld	iy, (iy)
+	ld	(ix - 3), bc
+	push	ix
+	ld	bc, -192
+	add	ix, bc
+	ld	de, (ix)
+	pop	ix
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, (ix - 3)
+	inc	bc
+	lea	iy, iy + 9
+	jp	BB0_4
+BB0_6:
 	or	a, a
 	sbc	hl, hl
 	ld	sp, ix
