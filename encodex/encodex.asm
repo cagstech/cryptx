@@ -11,31 +11,21 @@ library ENCODEX, 1
     
     
 _rmemcpy:
-	call	ti._frameset0
-	ld	bc, (ix + 6)
-	ld	iy, (ix + 9)
-	ld	de, (ix + 12)
-.lbl_1:
-	push	de
-	pop	hl
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jr	z, .lbl_3
-	ld	a, (iy)
-	lea	hl, iy
-	push	bc
-	pop	iy
-	add	iy, de
-	ld	(iy - 1), a
-	push	hl
-	pop	iy
-	dec	de
-	inc	iy
-	jr	.lbl_1
-.lbl_3:
-	pop	ix
-	ret
+    ld  iy, -3
+    add iy, sp
+    ld  bc, (iy + 12)
+    sbc hl, hl
+    add hl, bc
+    ret nc
+    ld  de, (iy + 9)
+    add hl, de
+    ld  de, (iy + 6)
+.loop:
+    ldi
+    ret po
+    dec hl
+    dec hl
+    jr  .loop
 
 
 asn1_decode:

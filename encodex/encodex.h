@@ -1,6 +1,6 @@
 /**
  * @file encodex.h
- * @brief Provides support for various data encoding schemes
+ * @brief Provides support for various data encoding schemes common to cryptography.
  *
  *@author Anthony @e ACagliano Cagliano
  */
@@ -16,16 +16,23 @@
 // ##########################
 // ###### ASN.1 Parser ######
 // ##########################
- 
+/*
+ * ASN stands for Abstract Syntax Notation.
+ * It is a standard notation language for defining data structures.
+ * It is commonly used for the encoding of key data by various cryptography libraries.
+ * Ex: DER-formatted keys use a modified version of ASN.1.
+ */
+
+
 /*************************************************
  * @typedef asn1\_obj\_t
  * Defines a struct type for extracting ASN.1 element metadata
  * See @b asn1_decode.
  */
 typedef struct _asn1_obj_t {
-	uint8_t tag;			/**< Defines the ASN.1 element tag (low 5 bits of the id) */
-	uint8_t f_class;		/**< Defines the ASN.1 class (high 2 bits of the id) */
-	bool f_form;			/**< Defines the ASN.1 construction scheme (bit 5 of the id) */
+	uint8_t tag;			/**< Defines the ASN.1 element basic tag (low 5 bits of the id). See @b ASN1_TYPES. */
+	uint8_t f_class;		/**< Defines the ASN.1 class (high 2 bits of the id). See @b ASN1_CLASSES. */
+	bool f_form;			/**< Defines the ASN.1 construction scheme (bit 5 of the id). See @b ASN1_FORMS. */
 	size_t len;				/**< Defines the length of the data portion of the element */
 	uint8_t *data;			/**< Defines a pointer to the data portion of the element */
 } asn1_obj_t;
@@ -73,10 +80,10 @@ enum ASN1_TYPES {
  * See @b asn1_obj_t.f_class.
  */
 enum ASN1_CLASSES {
-	ASN1_UNIVERSAL,
-	ASN1_APPLICATION,
-	ASN1_CONTEXTSPEC,
-	ASN1_PRIVATE
+	ASN1_UNIVERSAL,			/**< tags defined in the ASN.1 standard. Most use cases on calc will be this. */
+	ASN1_APPLICATION,		/**< tags unique to a particular application. */
+	ASN1_CONTEXTSPEC,		/**< tags that need to be identified within a particular, well-definded context. */
+	ASN1_PRIVATE			/**< reserved for use by a specific entity for their applications. */
 };
 
 /********************
@@ -85,8 +92,8 @@ enum ASN1_CLASSES {
  * See @b asn1_obj_t.f_form.
  */
 enum ASN1_FORMS {
-	ASN1_PRIMATIVE,
-	ASN1_CONSTRUCTED
+	ASN1_PRIMITIVE,			/**< data type that cannot be broken down further. */
+	ASN1_CONSTRUCTED		/**< data type composed of multiple primitive data types. */
 };
 
 /****************************************************************
