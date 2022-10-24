@@ -1,11 +1,31 @@
 /*
  *--------------------------------------
- * Program Name:
- * Author:
- * License:
- * Description:
+ * Program Name: DEMO
+ * Author: Anthony Cagliano
+ * License: GPL3
+ * Description: ASN.1 Decoder Demo
  *--------------------------------------
-*/
+ *
+ * This program demonstrates how to extract public key information from
+ * a DER-encoded RSA key format. The DER-formatted public key exported by
+ * pycryptodomex's RSA module looks like this:
+ 
+ 
+	SEQUENCE {
+		RSAMetadata ::= SEQUENCE {
+			pkcs#1IdString		OBJECT IDENTIFIER
+			nullObject			NULL
+		}
+		RSAData ::= BIT STRING {
+			RSAPublicKey ::= SEQUENCE {
+				modulus           INTEGER,  -- n
+				publicExponent    INTEGER   -- e
+			}
+		}
+	}
+ 
+ *
+ */
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -24,15 +44,37 @@ int main(void)
 	asn1_obj_t output2[10] = {0};
 	sprintf(CEMU_CONSOLE, "\n\n----------------------------------\nENCODEX ASN.1 Decoder Demo\n");
 
-	// decode root node of asn1 data
+	// parse ASN.1 encoded data
+	/*
+	 This call to asn1_decode will return 3 objects.
+	 1. pkcs#1IdString
+	 2. nullObject
+	 3. RSAData
+	 This is because any tag with the constructed bit set will be automatically
+	 deconstructed further, but the BIT STRING object does not have this tag set.
+	 You will need to then call asn1_decode on this object specifically to break it down further.
+	 */
 	size_t obj_ct = asn1_decode(asn1_demo, sizeof asn1_demo, output, 10);
 	sprintf(CEMU_CONSOLE, "Decode complete, %u objects parsed.\n", obj_ct);
 	for(int i=0; i<obj_ct; i++)
 		sprintf(CEMU_CONSOLE, "Obj %u, Tag Id: %u, Size: %u, Addr: %u\n", i, output[i].tag, output[i].len, output[i].data);
 	
+	
+	/*
+	 For reasons unknown, DER encodes the integer modulus and public exponent as a BIT STRING
+	 with a single byte of 0x00 padding, followed by a SEQUENCE containing the modulus and
+	 exponent.
+	 Also the modulus itself is usually prepended with a single 0x00 byte as well.
+	 This call to asn1_decode will return 2 objects.
+	 1. modulus
+	 2. exponent
+	 */
 	obj_ct = asn1_decode(output[2].data, output[2].len, output2, 10);
 	for(int i=0; i<obj_ct; i++)
 		sprintf(CEMU_CONSOLE, "Obj %u, Tag Id: %u, Size: %u, Addr: %u\n", i, output2[i].tag, output2[i].len, output2[i].data);
 	
+	
+	// Strip the first byte of modulus and you have the information you need for
+	// rsa_encrypt().
     return 0;
 }
