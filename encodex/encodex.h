@@ -129,7 +129,7 @@ size_t asn1_decode(void *asn1_data, size_t asn1_len, asn1_obj_t *objs, size_t it
  * @param in Pointer to octet-encoded data stream.
  * @param len Length of octet-encoded data stream.
  * @param out Pointer to sextet-encoded data stream.
- * @note @b out should be at least  len \* 4 / 3 bytes large.
+ * @note @b out should be at least  len * 4 / 3 bytes large.
  * @returns Length of output sextet.
  */
 size_t base64_encode(const void *in, size_t len, void *out);
@@ -139,7 +139,7 @@ size_t base64_encode(const void *in, size_t len, void *out);
  * @param in Pointer to sextet-encoded data stream.
  * @param len Length of sextet-encoded data stream.
  * @param out Pointer to octet-encoded data stream.
- * @note @b out should be at least  len \* 3 / 4 bytes large.
+ * @note @b out should be at least  len * 3 / 4 bytes large.
  * @returns Length of output octet.
  */
 size_t base64_decode(const void *in, size_t len, void *out);
