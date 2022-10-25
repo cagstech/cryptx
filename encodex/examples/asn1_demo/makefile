@@ -11,6 +11,7 @@ ARCHIVED ?= NO
 CFLAGS ?= -Wall -Wextra -Oz
 CXXFLAGS ?= -Wall -Wextra -Oz
 DEBUGMODE = DEBUG
+HAS_PRINTF = NO
 
 # ----------------------------
 

@@ -1,3 +1,5 @@
 	library	ENCODEX, 1
 
 	export	asn1_decode
+	export	base64_encode
+	export	base64_decode

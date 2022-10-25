@@ -103,13 +103,45 @@ enum ASN1_FORMS {
  * unpack the modulus and exponent. The second time should be on the
  * @b ANS1_BITSTRING that encodes the modulus
  * and public exponent. See the ans1\_decode demo for details.
- * @param asn1_data Pointer to ASN.1-encoded data
- * @param asn1_len The length of the encoded data
- * @param objs Pointer to an array of @b asn1_obj_t structs to fill with decoded data
- * @param iter_count Maximum number of ASN.1 elements to process before returning
+ * @param asn1_data Pointer to ASN.1-encoded data.
+ * @param asn1_len The length of the encoded data.
+ * @param objs Pointer to an array of @b asn1_obj_t structs to fill with decoded data.
+ * @param iter_count Maximum number of ASN.1 elements to process before returning.
  * @returns The number of objects returned by the parser. Zero indicates an error.
  */
 size_t asn1_decode(void *asn1_data, size_t asn1_len, asn1_obj_t *objs, size_t iter_count);
 
+
+
+// ###########################
+// ###### Base64 Parser ######
+// ###########################
+/*
+ * Base64 encodes data as a sextet (where each byte corresponds
+ * to 6 bits of the input stream) which is then mapped to one of
+ * 64 printable characters, or the = padding character.
+ * Base64 is often used to encode cryptographic data such as
+ * the PEM key format, bcrypt, and more.
+ */
+
+/***************************************************************
+ * @brief Converts an octet-encoded byte stream into a sextet-encoded byte stream.
+ * @param in Pointer to octet-encoded data stream.
+ * @param len Length of octet-encoded data stream.
+ * @param out Pointer to sextet-encoded data stream.
+ * @note @b out should be at least  len \* 4 / 3 bytes large.
+ * @returns Length of output sextet.
+ */
+size_t base64_encode(const void *in, size_t len, void *out);
+
+/***************************************************************
+ * @brief Converts a sextet-encoded byte stream into a octet-encoded byte stream.
+ * @param in Pointer to sextet-encoded data stream.
+ * @param len Length of sextet-encoded data stream.
+ * @param out Pointer to octet-encoded data stream.
+ * @note @b out should be at least  len \* 3 / 4 bytes large.
+ * @returns Length of output octet.
+ */
+size_t base64_decode(const void *in, size_t len, void *out);
 
 #endif

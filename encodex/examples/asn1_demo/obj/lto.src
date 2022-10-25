@@ -64,7 +64,7 @@ _main:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	hl, 294
+	ld	hl, 162
 	push	hl
 	ld	hl, _asn1_demo
 	push	hl
@@ -161,9 +161,20 @@ BB0_3:
 	push	de
 	push	hl
 	call	_asn1_decode
-	push	hl
 	pop	de
-	pop	hl
+	pop	de
+	pop	de
+	pop	de
+	ld	bc, -189
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	push	hl
+	ld	hl, _.str.1
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
 	pop	hl
 	pop	hl
 	pop	hl
@@ -174,37 +185,29 @@ BB0_3:
 	lea	iy, iy + 3
 	or	a, a
 	sbc	hl, hl
-	push	hl
-	pop	bc
+	ex	de, hl
 BB0_4:
-	push	de
-	pop	hl
+	ld	bc, -189
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
 	or	a, a
-	sbc	hl, bc
-	jp	z, BB0_6
+	sbc	hl, de
+	jr	z, BB0_6
 	or	a, a
 	sbc	hl, hl
 	ld	l, (iy - 3)
-	ld	(ix - 3), bc
 	push	ix
 	ld	bc, -192
 	add	ix, bc
 	ld	(ix), de
 	pop	ix
 	ld	de, (iy)
-	ld	bc, (ix - 3)
-	ld	(ix - 3), de
-	push	ix
-	ld	de, -189
-	add	ix, de
-	ld	(ix), bc
-	pop	ix
 	ld	bc, (iy + 3)
 	push	bc
-	ld	de, (ix - 3)
 	push	de
 	push	hl
-	ld	bc, -189
+	ld	bc, -192
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -218,30 +221,23 @@ BB0_4:
 	add	hl, bc
 	ld	(hl), iy
 	call	_sprintf
-	ld	de, -189
-	lea	hl, ix
-	add	hl, de
-	ld	bc, (hl)
-	ld	de, -195
-	lea	iy, ix
-	add	iy, de
-	ld	iy, (iy)
-	ld	(ix - 3), bc
-	push	ix
 	ld	bc, -192
-	add	ix, bc
-	ld	de, (ix)
-	pop	ix
+	lea	hl, ix
+	add	hl, bc
+	ld	de, (hl)
+	ld	bc, -195
+	lea	iy, ix
+	add	iy, bc
+	ld	iy, (iy)
 	pop	hl
 	pop	hl
 	pop	hl
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, (ix - 3)
-	inc	bc
+	inc	de
 	lea	iy, iy + 9
-	jp	BB0_4
+	jr	BB0_4
 BB0_6:
 	or	a, a
 	sbc	hl, hl
@@ -253,7 +249,7 @@ BB0_6:
 	section	.data,"aw",@progbits
 	public	_asn1_demo
 _asn1_demo:
-	db	"0‚""0", 13, "	*†H†÷", 13, "", 0, "‚", 0, "0‚", 10, "‚", 0, "Ã-xxúøîÕy(g+tö×]B(’B\cN@Ÿ@6ØˆèÚ»Oy6«ç a3+†^j|""ÕUŸä‚Cîg©3ŸÁK™±Šïa~Ï\#§äê:Qsğ—JJ*J$", 13, "£<íxú<ìrï|¦5¯ˆ‘", 10, "“K¶ÑSC(Ûi´t¼‡İŠk¨R¸çwN‚6ÈßxäØ", 0, "±2#ò¿­†– 0ABDiŞ‹$1haSƒû5-Èì", 10, ")o)%áÍºÅ>Ä¡¼R^Æñ£ª¹ü£Ä1Õ7óO/]ÏµPó¨İ	…ß™/‹¼oŸ…Å""^e J&ŸÿÎ¸Ç?ú­", 0, ""
+	db	"0Ÿ0", 13, "	*†H†÷", 13, "", 0, "", 0, "0‰", 0, "Ør	şWÏP¶OmÇõ€åKC˜'XƒU¼š«`ğJØc:gG†CO@YÅ”A“gø©WV¼", 13, "Éÿ¹]2/áç5À[-‰U4¦my‰[µ²Ò""Â", 0, "‰¨£%mÃ¿ÍÔ™×ŒÉ©^ÇÑã", 0, "qĞŠöÌNâ÷*Šqj<ÚšS", 0, ""
 
 	section	.rodata,"a",@progbits
 	private	_.str
@@ -263,7 +259,7 @@ _.str:
 	section	.rodata,"a",@progbits
 	private	_.str.1
 _.str.1:
-	db	"Decode complete, %u objects parsed.", 10, 0
+	db	10, "Decode complete, %u objects parsed.", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.2
