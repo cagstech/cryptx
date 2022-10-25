@@ -139,7 +139,7 @@ size_t base64_encode(const void *in, size_t len, void *out);
  * @param in Pointer to sextet-encoded data stream.
  * @param len Length of sextet-encoded data stream.
  * @param out Pointer to octet-encoded data stream.
- * @note @b out should be at least  len * 3 / 4 bytes large.
+ * @note @b out should be at least len * 3 / 4 bytes large.
  * @returns Length of output octet.
  */
 size_t base64_decode(const void *in, size_t len, void *out);

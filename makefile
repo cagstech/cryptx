@@ -16,43 +16,48 @@
 
 include $(CURDIR)/../common.mk
 
-LIBS := hashlib cryptoc encodex
-TOOLS := fasmg convbin convimg convfont cedev-config
+LIBS := hashlib encrypt encodex
+TOOLS := fasmg convbin
 
 
 SRCDIR = $(call NATIVEPATH,$1)
+TOOLSDIR = $(call NATIVEPATH,../../tools/$1)
 
-all: $(LIBS)
-
-hashlib: hashlib/hashlib.8xv
-cryptoc: cryptoc/cryptoc.8xv
-encodex: encodex/encodex.8xv
-
-hashlib/hashlib.8xv: hashlib/hashlib.asm
-	sed -i '' 's/BB.*_/\.lbl_/g' hashlib/hashlib.asm
-	$(Q)$(FASMG) $< $@
-
-cryptoc/cryptoc.8xv: cryptoc/cryptoc.asm
-	sed -i '' 's/BB.*_/\.lbl_/g' cryptoc/cryptoc.asm
-	$(Q)$(FASMG) $< $@
+all: $(TOOLS) $(LIBS)
 	
-encodex/encodex.8xv: encodex/encodex.asm
-	sed -i '' 's/BB.*_/\.lbl_/g' encodex/encodex.asm
-	$(Q)$(FASMG) $< $@
+$(TOOLS): check
+	$(Q)$(MAKE) -C $(call TOOLSDIR,$@)
+	
+$(LIBS): fasmg
+	sed -i '' 's/BB.*_/\.lbl_/g' $(call SRCDIR,$@/$@.asm)
+	$(Q)$(FASMG) $(call SRCDIR,$@/$@.asm)
+	
+
+#hashlib: hashlib/hashlib.8xv
+#encrypt: encrypt/cryptoc.8xv
+#encodex: encodex/encodex.8xv
+
+#hashlib/hashlib.8xv: hashlib/hashlib.asm
+#	sed -i '' 's/BB.*_/\.lbl_/g' hashlib/hashlib.asm
+#	$(Q)$(FASMG) $< $@
+
+#cryptoc/cryptoc.8xv: cryptoc/cryptoc.asm
+#	sed -i '' 's/BB.*_/\.lbl_/g' cryptoc/cryptoc.asm
+#	$(Q)$(FASMG) $< $@
+	
+#encodex/encodex.8xv: encodex/encodex.asm
+#	sed -i '' 's/BB.*_/\.lbl_/g' encodex/encodex.asm
+#	$(Q)$(FASMG) $< $@
 
 
 clean:
 	$(foreach library,$(LIBS),$(call REMOVE, $(call SRCDIR,$(library))/$(library).lib $(call SRCDIR,$(library))/$(library).8xv))
 
-install: all
+install: $(LIBS)
 	$(Q)$(call MKDIR,$(INSTALL_LIB))
 	$(Q)$(call MKDIR,$(INSTALL_H))
-	cp hashlib/hashlib.lib $(INSTALL_LIB)
-	cp cryptoc/cryptoc.lib $(INSTALL_LIB)
-	cp encodex/encodex.lib $(INSTALL_LIB)
-	cp hashlib/hashlib.h $(INSTALL_H)
-	cp cryptoc/cryptoc.h $(INSTALL_H)
-	cp encodex/encodex.h $(INSTALL_H)
+	$(foreach library,$(LIBS),cp $(library)/$(library).lib $(INSTALL_LIB);)
+	$(foreach library,$(LIBS),cp $(library)/$(library).h $(INSTALL_H);)
 	
 group: $(LIBS)
 	convbin --iformat 8x --oformat 8xg-auto-extract \
