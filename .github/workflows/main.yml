@@ -10,27 +10,27 @@ jobs:
       - name: Compile Quick Reference
         uses: xu-cheng/latex-action@master
         with:
-          working_directory: docs/quickref
+          working_directory: cryptx/docs/quickref
           root_file: QuickRef.tex
           
       - name: Upload Quick Reference
         uses: actions/upload-artifact@v3
         with:
           name: Quick Reference
-          path: /docs/quickref/QuickRef.pdf
+          path: cryptx/docs/quickref/QuickRef.pdf
           if-no-files-found: warn
           
       - name: Compile Quick Reference
         uses: xu-cheng/latex-action@master
         with:
-          working_directory: docs/analysis
+          working_directory: cryptx/docs/analysis
           root_file: Cryptanalysis.tex
           
       - name: Upload Analysis
         uses: actions/upload-artifact@v3
         with:
           name: Cryptanalysis
-          path: /docs/analysis/Cryptanalysis.pdf
+          path: cryptx/docs/analysis/Cryptanalysis.pdf
           if-no-files-found: warn
         
           
