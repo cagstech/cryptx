@@ -1,0 +1,722 @@
+
+% --------------------------------------------------------------
+
+% This is all preamble stuff that you don't have to worry about.
+
+% Head down to where it says "Start here"
+
+% --------------------------------------------------------------
+
+
+
+\documentclass[titlepage]{article}
+
+\usepackage[margin=1in]{geometry} 
+\usepackage[table]{xcolor}
+\usepackage{amsmath,amsthm,amssymb,scrextend,mathtools,siunitx, cancel, bm, xfrac, esint}
+\usepackage{mdframed}
+\usepackage{csquotes}
+\usepackage{tabto}
+\usepackage{makecell}
+\usepackage{longtable}
+\usepackage{framed}
+\usepackage[breakable,skins]{tcolorbox}
+\usepackage{multirow}
+
+
+\edef\restoreparindent{\parindent=\the\parindent\relax}
+\usepackage{parskip}
+\restoreparindent
+
+\usepackage{parskip,caption,gensymb}
+\usepackage{graphicx,wrapfig,booktabs,multirow}
+\usepackage{multicol}
+\usepackage{placeins}
+\graphicspath{./}
+\usepackage{url}
+\usepackage[xcdraw,dvipsnames]{}
+\usepackage{fancyhdr,soul}
+\usepackage{tikz}
+\usepackage{textgreek}
+\usepackage{float}
+\usepackage[dvipsnames]{}
+
+%\renewcommand{\baselinestretch}{1.5} %this is your line spacing, current at, you guessed it! 1.5
+\pagestyle{fancy}
+
+
+\usepackage[hidelinks]{hyperref} %remove [hidelinks] and all links will have box surrounding
+\usepackage{changepage}
+
+
+\usepackage{listings}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+%\definecolor{lightgray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{quotecolor}{rgb}{211,211,211}
+\definecolor{chromeyellow}{rgb}{1.0, 0.65, 0.0}
+
+\lstdefinestyle{code}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=t,                    
+	keepspaces=false,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=1
+}
+\lstset{style=code}
+
+
+
+% if you want to define a new color use this format: {name}{RBG}{R, G, B values}
+%\definecolor{teal}{RGB}{0, 128, 128 } 
+\definecolor{ltgray}{gray}{0.9}
+
+\global\mdfdefinestyle{exampledefault}{%
+	linecolor=white,linewidth=3pt,%
+	backgroundcolor=ltgray,
+	leftmargin=1cm,rightmargin=1cm
+}
+
+\newcommand*{\hamil}{\hat{\mathcal{H}}}
+
+
+\newcommand{\N}{\mathbb{N}}
+
+\newcommand{\Z}{\mathbb{Z}}
+
+\newcommand{\I}{\mathbb{I}}
+
+\newcommand{\R}{\mathbb{R}}
+
+\newcommand{\Q}{\mathbb{Q}}
+
+\renewcommand{\qed}{}
+
+\let\newproof\proof
+\definecolor{shadecolor}{RGB}{180,180,180}
+
+\renewenvironment{proof}{\begin{addmargin}[2em]{2em}\begin{newproof}}{\end{newproof}\end{addmargin}\qed}
+% \newcommand{\expl}[1]{\text{\hfill[#1]}$}
+
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+		
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+		
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+		
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+		
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\newenvironment{reflection}[2][Reflection]{\begin{trivlist}
+		
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\newenvironment{proposition}[2][Proposition]{\begin{trivlist}
+		
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+		
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+
+\mdfdefinestyle{function}{%
+	backgroundcolor=Tan!10,%
+	linecolor=Tan,%
+	linewidth=1pt,%
+	leftmargin=0.1cm,%
+	rightmargin=0.1cm,%
+	roundcorner=10pt,%
+	frametitlebackgroundcolor=Tan,%
+}
+
+\mdfdefinestyle{warning}{%
+	linecolor=red,%
+	linewidth=1pt,%
+	leftmargin=-0.2cm,%
+	rightmargin=-0.2cm,%
+	skipbelow=0,%
+	skipabove=0,%
+	topline=false,%
+	bottomline=false,%
+	rightline=false%
+}
+
+\mdfdefinestyle{note}{%
+	linecolor=YellowOrange,%
+	linewidth=1pt,%
+	leftmargin=-0.2cm,%
+	rightmargin=-0.2cm,%
+	skipbelow=0,%
+	skipabove=0,%
+	topline=false,%
+	bottomline=false,%
+	rightline=false%
+}
+
+\newtcolorbox[]{functionspec}[2][]{%
+	breakable,
+	fonttitle=\bfseries,
+	fontupper=\normalsize,
+	boxrule=0pt,
+	title=\textcolor{white}{#2},
+	#1
+}
+
+\newtcolorbox{notespec}{
+	colframe=chromeyellow,
+	boxrule=0pt,
+	leftrule=4pt,
+	colback=chromeyellow!5
+}
+
+\newtcolorbox{warningspec}{
+	colframe=red,
+	boxrule=0.25pt,
+	leftrule=4pt,
+	colback=red!5
+}
+\setlength{\parindent}{0pt}
+% --------------------------------------------------------------
+
+%                         Start here
+
+% --------------------------------------------------------------
+
+
+
+%\lhead{left}
+
+%\chead{center}
+
+%\rhead{Right}
+
+%If you uncomment any/all of the above, you can set your own headers, uncommenting one will remove the auto headers in place (section and subsection) 
+
+\title{\huge{CryptX}\\\Huge{Cryptography\\on the\\TI-84+ CE}\\\LARGE{Quick Reference}\\Version 10}
+
+\author{by Anthony Cagliano}
+
+\date{}
+
+\makeatletter\@enumdepth1\makeatother
+
+\makeatletter
+\def\@Aboxed#1&#2&#3\ENDDNE{%
+	\ifnum0=`{}\fi \setbox \z@
+	\hbox{$\displaystyle#1{}\m@th$\kern\fboxsep \kern\fboxrule }%
+	\edef\@tempa {\kern  \wd\z@ &\kern -\the\wd\z@ \fboxsep
+		\the\fboxsep \fboxrule \the\fboxrule }\@tempa 
+	\fcolorbox{white}{ltgray}{$\displaystyle #1#2$}% changed
+}
+\makeatother
+
+\begin{document}
+	
+	\begin{titlepage}
+		\begin{center}
+			\vspace*{2in}
+			{\Large\textbf{CryptX}}
+			\\\rule{.5\linewidth}{4px}\\
+			{\huge\textbf{Industry-Standard\\Cryptography\\on the\\\vspace{2mm}TI-84+ CE}}
+			\\\rule{.5\linewidth}{4px}\\\vspace{4mm}
+			{\large\textit{Version 10}}\\\vspace{4mm}{\Large Quick Reference}\\
+			\vspace*{2in}
+			by Anthony Cagliano
+		\end{center}
+	\end{titlepage}
+	\setcounter{secnumdepth}{2}
+	\setcounter{tocdepth}{2}
+	\tableofcontents
+	\vspace{0.25in}
+	\rule{1\linewidth}{2px}
+	\section*{Installation}
+		\texttt{CryptX} is a collection of C (and ez80 Assembly) libraries for the TI-84+ CE graphing calculator that integrate with the \underline{\href{https://github.com/CE-Programming/toolchain}{CE C toolchain}}. If you have not already, familiarize yourself with the installation and usage instructions for the toolchain starting with \underline{\href{https://ce-programming.github.io/toolchain/static/getting-started.html}{this page}}.
+		
+		How to install the libraries on your device differs depending on what you need. The simplest thing to do is to just send the TI Group file \texttt{CryptX.8xg} to your graphing calculator. This will extract all three libraries onto your device. If you only need one or two of the libraries, you can navigate into the directory for the library you need and send one or more of the following TI Application Variable files to your calculator--\texttt{HASHLIB.8xv}, \texttt{ENCRYPT.8xv}, \texttt{ENCODEC.8xv}. Also bear in mind that ENCRYPT depends on HASHLIB so if you will be using the former be sure to install the latter as well.
+		
+		If you are a developer looking to use the library within your own project you must make sure that the necessary C header and library files are in the correct directories so that the compiler can find them. For the header files (.h) this is the \texttt{include} directory within the toolchain's root folder and for the library files (.lib) this is the \texttt{lib/libload} directory, also within the toolchain's root folder. A build rule exists within the makefile to make this easier. Simply open up a Terminal or command prompt window and type in \texttt{make install} or your system's equivalent.
+		
+		
+	
+	\newpage %starts intro on next page, remove and it'll start just under contents
+	\section{API Documentation, HASHLIB}
+	
+		\subsection{Enumerations, Definitions, and Macros}
+		\renewcommand*{\thead}[1]{\multicolumn{1}{c}{\bfseries #1}}
+		\def\arraystretch{1.75}%  1 is the default, change whatever you need
+		\rowcolors{2}{white}{gray!25}
+			\begin{table}[H]
+				\begin{tabular}{p{0.35\linewidth} | p{0.65\linewidth}}
+					\rowcolor{black!75}
+					\multicolumn{2}{|c|}{\textbf{\color{white}Hash Algorithms}} \\
+					\rowcolor{gray!75}
+					\thead{Identifier} & \thead{Algorithm}\\
+					SHA256 & Selects the SHA-256 hash or hmac algorithm
+				\end{tabular}
+				\label{enumerations:hash}
+			\end{table}
+	
+		\begin{table}[H]
+			\begin{tabular}{p{0.35\linewidth} | p{0.65\linewidth}}
+				\rowcolor{black!75}
+				\multicolumn{2}{|c|}{\textbf{\color{white}Constant Definitions}} \\
+				\rowcolor{gray!75}
+				\thead{Identifier} & \thead{Description}\\
+				fastRam\_Safe & Region of fast RAM generally safe to use for short-term computations\\
+				fastRam\_Unsafe & Region of fast RAM used by this library for PRNG and hashing speed\\
+				SHA256\_DIGEST\_LEN & Binary length of SHA-256 hash digest (32 bytes)
+			\end{tabular}
+			\label{definitions-hashlib}
+		\end{table}
+		
+		\subsection{Implementations}
+		\definecolor{bisque}{rgb}{1.0, 0.89, 0.77}
+		\definecolor{beige}{rgb}{0.96, 0.96, 0.86}
+		\subsubsection{Cryptographic Hashing}
+			A cryptographic hash is a fixed-size representation of an arbitrary-length stream of data. Hashes are also non-invertible, meaning that you cannot return the original message from the hash. The main function of a cryptographic hash is to verify whether some block of stored or transmitted data has changed since it was created or since it was last hashed. This works because the deviation of even a single bit in the input changes the hash quite drastically. Hashes can also be used to encrypt passwords, although the algorithms that do this are very different than those used for "fast" hashing.
+			\begin{functionspec}[]{void hash\_init(hash\_ctx* ctx, uint8\_t hash\_alg)}
+				Initializes the hash-state context for use.\\
+				\textbf{ctx} A pointer to an instance of \textit{hash\_ctx}.\\
+				\textbf{hash\_alg} The hashing algorithm to use. See \texttt{hash\_algorithms} (Enumerations).
+			\end{functionspec}
+			\vspace{1mm}
+			\begin{functionspec}[]{void hash\_update(hash\_ctx* ctx, const void* data, size\_t len)}
+				Updates the hash-state with new data. Be sure to initialize it first!\\
+				\textbf{ctx} A pointer to an instance of \textit{hash\_ctx}.\\
+				\textbf{data} A pointer to arbitrary data to hash.\\
+				\textbf{len} The size, in bytes, of the data to hash.
+			\end{functionspec}
+			\vspace{1mm}
+			\begin{functionspec}[]{void hash\_final(hash\_ctx* ctx, void* digest)}
+				Performs final transformations on the context and returns a digest from the current hash-state.\\
+				Does not destroy the context. It can still be used with the same data stream if needed.\\
+				\textbf{ctx} A pointer to an instance of \textit{hash\_ctx}.\\
+				\textbf{digest} A pointer to a buffer to write the digest to.
+			\end{functionspec}
+			
+		\subsubsection{Hash-Based Message Authentication Code (HMAC)}
+			An HMAC generates a more secure hash by using a key known only to authorized parties as part of the hash initialization. Thus, while normal hashes can be generated and verified by anyone, only the parties with the key can generate and validate using a HMAC hash. An HMAC can fill the same roles as a normal cryptographic hash, but provides endpoint validation as well.
+			\begin{functionspec}[]{void hmac\_init(hmac\_ctx* ctx, const void* key, size\_t keylen, uint8\_t hash\_alg)}
+				Initializes the HMAC hash-state context for use.\\
+				\textbf{ctx} A pointer to an instance of \textit{hmac\_ctx}.\\
+				\textbf{key} A pointer to the key to use in the HMAC initilaization.\\
+				\textbf{keylen} The length of the key, in bytes.\\
+				\textbf{hash\_alg} The hashing algorithm to use. See \texttt{hash\_algorithms} (Enumerations).
+				\begin{notespec}
+					NIST recommends a minimum key length of 128 bits, or 16 bytes.
+				\end{notespec}
+			\end{functionspec}
+			\vspace{1mm}
+			\begin{functionspec}[]{void hmac\_update(hmac\_ctx* ctx, const void* data, size\_t len)}
+				Updates the HMAC hash-state with new data. Be sure to initialize it first!\\
+				\textbf{ctx} A pointer to an instance of \textit{hmac\_ctx}.\\
+				\textbf{data} A pointer to arbitrary data to hash.\\
+				\textbf{len} The size, in bytes, of the data to hash.
+			\end{functionspec}
+			\vspace{1mm}
+			\begin{functionspec}[]{void hmac\_final(hmac\_ctx* ctx, void* digest)}
+				Performs final transformations on the context and returns a digest from the current hash-state.\\
+				Does not destroy the context. It can still be used with the same data stream if needed.\\
+				\textbf{ctx} A pointer to an instance of \textit{hmac\_ctx}.\\
+				\textbf{digest} A pointer to a buffer to write the digest to.
+			\end{functionspec}
+		
+		\subsubsection{Mask and Key Generation}
+			Sometimes in cryptography you need to generate hashes or keys of an arbitrary size. Two related, but different, functions exist to fill this role. The first of the two is a \textbf{mask generation function (MGF)}. A MGF generates a mask of arbitrary length by passing the data with a counter appended to it to a cryptographic primative such as SHA-256. The second of the two is a \textbf{password-based key derivation function}. A PBKDF works by using the supplied password as the key for an HMAC and then hashing the salt for the given number of rounds for each block of output.
+				\begin{functionspec}[]{void hash\_mgf1(const void* data, size\_t datalen,\\\tabto{30mm}void* outbuf, size\_t outlen, uint8\_t hash\_alg)}
+				Generates a mask of a given length from the given data.\\
+				\textbf{data} A pointer to data to generate the mask with.\\
+				\textbf{datalen} The length, in bytes, of the data.\\
+				\textbf{outbuf} A pointer to a buffer to write the mask to.\\
+				\textbf{outlen} The number of bytes of the mask to output.\\
+				\textbf{hash\_alg} The hashing algorithm to use. See \texttt{hash\_algorithms} (Enumerations).
+			\end{functionspec}
+			\vspace{1mm}
+			\begin{functionspec}[]{void hmac\_pbkdf2(const char* password, size\_t passlen,\\\tabto{35mm}void* key,  size\_t keylen\\\tabto{35mm}const void* salt, size\_t saltlen,\\\tabto{35mm}size\_t rounds, uint8\_t hash\_alg)}
+				Generates a key of given length from a password, salt, and a given number of rounds.\\
+				\textbf{password} A pointer to a string containing the password.\\
+				\textbf{passlen} The length of the password string.\\
+				\textbf{key} A pointer to a buffer to write the key to.\\
+				\textbf{keylen} The number of bytes of the key to output.\\
+				\textbf{salt} A pointer to a buffer containing pseudo random bytes.\\
+				\textbf{saltlen} The length of the salt, in bytes.\\
+				\textbf{rounds} The number of times to iterate the HMAC function per block in the output.\\
+				\textbf{hash\_alg} The hashing algorithm to use. See \texttt{hash\_algorithms} (Enumerations).
+				\begin{notespec}
+					NIST recommends a minimum salt length of 128 bits, or 16 bytes.
+				\end{notespec}
+			\end{functionspec}
+		
+		\subsubsection{Digest Operations}
+			The following are functions that operate on a digest, such as one returned by the hash, hmac, mgf, or pbkdf functions. The first of the two converts the digest into a hex representation of itself. The second compares two digests using a method that defeats timing analysis.
+		
+			\begin{functionspec}[]{void digest\_tostring(const void* digest, size\_t len, const char* hexstr)}
+				Outputs a textual representation of the hex encoding of a binary digest.\\
+				Ex: 0xfe, 0xa4, 0xc1, 0xf2 =$>$ "FEA4C1F2"\\
+				\textbf{digest} A pointer to a digest to convert to a string.\\
+				\textbf{len} The length of the digest, in bytes, to convert.\\
+				\textbf{hexstr} A pointer to a buffer to write the string. Must be equal to twice the digest length + 1.
+			\end{functionspec}
+			\vspace{1mm}
+			\begin{functionspec}[]{void digest\_compare(const void* digest1, const void* digest2, size\_t len)}
+				Compares the given number of bytes at $digest1$ with $digest2$ in a manner that is resistant to timing analysis.\\
+				\textbf{digest1} A pointer to the first buffer to compare.\\
+				\textbf{digest2} A pointer to the second buffer to compare.\\
+				\textbf{len} The number of bytes to compare.
+			\end{functionspec}
+		\newpage
+	\section{API Documentation, ENCRYPT}
+		\subsection{Enumerations, Definitions, and Macros}
+			\begin{table}[H]
+				\begin{tabular}{p{0.35\linewidth} | p{0.65\linewidth}}
+					\rowcolor{black!75}
+					\multicolumn{2}{|c|}{\textbf{\color{white}AES Cipher Modes}} \\
+					\rowcolor{gray!75}
+					\thead{Identifier} & \thead{Description}\\
+					AES\_MODE\_CBC & Selects cyclic-block chaining (CBC) cipher mode\\
+					AES\_MODE\_CTR & Selects counter (CTR) cipher mode
+				\end{tabular}
+				\label{enumerations:cipher_modes}
+			\end{table}
+			\begin{table}[H]
+				\begin{tabular}{p{0.35\linewidth} | p{0.65\linewidth}}
+					\rowcolor{black!75}
+					\multicolumn{2}{|c|}{\textbf{\color{white}AES Padding Schemes}} \\
+					\rowcolor{gray!75}
+					\thead{Identifier} & \thead{Description}\\
+					PAD\_DEFAULT & Enables default padding mode (PKCS\#7)\\
+					PAD\_PKCS7 & Enables the PKCS\#7 padding scheme\\
+					PAD\_ISO2 & Enables the ISO-9797 M2 padding scheme
+				\end{tabular}
+				\label{enumerations:padding_schemes}
+			\end{table}
+			\begin{table}[H]
+				\begin{tabular}{p{0.35\linewidth} | p{0.65\linewidth}}
+					\rowcolor{black!75}
+					\multicolumn{2}{|c|}{\textbf{\color{white}AES Response Codes}} \\
+					\rowcolor{gray!75}
+					\thead{Identifier} & \thead{Description}\\
+					AES\_OK & AES operation completed w/o errors\\
+					AES\_INVALID\_ARG & One or more inputs invalid\\
+					AES\_INVALID\_MSG & Message cannot be encrypted\\
+					AES\_INVALID\_CIPHERMODE & Cipher mode not supported\\
+					AES\_INVALID\_PADDINGMODE & Padding mode not supported\\
+					AES\_INVALID\_CIPHERTEXT & Ciphertext cannot be decrypted \\
+					AES\_INVALID\_OPERATION & \makecell[l]{Encryption-locked context used for decryption\\Decryption-locked context used for encryption\\\textit{Context locks to the first operation it is used with.}}
+				\end{tabular}
+				\label{enumerations:aes_errors}
+			\end{table}
+			\begin{table}[H]
+				\begin{tabular}{p{0.35\linewidth} | p{0.65\linewidth}}
+					\rowcolor{black!75}
+					\multicolumn{2}{|c|}{\textbf{\color{white}RSA Response Codes}} \\
+					\rowcolor{gray!75}
+					\thead{Identifier} & \thead{Description}\\
+					RSA\_OK & RSA operation completed w/o errors\\
+					RSA\_INVALID\_ARG & One or more inputs invalid\\
+					RSA\_INVALID\_MSG & Message value exceeds modulus value\\
+					RSA\_INVALID\_MODULUS & \makecell[l]{Modulus not odd\\Length not in range 128-256 bytes}\\
+					RSA\_ENCODING\_ERROR & \makecell[l]{OAEP requirements not met, ex:\\Message not less than modulus length minus twice the hash digest\\ length plus two.}
+				\end{tabular}
+				\label{enumerations:rsa_errors}
+			\end{table}
+				\begin{table}[H]
+				\begin{tabular}{p{0.35\linewidth} | p{0.65\linewidth}}
+					\rowcolor{black!75}
+					\multicolumn{2}{|c|}{\textbf{\color{white}Constant Definitions}} \\
+					\rowcolor{gray!75}
+					\thead{Identifier} & \thead{Description}\\
+					AES\_BLOCKSIZE & Block length of the AES cipher (16 bytes)\\
+					AES\_IVSIZE & Length of the AES initialization vector (same as block size)
+				\end{tabular}
+				\label{definitions-encrypt}
+			\end{table}
+			\begin{table}[H]
+				\begin{tabular}{p{0.35\linewidth} | p{0.65\linewidth}}
+					\rowcolor{black!75}
+					\multicolumn{2}{|c|}{\textbf{\color{white}Macros}} \\
+					\rowcolor{gray!75}
+					\thead{Identifier} & \thead{Description}\\
+					aes\_outsize(len) & Returns the smallest multiple of the block size that can hold the ciphertext with any required padding\\
+					aes\_extoutsize(len) & Returns the output of \texttt{aes\_outsize(len)} with an additional 16 bytes added for the IV
+				\end{tabular}
+				\label{macros}
+			\end{table}
+			
+		\subsection{Implementations}			
+			\subsubsection{Secure Random Number Generator (SRNG)}
+				This library provides a random number generator (RNG) to replace the one provided by the toolchain for cryptographic purposes. While the toolchain's RNG is statistically random, it is also \textbf{deterministic} (def: a single input maps to a single output) and predictable given the state of the generator. That makes it insecure for cryptography. The RNG provided by this library is not only statistically random as well but also is unpredictable owing to the gathering of \textbf{entropy} (def: unpredictability) from the behavior of bus noise (unmapped memory) on the hardware. You can find a more technical explanation of the entropy-sourcing process, proof of entropy, and more in \texttt{CryptX Cryptanalysis, Section 1}. 
+			\vspace{5mm}
+			\begin{functionspec}[]{bool csrand\_init(void)}\small
+				Initializes the CSRNG.\\
+				\textbf{returns} \texttt{True} if the source selection succeeded and \texttt{False} if it failed.\\
+				Be sure to intercept and handle a return value of False from this function.
+			\end{functionspec}
+			\vspace{1mm}
+			\begin{functionspec}[]{uint32\_t csrand\_get(void)}\small
+				\textbf{returns} A securely pseudo random 32-bit (4 byte) unsigned integer.
+			\end{functionspec}
+			\vspace{1mm}
+			\begin{functionspec}[]{bool csrand\_fill(void* buffer, size\_t size)}\small
+				\textbf{buffer} Pointer to an arbitrary buffer to fill with random bytes.\\
+				\textbf{size} Number of bytes to write.\\
+				\textbf{returns} \texttt{True} if operation succeeded. \texttt{False} if failed.
+			\end{functionspec}
+		
+		\subsubsection{Advanced Encryption Standard (AES)}
+			
+			The \textbf{Advanced Encryption Standard (AES)} is a symmetric encryption system and a block cipher. Symmetric encryption means that the same key can be used for both encryption and decryption. A block cipher is a cipher in which the data is operated on in blocks of a fixed size. AES is one of the most secure encryption systems in use today, expected to remain secure even through the advent of quantum computing. It is also fast and more secure than asymmetric encryption for smaller key sizes.
+			
+			The AES implementation used alone provides confidentiality only, not integrity. For details on authenticated encryption, see \underline{\hyperref[sec:auth]{Authenticated Encryption with CryptX}}.
+				\begin{functionspec}[]{aes\_error\_t aes\_init(const aes\_ctx* ctx, const void* key, size\_t keylen,\\\tabto{35mm}const void* iv, uint24\_t flags)}
+					Configures an AES context given a key and a series of option flags.\\
+					\textbf{ctx} Pointer to an AES cipher configuration context.\\
+					\textbf{key} Pointer to a buffer containing the AES key.\\
+					\textbf{keylen} The length, in bytes, of the AES key.\\
+					\textbf{iv} Pointer to initialization vector, buffer equaling the block size in length containing random bytes.\\
+					\textbf{flags} A series of cipher options bitwise-ORd together. Pass 0 to use default options.\\
+					\textbf{returns} An \texttt{aes\_error\_t} response indicating the status of the AES operation.
+					\begin{notespec}
+						\textbf{cipher options flags:}\\
+						\texttt{cipher modes}: AES\_MODE\_CBC or AES\_MODE\_CTR\\
+						\texttt{CBC padding modes}: PAD\_DEFAULT or PAD\_PKCS7 or PAD\_ISO2\\
+						\texttt{CTR initialization vector fixed nonce length}: AES\_CTR\_NONCELEN(len)\\
+						\texttt{CTR initialization vector counter length}: AES\_CTR\_COUNTERLEN(len)\\
+						Passing only \texttt{0} for flags sets defaults for CBC mode.\\
+						Passing only \texttt{AES\_MODE\_CTR} for flags sets defaults for CTR mode.\\
+						Do not edit the cipher context manually after initialization.\\
+						Cipher contexts are stateful and one-directional. If you need a two-way AES session you will need two contexts.
+					\end{notespec}
+				\begin{warningspec}
+					\texttt{data length limit:} It is recommended that you change your key after encrypting $2^{64}$ blocks of information.
+				\end{warningspec}
+				\end{functionspec}
+			\vspace{1mm}
+				\begin{functionspec}[]{aes\_error\_t aes\_encrypt(const aes\_ctx* ctx, const void* plaintext, size\_t len,\\\tabto{40mm}void* ciphertext)}
+					Encrypts the given message using the AES cipher.\\
+					\textbf{ctx} A pointer to an AES cipher configured by aes\_init().\\
+					\textbf{plaintext} A pointer to a buffer containing data to encrypt.\\
+					\textbf{len} The length of the data to encrypt.\\
+					\textbf{ciphertext} A pointer to a buffer to write the encrypted output to.\\
+					\textbf{returns} An \texttt{aes\_error\_t} response indicating the status of the AES operation.
+					\begin{notespec}
+						The AES context is stateful. After a call to \texttt{aes\_encrypt()}, you can pass another message on the same stream without altering or re-initializing the context by simply calling \texttt{aes\_encrypt()} again.\\
+						Once a context is used with aes\_encrypt(), attempting to use it with aes\_decrypt() will return \texttt{AES\_INVALID\_OPERATION}.\\
+						Calls to aes\_encrypt() are chainable. If in CBC mode, this will be true only after any appended padding is removed by the decryptor.\\
+						If in CBC mode, padding will be appended automatically by the encryptor. \textbf{ciphertext} will therefore need to be large enough to hold the plaintext plus any necessary padding. This is the length of the plaintext rounded up to the next multiple of the block size. If the plaintext already is a multiple of the block size, another block of padding is added.
+					\end{notespec}
+				\end{functionspec}
+		\vspace{1mm}
+				\begin{functionspec}[]{aes\_error\_t aes\_decrypt(const aes\_ctx* ctx, const void* ciphertext, size\_t len,\\\tabto{40mm}void* plaintext)}
+				Decrypts the given message using the AES cipher.\\
+				\textbf{ctx} A pointer to an AES cipher configured by aes\_init().\\
+				\textbf{ciphertext} A pointer to a buffer containing data to decrypt.\\
+				\textbf{len} The length of the data to decrypt.\\
+				\textbf{plaintext} A pointer to a buffer to write the decrypted output to.\\
+				\textbf{returns} An \texttt{aes\_error\_t} response indicating the status of the AES operation.
+					\begin{notespec}
+					The AES context is stateful. After a call to \texttt{aes\_decrypt()}, you can pass another message on the same stream without altering or re-initializing the context by simply calling \texttt{aes\_decrypt()} again.\\
+					Once a context is used with aes\_decrypt(), attempting to use it with aes\_encrypt() will return \texttt{AES\_INVALID\_OPERATION}.\\
+					Calls to aes\_decrypt() are chainable. \\If in CBC mode, this will be true only after any appended padding is removed.\\
+					If in CBC mode, padding will not be removed automatically. This can be done algorithmically quite simply by the user. If using PKCS7, simply read the last byte of the padded plaintext and strip that many bytes. If using ISO2, simply seek from the end of the padded plaintext backwards to the first \$0x80 byte and strip from that byte forwards.
+				\end{notespec}
+			\end{functionspec}
+		
+		\subsubsection{RSA Public Key Encryption}
+		
+			Public key encryption is a form of asymmetric encryption generally used to share a secret key for AES or another symmetric encryption system. To communicate between two parties, both need a public key and a private key. The public key is (hence the term "public") common knowledge and is sent to other parties in the clear. The private key is known only to the host. The public key is used to encrypt messages for the host, and the private key is used by the host to decrypt those messages. The public key and private key are inverses of each other such that:\\
+			$ encrypted\;=\;message\;^{public\;exponent} \;\%\;public\;modulus $\\
+			$ message\;=\;encrypted\;^{private\;exponent}\;\%\;private\;modulus $\\
+			RSA is very slow, especially on the TI-84+ CE. Encrypting with just a 1024-bit modulus will take several seconds. For this reason, do not use RSA for sustained encrypted communication. Use RSA once to share a key with a remote host, then use AES.
+			Also the RSA implementation in this library is encryption only. This means you will need to handshake with a server to create a secure session, like so:
+			\begin{enumerate}
+				\item Connect to remote host. Let that server generate a public and private key pair. Send the public key to the calculator.
+				\item Use hashlib to generate an AES secret. Encrypt that secret using RSA and send the encrypted message to the remote host.
+				\item Decrypt the message on the server, and set up an AES session using the secret just shared with the remote host.
+			\end{enumerate}
+			
+			\begin{functionspec}[]{rsa\_error\_t rsa\_encrypt(const void* msg, size\_t msglen, void* ciphertext,\\\tabto{40mm}const void* pubkey, size\_t keylen, uint8\_t oaep\_hash\_alg)}
+				Encrypts the given message using the given public key and the public exponent $65537$.\\
+				Applies the OAEP v2.2 encoding scheme prior to encryption.\\
+				\textbf{msg} A pointer to a buffer containing data to encrypt.\\
+				\textbf{msglen} The length of the data to encrypt.\\
+				\textbf{ciphertext} A pointer to a buffer to write the encrypted output to.\\
+				\textbf{pubkey} A pointer to an RSA public modulus.\\
+				\textbf{keylen} The length of the RSA public modulus, in bytes.\\
+				\textbf{oaep\_hash\_alg} The hashing algorithm to use for OAEP. See \texttt{hash\_algorithms} (Enumerations).\\
+				\textbf{returns} An \texttt{rsa\_error\_t} response indicating the status of the RSA operation.
+			\end{functionspec}		
+		\newpage
+		\section{API Documentation, ENCODEC}
+				\subsection{Enumerations, Definitions, and Macros}
+			\begin{table}[H]
+				\begin{tabular}{p{0.35\linewidth} | p{0.65\linewidth}}
+					\rowcolor{black!75}
+					\multicolumn{2}{|c|}{\textbf{\color{white}ASN.1 Types}} \\
+					\rowcolor{gray!75}
+					\thead{Identifier} & \thead{Description}\\
+					ASN1\_RESVD & Reserved\\
+					ASN1\_BOOLEAN & Denotes object of type boolean\\
+					ASN1\_INTEGER & Denotes object of type integer\\
+					ASN1\_BITSTRING & Denotes a string of bits\\
+					ASN1\_OCTETSTRING & Denotes a string of octets\\
+					ASN1\_NULL & Denotes a null object\\
+					ASN1\_OBJECTID & Denotes an object identifier string\\
+					ASN1\_OBJECTDESC & Denotes a description of an object\\
+					ASN1\_SEQUENCE & Denotes a construction of multiple objects\\
+					ASN1\_SET & Denotes an unordered construction of multiple objects
+				\end{tabular}
+				\label{enumerations:asn1_types}
+				\textit{Several uncommon tag types omitted. See C header for the full list.}
+			\end{table}
+			\begin{table}[H]
+			\begin{tabular}{p{0.35\linewidth} | p{0.65\linewidth}}
+				\rowcolor{black!75}
+				\multicolumn{2}{|c|}{\textbf{\color{white}ASN.1 Classes}} \\
+				\rowcolor{gray!75}
+				\thead{Identifier} & \thead{Description}\\
+				ASN1\_UNIVERSAL & Denotes a tag defined within the ASN.1 standard\\
+				ASN1\_APPLICATION & Denotes a tag unique to a particular application\\
+				ASN1\_CONTEXTSPEC & Denotes a tag unique to a well-defined context\\
+				ASN1\_PRIVATE & Denotes a tag reserved by an entity for use by applications\\
+			\end{tabular}
+			\label{enumerations:asn1_classes}
+		\end{table}
+		\begin{table}[H]
+		\begin{tabular}{p{0.35\linewidth} | p{0.65\linewidth}}
+			\rowcolor{black!75}
+			\multicolumn{2}{|c|}{\textbf{\color{white}ASN.1 Forms}} \\
+			\rowcolor{gray!75}
+			\thead{Identifier} & \thead{Description}\\
+			ASN1\_PRIMITIVE & Denotes an object that cannot be deconstructed further\\
+			ASN1\_CONSTRUCTED & Denotes an object composed of multiple primitive objects\\
+		\end{tabular}
+		\label{enumerations:asn1_forms}
+		\end{table}
+		\subsection{Implementations}
+			\subsubsection{ASN.1 Encoding}
+				ASN.1 stands for \textbf{Abstract Syntax Notation} and is a form of plaintext encoding used to express one or more data objects sequentially. It embeds: (1) a tag indicating the object type, (2) the size of the object, and (3) the object data. The main serialization format for ASN.1 is called \textbf{DER} and it is commonly used for the encoding of public keys produced by various cryptography modules. DER stands for \textbf{Distinguished Encoding Rules}.
+				
+				\begin{functionspec}[]{size\_t asn1\_decode(const void* asn1\_data, size\_t len, asn1\_obj\_t* objs, size\_t iter\_count)}
+					Decodes the given ASN.1 encoded data stream.\\
+					Returns the object type, class, and form (see \textit{ASN1\_TYPES, ASN1\_CLASSES, ASN1\_FORMS}), as well as its length and a pointer to the first data byte.\\
+					\textbf{asn1\_data} A pointer to an ASN.1-encoded stream of data.\\
+					\textbf{len} Length of data to decode.\\
+					\textbf{objs} A pointer to an array of asn1 object structs to extract to.\\
+					\textbf{iter\_count} Maximum number of objects to extract.\\
+					\textbf{returns} A \texttt{size\_t} indicating how many objects were extracted.
+					\begin{notespec}
+						This function will recurse for any object that is of form \texttt{ASN1\_CONSTRUCTED}. If an object is constructed but does not have this bit set, then the user will need to re-enter this function manually using the pointer and length returned for that object.\\
+						If an object starts with a 0x00 byte, this function assumes that to a pre-padding byte, attempts to strip it and parse starting from the next byte.\\
+						Due to platform constraints, only objects of a size that fits within a \texttt{size\_t} are supported. If the parser encounters an unsupported size, it will error out, returning only objects parsed up to that point.
+					\end{notespec}
+				\end{functionspec}
+			\subsubsection{Base64 Encoding}
+				Base64 is an alternative data-encoding scheme in which the data is interpreted as a \textbf{sextet} (def: six (6) bit value) which is then mapped out to one of 64 printable characters (A-Z, a-z, +, /). A padding character (=) is appended to the stream if it is not a multiple of 4 sextets in length. Base64 is used alongside DER for the encoding of public keys (PEM format). It also occurs in bcrypt password hashes.
+				
+				\begin{functionspec}[]{size\_t base64\_encode(const void* in, size\_t len, void* out)}
+					Encodes a given byte stream as base64.\\
+					\textbf{in} A pointer to data to base64 encode.\\
+					\textbf{len} Length of data to encode.\\
+					\textbf{out} A pointer to a buffer to write the base64-encoded data.\\
+					\textbf{returns} A \texttt{size\_t} indicating the size of the encoded data.
+				\end{functionspec}
+			
+				\begin{functionspec}[]{size\_t base64\_encode(const void* in, size\_t len, void* out)}
+					Decodes a given base64 byte stream.\\
+					\textbf{in} A pointer to base64-encoded data.\\
+					\textbf{len} Length of data to decode.\\
+					\textbf{out} A pointer to a buffer to write the decoded data.\\
+					\textbf{returns} A \texttt{size\_t} indicating the size of the decoded data.
+				\end{functionspec}
+		\newpage
+		\section{Addendum: Authenticated Encryption with CryptX}
+			\label{sec:auth}
+			\textbf{Authenticated encryption} is an encryption scheme that produces a ciphertext that is not only obfuscated but also has its integrity and authenticity verifiable. This can be accomplished in a few ways, the most common of which are: (1) appending a signature, hash, or keyed hash to a message, and (2) implementing a cipher mode that integrates authentication.
+			
+			\#2 above is not implemented in HASHLIB. Most of the authenticating cipher modes are computationally-intensive without hardware acceleration and may not be feasible for use on the TI-84+ CE. While consideration is being given to potentially adding a cipher mode such as OCB or GCM if a sufficiently-optimized implementation for this platform can be found (or devised), it is possible to construct a ciphertext guarded against tampering by using method \#1, which this library does provide for.
+			
+			It is my recommendation that whenever you are sending data you need to be \textbf{truly secure} with this library, you always embed a \textbf{keyed hash} into the message that the recipient can validate. This functionality is provided by the \texttt{HMAC} implementation shown earlier in this document. Proper application of HMAC for ciphertext integrity requires the following considerations:
+			\begin{enumerate}
+				\item Initialization vector/nonce blocks for encryption are securely pseudo-random.
+				\item Encryption and HMAC keys are also securely pseudo-random and are long enough to be considered secure. Minimum key sizes recommended are 16 bytes.
+				\item You are not using your encryption key as your HMAC key or vice versa. There are attack vectors that result from using the same key for encryption and authentication.
+				\item Append a keyed hash (HMAC) of the initialization vector/nonce, encrypted message, and any other associated data such as packet headers to the outgoing message. On the receiving side, validate the HMAC before decryption and reject any message that does not authenticate. The HMAC key can be an application secret known to both parties or a generated nonce shared alongside the AES encryption key using RSA or another public key encryption method.
+			\end{enumerate}
+			\begin{lstlisting}[language=C,title=Sample authenticated encryption construction using CryptX API]
+				// this assumes that the AES secret `aes_key` and the HMAC secret `hmac_key`
+				// have been negotiated beforehand.
+				
+				// let's send a simple ascii string
+				char* msg = "The daring fox jumped over the moon."
+				
+				// the header is a size word, containing size of string plus our IV
+				// header can really be whatever you want, but some arbitrary nonsense as an example
+				size_t header = sizeof(msg)+AES_IVSIZE;
+				
+				uint8_t iv[AES_IVSIZE];
+				uint8_t hmac_digest[SHA256_DIGEST_LEN];
+				aes_ctx ctx;
+				hmac_ctx hmac;
+				
+				// !!!! NEVER PROCEED IF csrand_init() FAILS !!!
+				if(!csrand_init()) return false;
+				csrand_fill(iv, AES_IVSIZE;
+				
+				// initialize AES context with mode, key, and iv
+				aes_init(&ctx, aes_key, sizeof aes_key, iv, AES_MODE_CTR);
+				
+				// encrypt message
+				// aes_encrypt supports in-place encryption
+				aes_encrypt(&ctx, msg, strlen(msg), msg);
+				
+				// hash everything you are sending, except the hash itself
+				hmac_init(&hmac, hmac_key, sizeof hmac_key, SHA256);
+				hmac_update(&hmac, &header, sizeof header);
+				hmac_update(&hmac, iv, sizeof iv);
+				hmac_update(&hmac, msg, strlen(msg));
+				hmac_final(&hmac, hmac_digest);
+				
+				// ps_send is a pseudo-function implying sending a packet segment over network
+				ps_send(&header, sizeof header);
+				ps_send(iv, sizeof iv);
+				ps_send(msg, sizeof msg);
+				ps_send(hmac_digest, sizeof hmac_digest);	
+\end{lstlisting}
+\newpage			
+			\section{Contributors}
+				\begin{itemize}
+					\item Anthony Cagliano [cryptographer, lead developer]
+					\item beckadamtheinventor [contributing developer, assembly conversions]
+					\item commandblockguy [contributing developer]
+					\item Zeroko [information on entropy on TI-84+ CE]
+					\item jacobly [ez80 implementation of digest\_compare and \_powmod for RSA]
+				\end{itemize}
+				\section{Disclaimer}
+					HASHLIB is a work-in-progress and has seen very little time as the forerunning cryptography library for the TI-84+ CE calculator. This means that it has not had much time to be thoroughly analyzed, and due to some hardware constraints may never offer total security against every possible attack. For this reason, I heavily advise that however secure HASHLIB may be, you never use it for encrypting truly sensitive data like online banking and other accounts, credit card information, and the like over an insecure network. It is likely safe enough to be used to encrypt data transfers and account login for TI-84+ CE game servers and package managers like the ones currently under development. By using this software you release and save harmless its developer(s) from liability for data compromise that may arise should you use this software.\\\\
+					
+					LICENSE: GNU General Public License v3.0
+	\end{document}
