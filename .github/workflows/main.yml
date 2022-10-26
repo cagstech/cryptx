@@ -9,22 +9,22 @@ jobs:
       - name: Compile Quick Reference
         uses: xu-cheng/latex-action@master
         with:
-          root_file: docs/quickref/QuickRef.tex
+          root_file: ${{ GITHUB_WORKSPACE }}/docs/quickref/QuickRef.tex
       - name: Upload Quick Reference
         uses: actions/upload-artifact@v3
         with:
           name: Quick Reference
-          path: docs/quickref/QuickRef.pdf
+          path: ${{ GITHUB_WORKSPACE }}/docs/quickref/QuickRef.pdf
           if-no-files-found: warn
       - name: Compile Quick Reference
         uses: xu-cheng/latex-action@master
         with:
-          root_file: docs/analysis/Cryptanalysis.tex
+          root_file: ${{ GITHUB_WORKSPACE }}/docs/analysis/Cryptanalysis.tex
       - name: Upload Analysis
         uses: actions/upload-artifact@v3
         with:
           name: Cryptanalysis
-          path: docs/analysis/Cryptanalysis.pdf
+          path: ${{ GITHUB_WORKSPACE }}/docs/analysis/Cryptanalysis.pdf
           if-no-files-found: warn
         
           
