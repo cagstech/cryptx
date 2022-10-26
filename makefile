@@ -18,6 +18,7 @@ include $(CURDIR)/../common.mk
 
 LIBS := hashlib encrypt encodex
 TOOLS := fasmg convbin
+DOC_FILES := QuickReference.pdf Cryptanalysis.pdf
 
 
 SRCDIR = $(call NATIVEPATH,$1)
@@ -67,8 +68,15 @@ check:
 	$(Q)$(EZCC) --version || ( echo Please install ez80-clang && exit 1 )
 	$(Q)$(FASMG) $(NULL) $(NULL) || ( echo Please install fasmg && exit 1 )
 	
-docs: QuickReference.pdf Cryptanalysis.pdf
-	pdflatex  -file-line-error -halt-on-error -interaction=nonstopmode -recorder  ".docs/QuickRef.tex"'
+docs: $(DOC_FILES)
+QuickReference.pdf: docs/quickref/QuickRef.tex
+	
+	pdflatex -output-directory="docs/quickref" -file-line-error -halt-on-error -interaction=nonstopmode -recorder  "docs/quickref/QuickRef.tex"
+	cp docs/quickref/QuickRef.pdf QuickReference.pdf
+Cryptanalysis.pdf: docs/analysis/Cryptanalysis.tex
+	pdflatex -output-directory="docs/analysis" -file-line-error -halt-on-error -interaction=nonstopmode -recorder  "docs/analysis/Cryptanalysis.tex"
+	cp docs/analysis/Cryptanalysis.pdf Cryptanalysis.pdf
+
 
 .PHONY: all clean install
 
