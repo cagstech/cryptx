@@ -1,0 +1,36 @@
+name: Build LaTeX document
+on: [push]
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v2.3.4
+        
+      - name: Compile Quick Reference
+        uses: xu-cheng/latex-action@master
+        with:
+          working_directory: docs/quickref
+          root_file: QuickRef.tex
+          
+      - name: Upload Quick Reference
+        uses: actions/upload-artifact@v3
+        with:
+          name: Quick Reference
+          path: docs/quickref/QuickRef.pdf
+          if-no-files-found: warn
+          
+      - name: Compile Quick Reference
+        uses: xu-cheng/latex-action@master
+        with:
+          working_directory: docs/analysis
+          root_file: Cryptanalysis.tex
+          
+      - name: Upload Analysis
+        uses: actions/upload-artifact@v3
+        with:
+          name: Cryptanalysis
+          path: docs/analysis/Cryptanalysis.pdf
+          if-no-files-found: warn
+        
+          
