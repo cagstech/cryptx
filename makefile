@@ -66,6 +66,9 @@ group: $(LIBS)
 check:
 	$(Q)$(EZCC) --version || ( echo Please install ez80-clang && exit 1 )
 	$(Q)$(FASMG) $(NULL) $(NULL) || ( echo Please install fasmg && exit 1 )
+	
+docs: QuickReference.pdf Cryptanalysis.pdf
+	pdflatex  -file-line-error -halt-on-error -interaction=nonstopmode -recorder  ".docs/QuickRef.tex"'
 
 .PHONY: all clean install
 
