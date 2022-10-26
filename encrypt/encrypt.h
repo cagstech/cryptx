@@ -1,19 +1,19 @@
 /**
- *	@file cryptoc.h
- *	@brief	Provides standard encryption for the TI-84+ CE
+ * @file encrypt.h
+ * @brief	Provides standard encryption for the TI-84+ CE.
+ * @author Anthony @e ACagliano Cagliano
+ * @author Adam @e beck Beckingham
+ * @author commandblockguy
  *
- *	Industry-Standard Cryptography for the TI-84+ CE
- *	- Secure Random Number Generator (SRNG)
- *	- cipher_aes
- *	- cipher_rsa
- *
- *	@author Anthony @e ACagliano Cagliano
- *	@author Adam @e beck Beckingham
- *	@author commandblockguy
+ * @mainpage ENCRYPT
+ * Provides symmetric and asymmetric (pubkey) encryption as well as a HWRNG.
+ * 1. Secure HWRNG
+ * 2. AES-128, AES-192, AES-256
+ * 3. RSA + OAEP v2.2
  */
 
-#ifndef CRYPTOC_H
-#define CRYPTOC_H
+#ifndef ENCRYPT_H
+#define ENCRYPT_H
 #include <hashlib.h>
 
 /*

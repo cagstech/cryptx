@@ -1,8 +1,13 @@
 /**
  * @file encodex.h
  * @brief Provides support for various data encoding schemes common to cryptography.
+ * @author Anthony @e ACagliano Cagliano
  *
- *@author Anthony @e ACagliano Cagliano
+ * @mainpage ENCODEX
+ * A library providing encoding support for various data formats
+ * 1. ASN.1 parser
+ * 2. Base64 encoding/decoding
+ * tbc
  */
 
 #ifndef ENCODEX_H
@@ -43,17 +48,17 @@ typedef struct _asn1_obj_t {
  * See @b asn1_obj_t.tag.
  */
 enum ASN1_TYPES {
-	ANS1_RESVD = 0,
-	ANS1_BOOLEAN,
-	ANS1_INTEGER,
-	ANS1_BITSTRING,
-	ANS1_OCTETSTRING,
-	ANS1_NULL,
-	ANS1_OBJECTID,
-	ANS1_OBJECTDESC,
-	ANS1_INSTANCE,
-	ANS1_REAL,
-	ANS1_ENUMERATED,
+	ASN1_RESVD = 0,
+	ASN1_BOOLEAN,
+	ASN1_INTEGER,
+	ASN1_BITSTRING,
+	ASN1_OCTETSTRING,
+	ASN1_NULL,
+	ASN1_OBJECTID,
+	ASN1_OBJECTDESC,
+	ASN1_INSTANCE,
+	ASN1_REAL,
+	ASN1_ENUMERATED,
 	ASN1_EMBEDDEDPDV,
 	ASN1_UTF8STRING,
 	ASN1_RELATIVEOID,
@@ -101,15 +106,15 @@ enum ASN1_FORMS {
  * @note This function is recursive for any element of @b constructed form.
  * @note For DER-formatted RSA public keys, you will need to call this function twice to
  * unpack the modulus and exponent. The second time should be on the
- * @b ANS1_BITSTRING that encodes the modulus
- * and public exponent. See the ans1\_decode demo for details.
+ * @b ASN1_BITSTRING that encodes the modulus
+ * and public exponent. See the asn1\_decode demo for details.
  * @param asn1_data Pointer to ASN.1-encoded data.
- * @param asn1_len The length of the encoded data.
+ * @param len The length of the encoded data.
  * @param objs Pointer to an array of @b asn1_obj_t structs to fill with decoded data.
  * @param iter_count Maximum number of ASN.1 elements to process before returning.
  * @returns The number of objects returned by the parser. Zero indicates an error.
  */
-size_t asn1_decode(void *asn1_data, size_t asn1_len, asn1_obj_t *objs, size_t iter_count);
+size_t asn1_decode(void *asn1_data, size_t len, asn1_obj_t *objs, size_t iter_count);
 
 
 
