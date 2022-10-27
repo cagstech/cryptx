@@ -10,8 +10,11 @@ library ENCODEX, 1
     export asn1_decode
     export base64_encode
     export base64_decode
-    
-    
+    export encode_pack1bpp
+    export decode_unpack1bpp
+    export encode_pack2bpp
+    export decode_unpack2bpp
+
 _rmemcpy:
 ; optimized by calc84maniac
     ld  iy, -3
@@ -593,6 +596,103 @@ base64_decode:
 	ld	sp, ix
 	pop	ix
 	ret
+
+
+; void decode_unpack1bpp(void *dest, void *src, size_t len);
+; note: len refers to src length, which is 1/8 the length of dest
+decode_unpack1bpp:
+	ld	iy,0
+	add	iy,sp
+	ld	hl,(iy+6)
+	ld	bc,(iy+9)
+	ld	iy,(iy+3)
+.outer:
+	ld	e,(hl)
+	ld	d,8
+.inner:
+	xor	a,a
+	rlc	e
+	adc	a,a
+	ld	(iy),a
+	inc	iy
+	dec	d
+	jr	nz,.inner
+	cpi
+	ret	po
+	jr	.outer
+
+; void encode_pack2bpp(void *dest, void *src, size_t len);
+; note: len refers to dest length, which is 8x the length of src
+encode_pack1bpp:
+	ld	iy,0
+	add	iy,sp
+	ld	hl,(iy+3)
+	ld	bc,(iy+9)
+	ld	iy,(iy+6)
+.outer:
+	ld d,8
+	xor a,a
+.inner:
+	ld e,(iy)
+	rrc e
+	adc a,a
+	inc iy
+	dec	d
+	jr	nz,.inner
+	ld	(hl),a
+	cpi
+	ret	po
+	jr	.outer
+
+
+; void decode_unpack2bpp(void *dest, void *src, size_t len);
+decode_unpack2bpp:
+	ld	iy,0
+	add	iy,sp
+	ld	hl,(iy+6)
+	ld	bc,(iy+9)
+	ld	iy,(iy+3)
+.outer:
+	ld	e,(hl)
+	ld	d,4
+.inner:
+	xor	a,a
+	rlc	e
+	rla
+	rlc	e
+	rla
+	ld	(iy),a
+	inc	iy
+	dec	d
+	jr	nz,.inner
+	cpi
+	ret	po
+	jr	.outer
+
+; void encode_pack2bpp(void *dest, void *src, size_t len);
+; note: len refers to dest length, which is 1/4 the length of src
+encode_pack2bpp:
+	ld	iy,0
+	add	iy,sp
+	ld	hl,(iy+3)
+	ld	bc,(iy+9)
+	ld	iy,(iy+6)
+.loop:
+	ld	a,(iy+0)
+	add	a,a
+	add	a,a
+	add	a,(iy+1)
+	add	a,a
+	add	a,a
+	add	a,(iy+2)
+	add	a,a
+	add	a,a
+	add	a,(iy+3)
+	lea	iy,iy+4
+	ld	(hl),a
+	cpi
+	ret	po
+	jr	.loop
 
 
 _b64_charset:
