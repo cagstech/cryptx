@@ -69,13 +69,12 @@ check:
 	$(Q)$(FASMG) $(NULL) $(NULL) || ( echo Please install fasmg && exit 1 )
 	
 docs: $(DOC_FILES)
-QuickReference.pdf: docs/quickref/QuickRef.tex
-	
-	pdflatex -output-directory="docs/quickref" -file-line-error -halt-on-error -interaction=nonstopmode -recorder  "docs/quickref/QuickRef.tex"
-	cp docs/quickref/QuickRef.pdf QuickReference.pdf
-Cryptanalysis.pdf: docs/analysis/Cryptanalysis.tex
-	pdflatex -output-directory="docs/analysis" -file-line-error -halt-on-error -interaction=nonstopmode -recorder  "docs/analysis/Cryptanalysis.tex"
-	cp docs/analysis/Cryptanalysis.pdf Cryptanalysis.pdf
+QuickReference.pdf: docs/tex/QuickRef.tex
+	pdflatex -output-directory="docs/tex" -file-line-error -halt-on-error -interaction=nonstopmode -recorder  "docs/tex/QuickRef.tex"
+	cp docs/tex/QuickRef.pdf QuickReference.pdf
+Cryptanalysis.pdf: docs/tex/Cryptanalysis.tex
+	pdflatex -output-directory="docs/tex" -file-line-error -halt-on-error -interaction=nonstopmode -recorder  "docs/tex/Cryptanalysis.tex"
+	cp docs/tex/Cryptanalysis.pdf Cryptanalysis.pdf
 
 
 .PHONY: all clean install
