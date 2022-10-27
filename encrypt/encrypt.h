@@ -17,7 +17,7 @@
 #include <hashlib.h>
 
 /*
- Cryptographically-Secure Random Number Generator (CS-RNG)
+ Cryptographically-Secure Random Number Generator (CSRNG)
  
  Many of the psuedorandom number generators (PRNGs) you find in computers and
  even the one within the C toolchain for the CE are insecure for cryptographic
