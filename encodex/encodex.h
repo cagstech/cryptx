@@ -148,4 +148,43 @@ size_t base64_encode(const void *in, size_t len, void *out);
  */
 size_t base64_decode(const void *in, size_t len, void *out);
 
+/***************************************************************
+ * @brief Converts a byte stream of 0x00 and 0x01 bytes into a 1bpp-encoded byte stream.
+ * @param src Pointer to input data stream, which must be a sequence of 0x00 and 0x01 bytes.
+ * @param dest Pointer to output data stream.
+ * @param len Length of 1bpp-encoded data stream. (@p dest)
+ * @note @b dest should be at least len * 8 bytes large.
+ */
+void encode_pack1bpp(const void *dest, void *src, size_t len);
+
+/***************************************************************
+ * @brief Converts a 1bpp-encoded byte stream into 0x00 and 0x01 bytes.
+ * @param src Pointer to input data stream.
+ * @param dest Pointer to output data stream.
+ * @param len Length of 1bpp-encoded data stream. (@p src)
+ * @note @b dest should be at least len * 8 bytes large.
+ */
+void decode_unpack1bpp(const void *dest, void *src, size_t len);
+
+/***************************************************************
+ * @brief Converts a byte stream of 0x00-0x03 bytes into a 2bpp-encoded byte stream.
+ * @param src Pointer to input data stream, which must be a sequence of bytes in the range 0x00 to 0x03.
+ * @param dest Pointer to output data stream.
+ * @param len Length of 2bpp-encoded data stream. (@p dest)
+ * @note @b dest should be at least len / 4 bytes large.
+ */
+void encode_pack2bpp(const void *dest, void *src, size_t len);
+
+/***************************************************************
+ * @brief Converts a 2bpp-encoded byte stream into bytes in the range 0x00 to 0x03.
+ * @param src Pointer to input data stream.
+ * @param dest Pointer to output data stream.
+ * @param len Length of 2bpp-encoded data stream. (@p src)
+ * @note @b dest should be at least len * 4 bytes large.
+ */
+void decode_unpack2bpp(const void *dest, void *src, size_t len);
+
+
+
+
 #endif
