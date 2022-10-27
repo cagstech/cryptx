@@ -3,11 +3,10 @@
  * @brief Provides support for various data encoding schemes common to cryptography.
  * @author Anthony @e ACagliano Cagliano
  *
- * @mainpage ENCODEX
  * A library providing encoding support for various data formats
  * 1. ASN.1 parser
  * 2. Base64 encoding/decoding
- * tbc
+ * 3. TBD
  */
 
 #ifndef ENCODEX_H

@@ -5,7 +5,6 @@
  * @author Adam @e beck Beckingham
  * @author commandblockguy
  *
- * @mainpage ENCRYPT
  * Provides symmetric and asymmetric (pubkey) encryption as well as a HWRNG.
  * 1. Secure HWRNG
  * 2. AES-128, AES-192, AES-256

@@ -1,15 +1,16 @@
 /**
  *	@file hashlib.h
  *	@brief	Provides cryptographic hashing for the TI--84+ CE
- *
- *	- hash_sha256, hash_mgf1
- *  - hmac_sha256, hmac_pbkdf2
- *  - secure buffer comparison
- *  - digest to string conversion
- *
  *	@author Anthony @e ACagliano Cagliano
  *	@author Adam @e beck Beckingham
  *	@author commandblockguy
+ *
+ * 1. Hashes: SHA256
+ * 2. HMAC: SHA256
+ * 3. MGF1
+ * 4. PBKDF2
+ * 5. Buffer comparison
+ * 6. Buffer to hexstring
  */
 
 #ifndef HASHLIB_H
