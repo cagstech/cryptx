@@ -21,9 +21,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">CryptX
+   <div id="projectname">CryptX<span id="projectnumber">&#160;10</span>
    </div>
-   <div id="projectbrief">Suite of Cryptography Libraries for the TI-84+ CE</div>
+   <div id="projectbrief">A collection of cryptographic libraries for the TI-84+ CE</div>
   </td>
  </tr>
  </tbody>
@@ -78,94 +78,34 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a7b2aea1f1f8c40516832e1b51de6f059"><td class="memItemLeft" align="right" valign="top">uint24_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__aes__ctx.html#a7b2aea1f1f8c40516832e1b51de6f059">keysize</a></td></tr>
-<tr class="separator:a7b2aea1f1f8c40516832e1b51de6f059"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7abad71532100be2c688e11e6dedf6d"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__aes__ctx.html#ad7abad71532100be2c688e11e6dedf6d">round_keys</a> [60]</td></tr>
-<tr class="separator:ad7abad71532100be2c688e11e6dedf6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71f1c71840080ed09b27da0332db0944"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__aes__ctx.html#a71f1c71840080ed09b27da0332db0944">iv</a> [16]</td></tr>
-<tr class="separator:a71f1c71840080ed09b27da0332db0944"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a963065a29ef08538b1ee614196baa38f"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__aes__ctx.html#a963065a29ef08538b1ee614196baa38f">ciphermode</a></td></tr>
-<tr class="separator:a963065a29ef08538b1ee614196baa38f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4bd595cd1b220b28ff3752b6e07efb89"><td class="memItemLeft" ><a id="a4bd595cd1b220b28ff3752b6e07efb89" name="a4bd595cd1b220b28ff3752b6e07efb89"></a>
+<tr class="memitem:a3c7170b46d94b5b8395f74eb0baa14c8"><td class="memItemLeft" align="right" valign="top">uint24_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__aes__ctx.html#a3c7170b46d94b5b8395f74eb0baa14c8">keysize</a></td></tr>
+<tr class="separator:a3c7170b46d94b5b8395f74eb0baa14c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb6943e9b2c5dd39e5390f26ae470ffe"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__aes__ctx.html#adb6943e9b2c5dd39e5390f26ae470ffe">round_keys</a> [60]</td></tr>
+<tr class="separator:adb6943e9b2c5dd39e5390f26ae470ffe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9056269d8094bcc491e56d1dea3f9381"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__aes__ctx.html#a9056269d8094bcc491e56d1dea3f9381">iv</a> [16]</td></tr>
+<tr class="separator:a9056269d8094bcc491e56d1dea3f9381"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae9d1d4174195c2e82cc5d6ea0b72504"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__aes__ctx.html#aae9d1d4174195c2e82cc5d6ea0b72504">ciphermode</a></td></tr>
+<tr class="separator:aae9d1d4174195c2e82cc5d6ea0b72504"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae22c4500d8a8b61d137854798d21b799"><td class="memItemLeft" ><a id="ae22c4500d8a8b61d137854798d21b799" name="ae22c4500d8a8b61d137854798d21b799"></a>
 union {</td></tr>
-<tr class="memitem:a75a3959059a029693994a9add83f6808"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="struct__aes__ctr.html">aes_ctr_t</a>&#160;&#160;&#160;<a class="el" href="struct__aes__ctx.html#a75a3959059a029693994a9add83f6808">ctr</a></td></tr>
-<tr class="separator:a75a3959059a029693994a9add83f6808"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c197bedd37b4e75108acf7343f2e388"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="struct__aes__cbc.html">aes_cbc_t</a>&#160;&#160;&#160;<a class="el" href="struct__aes__ctx.html#a4c197bedd37b4e75108acf7343f2e388">cbc</a></td></tr>
-<tr class="separator:a4c197bedd37b4e75108acf7343f2e388"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4bd595cd1b220b28ff3752b6e07efb89"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b></td></tr>
-<tr class="separator:a4bd595cd1b220b28ff3752b6e07efb89"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7638d6269b5072f4fe3db606d4e46881"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__aes__ctx.html#a7638d6269b5072f4fe3db606d4e46881">op_assoc</a></td></tr>
-<tr class="separator:a7638d6269b5072f4fe3db606d4e46881"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6bde57dbb9860ce1956642330674f5a"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="struct__aes__ctr.html">aes_ctr_t</a>&#160;&#160;&#160;<a class="el" href="struct__aes__ctx.html#a634769fbe859922773abe87593607d20">ctr</a></td></tr>
+<tr class="separator:ab6bde57dbb9860ce1956642330674f5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae67e2fff9e63fa526155215aadb410cb"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="struct__aes__cbc.html">aes_cbc_t</a>&#160;&#160;&#160;<a class="el" href="struct__aes__ctx.html#a12739f38b27a383886a23a73e6acfbf5">cbc</a></td></tr>
+<tr class="separator:ae67e2fff9e63fa526155215aadb410cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae22c4500d8a8b61d137854798d21b799"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b></td></tr>
+<tr class="separator:ae22c4500d8a8b61d137854798d21b799"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac1749cf900931c1810f155df1a45f73"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__aes__ctx.html#aac1749cf900931c1810f155df1a45f73">op_assoc</a></td></tr>
+<tr class="separator:aac1749cf900931c1810f155df1a45f73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="a4c197bedd37b4e75108acf7343f2e388" name="a4c197bedd37b4e75108acf7343f2e388"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c197bedd37b4e75108acf7343f2e388">&#9670;&#160;</a></span>cbc</h2>
+<a id="a3c7170b46d94b5b8395f74eb0baa14c8" name="a3c7170b46d94b5b8395f74eb0baa14c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c7170b46d94b5b8395f74eb0baa14c8">&#9670;&#160;</a></span>keysize</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="struct__aes__cbc.html">aes_cbc_t</a> cbc</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >metadata for cbc mode </p>
-
-</div>
-</div>
-<a id="a963065a29ef08538b1ee614196baa38f" name="a963065a29ef08538b1ee614196baa38f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a963065a29ef08538b1ee614196baa38f">&#9670;&#160;</a></span>ciphermode</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t ciphermode</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >selected operational mode of the cipher </p>
-
-</div>
-</div>
-<a id="a75a3959059a029693994a9add83f6808" name="a75a3959059a029693994a9add83f6808"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a75a3959059a029693994a9add83f6808">&#9670;&#160;</a></span>ctr</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="struct__aes__ctr.html">aes_ctr_t</a> ctr</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >metadata for counter mode </p>
-
-</div>
-</div>
-<a id="a71f1c71840080ed09b27da0332db0944" name="a71f1c71840080ed09b27da0332db0944"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a71f1c71840080ed09b27da0332db0944">&#9670;&#160;</a></span>iv</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t iv[16]</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >IV state for next block </p>
-
-</div>
-</div>
-<a id="a7b2aea1f1f8c40516832e1b51de6f059" name="a7b2aea1f1f8c40516832e1b51de6f059"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7b2aea1f1f8c40516832e1b51de6f059">&#9670;&#160;</a></span>keysize</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint24_t keysize</td>
+          <td class="memname">uint24_t _aes_ctx::keysize</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -173,33 +113,93 @@ union {</td></tr>
 
 </div>
 </div>
-<a id="a7638d6269b5072f4fe3db606d4e46881" name="a7638d6269b5072f4fe3db606d4e46881"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7638d6269b5072f4fe3db606d4e46881">&#9670;&#160;</a></span>op_assoc</h2>
+<a id="adb6943e9b2c5dd39e5390f26ae470ffe" name="adb6943e9b2c5dd39e5390f26ae470ffe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb6943e9b2c5dd39e5390f26ae470ffe">&#9670;&#160;</a></span>round_keys</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t op_assoc</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >state-flag indicating if context is for encryption or decryption </p>
-
-</div>
-</div>
-<a id="ad7abad71532100be2c688e11e6dedf6d" name="ad7abad71532100be2c688e11e6dedf6d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad7abad71532100be2c688e11e6dedf6d">&#9670;&#160;</a></span>round_keys</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t round_keys[60]</td>
+          <td class="memname">uint32_t _aes_ctx::round_keys[60]</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p >round keys </p>
+
+</div>
+</div>
+<a id="a9056269d8094bcc491e56d1dea3f9381" name="a9056269d8094bcc491e56d1dea3f9381"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9056269d8094bcc491e56d1dea3f9381">&#9670;&#160;</a></span>iv</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t _aes_ctx::iv[16]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >IV state for next block </p>
+
+</div>
+</div>
+<a id="aae9d1d4174195c2e82cc5d6ea0b72504" name="aae9d1d4174195c2e82cc5d6ea0b72504"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae9d1d4174195c2e82cc5d6ea0b72504">&#9670;&#160;</a></span>ciphermode</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t _aes_ctx::ciphermode</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >selected operational mode of the cipher </p>
+
+</div>
+</div>
+<a id="a634769fbe859922773abe87593607d20" name="a634769fbe859922773abe87593607d20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a634769fbe859922773abe87593607d20">&#9670;&#160;</a></span>ctr</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct__aes__ctr.html">aes_ctr_t</a> _aes_ctx::ctr</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >metadata for counter mode </p>
+
+</div>
+</div>
+<a id="a12739f38b27a383886a23a73e6acfbf5" name="a12739f38b27a383886a23a73e6acfbf5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12739f38b27a383886a23a73e6acfbf5">&#9670;&#160;</a></span>cbc</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct__aes__cbc.html">aes_cbc_t</a> _aes_ctx::cbc</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >metadata for cbc mode </p>
+
+</div>
+</div>
+<a id="aac1749cf900931c1810f155df1a45f73" name="aac1749cf900931c1810f155df1a45f73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac1749cf900931c1810f155df1a45f73">&#9670;&#160;</a></span>op_assoc</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t _aes_ctx::op_assoc</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >state-flag indicating if context is for encryption or decryption </p>
 
 </div>
 </div>

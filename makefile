@@ -68,13 +68,17 @@ check:
 	$(Q)$(EZCC) --version || ( echo Please install ez80-clang && exit 1 )
 	$(Q)$(FASMG) $(NULL) $(NULL) || ( echo Please install fasmg && exit 1 )
 	
-docs: $(DOC_FILES)
+pdf: $(DOC_FILES)
 QuickReference.pdf: docs/tex/QuickRef.tex
 	pdflatex -output-directory="docs/tex" -file-line-error -halt-on-error -interaction=nonstopmode -recorder  "docs/tex/QuickRef.tex"
 	cp docs/tex/QuickRef.pdf QuickReference.pdf
 Cryptanalysis.pdf: docs/tex/Cryptanalysis.tex
 	pdflatex -output-directory="docs/tex" -file-line-error -halt-on-error -interaction=nonstopmode -recorder  "docs/tex/Cryptanalysis.tex"
 	cp docs/tex/Cryptanalysis.pdf Cryptanalysis.pdf
+	
+html: docs/html/index.html
+docs/html/index.html: docs/.doxyfile
+	doxygen docs/.doxyfile
 
 
 .PHONY: all clean install

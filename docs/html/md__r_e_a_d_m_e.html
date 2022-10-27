@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CryptX: Cryptography Library for the TI-84+ CE</title>
+<title>CryptX: CryptX</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,9 +21,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">CryptX
+   <div id="projectname">CryptX<span id="projectnumber">&#160;10</span>
    </div>
-   <div id="projectbrief">Suite of Cryptography Libraries for the TI-84+ CE</div>
+   <div id="projectbrief">A collection of cryptographic libraries for the TI-84+ CE</div>
   </td>
  </tr>
  </tbody>
@@ -70,17 +70,24 @@ $(function() {
 
 </div><!-- top -->
 <div><div class="header">
-  <div class="headertitle"><div class="title">Cryptography Library for the TI-84+ CE </div></div>
+  <div class="headertitle"><div class="title">CryptX </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p >This library is written as a libload-compatibile C (and ASM) library. To install the lib into the toolchain, simply navigate into the hashlib directory within a terminal of your choice and type <code>make install</code>. Alternatively, you can manually move <code><a class="el" href="hashlib_8h.html" title="Provides cryptographic hashing for the TI–84+ CE.">hashlib.h</a></code> into <code>$CEDEV/include</code> and <code>hashlib.lib</code> into <code>$CEDEV/lib/libload</code>. Also, be sure to send <code>HASHLIB.8xv</code> to your TI-84+ CE.</p>
-<p >For detailed documentation, head to <a href="https://acagliano.github.io/cryptx/html/">C header documentation</a>.</p>
-<p >For even more detailed documentation head to <a href="https://github.com/acagliano/cryptx/blob/stable/CryptX%20Quick%20Reference.pdf">Quick Refence</a>. For cryptanalysis head to <a href="https://github.com/acagliano/cryptx/blob/stable/CryptX%20Cryptanalysis.pdf">Cryptanalysis</a>.</p>
+<div class="textblock"><p >CryptX provides industry-standard cryptography for the TI-84+ CE graphing calculator. The package contains three(3) separate libraries that serve different functions.</p>
+<ol type="1">
+<li>HASHLIB &ndash; provides SHA-256 cryptographic hash, HMAC, MGF1, and PBKDF2_HMAC</li>
+<li>ENCRYPT &ndash; provides a secure HWRNG, AES, and RSA</li>
+<li>ENCODEX &ndash; provides support for ASN.1 parsing, Base64 encoding and decoding</li>
+</ol>
+<p >These libraries depend on <b>LIBLOAD</b>, which is a dynamic library loader provided by the CE C toolchain. Make sure you have that present on your device. <a href="https://github.com/CE-Programming/toolchain">CE C toolchain</a>.</p>
+<p >If you are an end-user who only needs the library files, you can simply send one or more of the TI Application Variables&ndash;HASHLIB.8xv, ENCRYPT.8xv, ENCODEX.8xv&ndash;to your TI-84+ CE.</p>
+<p >If you are a developer, you will need to install the necessary files from this library into the toolchain's source and library directories in order to use the libraries in your programs. To do this you will need to move the library's <code>.lib</code> and <code>.h</code> files into the correct folders within the toolchain. The <code>.lib</code> files for each library go into the <code>$CEDEV/lib/libload</code> directory and the <code>.h</code> files for each library go into the <code>$CEDEV/include</code>.</p>
+<p >For more detailed documentation head to <a href="https://github.com/acagliano/cryptx/blob/stable/QuickReference.pdf">Quick Refence</a>. For cryptanalysis head to <a href="https://github.com/acagliano/cryptx/blob/stable/Cryptanalysis.pdf">Cryptanalysis</a>.</p>
 <p >Credits: <br  />
  Some algorithms sourced at least in part from <a href="https://github.com/B-Con/crypto-algorithms">B-con crypto-algorithms</a>. <br  />
  Cemetech user Zeroko - information on CE randomness. <br  />
  beckadamtheinventor &amp; commandblockguy - coding assistance, conversion of some C routines to assembly for speed. <br  />
- </p>
+ jacobly - modular exponentiation </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->

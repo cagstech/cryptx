@@ -1,4 +1,4 @@
-# CRYTPX #
+# CryptX
 
 CryptX provides industry-standard cryptography for the TI-84+ CE graphing calculator.
 The package contains three(3) separate libraries that serve different functions. 

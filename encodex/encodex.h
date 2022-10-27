@@ -136,7 +136,7 @@ size_t asn1_decode(void *asn1_data, size_t len, asn1_obj_t *objs, size_t iter_co
  * @note @b out should be at least  len * 4 / 3 bytes large.
  * @returns Length of output sextet.
  */
-size_t base64_encode(const void *in, size_t len, void *out);
+size_t base64_encode(const void *src, size_t len, void *dest);
 
 /***************************************************************
  * @brief Converts a sextet-encoded byte stream into a octet-encoded byte stream.
@@ -146,7 +146,7 @@ size_t base64_encode(const void *in, size_t len, void *out);
  * @note @b out should be at least len * 3 / 4 bytes large.
  * @returns Length of output octet.
  */
-size_t base64_decode(const void *in, size_t len, void *out);
+size_t base64_decode(const void *src, size_t len, void *dest);
 
 /***************************************************************
  * @brief Converts a byte stream of 0x00 and 0x01 bytes into a 1bpp-encoded byte stream.

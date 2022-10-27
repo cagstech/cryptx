@@ -21,9 +21,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">CryptX
+   <div id="projectname">CryptX<span id="projectnumber">&#160;10</span>
    </div>
-   <div id="projectbrief">Suite of Cryptography Libraries for the TI-84+ CE</div>
+   <div id="projectbrief">A collection of cryptographic libraries for the TI-84+ CE</div>
   </td>
  </tr>
  </tbody>
@@ -78,466 +78,302 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <a href="encrypt_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#ifndef ENCRYPT_H</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#define ENCRYPT_H</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;<a class="code" href="hashlib_8h.html">hashlib.h</a>&gt;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment"> Cryptographically-Secure Random Number Generator (CSRNG)</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment"> </span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment"> Many of the psuedorandom number generators (PRNGs) you find in computers and</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment"> even the one within the C toolchain for the CE are insecure for cryptographic</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment"> purposes. They produce statistical randomness, but the state is generally seeded</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment"> using a value such as rtc_Time(). If an adversary reconstructs the seed, every</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment"> output of the PRNG becomes computable with little effort. These types of PRNGs</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment"> are called deterministic algorithms--given the input, the output is predictable.</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment"> These PRNGs work for games and other applications where the illusion of randomness</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment"> is sufficient, but they are not safe for cryptography.</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment"> </span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment"> A secure PRNG is an random number generator that is not only statistically random, but</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment"> also passes the next-bit and state compromise tests. The _next-bit test_ is defined like so:</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment"> given the prior output of the PRNG (bits 0=&gt;i), the next bit (i+1) of the output cannot be</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="comment"> predicted by a polynomial-time statistical test with a probability non-negligibly greater than 50%.</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment"> In simpler terms, a secure PRNG must be unpredictable, or &quot;entropic&quot;.</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment"> The _state compromise test_ means that an adversary gaining knowledge of the initial state of</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment"> the PRNG does not gain any information about its output.</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment"> </span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment"> The SRNG previded by HASHLIB solves both tests like so:</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment"> (next-bit)</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment"> &lt;&gt;  The SRNG&#39;s output is derived from a 119-byte entropy pool created by reading</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment"> data from the most entropic byte located within floating memory on the device.</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment"> &lt;&gt;  The &quot;entropic byte&quot; is a byte containing a bit that that, out of 1024 test reads,</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment"> has the closest to a 50/50 split between 1&#39;s and 0&#39;s.</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="comment"> &lt;&gt;  The byte containing that bit is read in xor mode seven times per byte to offset</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment"> any hardware-based correlation between subsequent reads from the entropic byte.</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment"> &lt;&gt;  The entropy pool is then run through a cryptographic hash to spread that entropy</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment"> evenly through the returned random value.</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment"> &lt;&gt;  The SRNG produces 96.51 bits of entropy per 32 bit number returned.</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment"> &lt;&gt;  Assertion: A source of randomness with sufficient entropy passed through a cryptographic hash</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment"> will produce output that passes all statistical randomness tests as well as the next-bit test.</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment"> (state compromise)</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment"> &lt;&gt;  The entropy pool is discarded after it is used once, and a new pool is</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment"> generated for the next random number.</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment"> &lt;&gt;  ^ This means that the prior state has no bearing on the next output of the PRNG.</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="comment"> &lt;&gt;  The SRNG destroys its own state after the random number is generated so that</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="comment"> the state used to generate it does not persist in memory.</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment"> </span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="comment"> *   Due to the derivation of entropy from subtle variations in the electrical state of</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment"> unmapped memory, this SRNG can also be considered a _hardware-based RNG_ (HWRNG).</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#ifndef ENCRYPT_H</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#define ENCRYPT_H</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;<a class="code" href="hashlib_8h.html">hashlib.h</a>&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment"> Cryptographically-Secure Random Number Generator (CSRNG)</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment"> </span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment"> Many of the psuedorandom number generators (PRNGs) you find in computers and</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment"> even the one within the C toolchain for the CE are insecure for cryptographic</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment"> purposes. They produce statistical randomness, but the state is generally seeded</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment"> using a value such as rtc_Time(). If an adversary reconstructs the seed, every</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment"> output of the PRNG becomes computable with little effort. These types of PRNGs</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment"> are called deterministic algorithms--given the input, the output is predictable.</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment"> These PRNGs work for games and other applications where the illusion of randomness</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment"> is sufficient, but they are not safe for cryptography.</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment"> </span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment"> A secure PRNG is an random number generator that is not only statistically random, but</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment"> also passes the next-bit and state compromise tests. The _next-bit test_ is defined like so:</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment"> given the prior output of the PRNG (bits 0=&gt;i), the next bit (i+1) of the output cannot be</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment"> predicted by a polynomial-time statistical test with a probability non-negligibly greater than 50%.</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="comment"> In simpler terms, a secure PRNG must be unpredictable, or &quot;entropic&quot;.</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment"> The _state compromise test_ means that an adversary gaining knowledge of the initial state of</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment"> the PRNG does not gain any information about its output.</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment"> </span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment"> The SRNG previded by HASHLIB solves both tests like so:</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment"> (next-bit)</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment"> &lt;&gt;  The SRNG&#39;s output is derived from a 119-byte entropy pool created by reading</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment"> data from the most entropic byte located within floating memory on the device.</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment"> &lt;&gt;  The &quot;entropic byte&quot; is a byte containing a bit that that, out of 1024 test reads,</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment"> has the closest to a 50/50 split between 1&#39;s and 0&#39;s.</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment"> &lt;&gt;  The byte containing that bit is read in xor mode seven times per byte to offset</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="comment"> any hardware-based correlation between subsequent reads from the entropic byte.</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment"> &lt;&gt;  The entropy pool is then run through a cryptographic hash to spread that entropy</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment"> evenly through the returned random value.</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment"> &lt;&gt;  The SRNG produces 96.51 bits of entropy per 32 bit number returned.</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment"> &lt;&gt;  Assertion: A source of randomness with sufficient entropy passed through a cryptographic hash</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment"> will produce output that passes all statistical randomness tests as well as the next-bit test.</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment"> (state compromise)</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment"> &lt;&gt;  The entropy pool is discarded after it is used once, and a new pool is</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment"> generated for the next random number.</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment"> &lt;&gt;  ^ This means that the prior state has no bearing on the next output of the PRNG.</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment"> &lt;&gt;  The SRNG destroys its own state after the random number is generated so that</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="comment"> the state used to generate it does not persist in memory.</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="comment"> </span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment"> *   Due to the derivation of entropy from subtle variations in the electrical state of</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="comment"> unmapped memory, this SRNG can also be considered a _hardware-based RNG_ (HWRNG).</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment">/*********************************************</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment"> * @brief Initializes the secure psuedo-random generator</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="comment"> * @return [bool] True if init succeeded, False otherwise</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="keywordtype">bool</span> csrand_init(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a008b7da7adce38b117a17c8165c08df9">   66</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="encrypt_8h.html#a008b7da7adce38b117a17c8165c08df9">csrand_init</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="comment">/***********************************************</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="comment"> * @brief Returns a securely psuedo-random 32-bit integer</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="comment"> * @return [uint32_t] A 32-bit random number.</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>uint32_t csrand_get(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a3cdabe638655bf5d3760c4ab700a43fd">   72</a></span>uint32_t <a class="code hl_function" href="encrypt_8h.html#a3cdabe638655bf5d3760c4ab700a43fd">csrand_get</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="comment">/**************************************************</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="comment"> * @brief Fills a buffer with securely pseduo-random bytes</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="comment"> * @param buffer Pointer to a buffer to fill with random bytes</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="comment"> * @param size Size of the buffer to fill</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="keywordtype">bool</span> csrand_fill(<span class="keywordtype">void</span>* buffer, <span class="keywordtype">size_t</span> size);</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="comment"> Advanced Encryption Standard (AES)</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="comment"> </span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="comment"> AES is a form of symmetric encryption, and also is a form of block cipher.</span></div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="comment"> Symmetric encryption means that the same key works in both directions.</span></div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="comment"> A block cipher is an encryption algorithm that operates on data in segments (for AES, 16 bytes),</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="comment"> moving through it one segment at a time.</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="comment"> </span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="comment"> Symmetric encryption is usually fast, and is generally more secure for smaller key sizes.</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="comment"> AES is one of the most secure encryption systems in use today.</span></div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="comment"> The most secure version of the algorithm is AES-256 (uses a 256-bit key).</span></div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="comment"> AES is one of the open-source encryption schemes believed secure enough to withstand even</span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="comment"> the advent of quantum computing.</span></div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="encrypt_8h.html#aa3641d44a877ff6eec0eb5cfbfaa5c61">   79</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="encrypt_8h.html#aa3641d44a877ff6eec0eb5cfbfaa5c61">csrand_fill</a>(<span class="keywordtype">void</span>* buffer, <span class="keywordtype">size_t</span> size);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="comment"> Advanced Encryption Standard (AES)</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="comment"> </span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="comment"> AES is a form of symmetric encryption, and also is a form of block cipher.</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="comment"> Symmetric encryption means that the same key works in both directions.</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="comment"> A block cipher is an encryption algorithm that operates on data in segments (for AES, 16 bytes),</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="comment"> moving through it one segment at a time.</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="comment"> </span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="comment"> Symmetric encryption is usually fast, and is generally more secure for smaller key sizes.</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="comment"> AES is one of the most secure encryption systems in use today.</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="comment"> The most secure version of the algorithm is AES-256 (uses a 256-bit key).</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="comment"> AES is one of the open-source encryption schemes believed secure enough to withstand even</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="comment"> the advent of quantum computing.</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="comment">/*******************************</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="comment"> * @typedef aes_ctx</span></div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="comment"> * Stores AES cipher configuration data.</span></div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno"><a class="line" href="struct__aes__cbc.html">  101</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="struct__aes__cbc.html">_aes_cbc</a> { uint8_t padding_mode; } <a class="code hl_struct" href="struct__aes__cbc.html">aes_cbc_t</a>;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="struct__aes__ctr.html">  102</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="struct__aes__ctr.html">_aes_ctr</a> {</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    uint8_t counter_pos_start; uint8_t counter_len;</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    uint8_t last_block_stop; uint8_t last_block[16]; } <a class="code hl_struct" href="struct__aes__ctr.html">aes_ctr_t</a>;</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="struct__aes__ctx.html">  106</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="struct__aes__ctx.html">_aes_ctx</a> {</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno"><a class="line" href="struct__aes__ctx.html#a7b2aea1f1f8c40516832e1b51de6f059">  107</a></span>    uint24_t <a class="code hl_variable" href="struct__aes__ctx.html#a7b2aea1f1f8c40516832e1b51de6f059">keysize</a>;                       </div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="struct__aes__ctx.html#ad7abad71532100be2c688e11e6dedf6d">  108</a></span>    uint32_t <a class="code hl_variable" href="struct__aes__ctx.html#ad7abad71532100be2c688e11e6dedf6d">round_keys</a>[60];                </div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno"><a class="line" href="struct__aes__ctx.html#a71f1c71840080ed09b27da0332db0944">  109</a></span>    uint8_t <a class="code hl_variable" href="struct__aes__ctx.html#a71f1c71840080ed09b27da0332db0944">iv</a>[16];                         </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="struct__aes__ctx.html#a963065a29ef08538b1ee614196baa38f">  110</a></span>    uint8_t <a class="code hl_variable" href="struct__aes__ctx.html#a963065a29ef08538b1ee614196baa38f">ciphermode</a>;                     </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keyword">union </span>{</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="struct__aes__ctx.html#a75a3959059a029693994a9add83f6808">  112</a></span>        <a class="code hl_struct" href="struct__aes__ctr.html">aes_ctr_t</a> <a class="code hl_variable" href="struct__aes__ctx.html#a75a3959059a029693994a9add83f6808">ctr</a>;                      </div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="struct__aes__ctx.html#a4c197bedd37b4e75108acf7343f2e388">  113</a></span>        <a class="code hl_struct" href="struct__aes__cbc.html">aes_cbc_t</a> <a class="code hl_variable" href="struct__aes__ctx.html#a4c197bedd37b4e75108acf7343f2e388">cbc</a>;                      </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    } mode;</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="struct__aes__ctx.html#a7638d6269b5072f4fe3db606d4e46881">  115</a></span>    uint8_t <a class="code hl_variable" href="struct__aes__ctx.html#a7638d6269b5072f4fe3db606d4e46881">op_assoc</a>;                       </div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>} <a class="code hl_struct" href="struct__aes__ctx.html">aes_ctx</a>;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="struct__aes__cbc.html">  100</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="struct__aes__cbc.html">_aes_cbc</a> { uint8_t padding_mode; } <a class="code hl_struct" href="struct__aes__cbc.html">aes_cbc_t</a>;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno"><a class="line" href="struct__aes__ctr.html">  101</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="struct__aes__ctr.html">_aes_ctr</a> {</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    uint8_t counter_pos_start; uint8_t counter_len;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    uint8_t last_block_stop; uint8_t last_block[16]; } <a class="code hl_struct" href="struct__aes__ctr.html">aes_ctr_t</a>;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="struct__aes__ctx.html">  105</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="struct__aes__ctx.html">_aes_ctx</a> {</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="struct__aes__ctx.html#a3c7170b46d94b5b8395f74eb0baa14c8">  106</a></span>    uint24_t <a class="code hl_variable" href="struct__aes__ctx.html#a3c7170b46d94b5b8395f74eb0baa14c8">keysize</a>;                       </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno"><a class="line" href="struct__aes__ctx.html#adb6943e9b2c5dd39e5390f26ae470ffe">  107</a></span>    uint32_t <a class="code hl_variable" href="struct__aes__ctx.html#adb6943e9b2c5dd39e5390f26ae470ffe">round_keys</a>[60];                </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="struct__aes__ctx.html#a9056269d8094bcc491e56d1dea3f9381">  108</a></span>    uint8_t <a class="code hl_variable" href="struct__aes__ctx.html#a9056269d8094bcc491e56d1dea3f9381">iv</a>[16];                         </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno"><a class="line" href="struct__aes__ctx.html#aae9d1d4174195c2e82cc5d6ea0b72504">  109</a></span>    uint8_t <a class="code hl_variable" href="struct__aes__ctx.html#aae9d1d4174195c2e82cc5d6ea0b72504">ciphermode</a>;                     </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keyword">union </span>{</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="struct__aes__ctx.html#a634769fbe859922773abe87593607d20">  111</a></span>        <a class="code hl_struct" href="struct__aes__ctr.html">aes_ctr_t</a> <a class="code hl_variable" href="struct__aes__ctx.html#a634769fbe859922773abe87593607d20">ctr</a>;                      </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="struct__aes__ctx.html#a12739f38b27a383886a23a73e6acfbf5">  112</a></span>        <a class="code hl_struct" href="struct__aes__cbc.html">aes_cbc_t</a> <a class="code hl_variable" href="struct__aes__ctx.html#a12739f38b27a383886a23a73e6acfbf5">cbc</a>;                      </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    } mode;</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="struct__aes__ctx.html#aac1749cf900931c1810f155df1a45f73">  114</a></span>    uint8_t <a class="code hl_variable" href="struct__aes__ctx.html#aac1749cf900931c1810f155df1a45f73">op_assoc</a>;                       </div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="encrypt_8h.html#aa188bc2768a3b7aa6ad73cb2c77819e0">  115</a></span>} <a class="code hl_typedef" href="encrypt_8h.html#aa188bc2768a3b7aa6ad73cb2c77819e0">aes_ctx</a>;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="comment">/*************************</span></div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="comment"> * @enum aes_cipher_modes</span></div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="comment"> * Supported AES cipher modes</span></div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340">  123</a></span><span class="keyword">enum</span> <a class="code hl_enumeration" href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340">aes_cipher_modes</a> {</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340ad21a3698b98b7368b14ec3d48314a132">  124</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340ad21a3698b98b7368b14ec3d48314a132">AES_MODE_CBC</a>,       </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340a5ecd63cd0bd97d46f273461b6550cb8e">AES_MODE_CTR</a>        </div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340a5ecd63cd0bd97d46f273461b6550cb8e">  126</a></span>};</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340">  122</a></span><span class="keyword">enum</span> <a class="code hl_enumeration" href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340">aes_cipher_modes</a> {</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340ad21a3698b98b7368b14ec3d48314a132">  123</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340ad21a3698b98b7368b14ec3d48314a132">AES_MODE_CBC</a>,       </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340a5ecd63cd0bd97d46f273461b6550cb8e">AES_MODE_CTR</a>        </div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340a5ecd63cd0bd97d46f273461b6550cb8e">  125</a></span>};</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="comment">/****************************</span></div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="comment"> * @enum aes_padding_schemes</span></div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="comment"> * Supported AES padding schemes</span></div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3">  132</a></span><span class="keyword">enum</span> <a class="code hl_enumeration" href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3">aes_padding_schemes</a> {</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3a673ae2fee0bfe0a962717b3f673b9b7c">  133</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3a673ae2fee0bfe0a962717b3f673b9b7c">PAD_PKCS7</a>,                  </div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3a322c11c9058ef67073a3ff9bdcb9f759">PAD_DEFAULT</a> = <a class="code hl_enumvalue" href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3a673ae2fee0bfe0a962717b3f673b9b7c">PAD_PKCS7</a>,    </div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3a7566d9371110a1a24db62b145c901ad8">  137</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3a7566d9371110a1a24db62b145c901ad8">PAD_ISO2</a> = 4,               </div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>};</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3">  131</a></span><span class="keyword">enum</span> <a class="code hl_enumeration" href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3">aes_padding_schemes</a> {</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3a673ae2fee0bfe0a962717b3f673b9b7c">  132</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3a673ae2fee0bfe0a962717b3f673b9b7c">PAD_PKCS7</a>,                  </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3a322c11c9058ef67073a3ff9bdcb9f759">PAD_DEFAULT</a> = <a class="code hl_enumvalue" href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3a673ae2fee0bfe0a962717b3f673b9b7c">PAD_PKCS7</a>,    </div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3a7566d9371110a1a24db62b145c901ad8">  136</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3a7566d9371110a1a24db62b145c901ad8">PAD_ISO2</a> = 4,               </div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>};</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="comment">/********************************************</span></div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span><span class="comment"> * @def AES_CTR_NONCELEN</span></div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span><span class="comment"> * Only has an effect when cipher is initialized to CTR mode.</span></div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span><span class="comment"> * Sets the length of the fixed prefix portion of the IV</span></div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span><span class="comment"> * Valid lengths: 1&lt;= len &lt; block size</span></div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="preprocessor">#define AES_CTR_NONCELEN(len)   ((0x0f &amp; len)&lt;&lt;4)</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a81900255324b491a01b42c202b2f654c">  146</a></span><span class="preprocessor">#define AES_CTR_NONCELEN(len)   ((0x0f &amp; len)&lt;&lt;4)</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span><span class="comment">/***********************************************</span></div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span><span class="comment"> * @def AES_CTR_COUNTERLEN</span></div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span><span class="comment"> * Only has an effect when cipher is initialized to CTR mode.</span></div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span><span class="comment"> * Stores the length of the counter portion of the IV.</span></div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span><span class="comment"> * Valid lengths: 1 &lt;= len &lt; block size.</span></div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span><span class="preprocessor">#define AES_CTR_COUNTERLEN(len) ((0x0f &amp; len)&lt;&lt;8)</span></div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a2703f5a4ec821ca3c27c2f01b26848e1">  154</a></span><span class="preprocessor">#define AES_CTR_COUNTERLEN(len) ((0x0f &amp; len)&lt;&lt;8)</span></div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span><span class="comment">/**********************************</span></div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span><span class="comment"> * @def AES_BLOCKSIZE</span></div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="comment"> * Defines the block size of the AES cipher.</span></div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="preprocessor">#define AES_BLOCKSIZE   16</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="encrypt_8h.html#afab0742642db9c0609c00bf8a54f386f">  160</a></span><span class="preprocessor">#define AES_BLOCKSIZE   16</span></div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span><span class="comment">/*****************************************</span></div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span><span class="comment"> * @def AES_IVSIZE</span></div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="comment"> * Defines the length of the AES initialization vector (IV)</span></div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span><span class="preprocessor">#define AES_IVSIZE      AES_BLOCKSIZE</span></div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a6c2d58d8dd281845fdc027b499dea89d">  166</a></span><span class="preprocessor">#define AES_IVSIZE      AES_BLOCKSIZE</span></div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span><span class="comment">/**********************************************************</span></div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span><span class="comment"> * @def aes_outsize()</span></div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span><span class="comment"> * Defines a macro to return the size of an AES ciphertext given a plaintext length.</span></div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span><span class="comment"> * Does not include space for an IV-prepend. See @b aes_extoutsize(len) for that.</span></div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span><span class="preprocessor">#define aes_outsize(len) \</span></div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span><span class="preprocessor">((((len)%AES_BLOCKSIZE)==0) ? (len) + AES_BLOCKSIZE : (((len)&gt;&gt;4) + 1)&lt;&lt;4)</span></div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno"><a class="line" href="encrypt_8h.html#ab723a524d8d2149cb44285a8b8228f1f">  173</a></span><span class="preprocessor">#define aes_outsize(len) \</span></div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span><span class="preprocessor">((((len)%AES_BLOCKSIZE)==0) ? (len) + AES_BLOCKSIZE : (((len)&gt;&gt;4) + 1)&lt;&lt;4)</span></div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span><span class="comment">/***********************************************************************</span></div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span><span class="comment"> * @def aes_extoutsize()</span></div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span><span class="comment"> * Defines a macro to return the size of an AES ciphertext with with an extra block added for the IV.</span></div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="preprocessor">#define aes_extoutsize(len) \</span></div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span><span class="preprocessor">(aes_outsize((len)) + AES_IVSIZE)</span></div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a5441aa332bfebb52cb4480d5a0783334">  180</a></span><span class="preprocessor">#define aes_extoutsize(len) \</span></div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="preprocessor">(aes_outsize((len)) + AES_IVSIZE)</span></div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span> </div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span><span class="comment">/*******************</span></div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="comment"> * @enum aes_error_t</span></div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span><span class="comment"> * AES error codes</span></div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno"><a class="line" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">  188</a></span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno"><a class="line" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdaacf07636102724d2a7913911b0cf74b2">  189</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdaacf07636102724d2a7913911b0cf74b2">AES_OK</a>,                             </div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno"><a class="line" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfda6d39b280aea9d8d62d126eef05d271db">  190</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfda6d39b280aea9d8d62d126eef05d271db">AES_INVALID_ARG</a>,                    </div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno"><a class="line" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdaae5e9a591aeda666b0e425d9a05834e3">  191</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdaae5e9a591aeda666b0e425d9a05834e3">AES_INVALID_MSG</a>,                    </div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno"><a class="line" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdad2b49ffeabf14aaf47db3d1bad18f84e">  192</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdad2b49ffeabf14aaf47db3d1bad18f84e">AES_INVALID_CIPHERMODE</a>,             </div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno"><a class="line" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfda47bbd593fc3bdb7758a790bab86b41d9">  193</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfda47bbd593fc3bdb7758a790bab86b41d9">AES_INVALID_PADDINGMODE</a>,            </div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno"><a class="line" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdaba928751c773ffa0287e47e1f86eae8b">  194</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdaba928751c773ffa0287e47e1f86eae8b">AES_INVALID_CIPHERTEXT</a>,             </div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    <a class="code hl_enumvalue" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfda95a9dcbf64347e3c6f2c50d05e8937f5">AES_INVALID_OPERATION</a>               </div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno"><a class="line" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfda95a9dcbf64347e3c6f2c50d05e8937f5">  196</a></span>} <a class="code hl_enumeration" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a>;</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno"><a class="line" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">  187</a></span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno"><a class="line" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdaacf07636102724d2a7913911b0cf74b2">  188</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdaacf07636102724d2a7913911b0cf74b2">AES_OK</a>,                             </div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno"><a class="line" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfda6d39b280aea9d8d62d126eef05d271db">  189</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfda6d39b280aea9d8d62d126eef05d271db">AES_INVALID_ARG</a>,                    </div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno"><a class="line" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdaae5e9a591aeda666b0e425d9a05834e3">  190</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdaae5e9a591aeda666b0e425d9a05834e3">AES_INVALID_MSG</a>,                    </div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno"><a class="line" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdad2b49ffeabf14aaf47db3d1bad18f84e">  191</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdad2b49ffeabf14aaf47db3d1bad18f84e">AES_INVALID_CIPHERMODE</a>,             </div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno"><a class="line" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfda47bbd593fc3bdb7758a790bab86b41d9">  192</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfda47bbd593fc3bdb7758a790bab86b41d9">AES_INVALID_PADDINGMODE</a>,            </div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno"><a class="line" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdaba928751c773ffa0287e47e1f86eae8b">  193</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdaba928751c773ffa0287e47e1f86eae8b">AES_INVALID_CIPHERTEXT</a>,             </div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    <a class="code hl_enumvalue" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfda95a9dcbf64347e3c6f2c50d05e8937f5">AES_INVALID_OPERATION</a>               </div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno"><a class="line" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfda95a9dcbf64347e3c6f2c50d05e8937f5">  195</a></span>} <a class="code hl_enumeration" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a>;</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span><span class="comment">/********************************************************************</span></div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span><span class="comment"> * @brief Initializes a stateful AES cipher context to be used for encryption or decryption.</span></div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span><span class="comment"> * @param ctx Pointer to an AES cipher context to initialize..</span></div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span><span class="comment"> * @param key Pointer to an 128, 192, or 256 bit key to load into the AES context.</span></div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span><span class="comment"> * @param keylen The size, in bytes, of the key to load.</span></div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span><span class="comment"> * @param iv Initialization vector, a buffer equal to the block size that is pseudo-random.</span></div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span><span class="comment"> * @param flags A series of flags to configure the AES context with. This is the bitwise OR of any non-default cipher options. Ex:</span></div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span><span class="comment"> *      @code</span></div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span><span class="comment"> *          aes_init(ctx, key, sizeof key, iv, AES_MODE_CTR | AES_CTR_COUNTERLEN(4));</span></div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span><span class="comment"> *          // this sets CTR mode and sets the counter to 4 bytes (32 bits)</span></div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span><span class="comment"> *          // since the nonce length is 8 bytes by default, this actually means the IV format is:</span></div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span><span class="comment"> *          // [nonce 8 bytes] [counter 4 bytes] [suffix 4 bytes]</span></div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span><span class="comment"> *      @endcode</span></div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span><span class="comment"> * @note Do not edit a context manually. You may corrupt the cipher state.</span></div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span><span class="comment"> * @note Contexts are not bidirectional due to being stateful. If you need to process both encryption and decryption, initialize seperate contexts</span></div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span><span class="comment"> *      for encryption and decryption. Both contexts will use the same key, but different initialization vectors.</span></div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span><span class="comment"> * @warning It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.</span></div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span><span class="comment"> * @warning Do not manually edit the @b ctx.mode field of the context structure. This will break the cipher configuration.</span></div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span><span class="comment"> *          If you want to change cipher modes, do so by calling @b aes_init again.</span></div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span><span class="comment"> * @warning AES-CBC and CTR modes ensure confidentiality but do not guard against tampering. AES-OCB/GCM are a bit computationallty-intensive</span></div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span><span class="comment"> *          for this platform, but HASHLIB provides hash and hmac functions in their stead. HMAC is generally more secure for this purpose.</span></div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span><span class="comment"> *          If you want a truly secure scheme, always append an HMAC to your message and use an application secret or unique key</span></div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span><span class="comment"> *          generated using a CSRNG to key the HMAC at both endpoints.</span></div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span><span class="comment"> * @return AES_OK if success, non-zero if failed. See aes_error_t.</span></div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span><a class="code hl_enumeration" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a> aes_init(</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                <a class="code hl_struct" href="struct__aes__ctx.html">aes_ctx</a>* ctx,</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>                <span class="keyword">const</span> <span class="keywordtype">void</span>* key,</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>                <span class="keywordtype">size_t</span> keylen,</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                <span class="keyword">const</span> <span class="keywordtype">void</span>* iv,</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>                uint24_t flags);</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a7d671ce993d8c2bee97c6701f5cd2d97">  222</a></span><a class="code hl_enumeration" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a> <a class="code hl_function" href="encrypt_8h.html#a7d671ce993d8c2bee97c6701f5cd2d97">aes_init</a>(</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                <a class="code hl_struct" href="struct__aes__ctx.html">aes_ctx</a>* ctx,</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                <span class="keyword">const</span> <span class="keywordtype">void</span>* key,</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>                <span class="keywordtype">size_t</span> keylen,</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>                <span class="keyword">const</span> <span class="keywordtype">void</span>* iv,</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                uint24_t flags);</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span><span class="comment">/*****************************************************</span></div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span><span class="comment"> * @brief General-Purpose AES Encryption</span></div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span><span class="comment"> * @param ctx Pointer to an AES cipher context.</span></div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span><span class="comment"> * @param plaintext Pointer to data to encrypt.</span></div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span><span class="comment"> * @param len Length of data at @b plaintext to encrypt. This can be the output of hashlib_AESCiphertextSize().</span></div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span><span class="comment"> * @param ciphertext Pointer to buffer to write encrypted data to.</span></div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span><span class="comment"> * @note @b ciphertext should large enough to hold the encrypted message.</span></div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span><span class="comment"> *          For CBC mode, this is the smallest multiple of the blocksize that will hold the plaintext,</span></div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span><span class="comment"> *              plus 1 block if the blocksize divides the plaintext evenly.</span></div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span><span class="comment"> *          For CTR mode, this is the same size as the plaintext.</span></div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span><span class="comment"> * @note @b plaintext and @b ciphertext are aliasable.</span></div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span><span class="comment"> * @note Encrypt is streamable, such that encrypt(msg1) + encrypt(msg2) is functionally identical to encrypt(msg1+msg2)</span></div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span><span class="comment"> * with the exception of intervening padding in CBC mode.</span></div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span><span class="comment"> * @note Once a  context is used for encryption, a stateful flag is set preventing the same context from being used for decryption.</span></div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span><span class="comment"> * @returns AES_OK if success, non-zero if failed. See aes_error_t.</span></div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span><a class="code hl_enumeration" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a> aes_encrypt(</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>                    <span class="keyword">const</span> <a class="code hl_struct" href="struct__aes__ctx.html">aes_ctx</a>* ctx,</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>                    <span class="keyword">const</span> <span class="keywordtype">void</span>* plaintext,</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                    <span class="keywordtype">size_t</span> len,</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>                    <span class="keywordtype">void</span>* ciphertext);</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a416ec0a48df057a40c980a2ab6c6c45c">  245</a></span><a class="code hl_enumeration" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a> <a class="code hl_function" href="encrypt_8h.html#a416ec0a48df057a40c980a2ab6c6c45c">aes_encrypt</a>(</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>                    <span class="keyword">const</span> <a class="code hl_struct" href="struct__aes__ctx.html">aes_ctx</a>* ctx,</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>                    <span class="keyword">const</span> <span class="keywordtype">void</span>* plaintext,</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>                    <span class="keywordtype">size_t</span> len,</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                    <span class="keywordtype">void</span>* ciphertext);</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span> </div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span> </div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span><span class="comment">/******************************************************</span></div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span><span class="comment"> * @brief General-Purpose AES Decryption</span></div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span><span class="comment"> * @param ctx Pointer to AES cipher context.</span></div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span><span class="comment"> * @param ciphertext Pointer to data to decrypt.</span></div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span><span class="comment"> * @param len Length of data at @b ciphertext to decrypt.</span></div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span><span class="comment"> * @param plaintext Pointer to buffer to write decryped data to.</span></div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span><span class="comment"> * @note @b plaintext and @b ciphertext are aliasable.</span></div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span><span class="comment"> * @note Decrypt is streamable, such that decrypt(msg1) + decrypt(msg2) is functionally identical to decrypt(msg1+msg2)</span></div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span><span class="comment"> * with the exception of intervening padding in CBC mode.</span></div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span><span class="comment"> * @note Once a context is used for decryption, a stateful flag is set preventing the same context from being used for encryption.</span></div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span><span class="comment"> * @returns AES_OK if success, non-zero if failed. See aes_error_t.</span></div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span><a class="code hl_enumeration" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a> aes_decrypt(</div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>                    <span class="keyword">const</span> <a class="code hl_struct" href="struct__aes__ctx.html">aes_ctx</a>* ctx,</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>                    <span class="keyword">const</span> <span class="keywordtype">void</span>* ciphertext,</div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>                    <span class="keywordtype">size_t</span> len,</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>                    <span class="keywordtype">void</span>* plaintext);</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a100a437a10da041f3b99c6795e059ea8">  263</a></span><a class="code hl_enumeration" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a> <a class="code hl_function" href="encrypt_8h.html#a100a437a10da041f3b99c6795e059ea8">aes_decrypt</a>(</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>                    <span class="keyword">const</span> <a class="code hl_struct" href="struct__aes__ctx.html">aes_ctx</a>* ctx,</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>                    <span class="keyword">const</span> <span class="keywordtype">void</span>* ciphertext,</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>                    <span class="keywordtype">size_t</span> len,</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>                    <span class="keywordtype">void</span>* plaintext);</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span> </div>
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span> </div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span> </div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span><span class="comment"> RSA Public Key Encryption</span></div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span><span class="comment"> </span></div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span><span class="comment"> Public key encryption is a form of asymmetric encryption.</span></div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span><span class="comment"> This means that a key only works in one direction, and both parties need a public key</span></div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span><span class="comment"> and a private key. The private key is used to decrypt a message and the public key is</span></div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span><span class="comment"> used to encrypt.</span></div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span><span class="comment"> In RSA, the public and private keys are modular inverses of each other, such that:</span></div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span><span class="comment"> encrypted = message ** public exponent % public key, and</span></div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span><span class="comment"> message = encrypted ** private exponent % private modulus</span></div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span><span class="comment"> ** means power, % means modulus</span></div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span><span class="comment"> </span></div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span><span class="comment"> 65537 (and a few other Fermat primes) are commonly used as public exponents.</span></div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span><span class="comment"> The public key (modulus) is sent in the clear and is known to to everyone.</span></div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span><span class="comment"> The cryptographic strength of RSA comes from the difficulty of factoring the modulus.</span></div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span><span class="comment"> Asymmetric encryption is generally VERY slow. Using even RSA-1024 on the TI-84+ CE will</span></div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span><span class="comment"> take several seconds. For this reason, you usually do not use RSA for sustained encrypted</span></div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span><span class="comment"> communication. Use RSA to share a symmetric key, and then use AES for future messages.</span></div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span><span class="comment"> </span></div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span><span class="comment"> RSA Public Key Encryption</span></div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span><span class="comment"> </span></div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span><span class="comment"> Public key encryption is a form of asymmetric encryption.</span></div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span><span class="comment"> This means that a key only works in one direction, and both parties need a public key</span></div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span><span class="comment"> and a private key. The private key is used to decrypt a message and the public key is</span></div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span><span class="comment"> used to encrypt.</span></div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span><span class="comment"> In RSA, the public and private keys are modular inverses of each other, such that:</span></div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span><span class="comment"> encrypted = message ** public exponent % public key, and</span></div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span><span class="comment"> message = encrypted ** private exponent % private modulus</span></div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span><span class="comment"> ** means power, % means modulus</span></div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span><span class="comment"> </span></div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span><span class="comment"> 65537 (and a few other Fermat primes) are commonly used as public exponents.</span></div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span><span class="comment"> The public key (modulus) is sent in the clear and is known to to everyone.</span></div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span><span class="comment"> The cryptographic strength of RSA comes from the difficulty of factoring the modulus.</span></div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span><span class="comment"> Asymmetric encryption is generally VERY slow. Using even RSA-1024 on the TI-84+ CE will</span></div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span><span class="comment"> take several seconds. For this reason, you usually do not use RSA for sustained encrypted</span></div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span><span class="comment"> communication. Use RSA to share a symmetric key, and then use AES for future messages.</span></div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span><span class="comment"> </span></div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span> </div>
 <div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span> </div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="comment">/******************</span></div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="comment"> * @enum rsa_error_t</span></div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span><span class="comment"> * RSA error codes</span></div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294">  296</a></span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294a2cafdb683e1870a33bcb821420626cae">  297</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294a2cafdb683e1870a33bcb821420626cae">RSA_OK</a>,                         </div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294aab9ab38286c4180a1aa9f6e8df42e5db">  298</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294aab9ab38286c4180a1aa9f6e8df42e5db">RSA_INVALID_ARG</a>,                </div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294aedeb18a96b96e292369abed5b2f0a271">  299</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294aedeb18a96b96e292369abed5b2f0a271">RSA_INVALID_MSG</a>,                </div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294a843ec210de66176ef63e2d2b8ebdeb65">  300</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294a843ec210de66176ef63e2d2b8ebdeb65">RSA_INVALID_MODULUS</a>,            </div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294a43eadc89540121b902e02afabc7a7eb9">RSA_ENCODING_ERROR</a>              </div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294a43eadc89540121b902e02afabc7a7eb9">  302</a></span>} <a class="code hl_enumeration" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294">rsa_error_t</a>;</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294">  295</a></span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294a2cafdb683e1870a33bcb821420626cae">  296</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294a2cafdb683e1870a33bcb821420626cae">RSA_OK</a>,                         </div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294aab9ab38286c4180a1aa9f6e8df42e5db">  297</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294aab9ab38286c4180a1aa9f6e8df42e5db">RSA_INVALID_ARG</a>,                </div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294aedeb18a96b96e292369abed5b2f0a271">  298</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294aedeb18a96b96e292369abed5b2f0a271">RSA_INVALID_MSG</a>,                </div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294a843ec210de66176ef63e2d2b8ebdeb65">  299</a></span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294a843ec210de66176ef63e2d2b8ebdeb65">RSA_INVALID_MODULUS</a>,            </div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>    <a class="code hl_enumvalue" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294a43eadc89540121b902e02afabc7a7eb9">RSA_ENCODING_ERROR</a>              </div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294a43eadc89540121b902e02afabc7a7eb9">  301</a></span>} <a class="code hl_enumeration" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294">rsa_error_t</a>;</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span> </div>
 <div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span> </div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span><span class="comment">/*****************************************************</span></div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span><span class="comment"> * @brief RSA Encryption</span></div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span><span class="comment"> * Performs an in-place RSA encryption of a message</span></div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span><span class="comment"> * over a public modulus \b pubkey and a public exponent, 65537</span></div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span><span class="comment"> * OAEP encoding of the input message is performed automatically.</span></div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span><span class="comment"> * @param msg Pointer to a message to encrypt using RSA.</span></div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span><span class="comment"> * @param msglen The length of the message @b msg.</span></div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span><span class="comment"> * @param ciphertext Pointer a buffer to write the ciphertext to.</span></div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span><span class="comment"> * @param pubkey Pointer to a public key to use for encryption.</span></div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span><span class="comment"> * @param keylen The length of the public key (modulus) to encrypt with.</span></div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span><span class="comment"> * @param oaep_hash_alg The numeric ID of the hashing algorithm to use within OAEP encoding.</span></div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span><span class="comment"> *      See @b hash_algorithms.</span></div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span><span class="comment"> * @note The size of @b ciphertext and @b keylen must be equal.</span></div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span><span class="comment"> * @note The @b msg will be encoded using OAEP before encryption.</span></div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span><span class="comment"> * @note msg and pubkey are both treated as byte arrays.</span></div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span><span class="comment"> * @return rsa_error_t</span></div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span><a class="code hl_enumeration" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294">rsa_error_t</a> rsa_encrypt(</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>                    <span class="keyword">const</span> <span class="keywordtype">void</span>* msg,</div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>                    <span class="keywordtype">size_t</span> msglen,</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                    <span class="keywordtype">void</span>* ciphertext,</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>                    <span class="keyword">const</span> <span class="keywordtype">void</span>* pubkey,</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>                    <span class="keywordtype">size_t</span> keylen,</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>                    uint8_t oaep_hash_alg);</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno"><a class="line" href="encrypt_8h.html#a993f15527e86e09be9954a7377909e14">  322</a></span><a class="code hl_enumeration" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294">rsa_error_t</a> <a class="code hl_function" href="encrypt_8h.html#a993f15527e86e09be9954a7377909e14">rsa_encrypt</a>(</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>                    <span class="keyword">const</span> <span class="keywordtype">void</span>* msg,</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>                    <span class="keywordtype">size_t</span> msglen,</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>                    <span class="keywordtype">void</span>* ciphertext,</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                    <span class="keyword">const</span> <span class="keywordtype">void</span>* pubkey,</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>                    <span class="keywordtype">size_t</span> keylen,</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>                    uint8_t oaep_hash_alg);</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span> </div>
 <div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span> </div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span> </div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span><span class="preprocessor">#ifdef CRYPTOC_ENABLE_ADVANCED_MODE</span></div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span> </div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span><span class="comment"> #### INTERNAL FUNCTIONS ####</span></div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span><span class="comment"> For advanced users only!!!</span></div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span><span class="comment"> </span></div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span><span class="comment"> To enable advanced mode place the directive:</span></div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span><span class="comment"> #define CRYPTOC_ENABLE_ADVANCED_MODE</span></div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span><span class="comment"> above any inclusion of this header file.</span></div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span><span class="comment"> </span></div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span><span class="comment"> If you know what you are doing and want to implement your own cipher modes,</span></div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span><span class="comment"> or signature algorithms, a few internal functions are exposed here.</span></div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span><span class="preprocessor">#ifdef CRYPTOC_ENABLE_ADVANCED_MODE</span></div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span> </div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span><span class="comment"> #### INTERNAL FUNCTIONS ####</span></div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span><span class="comment"> For advanced users only!!!</span></div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span><span class="comment"> </span></div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span><span class="comment"> To enable advanced mode place the directive:</span></div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span><span class="comment"> #define CRYPTOC_ENABLE_ADVANCED_MODE</span></div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span><span class="comment"> above any inclusion of this header file.</span></div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span><span class="comment"> </span></div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span><span class="comment"> If you know what you are doing and want to implement your own cipher modes,</span></div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span><span class="comment"> or signature algorithms, a few internal functions are exposed here.</span></div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span> </div>
 <div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span> </div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span><span class="comment">/*****************************************************</span></div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span><span class="comment"> * @brief AES single-block ECB mode encryption function</span></div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span><span class="comment"> * @param block_in Block of data to encrypt.</span></div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span><span class="comment"> * @param block_out Buffer to write encrypted block of data.</span></div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span><span class="comment"> * @param ks AES key schedule context to use for encryption.</span></div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span><span class="comment"> * @note @b block_in and @b block_out are aliasable.</span></div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span><span class="comment"> * @warning ECB mode encryption is insecure (see many-time pad vulnerability).</span></div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span><span class="comment"> *     Use ECB-mode block encryptors as a constructor for custom cipher modes only.</span></div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span><span class="keywordtype">void</span> aes_ecb_unsafe_encrypt(<span class="keyword">const</span> <span class="keywordtype">void</span> *block_in, <span class="keywordtype">void</span> *block_out, <a class="code hl_struct" href="struct__aes__ctx.html">aes_ctx</a> *ks);</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span><span class="keywordtype">void</span> aes_ecb_unsafe_encrypt(<span class="keyword">const</span> <span class="keywordtype">void</span> *block_in, <span class="keywordtype">void</span> *block_out, <a class="code hl_struct" href="struct__aes__ctx.html">aes_ctx</a> *ks);</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span> </div>
 <div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span> </div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span><span class="comment">/*****************************************************</span></div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span><span class="comment"> * @brief AES single-block ECB mode decryption function</span></div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span><span class="comment"> * @param block_in Block of data to encrypt.</span></div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span><span class="comment"> * @param block_out Buffer to write encrypted block of data.</span></div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span><span class="comment"> * @param ks AES key schedule context to use for encryption.</span></div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span><span class="comment"> * @note @b block_in and @b block_out are aliasable.</span></div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span><span class="comment"> * @warning ECB mode encryption is insecure (see many-time pad vulnerability).</span></div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span><span class="comment"> *     Use ECB-mode block encryptors as a constructor for custom cipher modes only.</span></div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span><span class="keywordtype">void</span> aes_ecb_unsafe_decrypt(<span class="keyword">const</span> <span class="keywordtype">void</span> *block_in, <span class="keywordtype">void</span> *block_out, <a class="code hl_struct" href="struct__aes__ctx.html">aes_ctx</a> *ks);</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span><span class="keywordtype">void</span> aes_ecb_unsafe_decrypt(<span class="keyword">const</span> <span class="keywordtype">void</span> *block_in, <span class="keywordtype">void</span> *block_out, <a class="code hl_struct" href="struct__aes__ctx.html">aes_ctx</a> *ks);</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span> </div>
 <div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span> </div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span><span class="comment">/*************************************************************</span></div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span><span class="comment"> * @brief Optimal Asymmetric Encryption Padding (OAEP) encoder for RSA</span></div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span><span class="comment"> * @param plaintext Pointer to the plaintext message to encode.</span></div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span><span class="comment"> * @param len Lengfh of the message to encode.</span></div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span><span class="comment"> * @param encoded Pointer to buffer to write encoded message to.</span></div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span><span class="comment"> * @param modulus_len Length of the RSA modulus to encode for.</span></div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span><span class="comment"> * @param auth An authentication string to include in the encoding. Can be NULL to omit.</span></div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span><span class="comment"> * @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.</span></div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span><span class="comment"> * @return Boolean | True if encoding succeeded, False if encoding failed.</span></div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span><span class="comment"> * @note @b plaintext and @b encoded are aliasable.</span></div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span><span class="keywordtype">bool</span> oaep_encode(</div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>            <span class="keyword">const</span> <span class="keywordtype">void</span> *plaintext,</div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>            <span class="keywordtype">size_t</span> len,</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>            <span class="keywordtype">void</span> *encoded,</div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>            <span class="keywordtype">size_t</span> modulus_len,</div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>            <span class="keyword">const</span> uint8_t *auth,</div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>            uint8_t hash_alg);</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span><span class="keywordtype">bool</span> oaep_encode(</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>            <span class="keyword">const</span> <span class="keywordtype">void</span> *plaintext,</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>            <span class="keywordtype">size_t</span> len,</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>            <span class="keywordtype">void</span> *encoded,</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>            <span class="keywordtype">size_t</span> modulus_len,</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>            <span class="keyword">const</span> uint8_t *auth,</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>            uint8_t hash_alg);</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span> </div>
 <div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span> </div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span><span class="comment">/************************************************</span></div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span><span class="comment"> * @brief OAEP decoder for RSA</span></div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span><span class="comment"> * @param encoded Pointer to the plaintext message to decode.</span></div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span><span class="comment"> * @param len Lengfh of the message to decode.</span></div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span><span class="comment"> * @param plaintext Pointer to buffer to write decoded message to.</span></div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span><span class="comment"> * @param auth An authentication string to include in the encoding. Can be NULL to omit.</span></div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span><span class="comment"> * @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.</span></div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span><span class="comment"> * @return Boolean | True if encoding succeeded, False if encoding failed.</span></div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span><span class="comment"> * @note @b plaintext and @b encoded are aliasable.</span></div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span><span class="keywordtype">bool</span> oaep_decode(</div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>            <span class="keyword">const</span> <span class="keywordtype">void</span> *encoded,</div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>            <span class="keywordtype">size_t</span> len,</div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>            <span class="keywordtype">void</span> *plaintext,</div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>            <span class="keyword">const</span> uint8_t *auth,</div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>            uint8_t hash_alg);</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span><span class="keywordtype">bool</span> oaep_decode(</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>            <span class="keyword">const</span> <span class="keywordtype">void</span> *encoded,</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>            <span class="keywordtype">size_t</span> len,</div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>            <span class="keywordtype">void</span> *plaintext,</div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>            <span class="keyword">const</span> uint8_t *auth,</div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>            uint8_t hash_alg);</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span> </div>
 <div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span> </div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span><span class="comment">/*****************************************************</span></div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span><span class="comment"> * @brief Probabilistic Sisgnature Scheme (PSS) encoder for RSA</span></div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span><span class="comment"> * @param plaintext Pointer to the plaintext message to encode.</span></div>
-<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span><span class="comment"> * @param len Lengfh of the message to encode.</span></div>
-<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span><span class="comment"> * @param encoded Pointer to buffer to write encoded message to.</span></div>
-<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span><span class="comment"> * @param modulus_len Length of the RSA modulus to encode for.</span></div>
-<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span><span class="comment"> * @param salt A nonce that can be passed to the encryption scheme. Pass NULL to generate internally.</span></div>
-<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span><span class="comment"> * @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.</span></div>
-<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span><span class="comment"> * @return Boolean | True if encoding succeeded, False if encoding failed.</span></div>
-<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span><span class="comment"> * @note Generally, to encode a message, pass NULL as salt.</span></div>
-<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span><span class="comment"> *      To verify a message, pass a pointer to the salt field in the message you are looking to verify.</span></div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span><span class="keywordtype">bool</span> pss_encode(</div>
-<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>            <span class="keyword">const</span> <span class="keywordtype">void</span> *plaintext,</div>
-<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>            <span class="keywordtype">size_t</span> len,</div>
-<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>            <span class="keywordtype">void</span> *encoded,</div>
-<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>            <span class="keywordtype">size_t</span> modulus_len,</div>
-<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>            <span class="keywordtype">void</span> *salt,</div>
-<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>            uint8_t hash_alg);</div>
+<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span><span class="keywordtype">bool</span> pss_encode(</div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>            <span class="keyword">const</span> <span class="keywordtype">void</span> *plaintext,</div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>            <span class="keywordtype">size_t</span> len,</div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>            <span class="keywordtype">void</span> *encoded,</div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>            <span class="keywordtype">size_t</span> modulus_len,</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>            <span class="keywordtype">void</span> *salt,</div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>            uint8_t hash_alg);</div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span> </div>
 <div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span> </div>
-<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span><span class="comment">/***********************************************************</span></div>
-<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span><span class="comment"> * @brief Modular Exponentiation function for RSA (and other implementations)</span></div>
-<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span><span class="comment"> * @param size The length, in bytes, of the @b base and @b modulus.</span></div>
-<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span><span class="comment"> * @param base Pointer to buffer containing the base, in bytearray (big endian) format.</span></div>
-<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span><span class="comment"> * @param exp A 24-bit exponent.</span></div>
-<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span><span class="comment"> * @param mod Pointer to buffer containing the modulus, in bytearray (big endian) format.</span></div>
-<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span><span class="comment"> * @note For the @b size field, the bounds are [0, 255] with 0 actually meaning 256.</span></div>
-<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span><span class="comment"> * @note @b size must not be 1.</span></div>
-<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span><span class="comment"> * @note @b exp must be non-zero.</span></div>
-<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span><span class="comment"> * @note @b modulus must be odd.</span></div>
-<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span><span class="keywordtype">void</span> powmod(</div>
-<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>        uint8_t size,</div>
-<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>        uint8_t *restrict base,</div>
-<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>        uint24_t exp,</div>
-<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>        <span class="keyword">const</span> uint8_t *restrict mod);</div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span><span class="keywordtype">void</span> powmod(</div>
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>        uint8_t size,</div>
+<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>        uint8_t *restrict base,</div>
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>        uint24_t exp,</div>
+<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>        <span class="keyword">const</span> uint8_t *restrict mod);</div>
+<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span> </div>
 <div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span> </div>
-<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span> </div>
-<div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span> </div>
-<div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aencrypt_8h_html_a0486449f609d0e485bad091a671d9294"><div class="ttname"><a href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294">rsa_error_t</a></div><div class="ttdeci">rsa_error_t</div><div class="ttdef"><b>Definition:</b> encrypt.h:296</div></div>
-<div class="ttc" id="aencrypt_8h_html_a0486449f609d0e485bad091a671d9294a2cafdb683e1870a33bcb821420626cae"><div class="ttname"><a href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294a2cafdb683e1870a33bcb821420626cae">RSA_OK</a></div><div class="ttdeci">@ RSA_OK</div><div class="ttdef"><b>Definition:</b> encrypt.h:297</div></div>
-<div class="ttc" id="aencrypt_8h_html_a0486449f609d0e485bad091a671d9294a43eadc89540121b902e02afabc7a7eb9"><div class="ttname"><a href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294a43eadc89540121b902e02afabc7a7eb9">RSA_ENCODING_ERROR</a></div><div class="ttdeci">@ RSA_ENCODING_ERROR</div><div class="ttdef"><b>Definition:</b> encrypt.h:301</div></div>
-<div class="ttc" id="aencrypt_8h_html_a0486449f609d0e485bad091a671d9294a843ec210de66176ef63e2d2b8ebdeb65"><div class="ttname"><a href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294a843ec210de66176ef63e2d2b8ebdeb65">RSA_INVALID_MODULUS</a></div><div class="ttdeci">@ RSA_INVALID_MODULUS</div><div class="ttdef"><b>Definition:</b> encrypt.h:300</div></div>
-<div class="ttc" id="aencrypt_8h_html_a0486449f609d0e485bad091a671d9294aab9ab38286c4180a1aa9f6e8df42e5db"><div class="ttname"><a href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294aab9ab38286c4180a1aa9f6e8df42e5db">RSA_INVALID_ARG</a></div><div class="ttdeci">@ RSA_INVALID_ARG</div><div class="ttdef"><b>Definition:</b> encrypt.h:298</div></div>
-<div class="ttc" id="aencrypt_8h_html_a0486449f609d0e485bad091a671d9294aedeb18a96b96e292369abed5b2f0a271"><div class="ttname"><a href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294aedeb18a96b96e292369abed5b2f0a271">RSA_INVALID_MSG</a></div><div class="ttdeci">@ RSA_INVALID_MSG</div><div class="ttdef"><b>Definition:</b> encrypt.h:299</div></div>
-<div class="ttc" id="aencrypt_8h_html_a194ef6b5934dff6dceed4dd819e76340"><div class="ttname"><a href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340">aes_cipher_modes</a></div><div class="ttdeci">aes_cipher_modes</div><div class="ttdef"><b>Definition:</b> encrypt.h:123</div></div>
-<div class="ttc" id="aencrypt_8h_html_a194ef6b5934dff6dceed4dd819e76340a5ecd63cd0bd97d46f273461b6550cb8e"><div class="ttname"><a href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340a5ecd63cd0bd97d46f273461b6550cb8e">AES_MODE_CTR</a></div><div class="ttdeci">@ AES_MODE_CTR</div><div class="ttdef"><b>Definition:</b> encrypt.h:125</div></div>
-<div class="ttc" id="aencrypt_8h_html_a194ef6b5934dff6dceed4dd819e76340ad21a3698b98b7368b14ec3d48314a132"><div class="ttname"><a href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340ad21a3698b98b7368b14ec3d48314a132">AES_MODE_CBC</a></div><div class="ttdeci">@ AES_MODE_CBC</div><div class="ttdef"><b>Definition:</b> encrypt.h:124</div></div>
-<div class="ttc" id="aencrypt_8h_html_a9933dec76c43b37331782bdd16ebc4a3"><div class="ttname"><a href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3">aes_padding_schemes</a></div><div class="ttdeci">aes_padding_schemes</div><div class="ttdef"><b>Definition:</b> encrypt.h:132</div></div>
-<div class="ttc" id="aencrypt_8h_html_a9933dec76c43b37331782bdd16ebc4a3a322c11c9058ef67073a3ff9bdcb9f759"><div class="ttname"><a href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3a322c11c9058ef67073a3ff9bdcb9f759">PAD_DEFAULT</a></div><div class="ttdeci">@ PAD_DEFAULT</div><div class="ttdef"><b>Definition:</b> encrypt.h:134</div></div>
-<div class="ttc" id="aencrypt_8h_html_a9933dec76c43b37331782bdd16ebc4a3a673ae2fee0bfe0a962717b3f673b9b7c"><div class="ttname"><a href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3a673ae2fee0bfe0a962717b3f673b9b7c">PAD_PKCS7</a></div><div class="ttdeci">@ PAD_PKCS7</div><div class="ttdef"><b>Definition:</b> encrypt.h:133</div></div>
-<div class="ttc" id="aencrypt_8h_html_a9933dec76c43b37331782bdd16ebc4a3a7566d9371110a1a24db62b145c901ad8"><div class="ttname"><a href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3a7566d9371110a1a24db62b145c901ad8">PAD_ISO2</a></div><div class="ttdeci">@ PAD_ISO2</div><div class="ttdef"><b>Definition:</b> encrypt.h:137</div></div>
-<div class="ttc" id="aencrypt_8h_html_aeb2e64abcc4317e3143fb820f21c3bfd"><div class="ttname"><a href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a></div><div class="ttdeci">aes_error_t</div><div class="ttdef"><b>Definition:</b> encrypt.h:188</div></div>
-<div class="ttc" id="aencrypt_8h_html_aeb2e64abcc4317e3143fb820f21c3bfda47bbd593fc3bdb7758a790bab86b41d9"><div class="ttname"><a href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfda47bbd593fc3bdb7758a790bab86b41d9">AES_INVALID_PADDINGMODE</a></div><div class="ttdeci">@ AES_INVALID_PADDINGMODE</div><div class="ttdef"><b>Definition:</b> encrypt.h:193</div></div>
-<div class="ttc" id="aencrypt_8h_html_aeb2e64abcc4317e3143fb820f21c3bfda6d39b280aea9d8d62d126eef05d271db"><div class="ttname"><a href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfda6d39b280aea9d8d62d126eef05d271db">AES_INVALID_ARG</a></div><div class="ttdeci">@ AES_INVALID_ARG</div><div class="ttdef"><b>Definition:</b> encrypt.h:190</div></div>
-<div class="ttc" id="aencrypt_8h_html_aeb2e64abcc4317e3143fb820f21c3bfda95a9dcbf64347e3c6f2c50d05e8937f5"><div class="ttname"><a href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfda95a9dcbf64347e3c6f2c50d05e8937f5">AES_INVALID_OPERATION</a></div><div class="ttdeci">@ AES_INVALID_OPERATION</div><div class="ttdef"><b>Definition:</b> encrypt.h:195</div></div>
-<div class="ttc" id="aencrypt_8h_html_aeb2e64abcc4317e3143fb820f21c3bfdaacf07636102724d2a7913911b0cf74b2"><div class="ttname"><a href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdaacf07636102724d2a7913911b0cf74b2">AES_OK</a></div><div class="ttdeci">@ AES_OK</div><div class="ttdef"><b>Definition:</b> encrypt.h:189</div></div>
-<div class="ttc" id="aencrypt_8h_html_aeb2e64abcc4317e3143fb820f21c3bfdaae5e9a591aeda666b0e425d9a05834e3"><div class="ttname"><a href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdaae5e9a591aeda666b0e425d9a05834e3">AES_INVALID_MSG</a></div><div class="ttdeci">@ AES_INVALID_MSG</div><div class="ttdef"><b>Definition:</b> encrypt.h:191</div></div>
-<div class="ttc" id="aencrypt_8h_html_aeb2e64abcc4317e3143fb820f21c3bfdaba928751c773ffa0287e47e1f86eae8b"><div class="ttname"><a href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdaba928751c773ffa0287e47e1f86eae8b">AES_INVALID_CIPHERTEXT</a></div><div class="ttdeci">@ AES_INVALID_CIPHERTEXT</div><div class="ttdef"><b>Definition:</b> encrypt.h:194</div></div>
-<div class="ttc" id="aencrypt_8h_html_aeb2e64abcc4317e3143fb820f21c3bfdad2b49ffeabf14aaf47db3d1bad18f84e"><div class="ttname"><a href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdad2b49ffeabf14aaf47db3d1bad18f84e">AES_INVALID_CIPHERMODE</a></div><div class="ttdeci">@ AES_INVALID_CIPHERMODE</div><div class="ttdef"><b>Definition:</b> encrypt.h:192</div></div>
+<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span> </div>
+<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aencrypt_8h_html_a008b7da7adce38b117a17c8165c08df9"><div class="ttname"><a href="encrypt_8h.html#a008b7da7adce38b117a17c8165c08df9">csrand_init</a></div><div class="ttdeci">bool csrand_init(void)</div><div class="ttdoc">Initializes the secure psuedo-random generator.</div></div>
+<div class="ttc" id="aencrypt_8h_html_a0486449f609d0e485bad091a671d9294"><div class="ttname"><a href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294">rsa_error_t</a></div><div class="ttdeci">rsa_error_t</div><div class="ttdef"><b>Definition:</b> encrypt.h:295</div></div>
+<div class="ttc" id="aencrypt_8h_html_a0486449f609d0e485bad091a671d9294a2cafdb683e1870a33bcb821420626cae"><div class="ttname"><a href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294a2cafdb683e1870a33bcb821420626cae">RSA_OK</a></div><div class="ttdeci">@ RSA_OK</div><div class="ttdef"><b>Definition:</b> encrypt.h:296</div></div>
+<div class="ttc" id="aencrypt_8h_html_a0486449f609d0e485bad091a671d9294a43eadc89540121b902e02afabc7a7eb9"><div class="ttname"><a href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294a43eadc89540121b902e02afabc7a7eb9">RSA_ENCODING_ERROR</a></div><div class="ttdeci">@ RSA_ENCODING_ERROR</div><div class="ttdef"><b>Definition:</b> encrypt.h:300</div></div>
+<div class="ttc" id="aencrypt_8h_html_a0486449f609d0e485bad091a671d9294a843ec210de66176ef63e2d2b8ebdeb65"><div class="ttname"><a href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294a843ec210de66176ef63e2d2b8ebdeb65">RSA_INVALID_MODULUS</a></div><div class="ttdeci">@ RSA_INVALID_MODULUS</div><div class="ttdef"><b>Definition:</b> encrypt.h:299</div></div>
+<div class="ttc" id="aencrypt_8h_html_a0486449f609d0e485bad091a671d9294aab9ab38286c4180a1aa9f6e8df42e5db"><div class="ttname"><a href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294aab9ab38286c4180a1aa9f6e8df42e5db">RSA_INVALID_ARG</a></div><div class="ttdeci">@ RSA_INVALID_ARG</div><div class="ttdef"><b>Definition:</b> encrypt.h:297</div></div>
+<div class="ttc" id="aencrypt_8h_html_a0486449f609d0e485bad091a671d9294aedeb18a96b96e292369abed5b2f0a271"><div class="ttname"><a href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294aedeb18a96b96e292369abed5b2f0a271">RSA_INVALID_MSG</a></div><div class="ttdeci">@ RSA_INVALID_MSG</div><div class="ttdef"><b>Definition:</b> encrypt.h:298</div></div>
+<div class="ttc" id="aencrypt_8h_html_a100a437a10da041f3b99c6795e059ea8"><div class="ttname"><a href="encrypt_8h.html#a100a437a10da041f3b99c6795e059ea8">aes_decrypt</a></div><div class="ttdeci">aes_error_t aes_decrypt(const aes_ctx *ctx, const void *ciphertext, size_t len, void *plaintext)</div><div class="ttdoc">General-Purpose AES Decryption.</div></div>
+<div class="ttc" id="aencrypt_8h_html_a194ef6b5934dff6dceed4dd819e76340"><div class="ttname"><a href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340">aes_cipher_modes</a></div><div class="ttdeci">aes_cipher_modes</div><div class="ttdef"><b>Definition:</b> encrypt.h:122</div></div>
+<div class="ttc" id="aencrypt_8h_html_a194ef6b5934dff6dceed4dd819e76340a5ecd63cd0bd97d46f273461b6550cb8e"><div class="ttname"><a href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340a5ecd63cd0bd97d46f273461b6550cb8e">AES_MODE_CTR</a></div><div class="ttdeci">@ AES_MODE_CTR</div><div class="ttdef"><b>Definition:</b> encrypt.h:124</div></div>
+<div class="ttc" id="aencrypt_8h_html_a194ef6b5934dff6dceed4dd819e76340ad21a3698b98b7368b14ec3d48314a132"><div class="ttname"><a href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340ad21a3698b98b7368b14ec3d48314a132">AES_MODE_CBC</a></div><div class="ttdeci">@ AES_MODE_CBC</div><div class="ttdef"><b>Definition:</b> encrypt.h:123</div></div>
+<div class="ttc" id="aencrypt_8h_html_a3cdabe638655bf5d3760c4ab700a43fd"><div class="ttname"><a href="encrypt_8h.html#a3cdabe638655bf5d3760c4ab700a43fd">csrand_get</a></div><div class="ttdeci">uint32_t csrand_get(void)</div><div class="ttdoc">Returns a securely psuedo-random 32-bit integer.</div></div>
+<div class="ttc" id="aencrypt_8h_html_a416ec0a48df057a40c980a2ab6c6c45c"><div class="ttname"><a href="encrypt_8h.html#a416ec0a48df057a40c980a2ab6c6c45c">aes_encrypt</a></div><div class="ttdeci">aes_error_t aes_encrypt(const aes_ctx *ctx, const void *plaintext, size_t len, void *ciphertext)</div><div class="ttdoc">General-Purpose AES Encryption.</div></div>
+<div class="ttc" id="aencrypt_8h_html_a7d671ce993d8c2bee97c6701f5cd2d97"><div class="ttname"><a href="encrypt_8h.html#a7d671ce993d8c2bee97c6701f5cd2d97">aes_init</a></div><div class="ttdeci">aes_error_t aes_init(aes_ctx *ctx, const void *key, size_t keylen, const void *iv, uint24_t flags)</div><div class="ttdoc">Initializes a stateful AES cipher context to be used for encryption or decryption.</div></div>
+<div class="ttc" id="aencrypt_8h_html_a9933dec76c43b37331782bdd16ebc4a3"><div class="ttname"><a href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3">aes_padding_schemes</a></div><div class="ttdeci">aes_padding_schemes</div><div class="ttdef"><b>Definition:</b> encrypt.h:131</div></div>
+<div class="ttc" id="aencrypt_8h_html_a9933dec76c43b37331782bdd16ebc4a3a322c11c9058ef67073a3ff9bdcb9f759"><div class="ttname"><a href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3a322c11c9058ef67073a3ff9bdcb9f759">PAD_DEFAULT</a></div><div class="ttdeci">@ PAD_DEFAULT</div><div class="ttdef"><b>Definition:</b> encrypt.h:133</div></div>
+<div class="ttc" id="aencrypt_8h_html_a9933dec76c43b37331782bdd16ebc4a3a673ae2fee0bfe0a962717b3f673b9b7c"><div class="ttname"><a href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3a673ae2fee0bfe0a962717b3f673b9b7c">PAD_PKCS7</a></div><div class="ttdeci">@ PAD_PKCS7</div><div class="ttdef"><b>Definition:</b> encrypt.h:132</div></div>
+<div class="ttc" id="aencrypt_8h_html_a9933dec76c43b37331782bdd16ebc4a3a7566d9371110a1a24db62b145c901ad8"><div class="ttname"><a href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3a7566d9371110a1a24db62b145c901ad8">PAD_ISO2</a></div><div class="ttdeci">@ PAD_ISO2</div><div class="ttdef"><b>Definition:</b> encrypt.h:136</div></div>
+<div class="ttc" id="aencrypt_8h_html_a993f15527e86e09be9954a7377909e14"><div class="ttname"><a href="encrypt_8h.html#a993f15527e86e09be9954a7377909e14">rsa_encrypt</a></div><div class="ttdeci">rsa_error_t rsa_encrypt(const void *msg, size_t msglen, void *ciphertext, const void *pubkey, size_t keylen, uint8_t oaep_hash_alg)</div><div class="ttdoc">RSA Encryption.</div></div>
+<div class="ttc" id="aencrypt_8h_html_aa188bc2768a3b7aa6ad73cb2c77819e0"><div class="ttname"><a href="encrypt_8h.html#aa188bc2768a3b7aa6ad73cb2c77819e0">aes_ctx</a></div><div class="ttdeci">struct _aes_ctx aes_ctx</div></div>
+<div class="ttc" id="aencrypt_8h_html_aa3641d44a877ff6eec0eb5cfbfaa5c61"><div class="ttname"><a href="encrypt_8h.html#aa3641d44a877ff6eec0eb5cfbfaa5c61">csrand_fill</a></div><div class="ttdeci">bool csrand_fill(void *buffer, size_t size)</div><div class="ttdoc">Fills a buffer with securely pseduo-random bytes.</div></div>
+<div class="ttc" id="aencrypt_8h_html_aeb2e64abcc4317e3143fb820f21c3bfd"><div class="ttname"><a href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a></div><div class="ttdeci">aes_error_t</div><div class="ttdef"><b>Definition:</b> encrypt.h:187</div></div>
+<div class="ttc" id="aencrypt_8h_html_aeb2e64abcc4317e3143fb820f21c3bfda47bbd593fc3bdb7758a790bab86b41d9"><div class="ttname"><a href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfda47bbd593fc3bdb7758a790bab86b41d9">AES_INVALID_PADDINGMODE</a></div><div class="ttdeci">@ AES_INVALID_PADDINGMODE</div><div class="ttdef"><b>Definition:</b> encrypt.h:192</div></div>
+<div class="ttc" id="aencrypt_8h_html_aeb2e64abcc4317e3143fb820f21c3bfda6d39b280aea9d8d62d126eef05d271db"><div class="ttname"><a href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfda6d39b280aea9d8d62d126eef05d271db">AES_INVALID_ARG</a></div><div class="ttdeci">@ AES_INVALID_ARG</div><div class="ttdef"><b>Definition:</b> encrypt.h:189</div></div>
+<div class="ttc" id="aencrypt_8h_html_aeb2e64abcc4317e3143fb820f21c3bfda95a9dcbf64347e3c6f2c50d05e8937f5"><div class="ttname"><a href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfda95a9dcbf64347e3c6f2c50d05e8937f5">AES_INVALID_OPERATION</a></div><div class="ttdeci">@ AES_INVALID_OPERATION</div><div class="ttdef"><b>Definition:</b> encrypt.h:194</div></div>
+<div class="ttc" id="aencrypt_8h_html_aeb2e64abcc4317e3143fb820f21c3bfdaacf07636102724d2a7913911b0cf74b2"><div class="ttname"><a href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdaacf07636102724d2a7913911b0cf74b2">AES_OK</a></div><div class="ttdeci">@ AES_OK</div><div class="ttdef"><b>Definition:</b> encrypt.h:188</div></div>
+<div class="ttc" id="aencrypt_8h_html_aeb2e64abcc4317e3143fb820f21c3bfdaae5e9a591aeda666b0e425d9a05834e3"><div class="ttname"><a href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdaae5e9a591aeda666b0e425d9a05834e3">AES_INVALID_MSG</a></div><div class="ttdeci">@ AES_INVALID_MSG</div><div class="ttdef"><b>Definition:</b> encrypt.h:190</div></div>
+<div class="ttc" id="aencrypt_8h_html_aeb2e64abcc4317e3143fb820f21c3bfdaba928751c773ffa0287e47e1f86eae8b"><div class="ttname"><a href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdaba928751c773ffa0287e47e1f86eae8b">AES_INVALID_CIPHERTEXT</a></div><div class="ttdeci">@ AES_INVALID_CIPHERTEXT</div><div class="ttdef"><b>Definition:</b> encrypt.h:193</div></div>
+<div class="ttc" id="aencrypt_8h_html_aeb2e64abcc4317e3143fb820f21c3bfdad2b49ffeabf14aaf47db3d1bad18f84e"><div class="ttname"><a href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfdad2b49ffeabf14aaf47db3d1bad18f84e">AES_INVALID_CIPHERMODE</a></div><div class="ttdeci">@ AES_INVALID_CIPHERMODE</div><div class="ttdef"><b>Definition:</b> encrypt.h:191</div></div>
 <div class="ttc" id="ahashlib_8h_html"><div class="ttname"><a href="hashlib_8h.html">hashlib.h</a></div><div class="ttdoc">Provides cryptographic hashing for the TI–84+ CE.</div></div>
-<div class="ttc" id="astruct__aes__cbc_html"><div class="ttname"><a href="struct__aes__cbc.html">_aes_cbc</a></div><div class="ttdef"><b>Definition:</b> encrypt.h:101</div></div>
-<div class="ttc" id="astruct__aes__ctr_html"><div class="ttname"><a href="struct__aes__ctr.html">_aes_ctr</a></div><div class="ttdef"><b>Definition:</b> encrypt.h:102</div></div>
-<div class="ttc" id="astruct__aes__ctx_html"><div class="ttname"><a href="struct__aes__ctx.html">_aes_ctx</a></div><div class="ttdef"><b>Definition:</b> encrypt.h:106</div></div>
-<div class="ttc" id="astruct__aes__ctx_html_a4c197bedd37b4e75108acf7343f2e388"><div class="ttname"><a href="struct__aes__ctx.html#a4c197bedd37b4e75108acf7343f2e388">_aes_ctx::cbc</a></div><div class="ttdeci">aes_cbc_t cbc</div><div class="ttdef"><b>Definition:</b> encrypt.h:113</div></div>
-<div class="ttc" id="astruct__aes__ctx_html_a71f1c71840080ed09b27da0332db0944"><div class="ttname"><a href="struct__aes__ctx.html#a71f1c71840080ed09b27da0332db0944">_aes_ctx::iv</a></div><div class="ttdeci">uint8_t iv[16]</div><div class="ttdef"><b>Definition:</b> encrypt.h:109</div></div>
-<div class="ttc" id="astruct__aes__ctx_html_a75a3959059a029693994a9add83f6808"><div class="ttname"><a href="struct__aes__ctx.html#a75a3959059a029693994a9add83f6808">_aes_ctx::ctr</a></div><div class="ttdeci">aes_ctr_t ctr</div><div class="ttdef"><b>Definition:</b> encrypt.h:112</div></div>
-<div class="ttc" id="astruct__aes__ctx_html_a7638d6269b5072f4fe3db606d4e46881"><div class="ttname"><a href="struct__aes__ctx.html#a7638d6269b5072f4fe3db606d4e46881">_aes_ctx::op_assoc</a></div><div class="ttdeci">uint8_t op_assoc</div><div class="ttdef"><b>Definition:</b> encrypt.h:115</div></div>
-<div class="ttc" id="astruct__aes__ctx_html_a7b2aea1f1f8c40516832e1b51de6f059"><div class="ttname"><a href="struct__aes__ctx.html#a7b2aea1f1f8c40516832e1b51de6f059">_aes_ctx::keysize</a></div><div class="ttdeci">uint24_t keysize</div><div class="ttdef"><b>Definition:</b> encrypt.h:107</div></div>
-<div class="ttc" id="astruct__aes__ctx_html_a963065a29ef08538b1ee614196baa38f"><div class="ttname"><a href="struct__aes__ctx.html#a963065a29ef08538b1ee614196baa38f">_aes_ctx::ciphermode</a></div><div class="ttdeci">uint8_t ciphermode</div><div class="ttdef"><b>Definition:</b> encrypt.h:110</div></div>
-<div class="ttc" id="astruct__aes__ctx_html_ad7abad71532100be2c688e11e6dedf6d"><div class="ttname"><a href="struct__aes__ctx.html#ad7abad71532100be2c688e11e6dedf6d">_aes_ctx::round_keys</a></div><div class="ttdeci">uint32_t round_keys[60]</div><div class="ttdef"><b>Definition:</b> encrypt.h:108</div></div>
+<div class="ttc" id="astruct__aes__cbc_html"><div class="ttname"><a href="struct__aes__cbc.html">_aes_cbc</a></div><div class="ttdef"><b>Definition:</b> encrypt.h:100</div></div>
+<div class="ttc" id="astruct__aes__ctr_html"><div class="ttname"><a href="struct__aes__ctr.html">_aes_ctr</a></div><div class="ttdef"><b>Definition:</b> encrypt.h:101</div></div>
+<div class="ttc" id="astruct__aes__ctx_html"><div class="ttname"><a href="struct__aes__ctx.html">_aes_ctx</a></div><div class="ttdef"><b>Definition:</b> encrypt.h:105</div></div>
+<div class="ttc" id="astruct__aes__ctx_html_a12739f38b27a383886a23a73e6acfbf5"><div class="ttname"><a href="struct__aes__ctx.html#a12739f38b27a383886a23a73e6acfbf5">_aes_ctx::cbc</a></div><div class="ttdeci">aes_cbc_t cbc</div><div class="ttdef"><b>Definition:</b> encrypt.h:112</div></div>
+<div class="ttc" id="astruct__aes__ctx_html_a3c7170b46d94b5b8395f74eb0baa14c8"><div class="ttname"><a href="struct__aes__ctx.html#a3c7170b46d94b5b8395f74eb0baa14c8">_aes_ctx::keysize</a></div><div class="ttdeci">uint24_t keysize</div><div class="ttdef"><b>Definition:</b> encrypt.h:106</div></div>
+<div class="ttc" id="astruct__aes__ctx_html_a634769fbe859922773abe87593607d20"><div class="ttname"><a href="struct__aes__ctx.html#a634769fbe859922773abe87593607d20">_aes_ctx::ctr</a></div><div class="ttdeci">aes_ctr_t ctr</div><div class="ttdef"><b>Definition:</b> encrypt.h:111</div></div>
+<div class="ttc" id="astruct__aes__ctx_html_a9056269d8094bcc491e56d1dea3f9381"><div class="ttname"><a href="struct__aes__ctx.html#a9056269d8094bcc491e56d1dea3f9381">_aes_ctx::iv</a></div><div class="ttdeci">uint8_t iv[16]</div><div class="ttdef"><b>Definition:</b> encrypt.h:108</div></div>
+<div class="ttc" id="astruct__aes__ctx_html_aac1749cf900931c1810f155df1a45f73"><div class="ttname"><a href="struct__aes__ctx.html#aac1749cf900931c1810f155df1a45f73">_aes_ctx::op_assoc</a></div><div class="ttdeci">uint8_t op_assoc</div><div class="ttdef"><b>Definition:</b> encrypt.h:114</div></div>
+<div class="ttc" id="astruct__aes__ctx_html_aae9d1d4174195c2e82cc5d6ea0b72504"><div class="ttname"><a href="struct__aes__ctx.html#aae9d1d4174195c2e82cc5d6ea0b72504">_aes_ctx::ciphermode</a></div><div class="ttdeci">uint8_t ciphermode</div><div class="ttdef"><b>Definition:</b> encrypt.h:109</div></div>
+<div class="ttc" id="astruct__aes__ctx_html_adb6943e9b2c5dd39e5390f26ae470ffe"><div class="ttname"><a href="struct__aes__ctx.html#adb6943e9b2c5dd39e5390f26ae470ffe">_aes_ctx::round_keys</a></div><div class="ttdeci">uint32_t round_keys[60]</div><div class="ttdef"><b>Definition:</b> encrypt.h:107</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

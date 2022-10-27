@@ -21,9 +21,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">CryptX
+   <div id="projectname">CryptX<span id="projectnumber">&#160;10</span>
    </div>
-   <div id="projectbrief">Suite of Cryptography Libraries for the TI-84+ CE</div>
+   <div id="projectbrief">A collection of cryptographic libraries for the TI-84+ CE</div>
   </td>
  </tr>
  </tbody>
@@ -78,277 +78,171 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <a href="hashlib_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#ifndef HASHLIB_H</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#define HASHLIB_H</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;stddef.h&gt;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment">/**********************************************</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment"> * @def fastRam_Safe</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment"> * Pointer to a region of fast RAM that is generally safe to use</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment"> * as long as you don&#39;t call Libload.</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#define fastRam_Safe        ((void*)0xE30A04)</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment"> /*********************************************</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">  * @def fastRam_Unsafe</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment">  * Pointer to the start of the region of fast RAM, including the safe region above as well as</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">  * a region used by the library&#39;s csrng.</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment">  */</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#define fastRam_Unsafe      ((void*)0xE30800)</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#ifndef HASHLIB_H</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#define HASHLIB_H</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;stddef.h&gt;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="hashlib_8h.html#a2671e33428186577b97034319c059c40">   28</a></span><span class="preprocessor">#define fastRam_Safe        ((void*)0xE30A04)</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="hashlib_8h.html#a28d611d50cc8cf20a1c9fa327e839a56">   35</a></span><span class="preprocessor">#define fastRam_Unsafe      ((void*)0xE30800)</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">Cryptographic Hashes</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment"> </span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment">A cryptographic hash is used to validate that data is unchanged between two endpoints.</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment">It is similar to a checksum, but checksums can be easily fooled; cryptographic hashes</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment">are a lot harder to fool due to how they distribute the bits in a data stream.</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment">The general use of a hash is as follows: the party sending a message hashes it and</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment">includes that hash as part of the message. The recipient hashes the message (except the hash)</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="comment">themselves and then compares that hash to the one included in the message. If the hashes match,</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment">the message is complete and unaltered. If the hashes do not match, the message is incomplete</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment">or has been tampered with.</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment">*/</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment">/**********************************************</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment"> * @typedef sha256_ctx</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment"> * Defines hash-state data for an instance of SHA-256.</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment"> * This structure is internal. You should never need to use this.</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="struct__sha256__ctx.html">   55</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="struct__sha256__ctx.html">_sha256_ctx</a> {</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="struct__sha256__ctx.html#a6fcedd1c789a695a3a181a7a6624d368">   56</a></span>    uint8_t <a class="code hl_variable" href="struct__sha256__ctx.html#a6fcedd1c789a695a3a181a7a6624d368">data</a>[64];       </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="struct__sha256__ctx.html#ace5c23e2acbfc3932b3b282d5bbf59f0">   57</a></span>    uint8_t <a class="code hl_variable" href="struct__sha256__ctx.html#ace5c23e2acbfc3932b3b282d5bbf59f0">datalen</a>;        </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="struct__sha256__ctx.html#a4c215841f9afc43636ec7f6142ae2642">   58</a></span>    uint8_t <a class="code hl_variable" href="struct__sha256__ctx.html#a4c215841f9afc43636ec7f6142ae2642">bitlen</a>[8];      </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="struct__sha256__ctx.html#a4e4b779e16b0ef55728be88db5aef714">   59</a></span>    uint32_t <a class="code hl_variable" href="struct__sha256__ctx.html#a4e4b779e16b0ef55728be88db5aef714">state</a>[8];      </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>} <a class="code hl_struct" href="struct__sha256__ctx.html">sha256_ctx</a>;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="comment">/**************************************</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment"> * @typedef hash_ctx</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment"> * Defines universal hash-state data, including pointer to algorithm-specific handling methods and</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="comment"> * a union of computational states for various hashes.</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="struct__hash__ctx.html">   67</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="struct__hash__ctx.html">_hash_ctx</a> {</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="struct__hash__ctx.html#a3c940bdce33dc74799df1e6bc193bfef">   68</a></span>    bool (*<a class="code hl_variable" href="struct__hash__ctx.html#a3c940bdce33dc74799df1e6bc193bfef">init</a>)(<span class="keywordtype">void</span>* ctx);                    </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="struct__hash__ctx.html#a578c2c6501b33833ca7b80ec7664b990">   69</a></span>    void (*<a class="code hl_variable" href="struct__hash__ctx.html#a578c2c6501b33833ca7b80ec7664b990">update</a>)(<span class="keywordtype">void</span>* ctx, <span class="keyword">const</span> <span class="keywordtype">void</span>* data, <span class="keywordtype">size_t</span> len);    </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="struct__hash__ctx.html#a4c1ecf5f097205cc9c59e9fa31ff61c8">   70</a></span>    void (*<span class="keyword">final</span>)(<span class="keywordtype">void</span>* ctx, <span class="keywordtype">void</span>* output);     </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="union__hash__ctx_1_1__hash.html">   71</a></span>    <span class="keyword">union </span><a class="code hl_union" href="union__hash__ctx_1_1__hash.html">_hash</a> {           </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="union__hash__ctx_1_1__hash.html#a6f62fd1bf5256001424fc36d58f7bbfb">   72</a></span>        <a class="code hl_struct" href="struct__sha256__ctx.html">sha256_ctx</a> <a class="code hl_variable" href="union__hash__ctx_1_1__hash.html#a6f62fd1bf5256001424fc36d58f7bbfb">sha256</a>;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    } Hash;</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    uint8_t digest_len;</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>} <a class="code hl_struct" href="struct__hash__ctx.html">hash_ctx</a>;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="comment"> /*******************************</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="comment">  * @enum hash_algorithms</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="comment">  * Idenitifiers for selecting hash types.</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="comment">  */</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="hashlib_8h.html#af36e91f131f610a6612b78700d483bd7">   81</a></span><span class="keyword">enum</span> <a class="code hl_enumeration" href="hashlib_8h.html#af36e91f131f610a6612b78700d483bd7">hash_algorithms</a> {</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="hashlib_8h.html#af36e91f131f610a6612b78700d483bd7ac7716785728694693ec29eccd5ffa0e1">   82</a></span>    <a class="code hl_enumvalue" href="hashlib_8h.html#af36e91f131f610a6612b78700d483bd7ac7716785728694693ec29eccd5ffa0e1">SHA256</a>,             </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>};</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="comment">/*********************************</span></div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="comment"> * @def SHA256_DIGEST_LEN</span></div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="comment"> * Binary length of the SHA-256 hash output.</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="preprocessor">#define SHA256_DIGEST_LEN   32</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="comment">/**************************************************************</span></div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="comment"> *  @brief Hash initializer.</span></div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="comment"> *  Initializes the given context with the starting state for the given hash algorithm and</span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="comment"> *  populates pointers to the methods for update and final for the given hash..</span></div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="comment"> *  @param ctx Pointer to a hash context (hash_ctx).</span></div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="comment"> *  @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="comment"> *  @return Boolean. True if hash initialization succeeded. False if hash ID invalid.</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="keywordtype">bool</span> hash_init(<a class="code hl_struct" href="struct__hash__ctx.html">hash_ctx</a>* ctx, uint8_t hash_alg);</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="comment">/*********************************************************</span></div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="comment"> *  @brief Updates the hash context for the given data.</span></div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="comment"> *  @param ctx Pointer to a hash context.</span></div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="comment"> *  @param data Pointer to data to hash.</span></div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="comment"> *  @param len Number of bytes at @b data to hash.</span></div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="comment"> *  @note You can use @b ctx.update() as an alternative to this function.</span></div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="comment"> *      If doing so, you must pass @b &amp;ctx.Hash instead of @b &amp;ctx.</span></div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="comment"> *  @warning You must have an initialized hash context or a crash will ensue.</span></div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="keywordtype">void</span> hash_update(<a class="code hl_struct" href="struct__hash__ctx.html">hash_ctx</a>* ctx, <span class="keyword">const</span> <span class="keywordtype">void</span>* data, <span class="keywordtype">size_t</span> len);</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span><span class="comment">/*****************************************************</span></div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="comment"> *  @brief Finalize context and render digest for hash</span></div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="comment"> *  @param ctx Pointer to a hash context.</span></div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="comment"> *  @param digest Pointer to a buffer to write the hash to.</span></div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="comment"> *  @note @b digest must be at large enough to hold the hash digest.</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="comment"> *  @note You can use @b ctx.final() as an alternative to this function.</span></div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="comment"> *      If doing so, you must pass @b &amp;ctx.Hash instead of @b &amp;ctx.</span></div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="comment"> *  @warning You must have an initialized hash context or a crash will ensue.</span></div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="keywordtype">void</span> hash_final(<a class="code hl_struct" href="struct__hash__ctx.html">hash_ctx</a>* ctx, <span class="keywordtype">void</span>* digest);</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><span class="comment">/*************************************************</span></div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="comment"> *  @brief Arbitrary Length Hashing Function</span></div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="comment"> *  Computes an arbitrary length hash from the given data using the given hashing algorithm.</span></div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="comment"> *  @param data Pointer to data to hash.</span></div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="comment"> *  @param datalen Number of bytes at @b data to hash.</span></div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="comment"> *  @param outbuf Pointer to buffer to write hash output to.</span></div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="comment"> *  @param outlen Number of bytes to write to @b outbuf.</span></div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="comment"> *  @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.</span></div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="comment"> *  @note @b outbuf must be at least @b outlen bytes large.</span></div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="keywordtype">bool</span> hash_mgf1(<span class="keyword">const</span> <span class="keywordtype">void</span>* data, <span class="keywordtype">size_t</span> datalen, <span class="keywordtype">void</span>* outbuf, <span class="keywordtype">size_t</span> outlen, uint8_t hash_alg);</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment">Cryptographic Hashes</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment"> </span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment">A cryptographic hash is used to validate that data is unchanged between two endpoints.</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment">It is similar to a checksum, but checksums can be easily fooled; cryptographic hashes</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment">are a lot harder to fool due to how they distribute the bits in a data stream.</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment">The general use of a hash is as follows: the party sending a message hashes it and</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="comment">includes that hash as part of the message. The recipient hashes the message (except the hash)</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment">themselves and then compares that hash to the one included in the message. If the hashes match,</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment">the message is complete and unaltered. If the hashes do not match, the message is incomplete</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment">or has been tampered with.</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment">*/</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="struct__sha256__ctx.html">   56</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="struct__sha256__ctx.html">_sha256_ctx</a> {</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="struct__sha256__ctx.html#a8a53e5a4c3961ca51a4381f6488d1089">   57</a></span>    uint8_t <a class="code hl_variable" href="struct__sha256__ctx.html#a8a53e5a4c3961ca51a4381f6488d1089">data</a>[64];       </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="struct__sha256__ctx.html#aecfb5410e142575871d537dc00b9d63a">   58</a></span>    uint8_t <a class="code hl_variable" href="struct__sha256__ctx.html#aecfb5410e142575871d537dc00b9d63a">datalen</a>;        </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="struct__sha256__ctx.html#afc9083f7e21cf81eec33df4a5f812b95">   59</a></span>    uint8_t <a class="code hl_variable" href="struct__sha256__ctx.html#afc9083f7e21cf81eec33df4a5f812b95">bitlen</a>[8];      </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="struct__sha256__ctx.html#a1e85694ce7e43ed85c5e0f8e11116d18">   60</a></span>    uint32_t <a class="code hl_variable" href="struct__sha256__ctx.html#a1e85694ce7e43ed85c5e0f8e11116d18">state</a>[8];      </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="hashlib_8h.html#a53df9e7d871973d59c7b58a6c3963c5d">   61</a></span>} <a class="code hl_typedef" href="hashlib_8h.html#a53df9e7d871973d59c7b58a6c3963c5d">sha256_ctx</a>;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="struct__hash__ctx.html">   68</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="struct__hash__ctx.html">_hash_ctx</a> {</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="struct__hash__ctx.html#ad457f984cc5dfa7850e5db99a5a02bfb">   69</a></span>    bool (*<a class="code hl_variable" href="struct__hash__ctx.html#ad457f984cc5dfa7850e5db99a5a02bfb">init</a>)(<span class="keywordtype">void</span>* ctx);                    </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="struct__hash__ctx.html#a6bad2c59595e0003f5bfeb8b90324274">   70</a></span>    void (*<a class="code hl_variable" href="struct__hash__ctx.html#a6bad2c59595e0003f5bfeb8b90324274">update</a>)(<span class="keywordtype">void</span>* ctx, <span class="keyword">const</span> <span class="keywordtype">void</span>* data, <span class="keywordtype">size_t</span> len);    </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="struct__hash__ctx.html#abc52562d16298aceb0da7edf82b6d2a8">   71</a></span>    void (*<span class="keyword">final</span>)(<span class="keywordtype">void</span>* ctx, <span class="keywordtype">void</span>* output);     </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="union__hash__ctx_1_1__hash.html">   72</a></span>    <span class="keyword">union </span><a class="code hl_union" href="union__hash__ctx_1_1__hash.html">_hash</a> {           </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="union__hash__ctx_1_1__hash.html#ad2426569cf1b106bbbfd1ce4e938ec74">   73</a></span>        <a class="code hl_struct" href="struct__sha256__ctx.html">sha256_ctx</a> <a class="code hl_variable" href="union__hash__ctx_1_1__hash.html#ad2426569cf1b106bbbfd1ce4e938ec74">sha256</a>;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    } Hash;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    uint8_t digest_len;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="hashlib_8h.html#aa55779911de10df960d64966c6825da7">   76</a></span>} <a class="code hl_typedef" href="hashlib_8h.html#aa55779911de10df960d64966c6825da7">hash_ctx</a>;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="hashlib_8h.html#af36e91f131f610a6612b78700d483bd7">   82</a></span><span class="keyword">enum</span> <a class="code hl_enumeration" href="hashlib_8h.html#af36e91f131f610a6612b78700d483bd7">hash_algorithms</a> {</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="hashlib_8h.html#af36e91f131f610a6612b78700d483bd7ac7716785728694693ec29eccd5ffa0e1">   83</a></span>    <a class="code hl_enumvalue" href="hashlib_8h.html#af36e91f131f610a6612b78700d483bd7ac7716785728694693ec29eccd5ffa0e1">SHA256</a>,             </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>};</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="hashlib_8h.html#af5aa539ae202ddf9e0c9211309869fc8">   90</a></span><span class="preprocessor">#define SHA256_DIGEST_LEN   32</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="hashlib_8h.html#ac97f2b17187bed64cb75d98ebb9184f8">  100</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="hashlib_8h.html#ac97f2b17187bed64cb75d98ebb9184f8">hash_init</a>(<a class="code hl_struct" href="struct__hash__ctx.html">hash_ctx</a>* ctx, uint8_t hash_alg);</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="hashlib_8h.html#aaf0fab49f90f31ca034e68c83858d14e">  111</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="hashlib_8h.html#aaf0fab49f90f31ca034e68c83858d14e">hash_update</a>(<a class="code hl_struct" href="struct__hash__ctx.html">hash_ctx</a>* ctx, <span class="keyword">const</span> <span class="keywordtype">void</span>* data, <span class="keywordtype">size_t</span> len);</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="hashlib_8h.html#a6de2a3ef1df7da45fbe84b38f72baa71">  122</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="hashlib_8h.html#a6de2a3ef1df7da45fbe84b38f72baa71">hash_final</a>(<a class="code hl_struct" href="struct__hash__ctx.html">hash_ctx</a>* ctx, <span class="keywordtype">void</span>* digest);</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno"><a class="line" href="hashlib_8h.html#aef7b1868edb022ce92f850e6269a2db9">  136</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="hashlib_8h.html#aef7b1868edb022ce92f850e6269a2db9">hash_mgf1</a>(<span class="keyword">const</span> <span class="keywordtype">void</span>* data, <span class="keywordtype">size_t</span> datalen, <span class="keywordtype">void</span>* outbuf, <span class="keywordtype">size_t</span> outlen, uint8_t hash_alg);</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span><span class="comment">Hash-Based Message Authentication Code (HMAC)</span></div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span><span class="comment"></span> </div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="comment">HMAC generates a more secure hash by using a key known only to authorized</span></div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span><span class="comment">parties as part of the hash initialization. Thus, while normal hashes can be</span></div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span><span class="comment">verified by anyone, only the parties with the key can validate using a HMAC hash.</span></div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span><span class="comment">*/</span></div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span><span class="comment">/*******************************************</span></div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="comment"> * @typedef sha256hmac_ctx</span></div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><span class="comment"> * Defines hash-state data for an instance of SHA-256.</span></div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno"><a class="line" href="struct__sha256hmac__ctx.html">  150</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="struct__sha256hmac__ctx.html">_sha256hmac_ctx</a> {</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno"><a class="line" href="struct__sha256hmac__ctx.html#a7a76c33feb53451f32a650e2d9568d36">  151</a></span>    uint8_t <a class="code hl_variable" href="struct__sha256hmac__ctx.html#a7a76c33feb53451f32a650e2d9568d36">ipad</a>[64];       </div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno"><a class="line" href="struct__sha256hmac__ctx.html#acce0aef7c236c61aa651f5479019e718">  152</a></span>    uint8_t <a class="code hl_variable" href="struct__sha256hmac__ctx.html#acce0aef7c236c61aa651f5479019e718">opad</a>[64];       </div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno"><a class="line" href="struct__sha256hmac__ctx.html#a6fcedd1c789a695a3a181a7a6624d368">  153</a></span>    uint8_t <a class="code hl_variable" href="struct__sha256hmac__ctx.html#a6fcedd1c789a695a3a181a7a6624d368">data</a>[64];       </div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno"><a class="line" href="struct__sha256hmac__ctx.html#ace5c23e2acbfc3932b3b282d5bbf59f0">  154</a></span>    uint8_t <a class="code hl_variable" href="struct__sha256hmac__ctx.html#ace5c23e2acbfc3932b3b282d5bbf59f0">datalen</a>;        </div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno"><a class="line" href="struct__sha256hmac__ctx.html#a4c215841f9afc43636ec7f6142ae2642">  155</a></span>    uint8_t <a class="code hl_variable" href="struct__sha256hmac__ctx.html#a4c215841f9afc43636ec7f6142ae2642">bitlen</a>[8];      </div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno"><a class="line" href="struct__sha256hmac__ctx.html#a4e4b779e16b0ef55728be88db5aef714">  156</a></span>    uint32_t <a class="code hl_variable" href="struct__sha256hmac__ctx.html#a4e4b779e16b0ef55728be88db5aef714">state</a>[8];      </div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>} <a class="code hl_struct" href="struct__sha256hmac__ctx.html">sha256hmac_ctx</a>;</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="comment">/*************************************</span></div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span><span class="comment"> * @typedef hmac_ctx</span></div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="comment"> * Defines hash-state data for an HMAC instance.</span></div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno"><a class="line" href="struct__hmac__ctx.html">  163</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="struct__hmac__ctx.html">_hmac_ctx</a> {</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno"><a class="line" href="struct__hmac__ctx.html#ae58a514b2bb7fb1c0ab980aa78895d1c">  164</a></span>    bool (*<a class="code hl_variable" href="struct__hmac__ctx.html#ae58a514b2bb7fb1c0ab980aa78895d1c">init</a>)(<span class="keywordtype">void</span>* ctx, <span class="keyword">const</span> <span class="keywordtype">void</span>* key, <span class="keywordtype">size_t</span> keylen);     </div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno"><a class="line" href="struct__hmac__ctx.html#a578c2c6501b33833ca7b80ec7664b990">  165</a></span>    void (*<a class="code hl_variable" href="struct__hmac__ctx.html#a578c2c6501b33833ca7b80ec7664b990">update</a>)(<span class="keywordtype">void</span>* ctx, <span class="keyword">const</span> <span class="keywordtype">void</span>* data, <span class="keywordtype">size_t</span> len);     </div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno"><a class="line" href="struct__hmac__ctx.html#a4c1ecf5f097205cc9c59e9fa31ff61c8">  166</a></span>    void (*<span class="keyword">final</span>)(<span class="keywordtype">void</span>* ctx, <span class="keywordtype">void</span>* output);                      </div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno"><a class="line" href="union__hmac__ctx_1_1__hmac.html">  167</a></span>    <span class="keyword">union </span><a class="code hl_union" href="union__hmac__ctx_1_1__hmac.html">_hmac</a> {           </div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno"><a class="line" href="union__hmac__ctx_1_1__hmac.html#a3400767fbd5ddc4a7186d1a72dbf8777">  168</a></span>        <a class="code hl_struct" href="struct__sha256hmac__ctx.html">sha256hmac_ctx</a> <a class="code hl_variable" href="union__hmac__ctx_1_1__hmac.html#a3400767fbd5ddc4a7186d1a72dbf8777">sha256hmac</a>;</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    } Hmac;</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>} <a class="code hl_struct" href="struct__hmac__ctx.html">hmac_ctx</a>;</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span><span class="comment">/*************************************************************</span></div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span><span class="comment"> *  @brief Context Initializer for HMAC</span></div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span><span class="comment"> *  Initializes the given context with the starting state for the given HMAC algorithm.</span></div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span><span class="comment"> *  @param ctx Pointer to a hmac context.</span></div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span><span class="comment"> *  @param key Pointer to an authentication key used to initialize the base hmac context.</span></div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span><span class="comment"> *  @param keylen Length of @b key, in bytes.</span></div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span><span class="comment"> *  @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.</span></div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="comment"> *  @return Boolean. True if hash initialization succeeded. False if hash ID invalid.</span></div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span><span class="keywordtype">bool</span> hmac_init(<a class="code hl_struct" href="struct__hmac__ctx.html">hmac_ctx</a>* ctx, <span class="keyword">const</span> <span class="keywordtype">void</span>* key, <span class="keywordtype">size_t</span> keylen, uint8_t hash_alg);</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span> </div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="comment">/*********************************************</span></div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span><span class="comment"> *  @brief Updates the hmac context for the given data.</span></div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span><span class="comment"> *  @param ctx Pointer to an HMAC context.</span></div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span><span class="comment"> *  @param data Pointer to data to hash.</span></div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span><span class="comment"> *  @param len Number of bytes at @b data to hash.</span></div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span><span class="comment"> *  @note You may use @b ctx.update() as an alternative to this function.</span></div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span><span class="comment"> *      If doing so, you must pass @b &amp;ctx.Hmac instead of @b &amp;ctx.</span></div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span><span class="comment"> *  @warning You must have an initialized hash context or a crash will ensue.</span></div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span><span class="keywordtype">void</span> hmac_update(<a class="code hl_struct" href="struct__hmac__ctx.html">hmac_ctx</a>* ctx, <span class="keyword">const</span> <span class="keywordtype">void</span>* data, <span class="keywordtype">size_t</span> len);</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span><span class="comment">/*************************************************</span></div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span><span class="comment"> *  @brief Finalize Context and Render Digest for HMAC</span></div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span><span class="comment"> *  @param ctx Pointer to an HMAC context.</span></div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span><span class="comment"> *  @param digest Pointer to a buffer to write the hash to.</span></div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span><span class="comment"> *  @note @b digest must be large enough to hold the hash digest.</span></div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span><span class="comment"> *  @note You may use @b ctx.final() as an alternative to this function.</span></div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span><span class="comment"> *      If doing so, you must pass @b &amp;ctx.Hmac instead of @b &amp;ctx.</span></div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span><span class="comment"> *  @warning You must have an initialized hash context or a crash will ensue.</span></div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span><span class="keywordtype">void</span> hmac_final(<a class="code hl_struct" href="struct__hmac__ctx.html">hmac_ctx</a>* ctx, <span class="keywordtype">void</span>* output);</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span><span class="comment">/*********************************************</span></div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span><span class="comment"> * @brief Password-Based Key Derivation Function</span></div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span><span class="comment"> * Computes a key derived from a password, a 16-byte salt, and a given number of rounds.</span></div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span><span class="comment"> * @param password Pointer to a string containing the password to derive a key from.</span></div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span><span class="comment"> * @param passlen The length of the password (in bytes).</span></div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span><span class="comment"> * @param key The buffer to write the key to. Must be at least @b keylen bytes large.</span></div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span><span class="comment"> * @param keylen The length of the key to generate (in bytes).</span></div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span><span class="comment"> * @param salt A psuedo-random string to use when computing the key.</span></div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span><span class="comment"> * @param saltlen The length of the salt to use (in bytes).</span></div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span><span class="comment"> * @param rounds The number of times to iterate the hash function per block of @b keylen.</span></div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span><span class="comment"> * @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.</span></div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span><span class="comment"> * @note Standards recommend a salt of at least 128 bits (16 bytes).</span></div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span><span class="comment"> * @note @b rounds is used to increase the cost (computational time) of generating a key. What makes password-</span></div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span><span class="comment"> * hashing algorithms secure is the time needed to generate a rainbow table attack against it. More rounds means</span></div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span><span class="comment"> * a more secure key, but more time spent generating it. Current cryptography standards recommend in excess of 1000</span></div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span><span class="comment"> * rounds but that may not be feasible on the CE.</span></div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span><span class="keywordtype">bool</span> hmac_pbkdf2(</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* password,</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    <span class="keywordtype">size_t</span> passlen,</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    <span class="keywordtype">void</span>* key,</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    <span class="keywordtype">size_t</span> keylen,</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <span class="keyword">const</span> <span class="keywordtype">void</span>* salt,</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    <span class="keywordtype">size_t</span> saltlen,</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="keywordtype">size_t</span> rounds,</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    uint8_t hash_alg);</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    </div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span><span class="comment">// Miscellaneous Functions</span></div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span><span class="comment">/*********************************************</span></div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span><span class="comment"> * @brief Convert a digest to a valid hex string.</span></div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span><span class="comment"> * @param digest Pointer to a buffer or digest to convert.</span></div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span><span class="comment"> * @param len Number of bytes at @b digest to convert.</span></div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span><span class="comment"> * @param hexstr A buffer to write the output hex string to. Must be at least 2 * len + 1 bytes large.</span></div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span><span class="keywordtype">bool</span> digest_tostring(<span class="keyword">const</span> <span class="keywordtype">void</span>* digest, <span class="keywordtype">size_t</span> len, <span class="keywordtype">char</span>* hexstr);</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span> </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span><span class="comment">Hash-Based Message Authentication Code (HMAC)</span></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="comment"></span> </div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span><span class="comment">HMAC generates a more secure hash by using a key known only to authorized</span></div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span><span class="comment">parties as part of the hash initialization. Thus, while normal hashes can be</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span><span class="comment">verified by anyone, only the parties with the key can validate using a HMAC hash.</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span><span class="comment">*/</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno"><a class="line" href="struct__sha256hmac__ctx.html">  151</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="struct__sha256hmac__ctx.html">_sha256hmac_ctx</a> {</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno"><a class="line" href="struct__sha256hmac__ctx.html#ab5acc050668c737d90c0190e75e4b352">  152</a></span>    uint8_t <a class="code hl_variable" href="struct__sha256hmac__ctx.html#ab5acc050668c737d90c0190e75e4b352">ipad</a>[64];       </div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno"><a class="line" href="struct__sha256hmac__ctx.html#aa053a464b6af9c46df33453265de483a">  153</a></span>    uint8_t <a class="code hl_variable" href="struct__sha256hmac__ctx.html#aa053a464b6af9c46df33453265de483a">opad</a>[64];       </div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno"><a class="line" href="struct__sha256hmac__ctx.html#af9cbeb1f5ab59ca10aa43df46a1b59e8">  154</a></span>    uint8_t <a class="code hl_variable" href="struct__sha256hmac__ctx.html#af9cbeb1f5ab59ca10aa43df46a1b59e8">data</a>[64];       </div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno"><a class="line" href="struct__sha256hmac__ctx.html#a5ac8daad74cbf5588d512cf49892d2bd">  155</a></span>    uint8_t <a class="code hl_variable" href="struct__sha256hmac__ctx.html#a5ac8daad74cbf5588d512cf49892d2bd">datalen</a>;        </div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno"><a class="line" href="struct__sha256hmac__ctx.html#af4fd1738729663cfa87e8a35dbfa7afa">  156</a></span>    uint8_t <a class="code hl_variable" href="struct__sha256hmac__ctx.html#af4fd1738729663cfa87e8a35dbfa7afa">bitlen</a>[8];      </div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno"><a class="line" href="struct__sha256hmac__ctx.html#a27f566f7a597a1c683c3d30805b2f916">  157</a></span>    uint32_t <a class="code hl_variable" href="struct__sha256hmac__ctx.html#a27f566f7a597a1c683c3d30805b2f916">state</a>[8];      </div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno"><a class="line" href="hashlib_8h.html#ab81b988d5afe79799b52a0baa55c3146">  158</a></span>} <a class="code hl_typedef" href="hashlib_8h.html#ab81b988d5afe79799b52a0baa55c3146">sha256hmac_ctx</a>;</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno"><a class="line" href="struct__hmac__ctx.html">  164</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="struct__hmac__ctx.html">_hmac_ctx</a> {</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno"><a class="line" href="struct__hmac__ctx.html#ac4d1127ea0dca63e0a6e134a0f6d082e">  165</a></span>    bool (*<a class="code hl_variable" href="struct__hmac__ctx.html#ac4d1127ea0dca63e0a6e134a0f6d082e">init</a>)(<span class="keywordtype">void</span>* ctx, <span class="keyword">const</span> <span class="keywordtype">void</span>* key, <span class="keywordtype">size_t</span> keylen);     </div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno"><a class="line" href="struct__hmac__ctx.html#a6bf90c4e65a5b1178d92f8a0b1a1ad5b">  166</a></span>    void (*<a class="code hl_variable" href="struct__hmac__ctx.html#a6bf90c4e65a5b1178d92f8a0b1a1ad5b">update</a>)(<span class="keywordtype">void</span>* ctx, <span class="keyword">const</span> <span class="keywordtype">void</span>* data, <span class="keywordtype">size_t</span> len);     </div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno"><a class="line" href="struct__hmac__ctx.html#ac7f58ce4f70fde87bb3c75be203aa1c2">  167</a></span>    void (*<span class="keyword">final</span>)(<span class="keywordtype">void</span>* ctx, <span class="keywordtype">void</span>* output);                      </div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno"><a class="line" href="union__hmac__ctx_1_1__hmac.html">  168</a></span>    <span class="keyword">union </span><a class="code hl_union" href="union__hmac__ctx_1_1__hmac.html">_hmac</a> {           </div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno"><a class="line" href="union__hmac__ctx_1_1__hmac.html#a79f9ff1e4e50e87d2b7b2fafea176789">  169</a></span>        <a class="code hl_struct" href="struct__sha256hmac__ctx.html">sha256hmac_ctx</a> <a class="code hl_variable" href="union__hmac__ctx_1_1__hmac.html#a79f9ff1e4e50e87d2b7b2fafea176789">sha256hmac</a>;</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    } Hmac;</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno"><a class="line" href="hashlib_8h.html#a8d813300476744f01319600478572f62">  171</a></span>} <a class="code hl_typedef" href="hashlib_8h.html#a8d813300476744f01319600478572f62">hmac_ctx</a>;</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno"><a class="line" href="hashlib_8h.html#a898e128b3311035c6769837208f34a7d">  184</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="hashlib_8h.html#a898e128b3311035c6769837208f34a7d">hmac_init</a>(<a class="code hl_struct" href="struct__hmac__ctx.html">hmac_ctx</a>* ctx, <span class="keyword">const</span> <span class="keywordtype">void</span>* key, <span class="keywordtype">size_t</span> keylen, uint8_t hash_alg);</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno"><a class="line" href="hashlib_8h.html#a6c5035021e844e83e062c198db85c20e">  195</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="hashlib_8h.html#a6c5035021e844e83e062c198db85c20e">hmac_update</a>(<a class="code hl_struct" href="struct__hmac__ctx.html">hmac_ctx</a>* ctx, <span class="keyword">const</span> <span class="keywordtype">void</span>* data, <span class="keywordtype">size_t</span> len);</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno"><a class="line" href="hashlib_8h.html#aab1ccbb4d4cc9b02116d2ed07a5c9ed3">  206</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="hashlib_8h.html#aab1ccbb4d4cc9b02116d2ed07a5c9ed3">hmac_final</a>(<a class="code hl_struct" href="struct__hmac__ctx.html">hmac_ctx</a>* ctx, <span class="keywordtype">void</span>* output);</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno"><a class="line" href="hashlib_8h.html#a1db040f9b150deacb5fca66d4684fa91">  227</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="hashlib_8h.html#a1db040f9b150deacb5fca66d4684fa91">hmac_pbkdf2</a>(</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* password,</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    <span class="keywordtype">size_t</span> passlen,</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    <span class="keywordtype">void</span>* key,</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <span class="keywordtype">size_t</span> keylen,</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    <span class="keyword">const</span> <span class="keywordtype">void</span>* salt,</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="keywordtype">size_t</span> saltlen,</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    <span class="keywordtype">size_t</span> rounds,</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    uint8_t hash_alg);</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    </div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span><span class="comment">// Miscellaneous Functions</span></div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno"><a class="line" href="hashlib_8h.html#a9875035ce2ae4859b39cfbbff2d1f609">  246</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="hashlib_8h.html#a9875035ce2ae4859b39cfbbff2d1f609">digest_tostring</a>(<span class="keyword">const</span> <span class="keywordtype">void</span>* digest, <span class="keywordtype">size_t</span> len, <span class="keywordtype">char</span>* hexstr);</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span><span class="comment">/*********************************************</span></div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span><span class="comment"> * @brief Secure buffer comparison</span></div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span><span class="comment"> * Evaluates the equality of two buffers using a method that offers resistance to timing attacks.</span></div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span><span class="comment"> * @param digest1 The first buffer to compare.</span></div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span><span class="comment"> * @param digest2 The second buffer to compare.</span></div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span><span class="comment"> * @param len The number of bytes to compare.</span></div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span><span class="comment"> * @return True if the buffers were equal. False if not equal.</span></div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span><span class="keywordtype">bool</span> digest_compare(<span class="keyword">const</span> <span class="keywordtype">void</span>* digest1, <span class="keyword">const</span> <span class="keywordtype">void</span>* digest2, <span class="keywordtype">size_t</span> len);</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span> </div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span> </div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno"><a class="line" href="hashlib_8h.html#aade3753b2b7e59ebf301c1c0712f8376">  259</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="hashlib_8h.html#aade3753b2b7e59ebf301c1c0712f8376">digest_compare</a>(<span class="keyword">const</span> <span class="keywordtype">void</span>* digest1, <span class="keyword">const</span> <span class="keywordtype">void</span>* digest2, <span class="keywordtype">size_t</span> len);</div>
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span> </div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="ahashlib_8h_html_af36e91f131f610a6612b78700d483bd7"><div class="ttname"><a href="hashlib_8h.html#af36e91f131f610a6612b78700d483bd7">hash_algorithms</a></div><div class="ttdeci">hash_algorithms</div><div class="ttdef"><b>Definition:</b> hashlib.h:81</div></div>
-<div class="ttc" id="ahashlib_8h_html_af36e91f131f610a6612b78700d483bd7ac7716785728694693ec29eccd5ffa0e1"><div class="ttname"><a href="hashlib_8h.html#af36e91f131f610a6612b78700d483bd7ac7716785728694693ec29eccd5ffa0e1">SHA256</a></div><div class="ttdeci">@ SHA256</div><div class="ttdef"><b>Definition:</b> hashlib.h:82</div></div>
-<div class="ttc" id="astruct__hash__ctx_html"><div class="ttname"><a href="struct__hash__ctx.html">_hash_ctx</a></div><div class="ttdef"><b>Definition:</b> hashlib.h:67</div></div>
-<div class="ttc" id="astruct__hash__ctx_html_a3c940bdce33dc74799df1e6bc193bfef"><div class="ttname"><a href="struct__hash__ctx.html#a3c940bdce33dc74799df1e6bc193bfef">_hash_ctx::init</a></div><div class="ttdeci">bool(* init)(void *ctx)</div><div class="ttdef"><b>Definition:</b> hashlib.h:68</div></div>
-<div class="ttc" id="astruct__hash__ctx_html_a578c2c6501b33833ca7b80ec7664b990"><div class="ttname"><a href="struct__hash__ctx.html#a578c2c6501b33833ca7b80ec7664b990">_hash_ctx::update</a></div><div class="ttdeci">void(* update)(void *ctx, const void *data, size_t len)</div><div class="ttdef"><b>Definition:</b> hashlib.h:69</div></div>
-<div class="ttc" id="astruct__hmac__ctx_html"><div class="ttname"><a href="struct__hmac__ctx.html">_hmac_ctx</a></div><div class="ttdef"><b>Definition:</b> hashlib.h:163</div></div>
-<div class="ttc" id="astruct__hmac__ctx_html_a578c2c6501b33833ca7b80ec7664b990"><div class="ttname"><a href="struct__hmac__ctx.html#a578c2c6501b33833ca7b80ec7664b990">_hmac_ctx::update</a></div><div class="ttdeci">void(* update)(void *ctx, const void *data, size_t len)</div><div class="ttdef"><b>Definition:</b> hashlib.h:165</div></div>
-<div class="ttc" id="astruct__hmac__ctx_html_ae58a514b2bb7fb1c0ab980aa78895d1c"><div class="ttname"><a href="struct__hmac__ctx.html#ae58a514b2bb7fb1c0ab980aa78895d1c">_hmac_ctx::init</a></div><div class="ttdeci">bool(* init)(void *ctx, const void *key, size_t keylen)</div><div class="ttdef"><b>Definition:</b> hashlib.h:164</div></div>
-<div class="ttc" id="astruct__sha256__ctx_html"><div class="ttname"><a href="struct__sha256__ctx.html">_sha256_ctx</a></div><div class="ttdef"><b>Definition:</b> hashlib.h:55</div></div>
-<div class="ttc" id="astruct__sha256__ctx_html_a4c215841f9afc43636ec7f6142ae2642"><div class="ttname"><a href="struct__sha256__ctx.html#a4c215841f9afc43636ec7f6142ae2642">_sha256_ctx::bitlen</a></div><div class="ttdeci">uint8_t bitlen[8]</div><div class="ttdef"><b>Definition:</b> hashlib.h:58</div></div>
-<div class="ttc" id="astruct__sha256__ctx_html_a4e4b779e16b0ef55728be88db5aef714"><div class="ttname"><a href="struct__sha256__ctx.html#a4e4b779e16b0ef55728be88db5aef714">_sha256_ctx::state</a></div><div class="ttdeci">uint32_t state[8]</div><div class="ttdef"><b>Definition:</b> hashlib.h:59</div></div>
-<div class="ttc" id="astruct__sha256__ctx_html_a6fcedd1c789a695a3a181a7a6624d368"><div class="ttname"><a href="struct__sha256__ctx.html#a6fcedd1c789a695a3a181a7a6624d368">_sha256_ctx::data</a></div><div class="ttdeci">uint8_t data[64]</div><div class="ttdef"><b>Definition:</b> hashlib.h:56</div></div>
-<div class="ttc" id="astruct__sha256__ctx_html_ace5c23e2acbfc3932b3b282d5bbf59f0"><div class="ttname"><a href="struct__sha256__ctx.html#ace5c23e2acbfc3932b3b282d5bbf59f0">_sha256_ctx::datalen</a></div><div class="ttdeci">uint8_t datalen</div><div class="ttdef"><b>Definition:</b> hashlib.h:57</div></div>
-<div class="ttc" id="astruct__sha256hmac__ctx_html"><div class="ttname"><a href="struct__sha256hmac__ctx.html">_sha256hmac_ctx</a></div><div class="ttdef"><b>Definition:</b> hashlib.h:150</div></div>
-<div class="ttc" id="astruct__sha256hmac__ctx_html_a4c215841f9afc43636ec7f6142ae2642"><div class="ttname"><a href="struct__sha256hmac__ctx.html#a4c215841f9afc43636ec7f6142ae2642">_sha256hmac_ctx::bitlen</a></div><div class="ttdeci">uint8_t bitlen[8]</div><div class="ttdef"><b>Definition:</b> hashlib.h:155</div></div>
-<div class="ttc" id="astruct__sha256hmac__ctx_html_a4e4b779e16b0ef55728be88db5aef714"><div class="ttname"><a href="struct__sha256hmac__ctx.html#a4e4b779e16b0ef55728be88db5aef714">_sha256hmac_ctx::state</a></div><div class="ttdeci">uint32_t state[8]</div><div class="ttdef"><b>Definition:</b> hashlib.h:156</div></div>
-<div class="ttc" id="astruct__sha256hmac__ctx_html_a6fcedd1c789a695a3a181a7a6624d368"><div class="ttname"><a href="struct__sha256hmac__ctx.html#a6fcedd1c789a695a3a181a7a6624d368">_sha256hmac_ctx::data</a></div><div class="ttdeci">uint8_t data[64]</div><div class="ttdef"><b>Definition:</b> hashlib.h:153</div></div>
-<div class="ttc" id="astruct__sha256hmac__ctx_html_a7a76c33feb53451f32a650e2d9568d36"><div class="ttname"><a href="struct__sha256hmac__ctx.html#a7a76c33feb53451f32a650e2d9568d36">_sha256hmac_ctx::ipad</a></div><div class="ttdeci">uint8_t ipad[64]</div><div class="ttdef"><b>Definition:</b> hashlib.h:151</div></div>
-<div class="ttc" id="astruct__sha256hmac__ctx_html_acce0aef7c236c61aa651f5479019e718"><div class="ttname"><a href="struct__sha256hmac__ctx.html#acce0aef7c236c61aa651f5479019e718">_sha256hmac_ctx::opad</a></div><div class="ttdeci">uint8_t opad[64]</div><div class="ttdef"><b>Definition:</b> hashlib.h:152</div></div>
-<div class="ttc" id="astruct__sha256hmac__ctx_html_ace5c23e2acbfc3932b3b282d5bbf59f0"><div class="ttname"><a href="struct__sha256hmac__ctx.html#ace5c23e2acbfc3932b3b282d5bbf59f0">_sha256hmac_ctx::datalen</a></div><div class="ttdeci">uint8_t datalen</div><div class="ttdef"><b>Definition:</b> hashlib.h:154</div></div>
-<div class="ttc" id="aunion__hash__ctx_1_1__hash_html"><div class="ttname"><a href="union__hash__ctx_1_1__hash.html">_hash_ctx::_hash</a></div><div class="ttdef"><b>Definition:</b> hashlib.h:71</div></div>
-<div class="ttc" id="aunion__hash__ctx_1_1__hash_html_a6f62fd1bf5256001424fc36d58f7bbfb"><div class="ttname"><a href="union__hash__ctx_1_1__hash.html#a6f62fd1bf5256001424fc36d58f7bbfb">_hash_ctx::_hash::sha256</a></div><div class="ttdeci">sha256_ctx sha256</div><div class="ttdef"><b>Definition:</b> hashlib.h:72</div></div>
-<div class="ttc" id="aunion__hmac__ctx_1_1__hmac_html"><div class="ttname"><a href="union__hmac__ctx_1_1__hmac.html">_hmac_ctx::_hmac</a></div><div class="ttdef"><b>Definition:</b> hashlib.h:167</div></div>
-<div class="ttc" id="aunion__hmac__ctx_1_1__hmac_html_a3400767fbd5ddc4a7186d1a72dbf8777"><div class="ttname"><a href="union__hmac__ctx_1_1__hmac.html#a3400767fbd5ddc4a7186d1a72dbf8777">_hmac_ctx::_hmac::sha256hmac</a></div><div class="ttdeci">sha256hmac_ctx sha256hmac</div><div class="ttdef"><b>Definition:</b> hashlib.h:168</div></div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="ahashlib_8h_html_a1db040f9b150deacb5fca66d4684fa91"><div class="ttname"><a href="hashlib_8h.html#a1db040f9b150deacb5fca66d4684fa91">hmac_pbkdf2</a></div><div class="ttdeci">bool hmac_pbkdf2(const char *password, size_t passlen, void *key, size_t keylen, const void *salt, size_t saltlen, size_t rounds, uint8_t hash_alg)</div><div class="ttdoc">Password-Based Key Derivation Function.</div></div>
+<div class="ttc" id="ahashlib_8h_html_a53df9e7d871973d59c7b58a6c3963c5d"><div class="ttname"><a href="hashlib_8h.html#a53df9e7d871973d59c7b58a6c3963c5d">sha256_ctx</a></div><div class="ttdeci">struct _sha256_ctx sha256_ctx</div></div>
+<div class="ttc" id="ahashlib_8h_html_a6c5035021e844e83e062c198db85c20e"><div class="ttname"><a href="hashlib_8h.html#a6c5035021e844e83e062c198db85c20e">hmac_update</a></div><div class="ttdeci">void hmac_update(hmac_ctx *ctx, const void *data, size_t len)</div><div class="ttdoc">Updates the hmac context for the given data.</div></div>
+<div class="ttc" id="ahashlib_8h_html_a6de2a3ef1df7da45fbe84b38f72baa71"><div class="ttname"><a href="hashlib_8h.html#a6de2a3ef1df7da45fbe84b38f72baa71">hash_final</a></div><div class="ttdeci">void hash_final(hash_ctx *ctx, void *digest)</div><div class="ttdoc">Finalize context and render digest for hash.</div></div>
+<div class="ttc" id="ahashlib_8h_html_a898e128b3311035c6769837208f34a7d"><div class="ttname"><a href="hashlib_8h.html#a898e128b3311035c6769837208f34a7d">hmac_init</a></div><div class="ttdeci">bool hmac_init(hmac_ctx *ctx, const void *key, size_t keylen, uint8_t hash_alg)</div><div class="ttdoc">Context Initializer for HMAC.</div></div>
+<div class="ttc" id="ahashlib_8h_html_a8d813300476744f01319600478572f62"><div class="ttname"><a href="hashlib_8h.html#a8d813300476744f01319600478572f62">hmac_ctx</a></div><div class="ttdeci">struct _hmac_ctx hmac_ctx</div></div>
+<div class="ttc" id="ahashlib_8h_html_a9875035ce2ae4859b39cfbbff2d1f609"><div class="ttname"><a href="hashlib_8h.html#a9875035ce2ae4859b39cfbbff2d1f609">digest_tostring</a></div><div class="ttdeci">bool digest_tostring(const void *digest, size_t len, char *hexstr)</div><div class="ttdoc">Convert a digest to a valid hex string.</div></div>
+<div class="ttc" id="ahashlib_8h_html_aa55779911de10df960d64966c6825da7"><div class="ttname"><a href="hashlib_8h.html#aa55779911de10df960d64966c6825da7">hash_ctx</a></div><div class="ttdeci">struct _hash_ctx hash_ctx</div></div>
+<div class="ttc" id="ahashlib_8h_html_aab1ccbb4d4cc9b02116d2ed07a5c9ed3"><div class="ttname"><a href="hashlib_8h.html#aab1ccbb4d4cc9b02116d2ed07a5c9ed3">hmac_final</a></div><div class="ttdeci">void hmac_final(hmac_ctx *ctx, void *output)</div><div class="ttdoc">Finalize Context and Render Digest for HMAC.</div></div>
+<div class="ttc" id="ahashlib_8h_html_aade3753b2b7e59ebf301c1c0712f8376"><div class="ttname"><a href="hashlib_8h.html#aade3753b2b7e59ebf301c1c0712f8376">digest_compare</a></div><div class="ttdeci">bool digest_compare(const void *digest1, const void *digest2, size_t len)</div><div class="ttdoc">Secure buffer comparison.</div></div>
+<div class="ttc" id="ahashlib_8h_html_aaf0fab49f90f31ca034e68c83858d14e"><div class="ttname"><a href="hashlib_8h.html#aaf0fab49f90f31ca034e68c83858d14e">hash_update</a></div><div class="ttdeci">void hash_update(hash_ctx *ctx, const void *data, size_t len)</div><div class="ttdoc">Updates the hash context for the given data.</div></div>
+<div class="ttc" id="ahashlib_8h_html_ab81b988d5afe79799b52a0baa55c3146"><div class="ttname"><a href="hashlib_8h.html#ab81b988d5afe79799b52a0baa55c3146">sha256hmac_ctx</a></div><div class="ttdeci">struct _sha256hmac_ctx sha256hmac_ctx</div></div>
+<div class="ttc" id="ahashlib_8h_html_ac97f2b17187bed64cb75d98ebb9184f8"><div class="ttname"><a href="hashlib_8h.html#ac97f2b17187bed64cb75d98ebb9184f8">hash_init</a></div><div class="ttdeci">bool hash_init(hash_ctx *ctx, uint8_t hash_alg)</div><div class="ttdoc">Hash initializer. Initializes the given context with the starting state for the given hash algorithm ...</div></div>
+<div class="ttc" id="ahashlib_8h_html_aef7b1868edb022ce92f850e6269a2db9"><div class="ttname"><a href="hashlib_8h.html#aef7b1868edb022ce92f850e6269a2db9">hash_mgf1</a></div><div class="ttdeci">bool hash_mgf1(const void *data, size_t datalen, void *outbuf, size_t outlen, uint8_t hash_alg)</div><div class="ttdoc">Arbitrary Length Hashing Function.</div></div>
+<div class="ttc" id="ahashlib_8h_html_af36e91f131f610a6612b78700d483bd7"><div class="ttname"><a href="hashlib_8h.html#af36e91f131f610a6612b78700d483bd7">hash_algorithms</a></div><div class="ttdeci">hash_algorithms</div><div class="ttdef"><b>Definition:</b> hashlib.h:82</div></div>
+<div class="ttc" id="ahashlib_8h_html_af36e91f131f610a6612b78700d483bd7ac7716785728694693ec29eccd5ffa0e1"><div class="ttname"><a href="hashlib_8h.html#af36e91f131f610a6612b78700d483bd7ac7716785728694693ec29eccd5ffa0e1">SHA256</a></div><div class="ttdeci">@ SHA256</div><div class="ttdef"><b>Definition:</b> hashlib.h:83</div></div>
+<div class="ttc" id="astruct__hash__ctx_html"><div class="ttname"><a href="struct__hash__ctx.html">_hash_ctx</a></div><div class="ttdef"><b>Definition:</b> hashlib.h:68</div></div>
+<div class="ttc" id="astruct__hash__ctx_html_a6bad2c59595e0003f5bfeb8b90324274"><div class="ttname"><a href="struct__hash__ctx.html#a6bad2c59595e0003f5bfeb8b90324274">_hash_ctx::update</a></div><div class="ttdeci">void(* update)(void *ctx, const void *data, size_t len)</div><div class="ttdef"><b>Definition:</b> hashlib.h:70</div></div>
+<div class="ttc" id="astruct__hash__ctx_html_ad457f984cc5dfa7850e5db99a5a02bfb"><div class="ttname"><a href="struct__hash__ctx.html#ad457f984cc5dfa7850e5db99a5a02bfb">_hash_ctx::init</a></div><div class="ttdeci">bool(* init)(void *ctx)</div><div class="ttdef"><b>Definition:</b> hashlib.h:69</div></div>
+<div class="ttc" id="astruct__hmac__ctx_html"><div class="ttname"><a href="struct__hmac__ctx.html">_hmac_ctx</a></div><div class="ttdef"><b>Definition:</b> hashlib.h:164</div></div>
+<div class="ttc" id="astruct__hmac__ctx_html_a6bf90c4e65a5b1178d92f8a0b1a1ad5b"><div class="ttname"><a href="struct__hmac__ctx.html#a6bf90c4e65a5b1178d92f8a0b1a1ad5b">_hmac_ctx::update</a></div><div class="ttdeci">void(* update)(void *ctx, const void *data, size_t len)</div><div class="ttdef"><b>Definition:</b> hashlib.h:166</div></div>
+<div class="ttc" id="astruct__hmac__ctx_html_ac4d1127ea0dca63e0a6e134a0f6d082e"><div class="ttname"><a href="struct__hmac__ctx.html#ac4d1127ea0dca63e0a6e134a0f6d082e">_hmac_ctx::init</a></div><div class="ttdeci">bool(* init)(void *ctx, const void *key, size_t keylen)</div><div class="ttdef"><b>Definition:</b> hashlib.h:165</div></div>
+<div class="ttc" id="astruct__sha256__ctx_html"><div class="ttname"><a href="struct__sha256__ctx.html">_sha256_ctx</a></div><div class="ttdef"><b>Definition:</b> hashlib.h:56</div></div>
+<div class="ttc" id="astruct__sha256__ctx_html_a1e85694ce7e43ed85c5e0f8e11116d18"><div class="ttname"><a href="struct__sha256__ctx.html#a1e85694ce7e43ed85c5e0f8e11116d18">_sha256_ctx::state</a></div><div class="ttdeci">uint32_t state[8]</div><div class="ttdef"><b>Definition:</b> hashlib.h:60</div></div>
+<div class="ttc" id="astruct__sha256__ctx_html_a8a53e5a4c3961ca51a4381f6488d1089"><div class="ttname"><a href="struct__sha256__ctx.html#a8a53e5a4c3961ca51a4381f6488d1089">_sha256_ctx::data</a></div><div class="ttdeci">uint8_t data[64]</div><div class="ttdef"><b>Definition:</b> hashlib.h:57</div></div>
+<div class="ttc" id="astruct__sha256__ctx_html_aecfb5410e142575871d537dc00b9d63a"><div class="ttname"><a href="struct__sha256__ctx.html#aecfb5410e142575871d537dc00b9d63a">_sha256_ctx::datalen</a></div><div class="ttdeci">uint8_t datalen</div><div class="ttdef"><b>Definition:</b> hashlib.h:58</div></div>
+<div class="ttc" id="astruct__sha256__ctx_html_afc9083f7e21cf81eec33df4a5f812b95"><div class="ttname"><a href="struct__sha256__ctx.html#afc9083f7e21cf81eec33df4a5f812b95">_sha256_ctx::bitlen</a></div><div class="ttdeci">uint8_t bitlen[8]</div><div class="ttdef"><b>Definition:</b> hashlib.h:59</div></div>
+<div class="ttc" id="astruct__sha256hmac__ctx_html"><div class="ttname"><a href="struct__sha256hmac__ctx.html">_sha256hmac_ctx</a></div><div class="ttdef"><b>Definition:</b> hashlib.h:151</div></div>
+<div class="ttc" id="astruct__sha256hmac__ctx_html_a27f566f7a597a1c683c3d30805b2f916"><div class="ttname"><a href="struct__sha256hmac__ctx.html#a27f566f7a597a1c683c3d30805b2f916">_sha256hmac_ctx::state</a></div><div class="ttdeci">uint32_t state[8]</div><div class="ttdef"><b>Definition:</b> hashlib.h:157</div></div>
+<div class="ttc" id="astruct__sha256hmac__ctx_html_a5ac8daad74cbf5588d512cf49892d2bd"><div class="ttname"><a href="struct__sha256hmac__ctx.html#a5ac8daad74cbf5588d512cf49892d2bd">_sha256hmac_ctx::datalen</a></div><div class="ttdeci">uint8_t datalen</div><div class="ttdef"><b>Definition:</b> hashlib.h:155</div></div>
+<div class="ttc" id="astruct__sha256hmac__ctx_html_aa053a464b6af9c46df33453265de483a"><div class="ttname"><a href="struct__sha256hmac__ctx.html#aa053a464b6af9c46df33453265de483a">_sha256hmac_ctx::opad</a></div><div class="ttdeci">uint8_t opad[64]</div><div class="ttdef"><b>Definition:</b> hashlib.h:153</div></div>
+<div class="ttc" id="astruct__sha256hmac__ctx_html_ab5acc050668c737d90c0190e75e4b352"><div class="ttname"><a href="struct__sha256hmac__ctx.html#ab5acc050668c737d90c0190e75e4b352">_sha256hmac_ctx::ipad</a></div><div class="ttdeci">uint8_t ipad[64]</div><div class="ttdef"><b>Definition:</b> hashlib.h:152</div></div>
+<div class="ttc" id="astruct__sha256hmac__ctx_html_af4fd1738729663cfa87e8a35dbfa7afa"><div class="ttname"><a href="struct__sha256hmac__ctx.html#af4fd1738729663cfa87e8a35dbfa7afa">_sha256hmac_ctx::bitlen</a></div><div class="ttdeci">uint8_t bitlen[8]</div><div class="ttdef"><b>Definition:</b> hashlib.h:156</div></div>
+<div class="ttc" id="astruct__sha256hmac__ctx_html_af9cbeb1f5ab59ca10aa43df46a1b59e8"><div class="ttname"><a href="struct__sha256hmac__ctx.html#af9cbeb1f5ab59ca10aa43df46a1b59e8">_sha256hmac_ctx::data</a></div><div class="ttdeci">uint8_t data[64]</div><div class="ttdef"><b>Definition:</b> hashlib.h:154</div></div>
+<div class="ttc" id="aunion__hash__ctx_1_1__hash_html"><div class="ttname"><a href="union__hash__ctx_1_1__hash.html">_hash_ctx::_hash</a></div><div class="ttdef"><b>Definition:</b> hashlib.h:72</div></div>
+<div class="ttc" id="aunion__hash__ctx_1_1__hash_html_ad2426569cf1b106bbbfd1ce4e938ec74"><div class="ttname"><a href="union__hash__ctx_1_1__hash.html#ad2426569cf1b106bbbfd1ce4e938ec74">_hash_ctx::_hash::sha256</a></div><div class="ttdeci">sha256_ctx sha256</div><div class="ttdef"><b>Definition:</b> hashlib.h:73</div></div>
+<div class="ttc" id="aunion__hmac__ctx_1_1__hmac_html"><div class="ttname"><a href="union__hmac__ctx_1_1__hmac.html">_hmac_ctx::_hmac</a></div><div class="ttdef"><b>Definition:</b> hashlib.h:168</div></div>
+<div class="ttc" id="aunion__hmac__ctx_1_1__hmac_html_a79f9ff1e4e50e87d2b7b2fafea176789"><div class="ttname"><a href="union__hmac__ctx_1_1__hmac.html#a79f9ff1e4e50e87d2b7b2fafea176789">_hmac_ctx::_hmac::sha256hmac</a></div><div class="ttdeci">sha256hmac_ctx sha256hmac</div><div class="ttdef"><b>Definition:</b> hashlib.h:169</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -21,9 +21,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">CryptX
+   <div id="projectname">CryptX<span id="projectnumber">&#160;10</span>
    </div>
-   <div id="projectbrief">Suite of Cryptography Libraries for the TI-84+ CE</div>
+   <div id="projectbrief">A collection of cryptographic libraries for the TI-84+ CE</div>
   </td>
  </tr>
  </tbody>
@@ -104,7 +104,7 @@ typedef struct <a class="el" href="struct__asn1__obj__t.html">_asn1_obj_t</a>&#1
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a8f60ccfb457bca463608a1666b3df30e"><td class="memItemLeft" align="right" valign="top"><a id="a8f60ccfb457bca463608a1666b3df30e" name="a8f60ccfb457bca463608a1666b3df30e"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>ASN1_TYPES</b> { <br />
+<tr class="memitem:a8f60ccfb457bca463608a1666b3df30e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encodex_8h.html#a8f60ccfb457bca463608a1666b3df30e">ASN1_TYPES</a> { <br />
 &#160;&#160;<b>ASN1_RESVD</b> = 0
 , <b>ASN1_BOOLEAN</b>
 , <b>ASN1_INTEGER</b>
@@ -157,20 +157,52 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ac055a4d75ae8b9eca210fe498120c1cc"><td class="memItemLeft" align="right" valign="top"><a id="ac055a4d75ae8b9eca210fe498120c1cc" name="ac055a4d75ae8b9eca210fe498120c1cc"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>asn1_decode</b> (void *asn1_data, size_t len, <a class="el" href="struct__asn1__obj__t.html">asn1_obj_t</a> *objs, size_t iter_count)</td></tr>
+<tr class="memitem:ac055a4d75ae8b9eca210fe498120c1cc"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encodex_8h.html#ac055a4d75ae8b9eca210fe498120c1cc">asn1_decode</a> (void *asn1_data, size_t len, <a class="el" href="struct__asn1__obj__t.html">asn1_obj_t</a> *objs, size_t iter_count)</td></tr>
+<tr class="memdesc:ac055a4d75ae8b9eca210fe498120c1cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses ASN.1 encoded data and returns metadata into an array of structs.  <a href="encodex_8h.html#ac055a4d75ae8b9eca210fe498120c1cc">More...</a><br /></td></tr>
 <tr class="separator:ac055a4d75ae8b9eca210fe498120c1cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad44cdc4707f97da29501486153ff5109"><td class="memItemLeft" align="right" valign="top"><a id="ad44cdc4707f97da29501486153ff5109" name="ad44cdc4707f97da29501486153ff5109"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>base64_encode</b> (const void *in, size_t len, void *out)</td></tr>
-<tr class="separator:ad44cdc4707f97da29501486153ff5109"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3870639142f6113314d1561e0ee75630"><td class="memItemLeft" align="right" valign="top"><a id="a3870639142f6113314d1561e0ee75630" name="a3870639142f6113314d1561e0ee75630"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>base64_decode</b> (const void *in, size_t len, void *out)</td></tr>
-<tr class="separator:a3870639142f6113314d1561e0ee75630"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a601f9f9d3c49d3ea29abae899de3de59"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encodex_8h.html#a601f9f9d3c49d3ea29abae899de3de59">base64_encode</a> (const void *src, size_t len, void *dest)</td></tr>
+<tr class="memdesc:a601f9f9d3c49d3ea29abae899de3de59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an octet-encoded byte stream into a sextet-encoded byte stream.  <a href="encodex_8h.html#a601f9f9d3c49d3ea29abae899de3de59">More...</a><br /></td></tr>
+<tr class="separator:a601f9f9d3c49d3ea29abae899de3de59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a9e532ff657237b6e81f5e8e73de9e7"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encodex_8h.html#a5a9e532ff657237b6e81f5e8e73de9e7">base64_decode</a> (const void *src, size_t len, void *dest)</td></tr>
+<tr class="memdesc:a5a9e532ff657237b6e81f5e8e73de9e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a sextet-encoded byte stream into a octet-encoded byte stream.  <a href="encodex_8h.html#a5a9e532ff657237b6e81f5e8e73de9e7">More...</a><br /></td></tr>
+<tr class="separator:a5a9e532ff657237b6e81f5e8e73de9e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad36396ba82ffa8ee3278114e5f4da8b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encodex_8h.html#ad36396ba82ffa8ee3278114e5f4da8b8">encode_pack1bpp</a> (const void *dest, void *src, size_t len)</td></tr>
+<tr class="memdesc:ad36396ba82ffa8ee3278114e5f4da8b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a byte stream of 0x00 and 0x01 bytes into a 1bpp-encoded byte stream.  <a href="encodex_8h.html#ad36396ba82ffa8ee3278114e5f4da8b8">More...</a><br /></td></tr>
+<tr class="separator:ad36396ba82ffa8ee3278114e5f4da8b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62e519aeb1f342f4dabb68646653123f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encodex_8h.html#a62e519aeb1f342f4dabb68646653123f">decode_unpack1bpp</a> (const void *dest, void *src, size_t len)</td></tr>
+<tr class="memdesc:a62e519aeb1f342f4dabb68646653123f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a 1bpp-encoded byte stream into 0x00 and 0x01 bytes.  <a href="encodex_8h.html#a62e519aeb1f342f4dabb68646653123f">More...</a><br /></td></tr>
+<tr class="separator:a62e519aeb1f342f4dabb68646653123f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7cfee301af23113dbc7471c45091d31"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encodex_8h.html#ac7cfee301af23113dbc7471c45091d31">encode_pack2bpp</a> (const void *dest, void *src, size_t len)</td></tr>
+<tr class="memdesc:ac7cfee301af23113dbc7471c45091d31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a byte stream of 0x00-0x03 bytes into a 2bpp-encoded byte stream.  <a href="encodex_8h.html#ac7cfee301af23113dbc7471c45091d31">More...</a><br /></td></tr>
+<tr class="separator:ac7cfee301af23113dbc7471c45091d31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae22ca98875b8defc30c1d223305844dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encodex_8h.html#ae22ca98875b8defc30c1d223305844dc">decode_unpack2bpp</a> (const void *dest, void *src, size_t len)</td></tr>
+<tr class="memdesc:ae22ca98875b8defc30c1d223305844dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a 2bpp-encoded byte stream into bytes in the range 0x00 to 0x03.  <a href="encodex_8h.html#ae22ca98875b8defc30c1d223305844dc">More...</a><br /></td></tr>
+<tr class="separator:ae22ca98875b8defc30c1d223305844dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Provides support for various data encoding schemes common to cryptography. </p>
-<dl class="section author"><dt>Author</dt><dd>Anthony <em>ACagliano</em> Cagliano </dd></dl>
+<dl class="section author"><dt>Author</dt><dd>Anthony <em>ACagliano</em> Cagliano</dd></dl>
+<p>A library providing encoding support for various data formats</p><ol type="1">
+<li>ASN.1 parser</li>
+<li>Base64 encoding/decoding</li>
+<li>TBD </li>
+</ol>
 </div><h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="a8f60ccfb457bca463608a1666b3df30e" name="a8f60ccfb457bca463608a1666b3df30e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f60ccfb457bca463608a1666b3df30e">&#9670;&#160;</a></span>ASN1_TYPES</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="encodex_8h.html#a8f60ccfb457bca463608a1666b3df30e">ASN1_TYPES</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Defines tag identifiers for ASN.1 encoding See <b><a class="el" href="struct__asn1__obj__t.html#a9b7aada2af09e2fd835be371a592ae5a">asn1_obj_t.tag</a></b>. </p>
+
+</div>
+</div>
 <a id="a3f41b386be2f2cf8faf9810ae600cba3" name="a3f41b386be2f2cf8faf9810ae600cba3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3f41b386be2f2cf8faf9810ae600cba3">&#9670;&#160;</a></span>ASN1_CLASSES</h2>
 
@@ -182,6 +214,7 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><b>base64_decode</b> (
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Defines class identifiers for ASN.1 encoding. See <b><a class="el" href="struct__asn1__obj__t.html#a560b2d20d164c3e01ff40496df4c13cc">asn1_obj_t.f_class</a></b>. </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a3f41b386be2f2cf8faf9810ae600cba3a36845401ba730128d3078d9cd0730fe8" name="a3f41b386be2f2cf8faf9810ae600cba3a36845401ba730128d3078d9cd0730fe8"></a>ASN1_UNIVERSAL&#160;</td><td class="fielddoc"><p >tags defined in the ASN.1 standard. Most use cases on calc will be this. </p>
 </td></tr>
@@ -206,12 +239,341 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><b>base64_decode</b> (
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Defines form identifiers for ASN.1 encoding. See <b><a class="el" href="struct__asn1__obj__t.html#a7d020c1e95230dc213dc2f8ddba107d4">asn1_obj_t.f_form</a></b>. </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ac5b9d07a91b78eb356e23e70b4abaf4ca916350d579d4895b1f843289b60b4572" name="ac5b9d07a91b78eb356e23e70b4abaf4ca916350d579d4895b1f843289b60b4572"></a>ASN1_PRIMITIVE&#160;</td><td class="fielddoc"><p >data type that cannot be broken down further. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ac5b9d07a91b78eb356e23e70b4abaf4cad03b2b41a6f3417a981a78ca887332e6" name="ac5b9d07a91b78eb356e23e70b4abaf4cad03b2b41a6f3417a981a78ca887332e6"></a>ASN1_CONSTRUCTED&#160;</td><td class="fielddoc"><p >data type composed of multiple primitive data types. </p>
 </td></tr>
 </table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ac055a4d75ae8b9eca210fe498120c1cc" name="ac055a4d75ae8b9eca210fe498120c1cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac055a4d75ae8b9eca210fe498120c1cc">&#9670;&#160;</a></span>asn1_decode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t asn1_decode </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>asn1_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct__asn1__obj__t.html">asn1_obj_t</a> *&#160;</td>
+          <td class="paramname"><em>objs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>iter_count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Parses ASN.1 encoded data and returns metadata into an array of structs. </p>
+<dl class="section note"><dt>Note</dt><dd>This function is recursive for any element of <b>constructed</b> form. </dd>
+<dd>
+For DER-formatted RSA public keys, you will need to call this function twice to unpack the modulus and exponent. The second time should be on the <b>ASN1_BITSTRING</b> that encodes the modulus and public exponent. See the asn1_decode demo for details. </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">asn1_data</td><td>Pointer to ASN.1-encoded data. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of the encoded data. </td></tr>
+    <tr><td class="paramname">objs</td><td>Pointer to an array of <b>asn1_obj_t</b> structs to fill with decoded data. </td></tr>
+    <tr><td class="paramname">iter_count</td><td>Maximum number of ASN.1 elements to process before returning. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The number of objects returned by the parser. Zero indicates an error. </dd></dl>
+
+</div>
+</div>
+<a id="a601f9f9d3c49d3ea29abae899de3de59" name="a601f9f9d3c49d3ea29abae899de3de59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a601f9f9d3c49d3ea29abae899de3de59">&#9670;&#160;</a></span>base64_encode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t base64_encode </td>
+          <td>(</td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>dest</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Converts an octet-encoded byte stream into a sextet-encoded byte stream. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in</td><td>Pointer to octet-encoded data stream. </td></tr>
+    <tr><td class="paramname">len</td><td>Length of octet-encoded data stream. </td></tr>
+    <tr><td class="paramname">out</td><td>Pointer to sextet-encoded data stream. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd><b>out</b> should be at least len * 4 / 3 bytes large. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Length of output sextet. </dd></dl>
+
+</div>
+</div>
+<a id="a5a9e532ff657237b6e81f5e8e73de9e7" name="a5a9e532ff657237b6e81f5e8e73de9e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a9e532ff657237b6e81f5e8e73de9e7">&#9670;&#160;</a></span>base64_decode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t base64_decode </td>
+          <td>(</td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>dest</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Converts a sextet-encoded byte stream into a octet-encoded byte stream. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in</td><td>Pointer to sextet-encoded data stream. </td></tr>
+    <tr><td class="paramname">len</td><td>Length of sextet-encoded data stream. </td></tr>
+    <tr><td class="paramname">out</td><td>Pointer to octet-encoded data stream. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd><b>out</b> should be at least len * 3 / 4 bytes large. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Length of output octet. </dd></dl>
+
+</div>
+</div>
+<a id="ad36396ba82ffa8ee3278114e5f4da8b8" name="ad36396ba82ffa8ee3278114e5f4da8b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad36396ba82ffa8ee3278114e5f4da8b8">&#9670;&#160;</a></span>encode_pack1bpp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void encode_pack1bpp </td>
+          <td>(</td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Converts a byte stream of 0x00 and 0x01 bytes into a 1bpp-encoded byte stream. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">src</td><td>Pointer to input data stream, which must be a sequence of 0x00 and 0x01 bytes. </td></tr>
+    <tr><td class="paramname">dest</td><td>Pointer to output data stream. </td></tr>
+    <tr><td class="paramname">len</td><td>Length of 1bpp-encoded data stream. (<code>dest</code>) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd><b>dest</b> should be at least len * 8 bytes large. </dd></dl>
+
+</div>
+</div>
+<a id="a62e519aeb1f342f4dabb68646653123f" name="a62e519aeb1f342f4dabb68646653123f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62e519aeb1f342f4dabb68646653123f">&#9670;&#160;</a></span>decode_unpack1bpp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void decode_unpack1bpp </td>
+          <td>(</td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Converts a 1bpp-encoded byte stream into 0x00 and 0x01 bytes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">src</td><td>Pointer to input data stream. </td></tr>
+    <tr><td class="paramname">dest</td><td>Pointer to output data stream. </td></tr>
+    <tr><td class="paramname">len</td><td>Length of 1bpp-encoded data stream. (<code>src</code>) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd><b>dest</b> should be at least len * 8 bytes large. </dd></dl>
+
+</div>
+</div>
+<a id="ac7cfee301af23113dbc7471c45091d31" name="ac7cfee301af23113dbc7471c45091d31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7cfee301af23113dbc7471c45091d31">&#9670;&#160;</a></span>encode_pack2bpp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void encode_pack2bpp </td>
+          <td>(</td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Converts a byte stream of 0x00-0x03 bytes into a 2bpp-encoded byte stream. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">src</td><td>Pointer to input data stream, which must be a sequence of bytes in the range 0x00 to 0x03. </td></tr>
+    <tr><td class="paramname">dest</td><td>Pointer to output data stream. </td></tr>
+    <tr><td class="paramname">len</td><td>Length of 2bpp-encoded data stream. (<code>dest</code>) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd><b>dest</b> should be at least len / 4 bytes large. </dd></dl>
+
+</div>
+</div>
+<a id="ae22ca98875b8defc30c1d223305844dc" name="ae22ca98875b8defc30c1d223305844dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae22ca98875b8defc30c1d223305844dc">&#9670;&#160;</a></span>decode_unpack2bpp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void decode_unpack2bpp </td>
+          <td>(</td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Converts a 2bpp-encoded byte stream into bytes in the range 0x00 to 0x03. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">src</td><td>Pointer to input data stream. </td></tr>
+    <tr><td class="paramname">dest</td><td>Pointer to output data stream. </td></tr>
+    <tr><td class="paramname">len</td><td>Length of 2bpp-encoded data stream. (<code>src</code>) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd><b>dest</b> should be at least len * 4 bytes large. </dd></dl>
 
 </div>
 </div>

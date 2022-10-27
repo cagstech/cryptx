@@ -21,9 +21,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">CryptX
+   <div id="projectname">CryptX<span id="projectnumber">&#160;10</span>
    </div>
-   <div id="projectbrief">Suite of Cryptography Libraries for the TI-84+ CE</div>
+   <div id="projectbrief">A collection of cryptographic libraries for the TI-84+ CE</div>
   </td>
  </tr>
  </tbody>
@@ -84,40 +84,25 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:ae58a514b2bb7fb1c0ab980aa78895d1c"><td class="memItemLeft" align="right" valign="top">bool(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__hmac__ctx.html#ae58a514b2bb7fb1c0ab980aa78895d1c">init</a> )(void *ctx, const void *key, size_t keylen)</td></tr>
-<tr class="separator:ae58a514b2bb7fb1c0ab980aa78895d1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a578c2c6501b33833ca7b80ec7664b990"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__hmac__ctx.html#a578c2c6501b33833ca7b80ec7664b990">update</a> )(void *ctx, const void *data, size_t len)</td></tr>
-<tr class="separator:a578c2c6501b33833ca7b80ec7664b990"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c1ecf5f097205cc9c59e9fa31ff61c8"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__hmac__ctx.html#a4c1ecf5f097205cc9c59e9fa31ff61c8">final</a> )(void *ctx, void *output)</td></tr>
-<tr class="separator:a4c1ecf5f097205cc9c59e9fa31ff61c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1ecb7ee6fd008c13077bb71072a833d"><td class="memItemLeft" align="right" valign="top"><a id="ac1ecb7ee6fd008c13077bb71072a833d" name="ac1ecb7ee6fd008c13077bb71072a833d"></a>
+<tr class="memitem:ac4d1127ea0dca63e0a6e134a0f6d082e"><td class="memItemLeft" align="right" valign="top">bool(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__hmac__ctx.html#ac4d1127ea0dca63e0a6e134a0f6d082e">init</a> )(void *ctx, const void *key, size_t keylen)</td></tr>
+<tr class="separator:ac4d1127ea0dca63e0a6e134a0f6d082e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bf90c4e65a5b1178d92f8a0b1a1ad5b"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__hmac__ctx.html#a6bf90c4e65a5b1178d92f8a0b1a1ad5b">update</a> )(void *ctx, const void *data, size_t len)</td></tr>
+<tr class="separator:a6bf90c4e65a5b1178d92f8a0b1a1ad5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7f58ce4f70fde87bb3c75be203aa1c2"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__hmac__ctx.html#ac7f58ce4f70fde87bb3c75be203aa1c2">final</a> )(void *ctx, void *output)</td></tr>
+<tr class="separator:ac7f58ce4f70fde87bb3c75be203aa1c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afebc00a7bbf696205a1fcd028388fc27"><td class="memItemLeft" align="right" valign="top"><a id="afebc00a7bbf696205a1fcd028388fc27" name="afebc00a7bbf696205a1fcd028388fc27"></a>
 union <a class="el" href="union__hmac__ctx_1_1__hmac.html">_hmac_ctx::_hmac</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Hmac</b></td></tr>
-<tr class="separator:ac1ecb7ee6fd008c13077bb71072a833d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:afebc00a7bbf696205a1fcd028388fc27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="a4c1ecf5f097205cc9c59e9fa31ff61c8" name="a4c1ecf5f097205cc9c59e9fa31ff61c8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c1ecf5f097205cc9c59e9fa31ff61c8">&#9670;&#160;</a></span>final</h2>
+<a id="ac4d1127ea0dca63e0a6e134a0f6d082e" name="ac4d1127ea0dca63e0a6e134a0f6d082e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4d1127ea0dca63e0a6e134a0f6d082e">&#9670;&#160;</a></span>init</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void(* final) (void *ctx, void *output)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >pointer to the digest output method for the given hash algorithm </p>
-
-</div>
-</div>
-<a id="ae58a514b2bb7fb1c0ab980aa78895d1c" name="ae58a514b2bb7fb1c0ab980aa78895d1c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae58a514b2bb7fb1c0ab980aa78895d1c">&#9670;&#160;</a></span>init</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool(* init) (void *ctx, const void *key, size_t keylen)</td>
+          <td class="memname">bool(* _hmac_ctx::init) (void *ctx, const void *key, size_t keylen)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -125,18 +110,33 @@ union <a class="el" href="union__hmac__ctx_1_1__hmac.html">_hmac_ctx::_hmac</a>&
 
 </div>
 </div>
-<a id="a578c2c6501b33833ca7b80ec7664b990" name="a578c2c6501b33833ca7b80ec7664b990"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a578c2c6501b33833ca7b80ec7664b990">&#9670;&#160;</a></span>update</h2>
+<a id="a6bf90c4e65a5b1178d92f8a0b1a1ad5b" name="a6bf90c4e65a5b1178d92f8a0b1a1ad5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bf90c4e65a5b1178d92f8a0b1a1ad5b">&#9670;&#160;</a></span>update</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void(* update) (void *ctx, const void *data, size_t len)</td>
+          <td class="memname">void(* _hmac_ctx::update) (void *ctx, const void *data, size_t len)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p >pointer to the update method for the given hash algorithm </p>
+
+</div>
+</div>
+<a id="ac7f58ce4f70fde87bb3c75be203aa1c2" name="ac7f58ce4f70fde87bb3c75be203aa1c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7f58ce4f70fde87bb3c75be203aa1c2">&#9670;&#160;</a></span>final</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void(* _hmac_ctx::final) (void *ctx, void *output)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >pointer to the digest output method for the given hash algorithm </p>
 
 </div>
 </div>

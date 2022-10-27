@@ -21,9 +21,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">CryptX
+   <div id="projectname">CryptX<span id="projectnumber">&#160;10</span>
    </div>
-   <div id="projectbrief">Suite of Cryptography Libraries for the TI-84+ CE</div>
+   <div id="projectbrief">A collection of cryptographic libraries for the TI-84+ CE</div>
   </td>
  </tr>
  </tbody>
@@ -101,23 +101,17 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a81900255324b491a01b42c202b2f654c"><td class="memItemLeft" align="right" valign="top"><a id="a81900255324b491a01b42c202b2f654c" name="a81900255324b491a01b42c202b2f654c"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>AES_CTR_NONCELEN</b>(len)&#160;&#160;&#160;((0x0f &amp; len)&lt;&lt;4)</td></tr>
+<tr class="memitem:a81900255324b491a01b42c202b2f654c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a81900255324b491a01b42c202b2f654c">AES_CTR_NONCELEN</a>(len)&#160;&#160;&#160;((0x0f &amp; len)&lt;&lt;4)</td></tr>
 <tr class="separator:a81900255324b491a01b42c202b2f654c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2703f5a4ec821ca3c27c2f01b26848e1"><td class="memItemLeft" align="right" valign="top"><a id="a2703f5a4ec821ca3c27c2f01b26848e1" name="a2703f5a4ec821ca3c27c2f01b26848e1"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>AES_CTR_COUNTERLEN</b>(len)&#160;&#160;&#160;((0x0f &amp; len)&lt;&lt;8)</td></tr>
+<tr class="memitem:a2703f5a4ec821ca3c27c2f01b26848e1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a2703f5a4ec821ca3c27c2f01b26848e1">AES_CTR_COUNTERLEN</a>(len)&#160;&#160;&#160;((0x0f &amp; len)&lt;&lt;8)</td></tr>
 <tr class="separator:a2703f5a4ec821ca3c27c2f01b26848e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afab0742642db9c0609c00bf8a54f386f"><td class="memItemLeft" align="right" valign="top"><a id="afab0742642db9c0609c00bf8a54f386f" name="afab0742642db9c0609c00bf8a54f386f"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>AES_BLOCKSIZE</b>&#160;&#160;&#160;16</td></tr>
+<tr class="memitem:afab0742642db9c0609c00bf8a54f386f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#afab0742642db9c0609c00bf8a54f386f">AES_BLOCKSIZE</a>&#160;&#160;&#160;16</td></tr>
 <tr class="separator:afab0742642db9c0609c00bf8a54f386f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c2d58d8dd281845fdc027b499dea89d"><td class="memItemLeft" align="right" valign="top"><a id="a6c2d58d8dd281845fdc027b499dea89d" name="a6c2d58d8dd281845fdc027b499dea89d"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>AES_IVSIZE</b>&#160;&#160;&#160;AES_BLOCKSIZE</td></tr>
+<tr class="memitem:a6c2d58d8dd281845fdc027b499dea89d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a6c2d58d8dd281845fdc027b499dea89d">AES_IVSIZE</a>&#160;&#160;&#160;<a class="el" href="encrypt_8h.html#afab0742642db9c0609c00bf8a54f386f">AES_BLOCKSIZE</a></td></tr>
 <tr class="separator:a6c2d58d8dd281845fdc027b499dea89d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab723a524d8d2149cb44285a8b8228f1f"><td class="memItemLeft" align="right" valign="top"><a id="ab723a524d8d2149cb44285a8b8228f1f" name="ab723a524d8d2149cb44285a8b8228f1f"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>aes_outsize</b>(len)&#160;&#160;&#160;((((len)%AES_BLOCKSIZE)==0) ? (len) + AES_BLOCKSIZE : (((len)&gt;&gt;4) + 1)&lt;&lt;4)</td></tr>
+<tr class="memitem:ab723a524d8d2149cb44285a8b8228f1f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#ab723a524d8d2149cb44285a8b8228f1f">aes_outsize</a>(len)&#160;&#160;&#160;((((len)%<a class="el" href="encrypt_8h.html#afab0742642db9c0609c00bf8a54f386f">AES_BLOCKSIZE</a>)==0) ? (len) + <a class="el" href="encrypt_8h.html#afab0742642db9c0609c00bf8a54f386f">AES_BLOCKSIZE</a> : (((len)&gt;&gt;4) + 1)&lt;&lt;4)</td></tr>
 <tr class="separator:ab723a524d8d2149cb44285a8b8228f1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5441aa332bfebb52cb4480d5a0783334"><td class="memItemLeft" align="right" valign="top"><a id="a5441aa332bfebb52cb4480d5a0783334" name="a5441aa332bfebb52cb4480d5a0783334"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>aes_extoutsize</b>(len)&#160;&#160;&#160;(aes_outsize((len)) + AES_IVSIZE)</td></tr>
+<tr class="memitem:a5441aa332bfebb52cb4480d5a0783334"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a5441aa332bfebb52cb4480d5a0783334">aes_extoutsize</a>(len)&#160;&#160;&#160;(<a class="el" href="encrypt_8h.html#ab723a524d8d2149cb44285a8b8228f1f">aes_outsize</a>((len)) + <a class="el" href="encrypt_8h.html#a6c2d58d8dd281845fdc027b499dea89d">AES_IVSIZE</a>)</td></tr>
 <tr class="separator:a5441aa332bfebb52cb4480d5a0783334"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
@@ -128,9 +122,8 @@ typedef struct <a class="el" href="struct__aes__cbc.html">_aes_cbc</a>&#160;</td
 <tr class="memitem:af070c8b55b23f225f8a12d83b5abb05f"><td class="memItemLeft" align="right" valign="top"><a id="af070c8b55b23f225f8a12d83b5abb05f" name="af070c8b55b23f225f8a12d83b5abb05f"></a>
 typedef struct <a class="el" href="struct__aes__ctr.html">_aes_ctr</a>&#160;</td><td class="memItemRight" valign="bottom"><b>aes_ctr_t</b></td></tr>
 <tr class="separator:af070c8b55b23f225f8a12d83b5abb05f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65315f1d62f11ec21b75450e86ce9774"><td class="memItemLeft" align="right" valign="top"><a id="a65315f1d62f11ec21b75450e86ce9774" name="a65315f1d62f11ec21b75450e86ce9774"></a>
-typedef struct <a class="el" href="struct__aes__ctx.html">_aes_ctx</a>&#160;</td><td class="memItemRight" valign="bottom"><b>aes_ctx</b></td></tr>
-<tr class="separator:a65315f1d62f11ec21b75450e86ce9774"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa188bc2768a3b7aa6ad73cb2c77819e0"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="struct__aes__ctx.html">_aes_ctx</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#aa188bc2768a3b7aa6ad73cb2c77819e0">aes_ctx</a></td></tr>
+<tr class="separator:aa188bc2768a3b7aa6ad73cb2c77819e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -168,26 +161,26 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a008b7da7adce38b117a17c8165c08df9"><td class="memItemLeft" align="right" valign="top"><a id="a008b7da7adce38b117a17c8165c08df9" name="a008b7da7adce38b117a17c8165c08df9"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>csrand_init</b> (void)</td></tr>
+<tr class="memitem:a008b7da7adce38b117a17c8165c08df9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a008b7da7adce38b117a17c8165c08df9">csrand_init</a> (void)</td></tr>
+<tr class="memdesc:a008b7da7adce38b117a17c8165c08df9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the secure psuedo-random generator.  <a href="encrypt_8h.html#a008b7da7adce38b117a17c8165c08df9">More...</a><br /></td></tr>
 <tr class="separator:a008b7da7adce38b117a17c8165c08df9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3cdabe638655bf5d3760c4ab700a43fd"><td class="memItemLeft" align="right" valign="top"><a id="a3cdabe638655bf5d3760c4ab700a43fd" name="a3cdabe638655bf5d3760c4ab700a43fd"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>csrand_get</b> (void)</td></tr>
+<tr class="memitem:a3cdabe638655bf5d3760c4ab700a43fd"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a3cdabe638655bf5d3760c4ab700a43fd">csrand_get</a> (void)</td></tr>
+<tr class="memdesc:a3cdabe638655bf5d3760c4ab700a43fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a securely psuedo-random 32-bit integer.  <a href="encrypt_8h.html#a3cdabe638655bf5d3760c4ab700a43fd">More...</a><br /></td></tr>
 <tr class="separator:a3cdabe638655bf5d3760c4ab700a43fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3641d44a877ff6eec0eb5cfbfaa5c61"><td class="memItemLeft" align="right" valign="top"><a id="aa3641d44a877ff6eec0eb5cfbfaa5c61" name="aa3641d44a877ff6eec0eb5cfbfaa5c61"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>csrand_fill</b> (void *buffer, size_t size)</td></tr>
+<tr class="memitem:aa3641d44a877ff6eec0eb5cfbfaa5c61"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#aa3641d44a877ff6eec0eb5cfbfaa5c61">csrand_fill</a> (void *buffer, size_t size)</td></tr>
+<tr class="memdesc:aa3641d44a877ff6eec0eb5cfbfaa5c61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fills a buffer with securely pseduo-random bytes.  <a href="encrypt_8h.html#aa3641d44a877ff6eec0eb5cfbfaa5c61">More...</a><br /></td></tr>
 <tr class="separator:aa3641d44a877ff6eec0eb5cfbfaa5c61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d671ce993d8c2bee97c6701f5cd2d97"><td class="memItemLeft" align="right" valign="top"><a id="a7d671ce993d8c2bee97c6701f5cd2d97" name="a7d671ce993d8c2bee97c6701f5cd2d97"></a>
-<a class="el" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>aes_init</b> (<a class="el" href="struct__aes__ctx.html">aes_ctx</a> *ctx, const void *key, size_t keylen, const void *iv, uint24_t flags)</td></tr>
+<tr class="memitem:a7d671ce993d8c2bee97c6701f5cd2d97"><td class="memItemLeft" align="right" valign="top"><a class="el" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a7d671ce993d8c2bee97c6701f5cd2d97">aes_init</a> (<a class="el" href="encrypt_8h.html#aa188bc2768a3b7aa6ad73cb2c77819e0">aes_ctx</a> *ctx, const void *key, size_t keylen, const void *iv, uint24_t flags)</td></tr>
+<tr class="memdesc:a7d671ce993d8c2bee97c6701f5cd2d97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a stateful AES cipher context to be used for encryption or decryption.  <a href="encrypt_8h.html#a7d671ce993d8c2bee97c6701f5cd2d97">More...</a><br /></td></tr>
 <tr class="separator:a7d671ce993d8c2bee97c6701f5cd2d97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a416ec0a48df057a40c980a2ab6c6c45c"><td class="memItemLeft" align="right" valign="top"><a id="a416ec0a48df057a40c980a2ab6c6c45c" name="a416ec0a48df057a40c980a2ab6c6c45c"></a>
-<a class="el" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>aes_encrypt</b> (const <a class="el" href="struct__aes__ctx.html">aes_ctx</a> *ctx, const void *plaintext, size_t len, void *ciphertext)</td></tr>
+<tr class="memitem:a416ec0a48df057a40c980a2ab6c6c45c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a416ec0a48df057a40c980a2ab6c6c45c">aes_encrypt</a> (const <a class="el" href="encrypt_8h.html#aa188bc2768a3b7aa6ad73cb2c77819e0">aes_ctx</a> *ctx, const void *plaintext, size_t len, void *ciphertext)</td></tr>
+<tr class="memdesc:a416ec0a48df057a40c980a2ab6c6c45c"><td class="mdescLeft">&#160;</td><td class="mdescRight">General-Purpose AES Encryption.  <a href="encrypt_8h.html#a416ec0a48df057a40c980a2ab6c6c45c">More...</a><br /></td></tr>
 <tr class="separator:a416ec0a48df057a40c980a2ab6c6c45c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a100a437a10da041f3b99c6795e059ea8"><td class="memItemLeft" align="right" valign="top"><a id="a100a437a10da041f3b99c6795e059ea8" name="a100a437a10da041f3b99c6795e059ea8"></a>
-<a class="el" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>aes_decrypt</b> (const <a class="el" href="struct__aes__ctx.html">aes_ctx</a> *ctx, const void *ciphertext, size_t len, void *plaintext)</td></tr>
+<tr class="memitem:a100a437a10da041f3b99c6795e059ea8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a100a437a10da041f3b99c6795e059ea8">aes_decrypt</a> (const <a class="el" href="encrypt_8h.html#aa188bc2768a3b7aa6ad73cb2c77819e0">aes_ctx</a> *ctx, const void *ciphertext, size_t len, void *plaintext)</td></tr>
+<tr class="memdesc:a100a437a10da041f3b99c6795e059ea8"><td class="mdescLeft">&#160;</td><td class="mdescRight">General-Purpose AES Decryption.  <a href="encrypt_8h.html#a100a437a10da041f3b99c6795e059ea8">More...</a><br /></td></tr>
 <tr class="separator:a100a437a10da041f3b99c6795e059ea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a993f15527e86e09be9954a7377909e14"><td class="memItemLeft" align="right" valign="top"><a id="a993f15527e86e09be9954a7377909e14" name="a993f15527e86e09be9954a7377909e14"></a>
-<a class="el" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294">rsa_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rsa_encrypt</b> (const void *msg, size_t msglen, void *ciphertext, const void *pubkey, size_t keylen, uint8_t oaep_hash_alg)</td></tr>
+<tr class="memitem:a993f15527e86e09be9954a7377909e14"><td class="memItemLeft" align="right" valign="top"><a class="el" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294">rsa_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a993f15527e86e09be9954a7377909e14">rsa_encrypt</a> (const void *msg, size_t msglen, void *ciphertext, const void *pubkey, size_t keylen, uint8_t oaep_hash_alg)</td></tr>
+<tr class="memdesc:a993f15527e86e09be9954a7377909e14"><td class="mdescLeft">&#160;</td><td class="mdescRight">RSA Encryption.  <a href="encrypt_8h.html#a993f15527e86e09be9954a7377909e14">More...</a><br /></td></tr>
 <tr class="separator:a993f15527e86e09be9954a7377909e14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -196,8 +189,136 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>csrand_fill</b> (void
 <dd>
 Adam <em>beck</em> Beckingham </dd>
 <dd>
-commandblockguy </dd></dl>
-</div><h2 class="groupheader">Enumeration Type Documentation</h2>
+commandblockguy</dd></dl>
+<p>Provides symmetric and asymmetric (pubkey) encryption as well as a HWRNG.</p><ol type="1">
+<li>Secure HWRNG</li>
+<li>AES-128, AES-192, AES-256</li>
+<li>RSA + OAEP v2.2 </li>
+</ol>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a81900255324b491a01b42c202b2f654c" name="a81900255324b491a01b42c202b2f654c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81900255324b491a01b42c202b2f654c">&#9670;&#160;</a></span>AES_CTR_NONCELEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define AES_CTR_NONCELEN</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">len</td><td>)</td>
+          <td>&#160;&#160;&#160;((0x0f &amp; len)&lt;&lt;4)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Only has an effect when cipher is initialized to CTR mode. Sets the length of the fixed prefix portion of the IV Valid lengths: 1&lt;= len &lt; block size </p>
+
+</div>
+</div>
+<a id="a2703f5a4ec821ca3c27c2f01b26848e1" name="a2703f5a4ec821ca3c27c2f01b26848e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2703f5a4ec821ca3c27c2f01b26848e1">&#9670;&#160;</a></span>AES_CTR_COUNTERLEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define AES_CTR_COUNTERLEN</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">len</td><td>)</td>
+          <td>&#160;&#160;&#160;((0x0f &amp; len)&lt;&lt;8)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Only has an effect when cipher is initialized to CTR mode. Stores the length of the counter portion of the IV. Valid lengths: 1 &lt;= len &lt; block size. </p>
+
+</div>
+</div>
+<a id="afab0742642db9c0609c00bf8a54f386f" name="afab0742642db9c0609c00bf8a54f386f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afab0742642db9c0609c00bf8a54f386f">&#9670;&#160;</a></span>AES_BLOCKSIZE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define AES_BLOCKSIZE&#160;&#160;&#160;16</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Defines the block size of the AES cipher. </p>
+
+</div>
+</div>
+<a id="a6c2d58d8dd281845fdc027b499dea89d" name="a6c2d58d8dd281845fdc027b499dea89d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c2d58d8dd281845fdc027b499dea89d">&#9670;&#160;</a></span>AES_IVSIZE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define AES_IVSIZE&#160;&#160;&#160;<a class="el" href="encrypt_8h.html#afab0742642db9c0609c00bf8a54f386f">AES_BLOCKSIZE</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Defines the length of the AES initialization vector (IV) </p>
+
+</div>
+</div>
+<a id="ab723a524d8d2149cb44285a8b8228f1f" name="ab723a524d8d2149cb44285a8b8228f1f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab723a524d8d2149cb44285a8b8228f1f">&#9670;&#160;</a></span>aes_outsize</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define aes_outsize</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">len</td><td>)</td>
+          <td>&#160;&#160;&#160;((((len)%<a class="el" href="encrypt_8h.html#afab0742642db9c0609c00bf8a54f386f">AES_BLOCKSIZE</a>)==0) ? (len) + <a class="el" href="encrypt_8h.html#afab0742642db9c0609c00bf8a54f386f">AES_BLOCKSIZE</a> : (((len)&gt;&gt;4) + 1)&lt;&lt;4)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Defines a macro to return the size of an AES ciphertext given a plaintext length. Does not include space for an IV-prepend. See <b><a class="el" href="encrypt_8h.html#a5441aa332bfebb52cb4480d5a0783334">aes_extoutsize(len)</a></b> for that. </p>
+
+</div>
+</div>
+<a id="a5441aa332bfebb52cb4480d5a0783334" name="a5441aa332bfebb52cb4480d5a0783334"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5441aa332bfebb52cb4480d5a0783334">&#9670;&#160;</a></span>aes_extoutsize</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define aes_extoutsize</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">len</td><td>)</td>
+          <td>&#160;&#160;&#160;(<a class="el" href="encrypt_8h.html#ab723a524d8d2149cb44285a8b8228f1f">aes_outsize</a>((len)) + <a class="el" href="encrypt_8h.html#a6c2d58d8dd281845fdc027b499dea89d">AES_IVSIZE</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Defines a macro to return the size of an AES ciphertext with with an extra block added for the IV. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="aa188bc2768a3b7aa6ad73cb2c77819e0" name="aa188bc2768a3b7aa6ad73cb2c77819e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa188bc2768a3b7aa6ad73cb2c77819e0">&#9670;&#160;</a></span>aes_ctx</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="encrypt_8h.html#aa188bc2768a3b7aa6ad73cb2c77819e0">aes_ctx</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Stores AES cipher configuration data. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="a194ef6b5934dff6dceed4dd819e76340" name="a194ef6b5934dff6dceed4dd819e76340"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a194ef6b5934dff6dceed4dd819e76340">&#9670;&#160;</a></span>aes_cipher_modes</h2>
 
@@ -209,10 +330,34 @@ commandblockguy </dd></dl>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Supported AES cipher modes </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a194ef6b5934dff6dceed4dd819e76340ad21a3698b98b7368b14ec3d48314a132" name="a194ef6b5934dff6dceed4dd819e76340ad21a3698b98b7368b14ec3d48314a132"></a>AES_MODE_CBC&#160;</td><td class="fielddoc"><p >selects CBC mode </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a194ef6b5934dff6dceed4dd819e76340a5ecd63cd0bd97d46f273461b6550cb8e" name="a194ef6b5934dff6dceed4dd819e76340a5ecd63cd0bd97d46f273461b6550cb8e"></a>AES_MODE_CTR&#160;</td><td class="fielddoc"><p >selects CTR mode </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="a9933dec76c43b37331782bdd16ebc4a3" name="a9933dec76c43b37331782bdd16ebc4a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9933dec76c43b37331782bdd16ebc4a3">&#9670;&#160;</a></span>aes_padding_schemes</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3">aes_padding_schemes</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Supported AES padding schemes </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a9933dec76c43b37331782bdd16ebc4a3a673ae2fee0bfe0a962717b3f673b9b7c" name="a9933dec76c43b37331782bdd16ebc4a3a673ae2fee0bfe0a962717b3f673b9b7c"></a>PAD_PKCS7&#160;</td><td class="fielddoc"><p >PKCS#7 padding | DEFAULT </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a9933dec76c43b37331782bdd16ebc4a3a322c11c9058ef67073a3ff9bdcb9f759" name="a9933dec76c43b37331782bdd16ebc4a3a322c11c9058ef67073a3ff9bdcb9f759"></a>PAD_DEFAULT&#160;</td><td class="fielddoc"><p >selects the scheme marked DEFAULT. Using this is recommended in case a change to the standards would set a stronger padding scheme as default </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a9933dec76c43b37331782bdd16ebc4a3a7566d9371110a1a24db62b145c901ad8" name="a9933dec76c43b37331782bdd16ebc4a3a7566d9371110a1a24db62b145c901ad8"></a>PAD_ISO2&#160;</td><td class="fielddoc"><p >ISO-9797 M2 padding </p>
 </td></tr>
 </table>
 
@@ -229,6 +374,7 @@ commandblockguy </dd></dl>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >AES error codes </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aeb2e64abcc4317e3143fb820f21c3bfdaacf07636102724d2a7913911b0cf74b2" name="aeb2e64abcc4317e3143fb820f21c3bfdaacf07636102724d2a7913911b0cf74b2"></a>AES_OK&#160;</td><td class="fielddoc"><p >AES operation completed successfully </p>
 </td></tr>
@@ -248,28 +394,6 @@ commandblockguy </dd></dl>
 
 </div>
 </div>
-<a id="a9933dec76c43b37331782bdd16ebc4a3" name="a9933dec76c43b37331782bdd16ebc4a3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9933dec76c43b37331782bdd16ebc4a3">&#9670;&#160;</a></span>aes_padding_schemes</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="encrypt_8h.html#a9933dec76c43b37331782bdd16ebc4a3">aes_padding_schemes</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a9933dec76c43b37331782bdd16ebc4a3a673ae2fee0bfe0a962717b3f673b9b7c" name="a9933dec76c43b37331782bdd16ebc4a3a673ae2fee0bfe0a962717b3f673b9b7c"></a>PAD_PKCS7&#160;</td><td class="fielddoc"><p >PKCS#7 padding | DEFAULT </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a9933dec76c43b37331782bdd16ebc4a3a322c11c9058ef67073a3ff9bdcb9f759" name="a9933dec76c43b37331782bdd16ebc4a3a322c11c9058ef67073a3ff9bdcb9f759"></a>PAD_DEFAULT&#160;</td><td class="fielddoc"><p >selects the scheme marked DEFAULT. Using this is recommended in case a change to the standards would set a stronger padding scheme as default </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a9933dec76c43b37331782bdd16ebc4a3a7566d9371110a1a24db62b145c901ad8" name="a9933dec76c43b37331782bdd16ebc4a3a7566d9371110a1a24db62b145c901ad8"></a>PAD_ISO2&#160;</td><td class="fielddoc"><p >ISO-9797 M2 padding </p>
-</td></tr>
-</table>
-
-</div>
-</div>
 <a id="a0486449f609d0e485bad091a671d9294" name="a0486449f609d0e485bad091a671d9294"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0486449f609d0e485bad091a671d9294">&#9670;&#160;</a></span>rsa_error_t</h2>
 
@@ -281,6 +405,7 @@ commandblockguy </dd></dl>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >RSA error codes </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a0486449f609d0e485bad091a671d9294a2cafdb683e1870a33bcb821420626cae" name="a0486449f609d0e485bad091a671d9294a2cafdb683e1870a33bcb821420626cae"></a>RSA_OK&#160;</td><td class="fielddoc"><p >RSA encryption completed successfully </p>
 </td></tr>
@@ -293,6 +418,348 @@ commandblockguy </dd></dl>
 <tr><td class="fieldname"><a id="a0486449f609d0e485bad091a671d9294a43eadc89540121b902e02afabc7a7eb9" name="a0486449f609d0e485bad091a671d9294a43eadc89540121b902e02afabc7a7eb9"></a>RSA_ENCODING_ERROR&#160;</td><td class="fielddoc"><p >RSA encryption failed, OAEP encoding error </p>
 </td></tr>
 </table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a008b7da7adce38b117a17c8165c08df9" name="a008b7da7adce38b117a17c8165c08df9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a008b7da7adce38b117a17c8165c08df9">&#9670;&#160;</a></span>csrand_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool csrand_init </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initializes the secure psuedo-random generator. </p>
+<dl class="section return"><dt>Returns</dt><dd>[bool] True if init succeeded, False otherwise </dd></dl>
+
+</div>
+</div>
+<a id="a3cdabe638655bf5d3760c4ab700a43fd" name="a3cdabe638655bf5d3760c4ab700a43fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3cdabe638655bf5d3760c4ab700a43fd">&#9670;&#160;</a></span>csrand_get()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t csrand_get </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a securely psuedo-random 32-bit integer. </p>
+<dl class="section return"><dt>Returns</dt><dd>[uint32_t] A 32-bit random number. </dd></dl>
+
+</div>
+</div>
+<a id="aa3641d44a877ff6eec0eb5cfbfaa5c61" name="aa3641d44a877ff6eec0eb5cfbfaa5c61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3641d44a877ff6eec0eb5cfbfaa5c61">&#9670;&#160;</a></span>csrand_fill()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool csrand_fill </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Fills a buffer with securely pseduo-random bytes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buffer</td><td>Pointer to a buffer to fill with random bytes </td></tr>
+    <tr><td class="paramname">size</td><td>Size of the buffer to fill </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a7d671ce993d8c2bee97c6701f5cd2d97" name="a7d671ce993d8c2bee97c6701f5cd2d97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d671ce993d8c2bee97c6701f5cd2d97">&#9670;&#160;</a></span>aes_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a> aes_init </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="encrypt_8h.html#aa188bc2768a3b7aa6ad73cb2c77819e0">aes_ctx</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>keylen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>iv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint24_t&#160;</td>
+          <td class="paramname"><em>flags</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initializes a stateful AES cipher context to be used for encryption or decryption. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>Pointer to an AES cipher context to initialize.. </td></tr>
+    <tr><td class="paramname">key</td><td>Pointer to an 128, 192, or 256 bit key to load into the AES context. </td></tr>
+    <tr><td class="paramname">keylen</td><td>The size, in bytes, of the key to load. </td></tr>
+    <tr><td class="paramname">iv</td><td>Initialization vector, a buffer equal to the block size that is pseudo-random. </td></tr>
+    <tr><td class="paramname">flags</td><td>A series of flags to configure the AES context with. This is the bitwise OR of any non-default cipher options. Ex: <div class="fragment"><div class="line"><a class="code hl_function" href="encrypt_8h.html#a7d671ce993d8c2bee97c6701f5cd2d97">aes_init</a>(ctx, key, <span class="keyword">sizeof</span> key, iv, <a class="code hl_enumvalue" href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340a5ecd63cd0bd97d46f273461b6550cb8e">AES_MODE_CTR</a> | <a class="code hl_define" href="encrypt_8h.html#a2703f5a4ec821ca3c27c2f01b26848e1">AES_CTR_COUNTERLEN</a>(4));</div>
+<div class="line"><span class="comment">// this sets CTR mode and sets the counter to 4 bytes (32 bits)</span></div>
+<div class="line"><span class="comment">// since the nonce length is 8 bytes by default, this actually means the IV format is:</span></div>
+<div class="line"><span class="comment">// [nonce 8 bytes] [counter 4 bytes] [suffix 4 bytes]</span></div>
+<div class="ttc" id="aencrypt_8h_html_a194ef6b5934dff6dceed4dd819e76340a5ecd63cd0bd97d46f273461b6550cb8e"><div class="ttname"><a href="encrypt_8h.html#a194ef6b5934dff6dceed4dd819e76340a5ecd63cd0bd97d46f273461b6550cb8e">AES_MODE_CTR</a></div><div class="ttdeci">@ AES_MODE_CTR</div><div class="ttdef"><b>Definition:</b> encrypt.h:124</div></div>
+<div class="ttc" id="aencrypt_8h_html_a2703f5a4ec821ca3c27c2f01b26848e1"><div class="ttname"><a href="encrypt_8h.html#a2703f5a4ec821ca3c27c2f01b26848e1">AES_CTR_COUNTERLEN</a></div><div class="ttdeci">#define AES_CTR_COUNTERLEN(len)</div><div class="ttdef"><b>Definition:</b> encrypt.h:154</div></div>
+<div class="ttc" id="aencrypt_8h_html_a7d671ce993d8c2bee97c6701f5cd2d97"><div class="ttname"><a href="encrypt_8h.html#a7d671ce993d8c2bee97c6701f5cd2d97">aes_init</a></div><div class="ttdeci">aes_error_t aes_init(aes_ctx *ctx, const void *key, size_t keylen, const void *iv, uint24_t flags)</div><div class="ttdoc">Initializes a stateful AES cipher context to be used for encryption or decryption.</div></div>
+</div><!-- fragment --> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>Do not edit a context manually. You may corrupt the cipher state. </dd>
+<dd>
+Contexts are not bidirectional due to being stateful. If you need to process both encryption and decryption, initialize seperate contexts for encryption and decryption. Both contexts will use the same key, but different initialization vectors. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key. </dd>
+<dd>
+Do not manually edit the <b>ctx.mode</b> field of the context structure. This will break the cipher configuration. If you want to change cipher modes, do so by calling <b>aes_init</b> again. </dd>
+<dd>
+AES-CBC and CTR modes ensure confidentiality but do not guard against tampering. AES-OCB/GCM are a bit computationallty-intensive for this platform, but HASHLIB provides hash and hmac functions in their stead. HMAC is generally more secure for this purpose. If you want a truly secure scheme, always append an HMAC to your message and use an application secret or unique key generated using a CSRNG to key the HMAC at both endpoints. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>AES_OK if success, non-zero if failed. See aes_error_t. </dd></dl>
+
+</div>
+</div>
+<a id="a416ec0a48df057a40c980a2ab6c6c45c" name="a416ec0a48df057a40c980a2ab6c6c45c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a416ec0a48df057a40c980a2ab6c6c45c">&#9670;&#160;</a></span>aes_encrypt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a> aes_encrypt </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="encrypt_8h.html#aa188bc2768a3b7aa6ad73cb2c77819e0">aes_ctx</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>plaintext</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>ciphertext</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>General-Purpose AES Encryption. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>Pointer to an AES cipher context. </td></tr>
+    <tr><td class="paramname">plaintext</td><td>Pointer to data to encrypt. </td></tr>
+    <tr><td class="paramname">len</td><td>Length of data at <b>plaintext</b> to encrypt. This can be the output of hashlib_AESCiphertextSize(). </td></tr>
+    <tr><td class="paramname">ciphertext</td><td>Pointer to buffer to write encrypted data to. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd><b>ciphertext</b> should large enough to hold the encrypted message. For CBC mode, this is the smallest multiple of the blocksize that will hold the plaintext, plus 1 block if the blocksize divides the plaintext evenly. For CTR mode, this is the same size as the plaintext. </dd>
+<dd>
+<b>plaintext</b> and <b>ciphertext</b> are aliasable. </dd>
+<dd>
+Encrypt is streamable, such that encrypt(msg1) + encrypt(msg2) is functionally identical to encrypt(msg1+msg2) with the exception of intervening padding in CBC mode. </dd>
+<dd>
+Once a context is used for encryption, a stateful flag is set preventing the same context from being used for decryption. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>AES_OK if success, non-zero if failed. See aes_error_t. </dd></dl>
+
+</div>
+</div>
+<a id="a100a437a10da041f3b99c6795e059ea8" name="a100a437a10da041f3b99c6795e059ea8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a100a437a10da041f3b99c6795e059ea8">&#9670;&#160;</a></span>aes_decrypt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="encrypt_8h.html#aeb2e64abcc4317e3143fb820f21c3bfd">aes_error_t</a> aes_decrypt </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="encrypt_8h.html#aa188bc2768a3b7aa6ad73cb2c77819e0">aes_ctx</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>ciphertext</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>plaintext</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>General-Purpose AES Decryption. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>Pointer to AES cipher context. </td></tr>
+    <tr><td class="paramname">ciphertext</td><td>Pointer to data to decrypt. </td></tr>
+    <tr><td class="paramname">len</td><td>Length of data at <b>ciphertext</b> to decrypt. </td></tr>
+    <tr><td class="paramname">plaintext</td><td>Pointer to buffer to write decryped data to. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd><b>plaintext</b> and <b>ciphertext</b> are aliasable. </dd>
+<dd>
+Decrypt is streamable, such that decrypt(msg1) + decrypt(msg2) is functionally identical to decrypt(msg1+msg2) with the exception of intervening padding in CBC mode. </dd>
+<dd>
+Once a context is used for decryption, a stateful flag is set preventing the same context from being used for encryption. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>AES_OK if success, non-zero if failed. See aes_error_t. </dd></dl>
+
+</div>
+</div>
+<a id="a993f15527e86e09be9954a7377909e14" name="a993f15527e86e09be9954a7377909e14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a993f15527e86e09be9954a7377909e14">&#9670;&#160;</a></span>rsa_encrypt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="encrypt_8h.html#a0486449f609d0e485bad091a671d9294">rsa_error_t</a> rsa_encrypt </td>
+          <td>(</td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>msg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>msglen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>ciphertext</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>pubkey</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>keylen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>oaep_hash_alg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>RSA Encryption. </p>
+<p >Performs an in-place RSA encryption of a message over a public modulus <b>pubkey</b> and a public exponent, 65537 OAEP encoding of the input message is performed automatically.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">msg</td><td>Pointer to a message to encrypt using RSA. </td></tr>
+    <tr><td class="paramname">msglen</td><td>The length of the message <b>msg</b>. </td></tr>
+    <tr><td class="paramname">ciphertext</td><td>Pointer a buffer to write the ciphertext to. </td></tr>
+    <tr><td class="paramname">pubkey</td><td>Pointer to a public key to use for encryption. </td></tr>
+    <tr><td class="paramname">keylen</td><td>The length of the public key (modulus) to encrypt with. </td></tr>
+    <tr><td class="paramname">oaep_hash_alg</td><td>The numeric ID of the hashing algorithm to use within OAEP encoding. See <b>hash_algorithms</b>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>The size of <b>ciphertext</b> and <b>keylen</b> must be equal. </dd>
+<dd>
+The <b>msg</b> will be encoded using OAEP before encryption. </dd>
+<dd>
+msg and pubkey are both treated as byte arrays. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>rsa_error_t </dd></dl>
 
 </div>
 </div>
