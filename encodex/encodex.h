@@ -47,22 +47,22 @@ typedef struct _asn1_obj_t {
  * See @b asn1_obj_t.tag.
  */
 enum ASN1_TYPES {
-	ASN1_RESVD = 0,
-	ASN1_BOOLEAN,
-	ASN1_INTEGER,
-	ASN1_BITSTRING,
-	ASN1_OCTETSTRING,
-	ASN1_NULL,
-	ASN1_OBJECTID,
-	ASN1_OBJECTDESC,
-	ASN1_INSTANCE,
-	ASN1_REAL,
+	ASN1_RESVD = 0,				/**< RESERVED */
+	ASN1_BOOLEAN,				/**< defines a BOOLEAN object */
+	ASN1_INTEGER,				/**< defines an INTEGER object */
+	ASN1_BITSTRING,				/**< defines a BIT STRING object */
+	ASN1_OCTETSTRING,			/**< defines an OCTET STRING object */
+	ASN1_NULL,					/**< defines a NULL object (0 size, no data) */
+	ASN1_OBJECTID,				/**< defines an OBJECT IDENTIFIER */
+	ASN1_OBJECTDESC,			/**< defines an OBJECT DESCRIPTION */
+	ASN1_INSTANCE,				/**< defines an INSTANCE */
+	ASN1_REAL,					/**< defines a REAL object */
 	ASN1_ENUMERATED,
 	ASN1_EMBEDDEDPDV,
 	ASN1_UTF8STRING,
 	ASN1_RELATIVEOID,
-	ASN1_SEQUENCE = 16,
-	ASN1_SET,
+	ASN1_SEQUENCE = 16,			/**< defines a SEQUENCE */
+	ASN1_SET,					/**< defines a SET */
 	ASN1_NUMERICSTRING,
 	ASN1_PRINTABLESTRING,
 	ASN1_TELETEXSTRING,
