@@ -171,7 +171,9 @@ size_t base64_decode(void *dest, const void *src, size_t len);
  * @param dest Pointer to output data stream.
  * @param src Pointer to input data stream, which must be a sequence of 0x00 and 0x01 bytes.
  * @param len Length of encoded (@p dest) data stream. (@p bpp / 8 the size of src)
- * @param bpp Number of bits-per-pixel to encode into. Note that only the low @p bpp bits of each byte in src will be encoded.
+ * @param bpp Number of bits-per-pixel to encode into.
+ * @note Only the low @p bpp bits of each byte in @p src will be encoded.
+ * @note @p bpp can be in range 1-4. Values outside that range unsupported.
  * @returns True if success, False if invalid/unsupported value of @p bpp.
  */
 bool encode_bpp(void *dest, const void *src, size_t len, uint8_t bpp);
@@ -182,6 +184,7 @@ bool encode_bpp(void *dest, const void *src, size_t len, uint8_t bpp);
  * @param dest Pointer to output data stream.
  * @param len Length of encoded (@p src) data stream. (8 / @p bpp the size of dest)
  * @param bpp Number of bits-per-pixel to decode from.
+ * @note @p bpp can be in range 1-4. Values outside that range unsupported.
  * @returns True if success, False if invalid/unsupported value of @p bpp.
  */
 bool decode_bpp(void *dest, const void *src, size_t len, uint8_t bpp);
