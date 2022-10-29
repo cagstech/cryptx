@@ -13,7 +13,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <encodex.h>
-#include <hashlib.h>
 #define CEMU_CONSOLE ((char*)0xFB0000)
 
 const uint8_t encode = {

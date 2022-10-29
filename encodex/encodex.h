@@ -167,21 +167,21 @@ size_t base64_decode(void *dest, const void *src, size_t len);
  */
 
 /***************************************************************
- * @brief Encodes an 8-bit encoded byte stream into a @p bpp bit encoded byte stream.
+ * @brief Encodes an octet-encoded byte stream into a @p bpp bit encoded byte stream.
  * @param dest Pointer to output data stream.
- * @param src Pointer to input data stream, which must be a sequence of 0x00 and 0x01 bytes.
+ * @param src Pointer to input data stream, with byte values expressible within @b bpp bits.
  * @param len Length of encoded (@p dest) data stream. (@p bpp / 8 the size of src)
  * @param bpp Number of bits-per-pixel to encode into.
- * @note Only the low @p bpp bits of each byte in @p src will be encoded.
+ * @note Only the low @p bpp bits of each byte in @p src will be preserved.
  * @note @p bpp can be in range 1-4. Values outside that range unsupported.
  * @returns True if success, False if invalid/unsupported value of @p bpp.
  */
 bool encode_bpp(void *dest, const void *src, size_t len, uint8_t bpp);
 
 /***************************************************************
- * @brief Decodes a @p bpp bit encoded byte stream into an 8-bit encoded byte stream.
- * @param src Pointer to input data stream.
- * @param dest Pointer to output data stream.
+ * @brief Decodes a @p bpp bit encoded byte stream into an octet-encoded byte stream.
+ * @param dest Pointer to output octet-encoded data stream.
+ * @param src Pointer to input data stream of @b bpp -encoded data.
  * @param len Length of encoded (@p src) data stream. (8 / @p bpp the size of dest)
  * @param bpp Number of bits-per-pixel to decode from.
  * @note @p bpp can be in range 1-4. Values outside that range unsupported.
