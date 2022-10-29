@@ -149,9 +149,9 @@ size_t base64_encode(void *dest, const void *src, size_t len);
 size_t base64_decode(void *dest, const void *src, size_t len);
 
 
-// #################################
-// ###### *N*Bpp Byte Packing ######
-// #################################
+// ##############################
+// ###### Bpp Byte Packing ######
+// ##############################
 /*
  * Bits-per-pixel is a a form of data compression in which only the
  * active bits of a series of bytes are retained and the bytes are

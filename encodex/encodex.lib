@@ -3,7 +3,5 @@
 	export	asn1_decode
 	export	base64_encode
 	export	base64_decode
-	export	encode_pack1bpp
-	export	decode_unpack1bpp
-	export	encode_pack2bpp
-	export	decode_unpack2bpp
+	export	encode_bpp
+	export	decode_bpp
