@@ -4,11 +4,24 @@ on:
   push:
     branches:
       - stable
-
+      
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: DenverCoder1/doxygen-github-pages-action@v1.1.0
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Doxygen
+        run: sudo apt-get install doxygen -y
+        shell: bash
+      - name: Generate Doxygen Documentation
+        run: doxygen
+        shell: bash
+      - name: Create .nojekyll
+        run: touch .nojekyll
+        shell: bash
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GH_REPO_TOKEN }}
+          branch: "gh-pages"
