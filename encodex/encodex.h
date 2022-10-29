@@ -167,36 +167,24 @@ size_t base64_decode(void *dest, const void *src, size_t len);
  */
 
 /***************************************************************
- * @brief Converts a byte stream of 0x00 and 0x01 bytes into a 1bpp-encoded byte stream.
+ * @brief Encodes an 8-bit encoded byte stream into a @p bpp bit encoded byte stream.
  * @param dest Pointer to output data stream.
  * @param src Pointer to input data stream, which must be a sequence of 0x00 and 0x01 bytes.
- * @param len Length of 1bpp-encoded (@b dest) data stream. (1/8 the size of src)
+ * @param len Length of encoded (@p dest) data stream. (@p bpp / 8 the size of src)
+ * @param bpp Number of bits-per-pixel to encode into. Note that only the low @p bpp bits of each byte in src will be encoded.
+ * @returns True if success, False if invalid/unsupported value of @p bpp.
  */
-void encode_pack1bpp(void *dest, const void *src, size_t len);
+bool encode_bpp(void *dest, const void *src, size_t len, uint8_t bpp);
 
 /***************************************************************
- * @brief Converts a 1bpp-encoded byte stream into 0x00 and 0x01 bytes.
+ * @brief Decodes a @p bpp bit encoded byte stream into an 8-bit encoded byte stream.
  * @param src Pointer to input data stream.
  * @param dest Pointer to output data stream.
- * @param len Length of 1bpp-encoded (@b src) data stream. (8x the size of dest)
+ * @param len Length of encoded (@p src) data stream. (8 / @p bpp the size of dest)
+ * @param bpp Number of bits-per-pixel to decode from.
+ * @returns True if success, False if invalid/unsupported value of @p bpp.
  */
-void decode_unpack1bpp(void *dest, const void *src, size_t len);
-
-/***************************************************************
- * @brief Converts a byte stream of 0x00-0x03 bytes into a 2bpp-encoded byte stream.
- * @param src Pointer to input data stream, which must be a sequence of bytes in the range 0x00 to 0x03.
- * @param dest Pointer to output data stream.
- * @param len Length of 2bpp-encoded (@b dest) data stream. (1/4 the size of src)
- */
-void encode_pack2bpp(void *dest, const void *src, size_t len);
-
-/***************************************************************
- * @brief Converts a 2bpp-encoded byte stream into bytes in the range 0x00 to 0x03.
- * @param src Pointer to input data stream.
- * @param dest Pointer to output data stream.
- * @param len Length of 2bpp-encoded (@b src) data stream. (4x the size of dest)
- */
-void decode_unpack2bpp(void *dest, const void *src, size_t len);
+bool decode_bpp(void *dest, const void *src, size_t len, uint8_t bpp);
 
 
 
