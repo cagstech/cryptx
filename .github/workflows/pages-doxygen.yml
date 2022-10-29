@@ -15,7 +15,7 @@ jobs:
         run: sudo apt-get install doxygen -y
         shell: bash
       - name: Generate Doxygen Documentation
-        run: doxygen
+        run: doxygen docs/.doxyfile
         shell: bash
       - name: Create .nojekyll
         run: touch .nojekyll
