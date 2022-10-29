@@ -3,7 +3,7 @@ name: GitHub Pages
 on:
   push:
     branches:
-      - main  # Set a branch name to trigger deployment
+      - stable  # Set a branch name to trigger deployment
   pull_request:
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
         # If you're changing the branch from main,
         # also change the `main` in `refs/heads/main`
         # below accordingly.
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/stable' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          publish_dir: docs
