@@ -188,8 +188,8 @@ asn1_decode:
 base64_encode:
 	ld	hl, -16
 	call	ti._frameset
-	ld	de, (ix + 9)
-	ld	iy, (ix + 12)
+	ld	iy, (ix + 6)
+	ld	de, (ix + 12)
 	ld	bc, 2
 	push	de
 	pop	hl
@@ -211,12 +211,12 @@ base64_encode:
 	push	bc
 	pop	de
 	inc	de
-	ld	iy, (ix + 6)
+	ld	iy, (ix + 9)
 	ld	(ix - 6), bc
 	add	iy, bc
 	push	de
 	pop	hl
-	ld	bc, (ix + 9)
+	ld	bc, (ix + 12)
 	or	a, a
 	sbc	hl, bc
 	ld	bc, 0
@@ -232,11 +232,11 @@ base64_encode:
 	ld	a, (iy)
 	push	de
 	pop	hl
-	ld	bc, (ix + 9)
+	ld	bc, (ix + 12)
 	or	a, a
 	sbc	hl, bc
 	jr	nc, .lbl_6
-	ld	hl, (ix + 6)
+	ld	hl, (ix + 9)
 	add	hl, de
 	inc	de
 	ld	bc, 0
@@ -264,7 +264,7 @@ base64_encode:
 	add	hl, de
 	ld	a, (hl)
 	ld	de, (ix - 3)
-	ld	iy, (ix + 12)
+	ld	iy, (ix + 6)
 	add	iy, de
 	ld	(iy), a
 	push	bc
@@ -316,8 +316,8 @@ base64_encode:
 	add	hl, de
 	ld	(ix - 3), hl
 	ld	(iy + 3), a
-	ld	iy, (ix + 12)
-	ld	de, (ix + 9)
+	ld	iy, (ix + 6)
+	ld	de, (ix + 12)
 	ld	bc, (ix - 6)
 	jp	.lbl_1
 .lbl_8:
@@ -366,14 +366,14 @@ base64_encode:
 base64_decode:
 	ld	hl, -24
 	call	ti._frameset
-	ld	de, (ix + 9)
+	ld	de, (ix + 12)
 	or	a, a
 	sbc	hl, hl
 	ld	a, e
 	and	a, 3
 	or	a, a
 	jp	nz, .lbl_24
-	ld	iy, (ix + 6)
+	ld	iy, (ix + 9)
 	ld	c, 2
 	push	de
 	pop	hl
@@ -402,13 +402,13 @@ base64_decode:
 	pop	iy
 	ld	(ix - 9), bc
 .lbl_6:
-	ld	de, (ix + 9)
+	ld	de, (ix + 12)
 	lea	hl, iy
 	or	a, a
 	sbc	hl, de
 	jp	nc, .lbl_23
 	lea	de, iy
-	ld	hl, (ix + 6)
+	ld	hl, (ix + 9)
 	add	hl, de
 	ld	a, (hl)
 	cp	a, 61
@@ -433,7 +433,7 @@ base64_decode:
 .lbl_9:
 	ld	(ix - 15), hl
 	lea	de, iy
-	ld	iy, (ix + 6)
+	ld	iy, (ix + 9)
 	add	iy, de
 	ld	a, (iy + 1)
 	cp	a, 61
@@ -456,7 +456,7 @@ base64_decode:
 .lbl_11:
 	ld	(ix - 18), hl
 	ld	de, (ix - 3)
-	ld	iy, (ix + 6)
+	ld	iy, (ix + 9)
 	add	iy, de
 	ld	a, (iy + 2)
 	cp	a, 61
@@ -478,7 +478,7 @@ base64_decode:
 	sbc	hl, de
 .lbl_13:
 	ld	de, (ix - 3)
-	ld	iy, (ix + 6)
+	ld	iy, (ix + 9)
 	add	iy, de
 	ld	a, (iy + 3)
 	cp	a, 61
@@ -550,7 +550,7 @@ base64_decode:
 	ld	l, 16
 	call	ti._lshru
 	ld	a, c
-	ld	hl, (ix + 12)
+	ld	hl, (ix + 6)
 	add	hl, de
 	inc	de
 	ld	(hl), a
@@ -564,7 +564,7 @@ base64_decode:
 	sbc	hl, de
 	jr	nc, .lbl_19
 	ld	a, iyh
-	ld	hl, (ix + 12)
+	ld	hl, (ix + 6)
 	add	hl, bc
 	inc	bc
 	ld	(hl), a
@@ -576,7 +576,7 @@ base64_decode:
 	sbc	hl, de
 	jr	nc, .lbl_21
 	ld	a, iyl
-	ld	hl, (ix + 12)
+	ld	hl, (ix + 6)
 	add	hl, bc
 	inc	bc
 	ld	(ix - 9), bc

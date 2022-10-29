@@ -130,28 +130,46 @@ size_t asn1_decode(void *asn1_data, size_t len, asn1_obj_t *objs, size_t iter_co
 
 /***************************************************************
  * @brief Converts an octet-encoded byte stream into a sextet-encoded byte stream.
- * @param in Pointer to octet-encoded data stream.
+ * @param dest Pointer to output sextet-encoded data stream.
+ * @param src Pointer to input octet-encoded data stream.
  * @param len Length of octet-encoded data stream.
- * @param out Pointer to sextet-encoded data stream.
- * @note @b out should be at least  len * 4 / 3 bytes large.
+ * @note @b dest should be at least  len * 4 / 3 bytes large.
  * @returns Length of output sextet.
  */
-size_t base64_encode(const void *src, size_t len, void *dest);
+size_t base64_encode(void *dest, const void *src, size_t len);
 
 /***************************************************************
  * @brief Converts a sextet-encoded byte stream into a octet-encoded byte stream.
- * @param in Pointer to sextet-encoded data stream.
+ * @param dest Pointer to output octet-encoded data stream.
+ * @param src Pointer to input sextet-encoded data stream.
  * @param len Length of sextet-encoded data stream.
- * @param out Pointer to octet-encoded data stream.
- * @note @b out should be at least len * 3 / 4 bytes large.
+ * @note @b dest should be at least len * 3 / 4 bytes large.
  * @returns Length of output octet.
  */
-size_t base64_decode(const void *src, size_t len, void *dest);
+size_t base64_decode(void *dest, const void *src, size_t len);
+
+
+// #################################
+// ###### *N*Bpp Byte Packing ######
+// #################################
+/*
+ * Bits-per-pixel is a a form of data compression in which only the
+ * active bits of a series of bytes are retained and the bytes are
+ * compressed such that each octet contains multiple "bytes" worth of data.
+ * For example, imagine a 4-byte long data stream with possible values
+ * 0x00 - 0x03. In this scheme, only the low 2 bits of each byte are
+ * actually used (0x00 = 0b00000000, 0x01 = 0b00000001, 0x02 = 0b00000010,
+ * 0x03 = 0b00000011). This means we are wasting 6 bits, or 75% of the
+ * data used to represent it.
+ * The correct encoding scheme to use here is 2-bpp (2 bits-per-pixel).
+ * This would express each "byte" in the stream as two bits, allowing us
+ * to compress the data, previously 4 bytes, into a single byte, losslessly.
+ */
 
 /***************************************************************
  * @brief Converts a byte stream of 0x00 and 0x01 bytes into a 1bpp-encoded byte stream.
- * @param src Pointer to input data stream, which must be a sequence of 0x00 and 0x01 bytes.
  * @param dest Pointer to output data stream.
+ * @param src Pointer to input data stream, which must be a sequence of 0x00 and 0x01 bytes.
  * @param len Length of 1bpp-encoded (@b dest) data stream. (1/8 the size of src)
  */
 void encode_pack1bpp(void *dest, const void *src, size_t len);
