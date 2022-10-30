@@ -15,6 +15,7 @@ body {display:flex; flex-direction:row; font-family: Lato,proxima-nova,Helvetica
 #content .major-header {padding:1% 0; margin-top:2%; font-size:120%;}
 th {text-align:left; background:lightgray;}
 dl {margin-left:2.5%;}
+dd {font-weight:bold;}
 
 .function-doc {background:rgba(85, 165, 217,.3); border-top:2px solid rgb(85, 165, 217); margin:2% 0; width:auto; display:inline-block; padding:1%; font-weight:bold;}
 .function-doc + p {margin:0; margin-left:5%;}
