@@ -8,9 +8,16 @@ body {display:flex; flex-direction:row; font-family: Lato,proxima-nova,Helvetica
 .navitem {color:white; padding:1% 0; padding-left:10%; cursor:pointer; cursor:hand;}
 .navitem:hover:not(.active) {background:#454545;}
 .active {background:white; color:black;}
-#content {flex:3;}
+#content {flex:3; overflow:auto;}
 #content>div {margin:0 10%;}
 #content a {color:#55a5d9;}
 .code {font-family:monospace; background:lightgray; padding:2px; margin:5px 0;}
-#content .major-header {padding:1% 0; margin-top:4%; font-size:120%;}
+#content .major-header {padding:1% 0; margin-top:2%; font-size:120%;}
 th {text-align:left; background:lightgray;}
+dl {margin-left:2.5%;}
+
+.function-doc {background:rgba(85, 165, 217,.3); border-top:2px solid rgb(85, 165, 217); margin:2% 0; width:auto; display:inline-block; padding:1%; font-weight:bold;}
+.function-doc + p {margin:0; margin-left:5%;}
+.function-doc + p>dl {margin-left:5%;}
+.param {color: #55a5d9; font-weight:bold;}
+.return {color:blue; font-weight:bold;}

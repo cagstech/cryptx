@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>CryptX Documentation</title>
+		<link type="text/css" rel="stylesheet" href="style.css" />
+		<style>
+		</style>
+	</head>
+	<body>
+		<div id="sidebar">
+			<div id="title">
+				CryptX
+				<span style="font-size:50%;">10.0</span>
+			</div><br />
+			<div class="major-header">INTRODUCTION</div>
+				<div class="navitem"><a href="index.html">What is CryptX?</a></div>
+				<div class="navitem"><a href="installing.html">Installing the Libraries</a></div>
+			<div class="major-header">COMPONENTS &amp; API</div>
+				<div class="navitem active">HASHLIB</div>
+				<div class="navitem"><a href="encrypt.html">ENCRYPT</a></div>
+				<div class="navitem"><a href="encodex.html">ENCODEX</a></div>
+			<div class="major-header">MORE INFO</div>
+				<div class="navitem">Cryptanalysis (PDF)</div>
+				<div class="navitem">About the Devs</div>
+				<div class="navitem">How to Contribute</div>
+				<div class="navitem">Legal</div>
+			
+		</div>
+		<div id="content"><div>
+			<p><span style="font-weight:bold;">HASHLIB</span>, as its name suggests, provides hash support for the calculator.</p>
+			<div class="major-header">Authors</div>
+			<ul>
+				<li>Anthony Cagliano</li>
+				<li>Adam Beckingham</li>
+			</ul>
+			<div class="major-header">Definitions</div>
+			<dl>
+				<dt>Hash</dt>
+				<dd>A <span style="font-weight:bold;">hash</span> is a non-invertible cryptographic algorithm that converts an arbitrarily long stream of data into a digest of fixed size. Cryptographic hashes are generally used to ensure that the content of a data stream has not changed between two points in time or transmission. This is possible because even the smallest change to the data causes a drastic change in the resulting hash.</dd><br />
+				<dt>HMAC</dt>
+				<dd>An <span style="font-weight:bold;">HMAC</span> is a keyed hash. It works in exactly the same way as a normal hash, except the initial hash state is transformed using a key before the data is hashed. HMAC is used for endpoint validation. This works because if you do not know the key, you cannot generate an HMAC that the other party can validate, nor can you validate information coming from the other party.</dd><br />
+				<dt>salt</dt>
+				<dd>An <span style="font-weight:bold;">salt</span> is a buffer of arbitrary size filled with securely-random bytes. Current standards recommend that salts be no less than 16 bytes (128 bits) in length.</dd>
+			</dl>
+			<div class="major-header">API Documentation</div>
+			<div class="function-doc">enum hash_algorithms { SHA256 };</div>
+			<p>Defines the supported hash algorithms.</p>
+			<div class="function-doc">typedef struct {...} hash_ctx;</div>
+			<p>Defines the hash state context for use with the hashing API</p>
+			<div class="function-doc">bool hash_init(hash_ctx* ctx, uint8_t hash_alg);</div>
+			<p>Initializes the hash state for use with a data stream.<br /><br />
+				<span class="param">ctx</span>: Pointer to a hash state context to initalize<br />
+				<span class="param">hash_alg</span>: Identifier for the hash algorithm to use (see hash_algorithms)<br />
+				<span class="return">output</span>: True if success, False if failed
+			</p>
+			<div class="function-doc">void hash_update(hash_ctx* ctx, const void* data, size_t len);</div>
+			<p>Updates the hash state for the given data.<br /><br />
+			<span class="param">ctx</span>: Pointer to a hash state context to update<br />
+			<span class="param">data</span>: Pointer to data to hash<br />
+			<span class="param">len</span>: Length of data to hash<br />
+			</p>
+			<div class="function-doc">void hash_final(hash_ctx* ctx, void* digest);</div>
+			<p>Returns a digest from the current hash state.<br /><br />
+			<span class="param">ctx</span>: Pointer to a hash state context<br />
+			<span class="param">digest</span>: Pointer to buffer to output digest to<br />
+			</p>
+			<div class="function-doc">bool hash_mgf1(const void* data, size_t datalen, void* outbuf, size_t outlen, uint8_t hash_alg);</div>
+			<p>Returns an arbitrary-length digest by iterating the hash of the data and a counter.<br /><br />
+			<span class="param">data</span>: Pointer to data to hash<br />
+			<span class="param">datalen</span>: Length of data to hash<br />
+			<span class="param">outbuf</span>: Pointer to buffer to write digest to<br />
+			<span class="param">outlen</span>: Length of digest to generate<br />
+			<span class="param">hash_alg</span>: Identifier for the hash algorithm to use (see hash_algorithms)<br />
+			<span class="return">output</span>: True if success, False if failed
+			</p>
+			<div class="function-doc">typedef struct {...} hmac_ctx;</div>
+			<p>Defines the hmac state context for use with the hmac API</p>
+			<div class="function-doc">bool hmac_init(hmac_ctx* ctx, const void* key, size_t keylen, uint8_t hash_alg);</div>
+			<p>Initializes the hmac state for use with a data stream.<br /><br />
+			<span class="param">ctx</span>: Pointer to a hmac state context to initalize<br />
+			<span class="param">key</span>: Pointer to a key to intialize with<br />
+			<span class="param">keylen</span>: Length of the key<br />
+			<span class="param">hash_alg</span>: Identifier for the hash algorithm to use (see hash_algorithms)<br />
+			<span class="return">output</span>: True if success, False if failed
+			</p>
+			<div class="function-doc">void hmac_update(hmac_ctx* ctx, const void* data, size_t len);</div>
+			<p>Updates the hmac state for the given data.<br /><br />
+			<span class="param">ctx</span>: Pointer to a hmac state context to update<br />
+			<span class="param">data</span>: Pointer to data to hash<br />
+			<span class="param">len</span>: Length of data to hash<br />
+			</p>
+			<div class="function-doc">void hmac_final(hmac_ctx* ctx, void* digest);</div>
+			<p>Returns a digest from the current hmac state.<br /><br />
+			<span class="param">ctx</span>: Pointer to a hmac state context<br />
+			<span class="param">digest</span>: Pointer to buffer to output digest to<br />
+			</p>
+			<div class="function-doc">bool hmac_pbkdf2(const void* password, size_t passlen, void* key, size_t keylen, const void* salt, size_t saltlen, uint8_t hash_alg);</div>
+			<p>Generates a key of arbitrary length from a password and a salt using an hmac algorithm.<br /><br />
+			<span class="param">password</span>: Pointer to password to generate key from<br />
+			<span class="param">passlen</span>: Length of password<br />
+			<span class="param">key</span>: Pointer to buffer to write key to<br />
+			<span class="param">keylen</span>: Length of key to generate<br />
+			<span class="param">salt</span>: Pointer to a salt to include in the keygen<br />
+			<span class="param">saltlen</span>: Length of the salt<br />
+			<span class="param">hash_alg</span>: Identifier for the hash algorithm to use (see hash_algorithms)<br />
+			<span class="return">output</span>: True if success, False if failed
+			</p>
+			<div class="function-doc">bool digest_tostring(const void* digest, size_t len, char* hexstr);</div>
+			<p>Converts a raw digest to a hexadecimal string.<br /><br />
+			<span class="param">digest</span>: Pointer to digest to convert<br />
+			<span class="param">len</span>: Length of the digest<br />
+			<span class="param">hexstr</span>: Buffer to write hex string to<br />
+			<span class="return">output</span>: True if success, False if failed
+			</p>
+			<div class="function-doc">bool digest_compare(const void* digest1, const void* digest2, size_t len);</div>
+			<p>Checks two buffers for bytewise equality using a method that defeats timing analysis.<br /><br />
+			<span class="param">digest1</span>: Pointer to the first digest<br />
+			<span class="param">digest2</span>: Pointer to the second digest<br />
+			<span class="param">len</span>: Number of bytes to compare<br />
+			<span class="return">output</span>: True if buffers match, False if not
+			</p>
+			<br />
+		</div></div>
+	</body>
+</html>
