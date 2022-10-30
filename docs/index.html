@@ -1,7 +1,54 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<title>CryptX Documentation</title>
+		<link type="text/css" rel="stylesheet" href="style.css" />
 	</head>
 	<body>
+		<div id="sidebar">
+			<div id="title">
+				CryptX
+				<span style="font-size:50%;">10.0</span>
+			</div><br />
+			<div class="major-header">INTRODUCTION</div>
+				<div class="navitem active">What is CryptX?</div>
+				<div class="navitem">Installing the Libraries</div>
+			<div class="major-header">COMPONENTS &amp; API</div>
+				<div class="navitem">HASHLIB</div>
+				<div class="navitem">ENCRYPT</div>
+				<div class="navitem">ENCODEX</div>
+			<div class="major-header">MORE INFO</div>
+				<div class="navitem">Cryptanalysis (PDF)</div>
+				<div class="navitem">About the Devs</div>
+				<div class="navitem">How to Contribute</div>
+				<div class="navitem">Legal</div>
+			
+		</div>
+		<div id="content"><div>
+			<p><span style="font-weight:bold">CryptX</span> is a suite of libraries designed to integrate with the <a target="_blank" href="https://github.com/CE-Programming/toolchain">C and ez80 assembly toolchain</a> for the Texas Instruments TI-84+ CE. As the name implies, this suite provides cryptography for the calculator. For ease of use and organization, the suite consists of three (3) libraries providing distinct functionality: cryptographic hashing, encryption, and encoding.</p>
+			<p>CryptX is not just another haphazard construction similar to others you might see in the software archives of several calculator programming websites that boasts password storage or the ability to hide or protect files. CryptX was written by a cryptographer, in partnership with experts on the intricacies of the TI-84+ CE hardware, and implements some of the most secure encryption technologies in existence, porting them in a manner that provides modest security while also remaining feasible to run on the calculator.</p>
+			<p>How does CryptX provide security, you might ask? Let&apos;s count the ways.<br />
+				<ul>
+					<li>SHA-256 cryptographic hash</li>
+					<li>HMAC (SHA-256)</li>
+					<li>Password-based key derivation (PBKDF2_HMAC)</li>
+					<li>An entropy-based hardware RNG</li>
+					<li>Advanced Encryption Standard (AES-128, AES-192, AES-256)</li>
+					<li>RSA Public Key Encryption with OAEPv2.2</li>
+					<li>DER decoding (ASN.1)</li>
+					<li>Base64 encoding &amp; decoding (supports PEM)</li>
+					<li>Bits-per-pixel packing &amp; unpacking</li>
+					<li>Timing-analysis-resistant buffer comparison</li>
+					<li>Support for authenticated encryption (encryption + HMAC)</li>
+				</ul>
+				CryptX not only provides all these implementations, but it also internally guards against:
+				<ul>
+					<li>timing analysis</li>
+					<li>stack/buffer leak</li>
+					<li>memory mapping via USB I/O</li>
+				</ul>
+				For details on this, see the full <a>Cryptanalysis</a>. Otherwise, for further help with installing and using the libraries, check out the links in the sidebar.
+			</p>
+		</div></div>
 	</body>
 </html>
