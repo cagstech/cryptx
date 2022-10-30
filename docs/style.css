@@ -12,7 +12,7 @@ body {display:flex; flex-direction:row; font-family: Lato,proxima-nova,Helvetica
 #content>div {margin:0 10%;}
 #content a {color:#55a5d9;}
 .code {font-family:monospace; background:lightgray; padding:2px; margin:5px 0;}
-#content .major-header {padding:1% 0; margin-top:2%; font-size:120%;}
+#content .major-header {padding:1% 0; margin-top:2%; font-size:120%; font-weight:bold;}
 th {text-align:left; background:lightgray;}
 dl {margin-left:2.5%;}
 dt {font-weight:bold;}
