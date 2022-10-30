@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>CryptX Documentation</title>
+		<link type="text/css" rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<div id="sidebar">
+			<div id="title">
+				CryptX
+				<span style="font-size:50%;">10.0</span>
+			</div><br />
+			<div class="major-header">INTRODUCTION</div>
+				<div class="navitem"><a href="index.html">What is CryptX?</a></div>
+				<div class="navitem active">Installing the Libraries</div>
+			<div class="major-header">COMPONENTS &amp; API</div>
+				<div class="navitem">HASHLIB</div>
+				<div class="navitem">ENCRYPT</div>
+				<div class="navitem">ENCODEX</div>
+			<div class="major-header">MORE INFO</div>
+				<div class="navitem">Cryptanalysis (PDF)</div>
+				<div class="navitem">About the Devs</div>
+				<div class="navitem">How to Contribute</div>
+				<div class="navitem">Legal</div>
+			
+		</div>
+		<div id="content"><div>
+			<p>Before you do anything with the libraries, you must download the project. You can do this by downloading the <a target="_blank"  href="https://github.com/acagliano/cryptx/releases/latest">latest release</a> from the project repository. Alternatively, you can clone the repository by running the following command in Terminal or Command Prompt:<br /><span class="code">git clone https://github.com/acagliano/cryptx.git</span>.</p>
+			<div class="major-header">Sending to your Calculator</div>
+			<p>The binaries within <span style="font-weight:bold">CryptX</span> are distributed as a single package or as individually libraries. For the former, you will want to seek out the <span style="font-family:monospace;">CryptX.8xg</span> file in the downloaded package. If you want individual libraries, look into the <span style="font-family:monospace;">HASHLIB, ENCRYPT, and ENCODEX</span> directories for a <span style="font-family:monospace;">.8xv</span> file sharing the same name as the library. Once you have located the binaries you want to install, you will want to connect your calculator to your computer using a USB-A to mini-B cable and use your preferred connectivity software to transfer the binaries to your device.</p>
+			<div class="major-header">Installing to the Toolchain (for developers)</div>
+			<p>If you are a developer who wants to use CryptX in one of your own projects, it gets a bit more complicated. In order to build as a dynamic library (which is how CryptX is designed) you will need the <span style="font-family:monospace;">.lib and .h</span> files for each library moved into the appropriate directories within the toolchain.
+				<table style="width:60%;">
+					<col width="30%" />
+					<col width="70%" />
+					<tr><th>File Extension</th><th>Target Directory</th></tr>
+					<tr><td>.h</td><td>&lt;CEdev_root&gt;/include</td></tr>
+					<tr><td>.lib</td><td>&lt;CEdev_root&gt;/lib/libload</td></tr>
+				</table><br />
+				Once this is done, you should be able to include the library headers in your project the same way you would any other C standard library.<br />
+				Ex: <span class="code">#include &lt;encrypt.h&gt;</span>
+			</p>
+		</div></div>
+	</body>
+</html>
