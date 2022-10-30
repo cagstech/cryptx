@@ -23,3 +23,11 @@ dt {font-weight:bold;}
 .param {color: #55a5d9; font-weight:bold;}
 .return {color:blue; font-weight:bold;}
 .more-info {background:rgba(210,180,140,.3); padding:5px; display:block; margin-top:5px; font-size:90%;}
+
+@media print {
+	@page { size:8.5in 11in; margin:0; padding:0; }
+	html,body {page; margin:0; padding:0;}
+	body {height:auto;}
+	sidebar {height:100vh;}
+	#content {height:100%;}
+}
