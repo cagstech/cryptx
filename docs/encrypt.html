@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>CryptX Documentation</title>
+		<link type="text/css" rel="stylesheet" href="style.css" />
+		<style>
+		</style>
+	</head>
+	<body>
+		<div id="sidebar">
+			<div id="title">
+				CryptX
+				<span style="font-size:50%;">10.0</span>
+			</div><br />
+			<div class="major-header">INTRODUCTION</div>
+				<div class="navitem"><a href="index.html">What is CryptX?</a></div>
+				<div class="navitem"><a href="installing.html">Installing the Libraries</a></div>
+			<div class="major-header">COMPONENTS &amp; API</div>
+				<div class="navitem"><a href="hashlib.html">HASHLIB</a></div>
+				<div class="navitem active">ENCRYPT</div>
+				<div class="navitem"><a href="encodex.html">ENCODEX</a></div>
+			<div class="major-header">MORE INFO</div>
+				<div class="navitem">Cryptanalysis (PDF)</div>
+				<div class="navitem">About the Devs</div>
+				<div class="navitem">How to Contribute</div>
+				<div class="navitem">Legal</div>
+			
+		</div>
+		<div id="content"><div>
+			<p><span style="font-weight:bold;">ENCRYPT</span>, as its name suggests, provides multiple encryption algorithms for the calculator.</p>
+			<div class="major-header">Authors</div>
+			<ul>
+				<li>Anthony Cagliano</li>
+				<li>Adam Beckingham</li>
+				<li>jacobly</li>
+				<li>Zeroko</li>
+			</ul>
+			<div class="major-header">Definitions</div>
+			<dl>
+				<dt>SRNG (Secure Random Number Generator)</dt>
+				<dd>A random number generator that provides (1) statistical randomness, (2) unpredictability, (3) resistance to state compromise.</dd><br />
+				<dt>Encryption</dt>
+				<dd>A reversible transformation of data designed to render it difficult for an unauthorized party to read. Another word for this is a <span style="font-weight:bold;">cipher</span>.</dd><br />
+				<dt>Symmetric Encryption</dt>
+				<dd>An encryption system in which a single key works for both encryption and decryption.</dd><br />
+				<dt>Asymmetric Encryption</dt>
+				<dd>An encryption system in which one key is used for encryption and a seperate key is used for decryption and there is some mathematical relationship between the two keys that allows them to reverse each other.</dd><br />
+				<dt>Advanced Encryption Standard (AES)</dt>
+				<dd>A symmetric encryption system defined by (1) 128, 192, or 256 bit keys (16, 24, 32 bytes), (2) a 128-bit (16 byte) block size, (3) 10-, 12-, and 14-round variants (depending on key size), and (4) a 128-bit (16 byte) randomized <span style="text-style:italic;">initialization vector</span>. AES, when properly implemented, remains unbroken.<br />
+					<span style="font-weight:bold">Round</span> means number of times the algorithm performs transformations on the data. For example, AES-128 has 10 rounds of encryption. This means the transformation is repeated ten (10) times.
+				</dd><br />
+				<dt>RSA</dt>
+				<dd>An asymmetric encryption system defined by two keys: one that is sent in the clear (public key) consisting of a public exponent and public modulus, and one that is kept secret (private key) consisting of a private exponent and private modulus. The public key is used to encrypt messages, the private is used to decrypt. The two are modular inverses of each other, such that:<br />
+					<span class="code">
+						encrypted = message <sup>public exponent</sup> % public modulus<br />
+						message = encrypted <sup>private exponent</sup> % private modulus
+					</span><br />
+					Common key lengths are between 1024 and 2048 bits (128 bytes and 256 bytes), though 1024-bit RSA has been broken for some time. It is recommended to use a length on the higher end of the range, but do keep in mind that computation will take longer.</dd>
+				</dd><br />
+			</dl>
+			<div class="major-header">API Documentation</div>
+			<div class="function-doc">bool csrand_init(void);</div>
+			<p>Initializes the secure RNG.<br /><br />
+				<span class="return">output</span>: True if success, False if failed
+			</p>
+			<div class="function-doc">uint32_t csrand_get(void);</div>
+			<p>Returns a securely random 32-bit (4 byte) integer.<br /><br />
+			<span class="return">output</span>: A 32-bit random integer
+			</p>
+			<div class="function-doc">bool csrand_fill(void* buffer, size_t size);</div>
+			<p>Fills a buffer with securely random bytes.<br /><br />
+				<span class="param">buffer</span>: Pointer to a buffer to fill with random bytes<br />
+				<span class="param">size</span>: Length of the buffer<br />
+				<span class="return">output</span>: True if success, False if failed
+			</p>
+			<div class="function-doc">typedef struct aes_ctx;</div>
+			<p>Defines state data for an AES context.
+			</p>
+			<div class="function-doc">enum aes_cipher_modes { AES_MODE_CBC, AES_MODE_CTR };</div>
+			<p>Defines supported AES cipher modes.
+			</p>
+			<div class="function-doc">enum aes_padding_schemes { PAD_PKCS7, PAD_DEFAULT = PAD_PKCS7, PAD_ISO2 = 4 };</div>
+			<p>Defines supported padding schemes for AES CBC mode
+			</p>
+			<div class="function-doc">#define AES_CTR_NONCELEN(len)   ((0x0f & len)&lt;&lt;4)</div>
+			<p>Defines a macro for passing a nonce (salt) length to aes_init's flags parameter.</p>
+			<div class="function-doc">#define AES_CTR_COUNTERLEN(len) ((0x0f & len)&lt;&lt;8)</div>
+			<p>Defines a macro for passing a counter length to aes_init's flags parameter.
+			</p>
+			<div class="function-doc">typedef enum { AES_OK, AES_INVALID_ARG, AES_INVALID_MSG, AES_INVALID_CIPHERMODE, AES_INVALID_PADDINGMODE, AES_INVALID_CIPHERTEXT, AES_INVALID_OPERATION } aes_error_t;</div>
+			<p>Defines possible responses codes from calls to the AES API.
+			</p>
+			<div class="function-doc">aes_error_t aes_init(aes_ctx* ctx, const void* key, size_t keylen, const void* iv, uint24_t flags);</div>
+			<p>Initializes a stateful and one-directional AES context.<br /><br />
+			<span class="param">ctx</span>: Pointer to an AES context<br />
+			<span class="param">key</span>: Pointer to the key to use with the AES context<br />
+			<span class="param">keylen</span>: Length of the key, in bytes<br />
+			<span class="param">iv</span>: Pointer to a 16-byte initialization vector (salt)<br />
+			<span class="param">flags</span>: A series of cipher options bitwise-ORd together.<br />
+			<span class="return">output</span>: An aes_error_t indicating the status of the AES operation<br />
+				<span class="more-info"><span style="font-weight:bold;">Cipher Options Flags</span><br />
+					Cipher Mode: AES_MODE_CTR, AES_MODE_CBC<br />
+					For AES CBC mode: PAD_DEFAULT, PAD_PKCS7, PAD_ISO2<br />
+					For AES CTR mode: AES_CTR_NONCELEN(len), AES_CTR_COUNTERLEN(len)
+					</span>
+
+			</p>
+			<div class="function-doc">aes_error_t aes_encrypt(const aes_ctx* ctx, const void* plainrtext, size_t len, void* ciphertext);</div>
+			<p>Encrypts a stream of data and updates the AES context such that (1) it will return AES_INVALID_OPERATION if used with decryption, and (2) you can pass the next stream of data to aes_encrypt() using the same context.<br /><br />
+			<span class="param">ctx</span>: Pointer to AES context<br />
+			<span class="param">plaintext</span>: Pointer to stream of data to encrypt<br />
+			<span class="param">len</span>: Length of data to encrypt<br />
+			<span class="param">ciphertext</span>: Pointer to buffer to write encrypted data to<br />
+			<span class="return">output</span>: An aes_error_t indicating the status of the AES operation
+			</p>
+			<div class="function-doc">aes_error_t aes_decrypt(const aes_ctx* ctx, const void* ciphertext, size_t len, void* plaintext);</div>
+			<p>Decrypts a stream of data and updates the AES context such that (1) it will return AES_INVALID_OPERATION if used with encryption, and (2) you can pass the next stream of data to aes_decrypt() using the same context.<br /><br />
+			<span class="param">ctx</span>: Pointer to AES context<br />
+			<span class="param">plaintext</span>: Pointer to stream of data to decrypt<br />
+			<span class="param">len</span>: Length of data to decrypt<br />
+			<span class="param">ciphertext</span>: Pointer to buffer to write decrypted data to<br />
+			<span class="return">output</span>: An aes_error_t indicating the status of the AES operation
+			</p>
+			<div class="function-doc">typedef enum { RSA_OK, RSA_INVALID_ARG,  RSA_INVALID_MSG, RSA_INVALID_MODULUS, RSA_ENCODING_ERROR } rsa_error_t;</div>
+			<p>Defines possible response codes from calls to the RSA API
+			</p>
+			<div class="function-doc">rsa_error_t rsa_encrypt(const void* msg, size_t msglen, void* ciphertext, const void* pubkey, size_t keylen, uint8_t oaep_hash_alg);</div>
+			<p>Encrypts a message using the RSA algorithm, applying the <span style="text-style:italic;">Optimal Asymmetic Encryption Padding</span> scheme (OAEPv2.2) prior to encryption.<br /><br />
+			<span class="param">msg</span>: Pointer to message to encrypt<br />
+			<span class="param">msglen</span>: Length of message to encrypt<br />
+			<span class="param">ciphertext</span>: Pointer to buffer to write encrypted message to<br />
+			<span class="param">pubkey</span>: Pointer to public modulus to encrypt with<br />
+			<span class="param">keylen</span>: Length, in bytes, of the public modulus<br />
+			<span class="return">output</span>: An rsa_error_t indicating the status of the RSA operation
+			</p>
+			<br />
+		</div></div>
+	</body>
+</html>

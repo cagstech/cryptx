@@ -21,3 +21,4 @@ dl {margin-left:2.5%;}
 .function-doc + p>dl {margin-left:5%;}
 .param {color: #55a5d9; font-weight:bold;}
 .return {color:blue; font-weight:bold;}
+.more-info {background:rgba(255,255,0,.5); padding:5px; display:block; margin-top:5px;}
