@@ -48,19 +48,18 @@
 				<dt>Octet Encoding</dt>
 				<dd>The standard encoding format in which each byte expresses 8 bits of information.</dd><br />
 			</dl>
-			<div class="major-header">API Documentation</div>
-			<div class="function-doc">typedef struct asn1_obj_t;</div>
-			<p>Defines a structure for the decoding of ASN.1-encoded objects.
-			</p>
+			<div class="major-header">Macros</div>
+			<div class="major-header">Enumerations</div>
 			<div class="function-doc">enum ASN1_TYPES { ASN1_RESVD = 0, ASN1_BOOLEAN, ASN1_INTEGER, ASN1_BITSTRING,	ASN1_OCTETSTRING, ASN1_NULL, ASN1_OBJECTID, ASN1_OBJECTDESC, ASN1_INSTANCE, ASN1_REAL, ASN1_ENUMERATED, ASN1_EMBEDDEDPDV, ASN1_UTF8STRING, ASN1_RELATIVEOID, ASN1_SEQUENCE = 16, ASN1_SET, ASN1_NUMERICSTRING, ASN1_PRINTABLESTRING, ASN1_TELETEXSTRING, ASN1_VIDEOTEXSTRING, ASN1_IA5STRING, ASN1_UTCTIME, ASN1_GENERALIZEDTIME, ASN1_GRAPHICSTRING, ASN1_VISIBLESTRING, ASN1_GENERALSTRING, ASN1_UNIVERSALSTRING, ASN1_CHARSTRING, ASN1_BMPSTRING };</div>
-			<p>Defines possible ASN.1 basic tag types.
-			</p>
+			<p>Defines possible ASN.1 basic tag types.</p>
 			<div class="function-doc">enum ASN1_CLASSES { ASN1_UNIVERSAL, ASN1_APPLICATION, ASN1_CONTEXTSPEC, ASN1_PRIVATE };</div>
-			<p>Defines possible class types for ASN.1-encoded objects.
-			</p>
+			<p>Defines possible class types for ASN.1-encoded objects.</p>
 			<div class="function-doc">enum ASN1_FORMS { ASN1_PRIMITIVE, ASN1_CONSTRUCTED };</div>
-			<p>Defines possible forms for ASN.1-encoded objects.
-			</p>
+			<p>Defines possible forms for ASN.1-encoded objects.</p>
+			<div class="major-header">Structs</div>
+			<div class="function-doc">typedef struct asn1_obj_t;</div>
+			<p>Defines a structure for the decoding of ASN.1-encoded objects.</p>
+			<div class="major-header">Functions</div>
 			<div class="function-doc">size_t asn1_decode(void *asn1_data, size_t len, asn1_obj_t *objs, size_t iter_count);</div>
 			<p>Decodes an ASN.1 encoded data stream, returning object metadata into an array of <span style="font-weight:bold">asn1_obj_t</span> structs.<br /><br />
 			<span class="param">asn1_data</span>: Pointer to ASN.1-encoded data<br />

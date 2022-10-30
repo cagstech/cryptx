@@ -44,11 +44,22 @@
 				<dt>salt</dt>
 				<dd>An <span style="font-weight:bold;">salt</span> is a buffer of arbitrary size filled with securely-random bytes. Current standards recommend that salts be no less than 16 bytes (128 bits) in length.</dd>
 			</dl>
-			<div class="major-header">API Documentation</div>
+			<div class="major-header">Macros</div>
+			<div class="function-doc">#define fastRam_Safe ((void*)0xE30A04)</div>
+			<p>Defines a region of fast RAM generally safe to use.</p>
+			<div class="function-doc">#define fastRam_Unsafe ((void*)0xE30800)</div>
+			<p>Defines a region of fast RAM that is used by the SRNG and hashing algorithms.</p>
+			<div class="function-doc">#define SHA256_DIGEST_LEN 32</div>
+			<p>Defines the output digest length of the SHA256 algorithm.</p>
+			<div class="major-header">Enumerations</div>
 			<div class="function-doc">enum hash_algorithms { SHA256 };</div>
 			<p>Defines the supported hash algorithms.</p>
+			<div class="major-header">Structs</div>
 			<div class="function-doc">typedef struct {...} hash_ctx;</div>
 			<p>Defines the hash state context for use with the hashing API</p>
+			<div class="function-doc">typedef struct {...} hmac_ctx;</div>
+			<p>Defines the hmac state context for use with the hmac API</p>
+			<div class="major-header">Functions</div>
 			<div class="function-doc">bool hash_init(hash_ctx* ctx, uint8_t hash_alg);</div>
 			<p>Initializes the hash state for use with a data stream.<br /><br />
 				<span class="param">ctx</span>: Pointer to a hash state context to initalize<br />
@@ -75,8 +86,6 @@
 			<span class="param">hash_alg</span>: Identifier for the hash algorithm to use (see hash_algorithms)<br />
 			<span class="return">output</span>: True if success, False if failed
 			</p>
-			<div class="function-doc">typedef struct {...} hmac_ctx;</div>
-			<p>Defines the hmac state context for use with the hmac API</p>
 			<div class="function-doc">bool hmac_init(hmac_ctx* ctx, const void* key, size_t keylen, uint8_t hash_alg);</div>
 			<p>Initializes the hmac state for use with a data stream.<br /><br />
 			<span class="param">ctx</span>: Pointer to a hmac state context to initalize<br />

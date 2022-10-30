@@ -60,7 +60,34 @@
 					Common key lengths are between 1024 and 2048 bits (128 bytes and 256 bytes), though 1024-bit RSA has been broken for some time. It is recommended to use a length on the higher end of the range, but do keep in mind that computation will take longer.</dd>
 				</dd><br />
 			</dl>
-			<div class="major-header">API Documentation</div>
+			<div class="major-header">Macros</div>
+			<div class="function-doc">#define AES_CTR_NONCELEN(len)   ((0x0f & len)&lt;&lt;4)</div>
+			<p>Defines a macro for passing a nonce (salt) length to aes_init's flags parameter.</p>
+			<div class="function-doc">#define AES_CTR_COUNTERLEN(len) ((0x0f & len)&lt;&lt;8)</div>
+			<p>Defines a macro for passing a counter length to aes_init's flags parameter.</p>
+			<div class="function-doc">#define AES_BLOCKSIZE	16</div>
+			<p>Defines the block size of the AES cipher.</p>
+			<div class="function-doc">#define AES_IVSIZE AES_BLOCKSIZE</div>
+			<p>Defines the length of the AES initialization vector.</p>
+			<div class="function-doc">#define aes_outsize(len) \<br />
+				((((len)%AES_BLOCKSIZE)==0) ? (len) + AES_BLOCKSIZE : (((len)>>4) + 1)<<4)</div>
+			<p>Defines a macro to return the necessary length for a padded AES plaintext.</p>
+			<div class="function-doc">#define aes_extoutsize(len) \<br />(aes_outsize((len)) + AES_IVSIZE)</div>
+			<p>Defines a macro to return the necessary length for a padded AES plaintext plus a single block for the IV.</p>
+			<div class="major-header">Enumerations</div>
+			<div class="function-doc">enum aes_cipher_modes { AES_MODE_CBC, AES_MODE_CTR };</div>
+			<p>Defines supported AES cipher modes.</p>
+			<div class="function-doc">enum aes_padding_schemes { PAD_PKCS7, PAD_DEFAULT = PAD_PKCS7, PAD_ISO2 = 4 };</div>
+			<p>Defines supported padding schemes for AES CBC mode</p>
+			<div class="function-doc">typedef enum { AES_OK, AES_INVALID_ARG, AES_INVALID_MSG, AES_INVALID_CIPHERMODE, AES_INVALID_PADDINGMODE, AES_INVALID_CIPHERTEXT, AES_INVALID_OPERATION } aes_error_t;</div>
+			<p>Defines possible responses codes from calls to the AES API.</p>
+			<div class="function-doc">typedef enum { RSA_OK, RSA_INVALID_ARG,  RSA_INVALID_MSG, RSA_INVALID_MODULUS, RSA_ENCODING_ERROR } rsa_error_t;</div>
+			<p>Defines possible response codes from calls to the RSA API
+			</p>
+			<div class="major-header">Structs</div>
+			<div class="function-doc">typedef struct aes_ctx;</div>
+			<p>Defines state data for an AES context.</p>
+			<div class="major-header">Functions</div>
 			<div class="function-doc">bool csrand_init(void);</div>
 			<p>Initializes the secure RNG.<br /><br />
 				<span class="return">output</span>: True if success, False if failed
@@ -74,23 +101,6 @@
 				<span class="param">buffer</span>: Pointer to a buffer to fill with random bytes<br />
 				<span class="param">size</span>: Length of the buffer<br />
 				<span class="return">output</span>: True if success, False if failed
-			</p>
-			<div class="function-doc">typedef struct aes_ctx;</div>
-			<p>Defines state data for an AES context.
-			</p>
-			<div class="function-doc">enum aes_cipher_modes { AES_MODE_CBC, AES_MODE_CTR };</div>
-			<p>Defines supported AES cipher modes.
-			</p>
-			<div class="function-doc">enum aes_padding_schemes { PAD_PKCS7, PAD_DEFAULT = PAD_PKCS7, PAD_ISO2 = 4 };</div>
-			<p>Defines supported padding schemes for AES CBC mode
-			</p>
-			<div class="function-doc">#define AES_CTR_NONCELEN(len)   ((0x0f & len)&lt;&lt;4)</div>
-			<p>Defines a macro for passing a nonce (salt) length to aes_init's flags parameter.</p>
-			<div class="function-doc">#define AES_CTR_COUNTERLEN(len) ((0x0f & len)&lt;&lt;8)</div>
-			<p>Defines a macro for passing a counter length to aes_init's flags parameter.
-			</p>
-			<div class="function-doc">typedef enum { AES_OK, AES_INVALID_ARG, AES_INVALID_MSG, AES_INVALID_CIPHERMODE, AES_INVALID_PADDINGMODE, AES_INVALID_CIPHERTEXT, AES_INVALID_OPERATION } aes_error_t;</div>
-			<p>Defines possible responses codes from calls to the AES API.
 			</p>
 			<div class="function-doc">aes_error_t aes_init(aes_ctx* ctx, const void* key, size_t keylen, const void* iv, uint24_t flags);</div>
 			<p>Initializes a stateful and one-directional AES context.<br /><br />
@@ -122,9 +132,6 @@
 			<span class="param">len</span>: Length of data to decrypt<br />
 			<span class="param">ciphertext</span>: Pointer to buffer to write decrypted data to<br />
 			<span class="return">output</span>: An aes_error_t indicating the status of the AES operation
-			</p>
-			<div class="function-doc">typedef enum { RSA_OK, RSA_INVALID_ARG,  RSA_INVALID_MSG, RSA_INVALID_MODULUS, RSA_ENCODING_ERROR } rsa_error_t;</div>
-			<p>Defines possible response codes from calls to the RSA API
 			</p>
 			<div class="function-doc">rsa_error_t rsa_encrypt(const void* msg, size_t msglen, void* ciphertext, const void* pubkey, size_t keylen, uint8_t oaep_hash_alg);</div>
 			<p>Encrypts a message using the RSA algorithm, applying the <span style="font-style:italic;">Optimal Asymmetic Encryption Padding</span> scheme (OAEPv2.2) prior to encryption.<br /><br />
