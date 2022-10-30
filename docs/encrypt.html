@@ -8,10 +8,10 @@
 	</head>
 	<body>
 		<div id="sidebar">
-			<div id="title">
+			<div id="title"><a href="index.html">
 				CryptX
 				<span style="font-size:50%;">10.0</span>
-			</div><br />
+			</a></div><br />
 			<div class="major-header">INTRODUCTION</div>
 				<div class="navitem"><a href="index.html">What is CryptX?</a></div>
 				<div class="navitem"><a href="installing.html">Installing the Libraries</a></div>
@@ -46,7 +46,7 @@
 				<dt>Asymmetric Encryption</dt>
 				<dd>An encryption system in which one key is used for encryption and a seperate key is used for decryption and there is some mathematical relationship between the two keys that allows them to reverse each other.</dd><br />
 				<dt>Advanced Encryption Standard (AES)</dt>
-				<dd>A symmetric encryption system defined by (1) 128, 192, or 256 bit keys (16, 24, 32 bytes), (2) a 128-bit (16 byte) block size, (3) 10-, 12-, and 14-round variants (depending on key size), and (4) a 128-bit (16 byte) randomized <span style="text-style:italic;">initialization vector</span>. AES, when properly implemented, remains unbroken.<br />
+				<dd>A symmetric encryption system defined by (1) 128, 192, or 256 bit keys (16, 24, 32 bytes), (2) a 128-bit (16 byte) block size, (3) 10-, 12-, and 14-round variants (depending on key size), and (4) a 128-bit (16 byte) randomized <span style="font-style:italic;">initialization vector</span>. AES, when properly implemented, remains unbroken.<br />
 					<span style="font-weight:bold">Round</span> means number of times the algorithm performs transformations on the data. For example, AES-128 has 10 rounds of encryption. This means the transformation is repeated ten (10) times.
 				</dd><br />
 				<dt>RSA</dt>
@@ -125,7 +125,7 @@
 			<p>Defines possible response codes from calls to the RSA API
 			</p>
 			<div class="function-doc">rsa_error_t rsa_encrypt(const void* msg, size_t msglen, void* ciphertext, const void* pubkey, size_t keylen, uint8_t oaep_hash_alg);</div>
-			<p>Encrypts a message using the RSA algorithm, applying the <span style="text-style:italic;">Optimal Asymmetic Encryption Padding</span> scheme (OAEPv2.2) prior to encryption.<br /><br />
+			<p>Encrypts a message using the RSA algorithm, applying the <span style="font-style:italic;">Optimal Asymmetic Encryption Padding</span> scheme (OAEPv2.2) prior to encryption.<br /><br />
 			<span class="param">msg</span>: Pointer to message to encrypt<br />
 			<span class="param">msglen</span>: Length of message to encrypt<br />
 			<span class="param">ciphertext</span>: Pointer to buffer to write encrypted message to<br />
