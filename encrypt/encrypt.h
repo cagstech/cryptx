@@ -328,14 +328,14 @@ rsa_error_t rsa_encrypt(
 					uint8_t oaep_hash_alg);
 
 
-#ifdef CRYPTOC_ENABLE_ADVANCED_MODE
+#ifdef ENCRYPT_ENABLE_ADVANCED_MODE
 
 /*
  #### INTERNAL FUNCTIONS ####
  For advanced users only!!!
  
  To enable advanced mode place the directive:
- #define CRYPTOC_ENABLE_ADVANCED_MODE
+ #define ENCRYPT_ENABLE_ADVANCED_MODE
  above any inclusion of this header file.
  
  If you know what you are doing and want to implement your own cipher modes,
