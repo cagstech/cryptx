@@ -3,6 +3,8 @@
 	<head>
 		<title>CryptX Documentation</title>
 		<link type="text/css" rel="stylesheet" href="style.css" />
+		<link rel="stylesheet" href="scripts/highlight/styles/default.min.css">
+			<script src="scripts/highlight/highlight.min.js"></script>
 		<style>
 		</style>
 	</head>
@@ -139,7 +141,62 @@
 			<span class="param">keylen</span>: Length, in bytes, of the public modulus<br />
 			<span class="return">output</span>: An rsa_error_t indicating the status of the RSA operation
 			</p>
+			<div class="major-header">Addendum: Authenticated Encryption</div>
+			<p>Authenticated encryption is an encryption scheme that produces a ciphertext that is not only obfuscated but also has its integrity and authenticity verifiable. This can be accomplished in a few ways, the most common of which are: (1) appending a signature, hash, or keyed hash to a message, and (2) implementing a cipher mode that integrates authentication.</p>
+			<p>#2 above is not implemented in CryptX. Most of the authenticating cipher modes are computationally-intensive without hardware acceleration and may not be feasible for use on the TI-84+ CE. While consid- eration is being given to potentially adding a cipher mode such as OCB or GCM if a sufficiently-optimized implementation for this platform can be found (or devised), it is possible to construct a ciphertext guarded against tampering by using method #1, which this library does provide for.</p>
+			<p>It recommended that whenever you are sending data you need to be truly secure with this library, you always embed a keyed hash into the message that the recipient can validate. This functionality is provided by the HMAC implementation shown earlier in this document. Proper application of HMAC for ciphertext integrity requires the following considerations:</p>
+			<ul>
+				<li>Initialization vector/nonce blocks for encryption are securely pseudo-random.</li>
+				<li>Encryption and HMAC keys are also securely pseudo-random and are long enough to be considered secure. Minimum key sizes recommended are 16 bytes.</li>
+				<li>You are not using your encryption key as your HMAC key or vice versa. There are attack vectors that result from using the same key for encryption and authentication.</li>
+				<li>Append a keyed hash (HMAC) of the initialization vector/nonce, encrypted message, and any other associated data such as packet headers to the outgoing message. On the receiving side, validate the HMAC before decryption and reject any message that does not authenticate. The HMAC key can be an application secret known to both parties or a generated nonce shared alongside the AES encryption key using RSA or another public key encryption method.</li>
+			</ul>
+			<span style="font-weight:bold;">Example of authenticated encryption, CryptX. by Anthony Cagliano</span>
+			<pre class="code"><code class="language-c">
+// this assumes that the AES secret ‘aes_key‘ and the HMAC secret ‘hmac_key‘
+// have been negotiated beforehand.
+
+// let’s send a simple ascii string
+char* msg = "The daring fox jumped over the moon."
+
+// the header is a size word, containing size of string plus our IV
+// header can really be whatever you want, but some arbitrary nonsense as an example
+size_t header = sizeof(msg)+AES_IVSIZE;
+
+// allocate the memory we need
+uint8_t iv[AES_IVSIZE];
+uint8_t hmac_digest[SHA256_DIGEST_LEN];
+aes_ctx ctx;
+hmac_ctx hmac;
+
+// !!!! NEVER PROCEED IF csrand_init() FAILS !!!
+if(!csrand_init()) return false;
+csrand_fill(iv, AES_IVSIZE);
+
+// initialize AES context with mode , key , and iv
+aes_init(&ctx, aes_key, sizeof aes_key, iv, AES_MODE_CTR);
+
+// encrypt message
+// aes_encrypt supports in-place encryption
+aes_encrypt(&ctx, msg, strlen(msg), msg);
+
+// hash everything you are sending, except the hash itself
+hmac_init(&hmac, hmac_key, sizeof hmac_key, SHA256);
+hmac_update(&hmac, &header, sizeof header);
+hmac_update(&hmac, iv, sizeof iv);
+hmac_update(&hmac, msg, strlen(msg));
+hmac_final(&hmac, hmac_digest);
+
+// ps_queue/send are psuedo functions implying queueing data to send
+// and then sending it
+ps_queue(&header, sizeof header);
+ps_queue(iv, sizeof iv);
+ps_queue(msg, sizeof msg);
+ps_queue(hmac_digest, sizeof hmac_digest);
+ps_send();
+			</code></pre>
 			<br />
 		</div></div>
 	</body>
+	<script>hljs.highlightAll();</script>
 </html>
