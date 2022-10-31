@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>CryptX Documentation</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link type="text/css" rel="stylesheet" href="style.css" />
+		<style>
+			.minor-header {font-weight:bold; color:black; font-size:110%; margin-top:2%;}
+		</style>
+	</head>
+	<body>
+		<div id="sidebar">
+			<div id="title"><a href="index.html">
+				CryptX
+				<span style="font-size:50%;">10.0</span>
+			</a></div><br />
+			<div class="major-header">INTRODUCTION</div>
+				<div class="navitem"><a href="index.html">What is CryptX?</a></div>
+				<div class="navitem"><a href="installing.html">Installing the Libraries</a></div>
+			<div class="major-header">COMPONENTS &amp; API</div>
+				<div class="navitem"><a href="hashlib.html">HASHLIB</a></div>
+				<div class="navitem"><a href="encrypt.html">ENCRYPT</a></div>
+				<div class="navitem"><a href="encodex.html">ENCODEX</a></div>
+			<div class="major-header">MORE INFO</div>
+				<div class="navitem"><a href="cryptanalysis.html">Cryptanalysis</a></div>
+				<div class="navitem active">Credits</div>
+				<div class="navitem"><a href="legal.html">Legal</a></div>
+			
+		</div>
+		<div id="content"><div>
+			<p>This project contains contributions from a variety of people, including those not directly listed as project authors. This document will provide attributions to those individuals as well as acknowledge sourcing of various algorithms where applicable.</p>
+			<div class="major-header">Contributors</div>
+			<dl>
+				<dt>Anthony Cagliano</dt>
+				<dd>Lead developer, cybersecurity analyst, and cryptographer responsibile for researching, analyzing, and porting most of the cryptographic algorithms to the calculator. Generally, this involved verifying data types to be of a compatible bit-width and endianness, devising a suitable API for users, and documenting the API.</dd><br />
+				<dt>Adam Beckingham</dt>
+				<dd>Involved in the optimization (and in some cases, rewrite) of various ported algorithms from compiled C to pure assembly for performance and size.</dd><br />
+				<dt>John Caesarz</dt>
+				<dd>Assisted with answering my dumb questions about ridiculous formatting ideas and corrected some of my assembly mistakes.</dd><br />
+				<dt>jacobly</dt>
+				<dd>Responsible for the implementation of modular exponentiation utilized by this library, as well as the buffer comparison algorithm.</dd><br />
+				<dt>Zeroko</dt>
+				<dd>Provided relevant information about bus noise for entropy sourcing on the calculator, performed analysis of unmapped memory seeking estimates on correlation and behavior. Additionally, optimized code to help guard against stack leak.</dd><br />
+				<dt>calc84maniac</dt>
+				<dd>Optimized _rmemcpy function, a function that operates similarly to the C standard library function memcpy, but that reverses endianness while copying.</dd>
+			</dl>
+			<div class="major-header">Algorithm Sourcing</div>
+			<p>It is a general rule in the field of information security that you &quot;do not roll your own cryptography&quot;. Doing so without an adequate knowledge of what you are doing can result in mistakes that render your implementations insecure.</p>
+			<p>Sorry to inform, but I broke this rule. Well, sort of. One of the biggest caveats in working on this project was that it&apos;s not like I can just look up implementations of encryption for a freaking calculator. They don&apos;t exist. It is even difficult to find implementations that be ported to this platform because target architecture matters. Not only does code often use incompatible bit-widths for data types, but sometimes code uses various system calls or hardware acceleration calls (and are designed around that) meaning that those implementations are no good. After a long time of searching, I finally came across a repository that was portable.</p>
+			<p><a target="_blank" href="https://github.com/B-Con/crypto-algorithms/">https://github.com/B-Con/crypto-algorithms/</a></p>
+			<p>This library&apos;s SHA256 and AES implementation is sourced from this repository. AES remains mostly as is, but SHA256 was subsequently converted into pure assembly by Adam Beckingham following the specs of the algorithm from that repo. Device-specific protections, such as those explained in the <a href="cryptanalysis.html">Cryptanalysis</a> were embedded in the output assembly afterwards.</p>
+			<p>HMAC and OAEP were implemented by hand by Anthony Cagliano using RFC-4868 and RFC-8017 as references, respectively. HMAC is currently in the processes of being converted to assembly and having its security profile evaluated.</p>
+			<br />
+		</div></div>
+	</body>
+</html>
