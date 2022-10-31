@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>CryptX Documentation</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link type="text/css" rel="stylesheet" href="style.css" />
+		<style>
+			.minor-header {font-weight:bold; color:black; font-size:110%; margin-top:2%;}
+			.blockquote {background:rgb(217,217,214,.5); padding:15px; font-style:italic;}
+			.proof {background:rgb(217,217,214,.5); padding:15px; font-size:95%; font-family:monospace;}
+		</style>
+		<script>
+			MathJax = {
+				tex: {
+					inlineMath: [['$', '$'], ['\\(', '\\)']]
+				},
+				svg: {
+					fontCache: 'global'
+				}
+			};
+		</script>
+		<script type="text/javascript" id="MathJax-script" async
+			src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+		</script>
+	</head>
+	<body>
+		<div id="sidebar">
+			<div id="title"><a href="index.html">
+				CryptX
+				<span style="font-size:50%;">10.0</span>
+			</a></div><br />
+			<div class="major-header">INTRODUCTION</div>
+				<div class="navitem"><a href="index.html">What is CryptX?</a></div>
+				<div class="navitem"><a href="installing.html">Installing the Libraries</a></div>
+			<div class="major-header">COMPONENTS &amp; API</div>
+				<div class="navitem"><a href="hashlib.html">HASHLIB</a></div>
+				<div class="navitem"><a href="encrypt.html">ENCRYPT</a></div>
+				<div class="navitem"><a href="encodex.html">ENCODEX</a></div>
+			<div class="major-header">MORE INFO</div>
+				<div class="navitem active">Cryptanalysis</div>
+				<div class="navitem"><a href="credits.html">Credits</a></div>
+				<div class="navitem"><a href="legal.html">Legal</a></div>
+			
+		</div>
+		<div id="content"><div>
+			<p>This document is a technical descriptor, providing details relevant to the construction of algorithms within CryptX that were built from the ground up, as well as providing details of hardening measures taken to ensure the library is as secure as possible. This document is provided such that platform-specific components of the library are able to be analyzed and peer-reviewed.</p>
+			<div class="major-header">Authors</div>
+			<ul>
+				<li>Anthony Cagliano</li>
+			</ul>
+			<div class="major-header">Secure RNG Construction &amp; Analysis</div>
+			<div class="minor-header">Rationale &amp; Difficulties</div>
+			<p>The first question to answer in the quest to devise a secure RNG was does the TI-84+ CE produce randomness, and if so, (1) what is the nature of this randomness and (2) how does this differ by hardware revision. The calculator is unlike a computer in that it lacks many of the dynamic sources of entropy that go into generating randomness for those platforms. I intially intended to use the <span style="font-style:italic;">r</span> register or CPU clock cycle counter, but this was rapidly discarded after I was informed that both of those are predictable. At a loss, and with insufficient knowledge of the device hardware mechanics, I posted on Cemetech seeking information about possible sources of randomness on the TI-84+ CE. Cemetech user <span style="font-style:italic;">Zeroko</span> came to the rescue with data on hardware bus noise.</p>
+				<div class="blockquote">
+					SRAM has a pair of bitlines for each bit of each column address, which are connected to a circuit that tries to make them both be charged to an equal, high level before reading from a memory cell (which partially discharges one of the two) and to a sense amplifier (basically a comparator) to read the resulting state afterward. (There may also be another level of gating between the bitlines and the comparators, but that does not strongly affect the dynamics.) In the unmapped space, there are no memory cells, so the controller equalizes the bitlines however well it does, then does nothing (there being no memory cell to discharge them), then senses which bitline is at a higher level. For some column addresses, this will be heavily biased one way or the other because the pre-charge transistors on the bitlines are too different, while for others, it will be less biased because they are more similar.
+					<hr />
+					Cemetech user Zeroko, <a href="https://www.cemetech.net/forum/viewtopic.php?p=293079">Producing Crypto-Safe Randomness on the TI-84+ CE</a>, May 2021
+				</div>
+				<div class="minor-header">Source-Selection Algorithm</div>
+				<p>Based on analysis of the unmapped space, I noticed that there was a very large subset of possible source bytes that appeared entropic and that these subsets differed by hardware revision. After some discussion I decided to construct an algorithm, with some support in optimization by Adam Beckingham, that would poll each byte in the unmapped space 1024 times and then count the deviation.</p>
+				<p>As the algorithm proceeded through the unmapped space, it would maintain an internal pointer to the most entropic source it has encountered as well as a &quot;to beat&quot; value on the degree of deviation. If the algorithm encounters a better source, it updates the internal pointer and the value to beat. By the time the algorithm finishes polling the unmapped space, it will have selected the best possible source of entropy. That source address is retained by the library for use gathering entropy and cannot be modified by the user.</p>
+				<p>Should the algorithm fail to find a suitable source (the maximum allowable bias is 75%/25% in either direction), the initialization function will return FALSE.</p>
+				<div class="minor-header">Entropy-Gathering Algorithm</div>
+				<p>The RNG internally reserves an entropy pool 119 bytes large in the device’s accelerated RAM. 119 bytes was chosen because it fits nicely within two (2) SHA256 blocks. To generate a random number, each byte in the entropy pool is updated by reading from the selected source byte. The entire pool is then passed through the SHA-256 cryptographic hash, generating a 32-byte digest. That hash is broken into 8-byte blocks, each byte of which is xored together to produce a single byte. The result is a 4-byte compression of the 119 byte entropy pool.</p>
+				<p>The next thing to prove was whether or not that size of an entropy pool has enough entropy to generate a 32 bit integer. To answer this question we turn to the Shannon entropy formula, which takes as inputs the set of all possible probabilities for an event and outputs the entropy of the event. In this case the &quot;event&quot; is the generation of a single bit from the source. The provided probabilities are the worst-case allowable: 75%/25% in either direction.</p>
+				<div class="proof">
+					<span style="font-weight:bold;">Proof of Entropy, Worst-Case</span><br />
+					<p>The byte selected for use by the CSRNG will have at least one bit with a maximum bias of 75% (± 25% deviation from 50/50), with the rest of the byte likely having a much higher bias. Therefore I will make the following assumptions:</p>
+					<ol>
+						<li>A single bit in the source has probabilities .75 and .25 for the set of two possible outputs (0 or 1).</li>
+						<li>The rest of the byte has zero entropy.</li>
+					</ol>
+					<p>$$ H(bit)=\sum_{i=1}^nP(i)\log_2\frac{1}{P(i)} $$</p>
+					<p>In the formula above, <span style="font-style:italic;">n</span> is the length of the set of probabilities, <span style="font-style:italic;">i</span> is an iterator, and <span style="font-style:italic;">P(i)</span> is the probability of the <span style="font-style:italic;">i-th</span> element in the set.</p>
+					<p>$$ H(bit)_{min}=0.750\log_2\frac{1}{0.750}+0.250\log_2\frac{1}{0.250}=0.811 $$</p>
+					<p>This is the entropy of a single bit, but because we are also assuming no entropy in the rest of the byte, we can use the same value for bytewise entropy.</p>
+					<p>The final step is to multiply that value by the number of bytes in the entropy pool.</p>
+					<p>$$ H(pool)_{min}(119)=0.811\times119.0=96.51 $$</p>
+					<p>This means that the entropy pool yields 96.51 bits of entropy per 32-bit number generated, which is more than enough.</p>
+				</div>
+				<div class="minor-header">Mitigating Correlation in the Source</div>
+				<p>Due to the nature of the CE hardware, there is a measurable correlation in the values of floating bits within unmapped memory. This correlation varies depending on the sample size, but would measurably reduce the entropy of the system. While specific numbers on the degree of correlation are, as of yet, unavailable, we do know that there are higher amounts of correlation in the initial reads which decreases after a certain number of reads. Zeroko provided a more technical explanation of this as well.</p>
+				<div class="blockquote">
+					Another source of non-randomness distinct from the bias is that the bitlines act like capacitors, so precharging only moves their voltage toward the desired level rather than reaching it. This results in a correlation between reads, with the correlation getting weaker with a longer time interval between them and with more intervening reads performed. This is why we cannot just use a von Neumann extractor (which only de-biases) and instead have to do something like XORing many consecutive bits together (which does not fully remove the bias and correlation but can lower it to an undetectable level).
+					<hr />
+					Cemetech user Zeroko, <a href="https://www.cemetech.net/forum/viewtopic.php?p=293079">Producing Crypto-Safe Randomness on the TI-84+ CE</a>, May 2021
+				</div>
+				<p>To solve this problem, Zeroko performed some analysis on the unmapped memory and revealed that XOR'ing seven (7) reads together per byte would be sufficient to trend the actual entropy closer to what is calculated above.</p>
+				<p>Note that these security proofs only apply to physical hardware (an actual TI-84+ CE), not to emulators. Emulators tend to use a deterministic RNG to reproduce the behavior of unmapped memory for the sake of speed and therefore sacrifice unpredictability.</p>
+				<div class="major-header">Side-Channel Analysis</div>
+			<br />
+		</div></div>
+	</body>
+</html>
