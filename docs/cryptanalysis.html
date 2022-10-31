@@ -163,7 +163,8 @@ end macro
 ; helper macro for restoring the interrupt state
 macro restore_interrupts? parent
 	ld bc,0
-parent.__interrupt_state = $-3 push bc
+parent.__interrupt_state = $-3
+	push bc
 	pop af
 	ret po
 	ei
