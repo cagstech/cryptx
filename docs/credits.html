@@ -49,7 +49,7 @@
 			<p>Sorry to inform, but I broke this rule. Well, sort of. One of the biggest caveats in working on this project was that it&apos;s not like I can just look up implementations of encryption for a freaking calculator. They don&apos;t exist. It is even difficult to find implementations that be ported to this platform because target architecture matters. Not only does code often use incompatible bit-widths for data types, but sometimes code uses various system calls or hardware acceleration calls (and are designed around that) meaning that those implementations are no good. After a long time of searching, I finally came across a repository that was portable.</p>
 			<p><a target="_blank" href="https://github.com/B-Con/crypto-algorithms/">https://github.com/B-Con/crypto-algorithms/</a></p>
 			<p>This library&apos;s SHA256 and AES implementation is sourced from this repository. AES remains mostly as is, but SHA256 was subsequently converted into pure assembly by Adam Beckingham following the specs of the algorithm from that repo. Device-specific protections, such as those explained in the <a href="cryptanalysis.html">Cryptanalysis</a> were embedded in the output assembly afterwards.</p>
-			<p>HMAC and OAEP were implemented by hand by Anthony Cagliano using RFC-4868 and RFC-8017 as references, respectively. HMAC is currently in the processes of being converted to assembly and having its security profile evaluated.</p>
+			<p>HMAC and OAEP were implemented by hand in C by Anthony Cagliano using RFC-4868 and RFC-8017 as references, respectively. HMAC is currently in the processes of being converted to assembly and having its security profile evaluated.</p>
 			<br />
 		</div></div>
 	</body>

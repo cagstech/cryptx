@@ -6,13 +6,17 @@
 		<link type="text/css" rel="stylesheet" href="style.css" />
 		<style>
 			.minor-header {font-weight:bold; color:black; font-size:110%; margin-top:2%;}
+			h4 {margin:0;}
+			.green {color:green;}
+			.red {color:red;}
+			.blue {color:blue;}
 		</style>
 	</head>
 	<body>
 		<div id="sidebar">
 			<div id="title"><a href="index.html">
 				CryptX
-				<span style="font-size:50%;">10.0</span>
+				<span style="font-size:50%;">10.x</span>
 			</a></div><br />
 			<div class="major-header">INTRODUCTION</div>
 				<div class="navitem"><a href="index.html">What is CryptX?</a></div>
@@ -24,12 +28,35 @@
 			<div class="major-header">MORE INFO</div>
 				<div class="navitem"><a href="cryptanalysis.html">Cryptanalysis</a></div>
 				<div class="navitem"><a href="credits.html">Credits</a></div>
-				<div class="navitem">Legal</div>
+				<div class="navitem active">Legal</div>
 			
 		</div>
 		<div id="content"><div>
-			
+			<div class="major-header">Disclaimer</div>
+			<p>CryptX is a work-in-progress and has seen very little time as the forerunning cryptography suite for the TI-84+ CE calculator. This means that it has not had much time to be thoroughly analyzed, and due to some hardware constraints may never offer total security against every possible attack. For this reason, I heavily advise that however secure CryptX may turn out to be, you never use it for encrypting truly sensitive data like online banking and other accounts, credit card information, and the like over an insecure network. You really shouldn&apos;t be using a calculator for this type of stuff anyway. Even ignoring the functional limitations of the devices themselves, they lack the necessary compliances to store and transmit that kind of information.</p>
+			<div class="major-header">End User License Agreement</div>
+			<p>The software included herein is released under the terms of the GNU General Public License Agreement (GPL) v3.0. This is an open-source license that provides the following stipulations:</p>
+			<ol><span class="green">
+				<h4>You Can:</h4>
+				<li>Use this software, in full or in part, for both private and commercial use.</li>
+				<li>Modify this software and create derivative works containing segments of this software&apos;s code.</li>
+				<li>Distribute this software freely, in full or in part, and whether modified, original, or derived.</li>
+				<li>Place a warranty on your use of the software.</li></span><br />
+				<span class="red">
+				<h4>You Can Not:</h4>
+				<li>Remove or supercede the GPL license on any usage of this software&apos;s code.</li>
+				<li>Hold the developers of this project liable for any issues that arise from your use of our code in your projects.</li>
+				</span><br />
+				<span class="blue">
+				<h4>You Must:</h4>
+				<li>Include a link to the original source code or to this Project, or provide some other form of attribution within the documentation for your derived use.</li>
+				<li>Describe in documentation any changes made to the original code.</li>
+				<li>License any derived use of this code under GPL3 or another compatible open-source license.</li>
+				<li>Include the full text of the license, or a link to the text of the license, somewhere within the source or documentation for your project.</li>
+				</span>
+			</ol>
+			<p>For the full text of the GPL3.0 license, click <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">this link</a>.</p>
+			<br />
 		</div></div>
 	</body>
-	<script>hljs.highlightAll();</script>
 </html>
