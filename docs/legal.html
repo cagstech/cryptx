@@ -23,7 +23,7 @@
 			page_basename = page.substr(page.lastIndexOf("/") + 1);
 			page_noext = page_basename.substr(0,page_basename.lastIndexOf('.'));
 			
-			toedit = document.querySelector("[name="+page_noext+"]");
+			toedit = document.querySelector("[name=\""+page_noext+"\"]");
 			toedit.classList.add('active');
 			</script>
 		<div id="content"><div>
@@ -52,6 +52,13 @@
 			</ol>
 			<p>For the full text of the GPL3.0 license, click <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">this link</a>.</p>
 			<br />
+			<div id="rtd-msg">
+				<script>
+					fetch('rtd-msg.html')
+					.then(response=> response.text())
+					.then(text=> document.getElementById('rtd-msg').innerHTML = text);
+				</script>
+				</div>
 		</div></div>
 	</body>
 </html>
