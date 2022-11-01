@@ -5,7 +5,7 @@ The package contains three(3) separate libraries that serve different functions.
 
 ## Getting Started with CryptX
 
-Visit the [CryptX Documentation](https://acagliano.github.io/cryptx/index.html) for help with using 
+Visit the [CryptX Documentation](https://acagliano.github.io/cryptx) for help with using 
 the library, documentation, cryptanalysis, credits, and more.
 
 
