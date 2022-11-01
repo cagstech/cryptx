@@ -14,18 +14,6 @@
 	</head>
 	<body>
 		<div id="sidebar"></div>
-		<script>
-			fetch('scripts/sidebar.html')
-			.then(response=> response.text())
-			.then(text=> document.getElementById('sidebar').innerHTML = text);
-			
-			page = window.location.href;
-			page_basename = page.substr(page.lastIndexOf("/") + 1);
-			page_noext = page_basename.substr(0,page_basename.lastIndexOf('.'));
-			
-			toedit = document.querySelector("[name=\""+page_noext+"\"]");
-			toedit.classList.add('active');
-			</script>
 		<div id="content"><div>
 			<div class="major-header">Disclaimer</div>
 			<p>CryptX is a work-in-progress and has seen very little time as the forerunning cryptography suite for the TI-84+ CE calculator. This means that it has not had much time to be thoroughly analyzed, and due to some hardware constraints may never offer total security against every possible attack. For this reason, I heavily advise that however secure CryptX may turn out to be, you never use it for encrypting truly sensitive data like online banking and other accounts, credit card information, and the like over an insecure network. You really shouldn&apos;t be using a calculator for this type of stuff anyway. Even ignoring the functional limitations of the devices themselves, they lack the necessary compliances to store and transmit that kind of information.</p>

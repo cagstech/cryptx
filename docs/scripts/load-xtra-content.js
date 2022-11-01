@@ -7,6 +7,8 @@ page = window.location.href;
 page_basename = page.substr(page.lastIndexOf("/") + 1);
 page_noext = page_basename.substr(0,page_basename.lastIndexOf('.'));
 
+alert(page_noext);
+
 toedit = document.querySelector('[name="'+page_noext+'"]');
 toedit.classList.add('active');
 
