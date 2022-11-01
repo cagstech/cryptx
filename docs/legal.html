@@ -13,24 +13,12 @@
 		</style>
 	</head>
 	<body>
-		<div id="sidebar">
-			<div id="title"><a href="index.html">
-				CryptX
-				<span style="font-size:50%;">10.x</span>
-			</a></div><br />
-			<div class="major-header">INTRODUCTION</div>
-				<div class="navitem"><a href="index.html">What is CryptX?</a></div>
-				<div class="navitem"><a href="installing.html">Installing the Libraries</a></div>
-			<div class="major-header">COMPONENTS &amp; API</div>
-				<div class="navitem"><a href="hashlib.html">HASHLIB</a></div>
-				<div class="navitem"><a href="encrypt.html">ENCRYPT</a></div>
-				<div class="navitem"><a href="encodex.html">ENCODEX</a></div>
-			<div class="major-header">MORE INFO</div>
-				<div class="navitem"><a href="cryptanalysis.html">Cryptanalysis</a></div>
-				<div class="navitem"><a href="credits.html">Credits</a></div>
-				<div class="navitem active">Legal</div>
-			
-		</div>
+		<div id="sidebar"></div>
+		<script>
+			fetch('sidebar.html')
+			.then(response=> response.text())
+			.then(text=> document.getElementById('sidebar').innerHTML = text);
+			</script>
 		<div id="content"><div>
 			<div class="major-header">Disclaimer</div>
 			<p>CryptX is a work-in-progress and has seen very little time as the forerunning cryptography suite for the TI-84+ CE calculator. This means that it has not had much time to be thoroughly analyzed, and due to some hardware constraints may never offer total security against every possible attack. For this reason, I heavily advise that however secure CryptX may turn out to be, you never use it for encrypting truly sensitive data like online banking and other accounts, credit card information, and the like over an insecure network. You really shouldn&apos;t be using a calculator for this type of stuff anyway. Even ignoring the functional limitations of the devices themselves, they lack the necessary compliances to store and transmit that kind of information.</p>
