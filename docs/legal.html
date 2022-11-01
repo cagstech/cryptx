@@ -18,6 +18,13 @@
 			fetch('sidebar.html')
 			.then(response=> response.text())
 			.then(text=> document.getElementById('sidebar').innerHTML = text);
+			
+			page = window.location.href;
+			page_basename = page.substr(page.lastIndexOf("/") + 1);
+			page_noext = page_basename.substr(0,page_basename.lastIndexOf('.'));
+			
+			toedit = document.querySelector("[name="+page_noext+"]");
+			toedit.classList.add('active');
 			</script>
 		<div id="content"><div>
 			<div class="major-header">Disclaimer</div>
