@@ -15,7 +15,7 @@
 	<body>
 		<div id="sidebar"></div>
 		<script>
-			fetch('sidebar.html')
+			fetch('scripts/sidebar.html')
 			.then(response=> response.text())
 			.then(text=> document.getElementById('sidebar').innerHTML = text);
 			
@@ -52,13 +52,8 @@
 			</ol>
 			<p>For the full text of the GPL3.0 license, click <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">this link</a>.</p>
 			<br />
-			<div id="rtd-msg">
-				<script>
-					fetch('rtd-msg.html')
-					.then(response=> response.text())
-					.then(text=> document.getElementById('rtd-msg').innerHTML = text);
-				</script>
-				</div>
+			<div id="rtd-msg"></div>
+			<script src="scripts/load-xtra-content.js"></script>
 		</div></div>
 	</body>
 </html>
