@@ -3,5 +3,7 @@
 .local
 */obj
 */bin
+*.8xv
+*.8xg
 
 docs/tex
