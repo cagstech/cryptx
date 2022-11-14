@@ -79,6 +79,11 @@ Cryptanalysis.pdf: docs/tex/Cryptanalysis.tex
 html: docs/html/index.html
 docs/html/index.html: docs/.doxyfile
 	doxygen docs/.doxyfile
+	
+archive: cryptx.zip
+cryptx.zip:
+	zip cryptx.zip README.md CryptX.8xg -j \
+		$(foreach library,$(LIBS),$(call SRCDIR,$(library))/$(library).8xv)
 
 
 .PHONY: all clean install
