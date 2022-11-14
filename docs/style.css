@@ -26,7 +26,11 @@ dt {font-weight:bold;}
 
 @media print {
 	@page { size:portrait; margin:.25in;}
-	body {page: portrait; height:auto;}
-	sidebar {height:100vh;}
+	body {display:block; page: portrait; height:auto;}
+	#sidebar {height:auto; width:100vw; margin:0; padding:0; display:flex; flex-direction:row;}
+	#sidebar>.major-header {display:none;}
+	#sidebar>#title {flex:1; padding:0;}
+	#sidebar>.navitem:not(.active) {display:none;}
+	#sidebar>.navitem.active {flex:3; background:#343131; color:white;}
 	#content {height:100%;}
 }
