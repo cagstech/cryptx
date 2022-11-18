@@ -89,7 +89,7 @@
 			<div class="major-header">Functions</div>
 			<div class="function-doc">bool csrand_init(bool sampling_mode);</div>
 			<p>Initializes the secure RNG.<br /><br />
-				<span class="param">sampling_mode</span>: A flag specifying the sampling mode (SAMPLING_THOROUGH | SAMPLING_FAST)<br />
+				<span class="param">sampling_mode</span>: A flag specifying the sampling mode. See below.<br />
 				<span class="return">output</span>: True if success, False if failed
 				<span class="more-info">
 					SAMPLING_THOROUGH ensures a more entropic source, but takes longer (~4s).<br />
