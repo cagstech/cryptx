@@ -59,11 +59,23 @@
  unmapped memory, this SRNG can also be considered a _hardware-based RNG_ (HWRNG).
  */
 
-/*********************************************
- * @brief Initializes the secure psuedo-random generator
- * @return [bool] True if init succeeded, False otherwise
+/*******************
+ * @enum sample\_counts
+ * Defines recommended input values for the @b csrand_init function.
  */
-bool csrand_init(void);
+enum sample_counts {
+	SAMPLE_SUPERFAST	=	128,
+	SAMPLE_FAST		= 	192,
+	SAMPLE_DEFAULT	=	256,
+};
+
+/*********************************************************************
+ * @brief Initializes the secure psuedo-random generator
+ * @param samples Number of samples to take per bit when polling for an entropic source. @see sample_counts
+ * @return [bool] True if init succeeded, False otherwise
+ * @note
+ */
+bool csrand_init(uint24_t samples);
 
 /***********************************************
  * @brief Returns a securely psuedo-random 32-bit integer
@@ -208,15 +220,11 @@ typedef enum {
  *          // [nonce 8 bytes] [counter 4 bytes] [suffix 4 bytes]
  *      @endcode
  * @note Do not edit a context manually. You may corrupt the cipher state.
- * @note Contexts are not bidirectional due to being stateful. If you need to process both encryption and decryption, initialize seperate contexts
- *      for encryption and decryption. Both contexts will use the same key, but different initialization vectors.
+ * @note Contexts are not bidirectional due to being stateful. If you need to process both encryption and decryption, initialize seperate contexts for encryption and decryption. Both contexts will use the same key, but different initialization vectors.
  * @warning It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.
- * @warning Do not manually edit the @b ctx.mode field of the context structure. This will break the cipher configuration.
- *          If you want to change cipher modes, do so by calling @b aes_init again.
- * @warning AES-CBC and CTR modes ensure confidentiality but do not guard against tampering. AES-OCB/GCM are a bit computationallty-intensive
- *          for this platform, but HASHLIB provides hash and hmac functions in their stead. HMAC is generally more secure for this purpose.
- *          If you want a truly secure scheme, always append an HMAC to your message and use an application secret or unique key
- *          generated using a CSRNG to key the HMAC at both endpoints.
+ * @warning Do not manually edit the @b ctx.mode field of the context structure. This will break the cipher configuration. If you want to change cipher modes, do so by calling @b aes_init again.
+ * @warning AES-CBC and CTR modes ensure confidentiality but do not guard against tampering. AES-OCB/GCM are a bit computationallty-intensive for this platform, but HASHLIB provides hash and hmac functions in their stead. HMAC is generally more secure for this purpose.
+ * If you want a truly secure scheme, always append an HMAC to your message and use an application secret or unique key generated using a CSRNG to key the HMAC at both endpoints.
  * @return AES_OK if success, non-zero if failed. See aes_error_t.
  */
 aes_error_t aes_init(
@@ -300,6 +308,13 @@ typedef enum {
 	RSA_ENCODING_ERROR              /**< RSA encryption failed, OAEP encoding error */
 } rsa_error_t;
 
+
+/******************
+ * @def RSA_MODULUS_MAX
+ * Defines the largest possible byte length for a modulus
+ * supported by this library.
+ */
+#define RSA_MODULUS_MAX		256
 /*****************************************************
  * @brief RSA Encryption
  *

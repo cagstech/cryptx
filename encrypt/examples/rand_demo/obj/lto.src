@@ -5,15 +5,25 @@
 _main:
 	ld	hl, -22
 	call	__frameset
+	ld	hl, 256
+	push	hl
 	call	_csrand_init
+	pop	hl
 	bit	0, a
 	jp	z, BB0_4
-	lea	hl, ix - 16
-	ld	(ix - 19), hl
+	ld	de, -327680
+	ld	hl, _.str
+	lea	bc, ix - 16
+	ld	(ix - 19), bc
+	push	hl
+	push	de
+	call	_sprintf
+	pop	hl
+	pop	hl
 	call	_csrand_get
 	push	de
 	push	hl
-	ld	hl, _.str
+	ld	hl, _.str.1
 	push	hl
 	ld	hl, -327680
 	push	hl
@@ -30,7 +40,7 @@ _main:
 	pop	hl
 	pop	hl
 	ld	de, -327680
-	ld	hl, _.str.1
+	ld	hl, _.str.2
 	ld	bc, 27
 	ldir
 	ld	de, 16
@@ -49,7 +59,7 @@ BB0_2:
 	ld	de, 0
 	ld	e, (hl)
 	push	de
-	ld	hl, _.str.2
+	ld	hl, _.str.3
 	push	hl
 	ld	hl, -327680
 	push	hl
@@ -66,6 +76,11 @@ BB0_4:
 	ld	hl, 1
 	jr	BB0_6
 BB0_5:
+	ld	hl, -327680
+	ld.sis	de, 10
+	ld	(hl), e
+	inc	hl
+	ld	(hl), d
 	or	a, a
 	sbc	hl, hl
 BB0_6:
@@ -77,23 +92,28 @@ BB0_6:
 	section	.rodata,"a",@progbits
 	private	_.str
 _.str:
-	db	"The rand is %lu.", 10, 0
+	db	"RNG init done.", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.1
 _.str.1:
-	db	"The buffer contents are: ", 10, 0
+	db	"The rand is %lu.", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.2
 _.str.2:
+	db	"The buffer contents are: ", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.3
+_.str.3:
 	db	"%02X ", 0
 
 	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"
 	extern	_csrand_fill
 	extern	__Unwind_SjLj_Register
-	extern	__Unwind_SjLj_Unregister
 	extern	_csrand_init
 	extern	__frameset
+	extern	__Unwind_SjLj_Unregister
 	extern	_sprintf
 	extern	_csrand_get

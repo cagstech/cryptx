@@ -24,8 +24,9 @@ int main(void)
     uint8_t salt[SALT_LEN];
 
     // initialize the secure RNG. Do not forget this!!!
-    if(!csrand_init()) return 1;
-    
+    if(!csrand_init(SAMPLE_DEFAULT)) return 1;
+	sprintf(CEMU_CONSOLE, "RNG init done.\n");
+	
 	// generate a single uint32_t
 	sprintf(CEMU_CONSOLE, "The rand is %lu.\n", csrand_get());
     
@@ -35,6 +36,7 @@ int main(void)
     for(uint8_t i=0; i<SALT_LEN; i++)
         sprintf(CEMU_CONSOLE, "%02X ", salt[i]);
     
+	strcpy(CEMU_CONSOLE, "\n");
     return 0;
     
 }

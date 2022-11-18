@@ -102,10 +102,6 @@ _indcall:
 ; Calls IY
     jp  (iy)
 
-
-;number of times to test each bit
-_num_tests := 1024
-_max_deviation := _num_tests/4
 ;------------------------------------------
 ; structures
 virtual at 0
@@ -185,85 +181,77 @@ stack_clear:
     ret
  
 ;------------------------------------------
-    
-
+; csrand_init(uint24_t sample_ct);
+;------------------------------------------
 csrand_init:
-; ix = selected byte
-; de = current deviation
-; hl = starting address
-; bc = bytes to check
-; outputs: hl = address
+; input: n is uint24 on the stack, 1 <= n <= 256
+;        n * 4 is the samples per bit
+    pop hl
+    pop de
+    ld a,e
+    ld (.smc_samples), a
+    push de
+    push hl
+ 
     push ix
-        ld ix, 0
-        ld de, _max_deviation
-        ld hl, $D65800
-        ld bc, 513
-.test_range_loop:
-        push bc
+        ld ix,0
+        ld a,0x46
+.bit_loop:
+        ld (.smc1),a
+        ld (.smc2),a
+        ld (.smc3),a
+        ld (.smc4),a
+        push af
             push hl
-                call _test_byte
+                ld bc,513
+.scan_loop:
+                push hl
+					push bc
+						push de
+							call .test_bit
+						pop de
+					pop bc
+                    ; or a,a
+                    sbc hl,de
+                    jq nc,.skip1
+                    add hl,de
+                    ex de,hl
+                    pop ix
+                    push ix
+.skip1:
+                pop hl
+                jq z,.early_exit
+ 
+                cpi
+                jp pe,.scan_loop
             pop hl
-        pop bc
-        inc hl
-        dec bc
-        ld a,c
-        or a,b
-        jq nz,.test_range_loop
+        pop af
+        add a,8
+        cp 0x86
+        jq nz,.bit_loop
+        jq .return
+.early_exit:
+        pop hl
+        pop af
+.return:
         lea hl, ix+0
         ld (_sprng_read_addr), hl
-        add hl, de
+ 
         xor a, a
-        sbc hl, de
+        sbc hl, bc  ; subtract 0 to set the z flag if HL is 0
     pop ix
     ret z
     inc a
     ret
-
-_test_byte:
-; inputs: hl = byte
-; outputs: none, but de should be edited if address contains less deviant bit
-; outputs: none, but ix should be edited to this address if contains less deviant bit
-; destroys: bc, af, hl
-; modifies: de, ix
-    push iy
-    push hl
-    ld b, 8
-    ld c, 0
-.test_byte_bitloop:
-    push bc
-    push de
-    ld a,c
-    call _test_bit  ; HL = bits set
-    pop de
-    pop bc
-    or a,a
-    sbc hl, de
-    jq nc, .skip_next_bit    ; IF HL < DE
-    add hl,de
-    ex hl, de
-    pop ix
-    push ix
-.skip_next_bit:
-    inc c
-    djnz .test_byte_bitloop
-    pop iy
-    pop iy
-    ret
-
-_test_bit:
-; inputs: a = bit
+    
+    
+.test_bit:
 ; inputs: hl = byte
 ; outputs: hl = hit count
+; outputs: carry flag reset
 ; destroys: af, bc, de, hl
-    add a,a
-    add a,a
-    add a,a
-    add a,$46 ;bit 0,(hl)
-    ld (.smc1),a
-    ld (.smc2),a
-    ld (.smc3),a
-    ld (.smc4),a
-    ld bc,$ff
+.smc_samples:=$+1
+    ld b,0
     ld de,0
 .loop:
     bit 0,(hl)
@@ -273,8 +261,8 @@ _test_bit:
 .next1:
     bit 0,(hl)
 .smc2:=$-1
-    jq z,.next2
-    inc de
+    jq nz,.next2    ; notice the inverted logic !
+    dec de          ; and the dec instead of inc !
 .next2:
     bit 0,(hl)
 .smc3:=$-1
@@ -283,18 +271,18 @@ _test_bit:
 .next3:
     bit 0,(hl)
 .smc4:=$-1
-    jq z, .next4
-    inc de
+    jq nz,.next4    ; notice the inverted logic !
+    dec de          ; and the dec instead of inc !
 .next4:
     djnz .loop
-    ld hl,_num_tests/2
-    or a,a
-    sbc hl,de
-    ret nc
-    ex hl,de
+ 
+    ; return |DE|
     or a,a
     sbc hl,hl
     sbc hl,de
+    ret nc
+    ex de,hl
+    or a, a  ; return with carry reset
     ret
     
 	

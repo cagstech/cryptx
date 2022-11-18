@@ -26,4 +26,5 @@ obj/src/main.c.bc: src/main.c /Users/acagliano/CEdev/include/stdint.h \
   /Users/acagliano/CEdev/include/ti/ui.h \
   /Users/acagliano/CEdev/include/ti/tokens.h \
   /Users/acagliano/CEdev/include/ti/vars.h \
-  /Users/acagliano/CEdev/include/cryptoc.h
+  /Users/acagliano/CEdev/include/encrypt.h \
+  /Users/acagliano/CEdev/include/hashlib.h
