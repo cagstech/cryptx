@@ -59,15 +59,15 @@
  unmapped memory, this SRNG can also be considered a _hardware-based RNG_ (HWRNG).
  */
 
-/*******************
- * @enum sample\_counts
+/************************
+ * @typedef sample\_counts
  * Defines recommended input values for the @b csrand_init function.
  */
-enum sample_counts {
+typedef enum _sample_counts {
 	SAMPLE_SUPERFAST =	(512>>2),
 	SAMPLE_FAST =		(768>>2),
 	SAMPLE_DEFAULT =	(1024>>2)
-};
+} sample_count_t;
 
 /*********************************************************************
  * @brief Initializes the secure psuedo-random generator
@@ -79,7 +79,7 @@ enum sample_counts {
  * entropic source to be chosen. Higher values ensure a more entropic source, but take longer.
  * @b SAMPLE_DEFAULT will take ~4 seconds, @b SAMPLE_SUPERFAST will take ~2 seconds.
  */
-bool csrand_init(uint24_t samples);
+bool csrand_init(sample_count_t samples);
 
 /***********************************************
  * @brief Returns a securely psuedo-random 32-bit integer

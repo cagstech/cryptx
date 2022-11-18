@@ -5,7 +5,7 @@
 _main:
 	ld	hl, -22
 	call	__frameset
-	ld	hl, 256
+	ld	hl, 6
 	push	hl
 	call	_csrand_init
 	pop	hl
