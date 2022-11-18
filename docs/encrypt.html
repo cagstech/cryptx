@@ -92,8 +92,8 @@
 				<span class="param">sampling_mode</span>: A flag specifying the sampling mode (SAMPLING_THOROUGH | SAMPLING_FAST)<br />
 				<span class="return">output</span>: True if success, False if failed
 				<span class="more-info">
-					Higher sample counts ensure a more entropic source, but take longer.<br />
-					Lower sample counts take less time but may not select the most entropic bit.
+					SAMPLING_THOROUGH ensures a more entropic source, but takes longer (~4s).<br />
+					SAMPLING_FAST takes less time (~2s) but may not select the most entropic bit.
 				</span>
 			</p>
 			<div class="function-doc">uint32_t csrand_get(void);</div>
