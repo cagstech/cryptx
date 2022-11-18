@@ -191,10 +191,20 @@ csrand_init:
 ; outputs: hl = address
     pop hl
     pop de
-    ld a,e
-    ld (_smc_samples), a
     push de
     push hl
+    ld a,e
+    or a
+    jr z, .thorough_sampling
+; fast sampling
+    ld de, 128
+    ld a, e
+    jr .start
+.thorough_sampling:
+	ld de, 256
+	ld a, e
+.start:
+	ld (_smc_samples), a
  
     push ix
         ld ix, 0

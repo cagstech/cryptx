@@ -59,27 +59,26 @@
  unmapped memory, this SRNG can also be considered a _hardware-based RNG_ (HWRNG).
  */
 
-/************************
- * @typedef sample\_counts
- * Defines recommended input values for the @b csrand_init function.
+/************************************
+ * @enum sampling\_mode
+ * Defines sampling modes for @b csrand\_init
  */
-typedef enum _sample_counts {
-	SAMPLE_SUPERFAST =	(512>>2),
-	SAMPLE_FAST =		(768>>2),
-	SAMPLE_DEFAULT =	(1024>>2)
-} sample_count_t;
+enum sampling_mode {
+	SAMPLING_THOROUGH,
+	SAMPLING_FAST
+};
 
-/*********************************************************************
+/*******************************************************************************
  * @brief Initializes the secure psuedo-random generator
- * @param samples Number of samples to take per bit when polling for an entropic source.
- * Takes a value in range 1-256. @see sample_counts
+ * @param sampling_mode Sampling mode to use for finding an entropic bit. See @b sampling_mode.
  * @return [bool] True if init succeeded, False otherwise
- * @note The sample count determines how fast the generator initializes, as well as how accurate
- * the source selection is. Lower values mean shorter init times but a greater chance for a less-
- * entropic source to be chosen. Higher values ensure a more entropic source, but take longer.
- * @b SAMPLE_DEFAULT will take ~4 seconds, @b SAMPLE_SUPERFAST will take ~2 seconds.
+ * @note Sampling mode controls the speed (and accuracy) of the source-selection algorithm.
+ * Setting SAMPLING\_THOROUGH retrieves 1024 samples per bit polled and takes ~4 seconds to run.
+ * Setting SAMPLING\_FAST retrieves 512 samples per bit polled and takes ~2 seconds to run.
+ * @note Using the faster sampling mode may result in a less-entropic source byte being selected due to less
+ * samples being collected. It is recommended to use THOROUGH.
  */
-bool csrand_init(sample_count_t samples);
+bool csrand_init(bool sampling_mode);
 
 /***********************************************
  * @brief Returns a securely psuedo-random 32-bit integer

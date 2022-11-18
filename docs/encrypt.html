@@ -87,17 +87,13 @@
 			<div class="function-doc">typedef struct aes_ctx;</div>
 			<p>Defines state data for an AES context.</p>
 			<div class="major-header">Functions</div>
-			<div class="function-doc">bool csrand_init(uint32_t samples);</div>
+			<div class="function-doc">bool csrand_init(bool sampling_mode);</div>
 			<p>Initializes the secure RNG.<br /><br />
-				<span class="param">samples</span>: Number of samples to take when polling for entropic bit<br />
+				<span class="param">sampling_mode</span>: A flag specifying the sampling mode (SAMPLING_THOROUGH | SAMPLING_FAST)<br />
 				<span class="return">output</span>: True if success, False if failed
 				<span class="more-info">
 					Higher sample counts ensure a more entropic source, but take longer.<br />
-					Lower sample counts take less time but may not select the most entropic bit.<br />
-					Recommended Values:<br />
-					SAMPLE_NORMAL: 1024 samples, ~4 second init time<br />
-					SAMPLE_FAST: 768 samples,<br />
-					SAMPLE_SUPERFAST: 512 samples, ~2 second init time
+					Lower sample counts take less time but may not select the most entropic bit.
 				</span>
 			</p>
 			<div class="function-doc">uint32_t csrand_get(void);</div>
