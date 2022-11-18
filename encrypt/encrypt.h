@@ -64,16 +64,20 @@
  * Defines recommended input values for the @b csrand_init function.
  */
 enum sample_counts {
-	SAMPLE_SUPERFAST	=	128,
-	SAMPLE_FAST		= 	192,
-	SAMPLE_DEFAULT	=	256,
+	SAMPLE_SUPERFAST =	(512>>2),
+	SAMPLE_FAST =		(768>>2),
+	SAMPLE_DEFAULT =	(1024>>2)
 };
 
 /*********************************************************************
  * @brief Initializes the secure psuedo-random generator
- * @param samples Number of samples to take per bit when polling for an entropic source. @see sample_counts
+ * @param samples Number of samples to take per bit when polling for an entropic source.
+ * Takes a value in range 1-256. @see sample_counts
  * @return [bool] True if init succeeded, False otherwise
- * @note
+ * @note The sample count determines how fast the generator initializes, as well as how accurate
+ * the source selection is. Lower values mean shorter init times but a greater chance for a less-
+ * entropic source to be chosen. Higher values ensure a more entropic source, but take longer.
+ * @b SAMPLE_DEFAULT will take ~4 seconds, @b SAMPLE_SUPERFAST will take ~2 seconds.
  */
 bool csrand_init(uint24_t samples);
 

@@ -184,56 +184,29 @@ stack_clear:
 ; csrand_init(uint24_t sample_ct);
 ;------------------------------------------
 csrand_init:
-; input: n is uint24 on the stack, 1 <= n <= 256
-;        n * 4 is the samples per bit
+; ix = selected byte
+; de = current deviation
+; hl = starting address
+; inputs: stack = samples / 4, Max is 256 (256*4 = 1024 samples)
+; outputs: hl = address
     pop hl
     pop de
     ld a,e
-    ld (.smc_samples), a
+    ld (_smc_samples), a
     push de
     push hl
  
     push ix
-        ld ix,0
-        ld a,0x46
-.bit_loop:
-        ld (.smc1),a
-        ld (.smc2),a
-        ld (.smc3),a
-        ld (.smc4),a
-        push af
-            push hl
-                ld bc,513
-.scan_loop:
-                push hl
-					push bc
-						push de
-							call .test_bit
-						pop de
-					pop bc
-                    ; or a,a
-                    sbc hl,de
-                    jq nc,.skip1
-                    add hl,de
-                    ex de,hl
-                    pop ix
-                    push ix
-.skip1:
-                pop hl
-                jq z,.early_exit
+        ld ix, 0
+        ld hl, $D65800
+        ld bc,513
+.test_range_loop:
+        push bc
+            call _test_byte
+        pop bc
+        cpi
+        jp pe,.test_range_loop
  
-                cpi
-                jp pe,.scan_loop
-            pop hl
-        pop af
-        add a,8
-        cp 0x86
-        jq nz,.bit_loop
-        jq .return
-.early_exit:
-        pop hl
-        pop af
-.return:
         lea hl, ix+0
         ld (_sprng_read_addr), hl
  
@@ -243,15 +216,50 @@ csrand_init:
     ret z
     inc a
     ret
-    
-    
-.test_bit:
+ 
+_test_byte:
+; inputs: hl = byte
+; inputs: de = minimum deviance
+; inputs: ix = pointer to the byte with minimum deviance
+; outputs: de is the new minimum deviance (if updated)
+; outputs: ix updated to hl if this byte contains the bit with lowest deviance
+; outputs: b = 0
+; outputs: a = 0x86
+; destroys: f
+; modifies: a, b, de, ix
+    ld a,0x46 ; second half of the `bit 0,(hl)` command
+.test_byte_bitloop:
+    push hl
+        push de
+            call _test_bit  ; HL = deviance (|desired - actual|)
+        pop de
+ 
+        add a,8       ; never overflows, so resets carry
+        sbc hl, de    ; check if HL is smaller than DE
+ 
+        jq nc, .skip_next_bit          ; HL >= DE
+        add hl,de
+        ex de,hl
+        pop ix
+        push ix
+.skip_next_bit:
+    pop hl
+    cp 0x86
+    jq nz, .test_byte_bitloop
+    ret
+ 
+_test_bit:
+; inputs: a = second byte of CB**
 ; inputs: hl = byte
 ; outputs: hl = hit count
-; outputs: carry flag reset
 ; destroys: af, bc, de, hl
-.smc_samples:=$+1
+ 
+_smc_samples:=$+1
     ld b,0
+    ld (.smc1),a
+    ld (.smc2),a
+    ld (.smc3),a
+    ld (.smc4),a
     ld de,0
 .loop:
     bit 0,(hl)
@@ -282,7 +290,6 @@ csrand_init:
     sbc hl,de
     ret nc
     ex de,hl
-    or a, a  ; return with carry reset
     ret
     
 	
