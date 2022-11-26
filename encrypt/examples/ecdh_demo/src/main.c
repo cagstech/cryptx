@@ -30,13 +30,15 @@ void hexdump(uint8_t *addr, size_t len, uint8_t *label){
 
 int main(void)
 {
-	uint8_t privkey1[ECDH_PRIVKEY_SIZE];
-	uint8_t pubkey1[ECDH_PUBKEY_SIZE];
-	uint8_t secret1[ECDH_PUBKEY_SIZE];		// privkey1 * pubkey2
+	//uint8_t privkey1[ECDH_PRIVKEY_SIZE];
+	//uint8_t pubkey1[ECDH_PUBKEY_SIZE];
+	//uint8_t secret1[ECDH_PUBKEY_SIZE];		// privkey1 * pubkey2
 	
-	uint8_t privkey2[ECDH_PRIVKEY_SIZE];
-	uint8_t pubkey2[ECDH_PUBKEY_SIZE];
-	uint8_t secret2[ECDH_PUBKEY_SIZE];		// privkey2 * pubkey1
+	uint8_t privkey[ECDH_PRIVKEY_SIZE];
+	uint8_t pubkey[ECDH_PUBKEY_SIZE] = {
+		
+	};
+	uint8_t secret[ECDH_PUBKEY_SIZE];		// privkey2 * pubkey1
     
     // Always check for false return value from csrand_init()
     if(!csrand_init(SAMPLING_FAST)) return 1;
