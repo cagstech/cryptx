@@ -51,7 +51,7 @@ int main(void)
     
     
     // generate random key and IV
-    if(!csrand_init()) return 1;          // <<<----- DONT FORGET THIS
+    if(!csrand_init(SAMPLING_FAST)) return 1;          // <<<----- DONT FORGET THIS
     // !!!! NEVER PROCEED WITH ANYTHING CRYPTOGRAPHIC !!!!
     // !!!! IF THE CSRNG FAILS TO INIT !!!!
     

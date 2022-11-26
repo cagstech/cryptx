@@ -1,5 +1,6 @@
-from Crypto.Cipher import AES
-from Crypto.Util import Counter
+import sys
+from Cryptodome.Cipher import AES
+from Cryptodome.Util import Counter
 from enum import Enum
 
 class CipherMode(Enum):
@@ -18,8 +19,7 @@ pt2 = b"The lazier fox fell down!"
 if MODE==CipherMode.CBC:
     cipher = AES.new(key, AES.MODE_CBC, iv=iv)
 elif MODE==CipherMode.CTR:
-    counter = Counter.new(64, prefix=iv[0:8], suffix=b'', initial_value=int.from_bytes(iv[8:], 'big'), little_endian=False, allow_wraparound=False)
-    cipher = AES.new(key, AES.MODE_CTR, counter=counter)
+    cipher = AES.new(key, AES.MODE_CTR, nonce=iv[:8], initial_value=iv[8:])
 pt1 = cipher.encrypt(pt1)
 pt2 = cipher.encrypt(pt2)
 

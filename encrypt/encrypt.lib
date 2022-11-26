@@ -7,6 +7,8 @@
 	export	aes_encrypt
 	export	aes_decrypt
 	export	rsa_encrypt
+	export	ecdh_keygen
+	export	ecdh_compute_secret
 	export	aes_ecb_unsafe_encrypt
 	export	aes_ecb_unsafe_decrypt
 	export	oaep_encode

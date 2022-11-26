@@ -142,7 +142,10 @@ _main:
 	pop	hl
 	pop	hl
 	pop	hl
+	ld	hl, 1
+	push	hl
 	call	_csrand_init
+	pop	hl
 	bit	0, a
 	jp	z, BB1_2
 	ld	de, -846
@@ -221,7 +224,7 @@ _main:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, 2113
+	ld	hl, 1
 	push	hl
 	ld	bc, -867
 	lea	hl, ix
@@ -255,30 +258,6 @@ _main:
 	pop	hl
 	pop	hl
 	pop	hl
-	or	a, a
-	sbc	hl, hl
-	ld	l, (ix - 26)
-	push	hl
-	ld	hl, _.str.12
-	push	hl
-	ld	hl, -327680
-	push	hl
-	call	_sprintf
-	pop	hl
-	pop	hl
-	pop	hl
-	or	a, a
-	sbc	hl, hl
-	ld	l, (ix - 25)
-	push	hl
-	ld	hl, _.str.13
-	push	hl
-	ld	hl, -327680
-	push	hl
-	call	_sprintf
-	pop	hl
-	pop	hl
-	pop	hl
 	ld	hl, (_str1)
 	ld	bc, -861
 	lea	iy, ix
@@ -303,7 +282,7 @@ _main:
 	pop	de
 	pop	de
 	push	hl
-	ld	hl, _.str.14
+	ld	hl, _.str.12
 	push	hl
 	ld	hl, -327680
 	push	hl
@@ -335,7 +314,7 @@ _main:
 	pop	de
 	pop	de
 	push	hl
-	ld	hl, _.str.15
+	ld	hl, _.str.13
 	push	hl
 	ld	hl, -327680
 	push	hl
@@ -343,7 +322,7 @@ _main:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, _.str.16
+	ld	hl, _.str.14
 	push	hl
 	ld	bc, -849
 	lea	hl, ix
@@ -359,7 +338,7 @@ _main:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, _.str.17
+	ld	hl, _.str.15
 	push	hl
 	ld	bc, -852
 	lea	hl, ix
@@ -469,31 +448,21 @@ _.str.11:
 	section	.rodata,"a",@progbits
 	private	_.str.12
 _.str.12:
-	db	"nonce len, %u", 10, 0
+	db	"message segment 1 done, exit code %u", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.13
 _.str.13:
-	db	"counter len, %u", 10, 0
+	db	"message segment 2 done, exit code %u", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.14
 _.str.14:
-	db	"message segment 1 done, exit code %u", 10, 0
+	db	"-- Encrypted Message 1 --", 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.15
 _.str.15:
-	db	"message segment 2 done, exit code %u", 10, 0
-
-	section	.rodata,"a",@progbits
-	private	_.str.16
-_.str.16:
-	db	"-- Encrypted Message 1 --", 0
-
-	section	.rodata,"a",@progbits
-	private	_.str.17
-_.str.17:
 	db	"-- Encrypted Message 2 --", 0
 
 	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"

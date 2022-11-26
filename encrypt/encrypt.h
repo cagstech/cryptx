@@ -346,6 +346,23 @@ rsa_error_t rsa_encrypt(
 					uint8_t oaep_hash_alg);
 
 
+#define ECDH_PRIVKEY_SIZE		24
+#define ECDH_PUBKEY_SIZE		(ECDH_PRIVKEY_SIZE<<1)
+// using NIST_B163
+// no using cofactor variant
+// where possible, uses timing-resistant internals
+
+typedef enum _ecdh_error_t {
+	ECDH_OK,
+	ECDH_ARG_ERROR,
+	ECDH_INVALID_PRIVKEY,
+	ECDH_INVALID_RPUBKEY
+} ecdh_error_t;
+
+ecdh_error_t ecdh_keygen(void *pubkey, void *privkey);
+ecdh_error_t ecdh_compute_secret(const uint8_t *privkey, const uint8_t *rpubkey, uint8_t *secret);
+
+
 #ifdef ENCRYPT_ENABLE_ADVANCED_MODE
 
 /*
