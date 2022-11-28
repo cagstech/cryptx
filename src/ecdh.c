@@ -55,7 +55,6 @@ void bigint_rshift(void *arr, size_t arr_len, uint8_t nbits);	// shift arr n bit
 */
 
 // Bigint for this implementation is a 28-byte big-endian encoded integer
-#define FLAG_LITTLE_ENDIAN	8
 typedef uint8_t BIGINT[ECC_PRV_KEY_SIZE];
 
 struct Point {
@@ -142,6 +141,7 @@ ecdh_error_t ecdh_keygen(uint8_t *pubkey, uint8_t *privkey, size_t klen, uint32_
 	rmemcpy(pkey.y, secp224k1.G.y, ECC_PRV_KEY_SIZE);
 	
 	// Q = a * G
+	// privkey is big-endian encoded
 	point_mul_vect(pkey, privkey);
 	
 	// reverse endianness of Point and copy to pubkey
@@ -163,6 +163,7 @@ ecdh_errot_t ecdh_secret(const uint8_t *privkey, const uint8_t *rpubkey, uint8_t
 	rmemcpy(pkey.y, rpubkey + ECC_PRV_KEY_SIZE, ECC_PRV_KEY_SIZE);
 	
 	// s = a * Q
+	// privkey is big-endian encoded
 	point_mul_vect(pkey, privkey);
 	
 	// reverse endianness of Point and copy to pubkey
