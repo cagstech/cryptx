@@ -111,7 +111,7 @@ void point_add(struct Point *pt1, struct Point *pt2);
  */
 
 
-ecdh_error_t ecdh_keygen(uint8_t *pubkey, uint8_t *privkey, size_t klen, uint32_t (rand*)()){
+ecdh_error_t ecdh_keygen(uint8_t *pubkey, uint8_t *privkey, size_t klen, uint32_t (randfill*)()){
 	if((pubkey==NULL) || (privkey==NULL))
 		return ECDH_INVALID_ARG;
 	
@@ -120,13 +120,8 @@ ecdh_error_t ecdh_keygen(uint8_t *pubkey, uint8_t *privkey, size_t klen, uint32_
 	// if rand is null, assume it's already done
 	// if you use this api wrong, its your own fault
 	// it will be well documented
-	if(rand!=NULL){
-		uint32_t r;
-		for(int i=0; i<ECC_NUM_WORDS; i++){
-			r = rand();
-			memcpy(&privkey[PLATFM_WORD_SIZE*i], &r, PLATFM_WORD_SIZE);
-		}
-	}
+	if(randfill != NULL)
+		randfill(privkey, ECC_PRV_KEY_SIZE);
 	
 	// force klen to equal ECC_PRV_KEY_SIZE
 	// it can exceed but any bytes higher than that will be discarded
