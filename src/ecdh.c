@@ -99,7 +99,7 @@ typedef enum _ecdh_errors {
 
 
 // ec point arithmetic prototypes
-void point_mul_vect(struct Point *pt, vec_t *exp, uint24_t explen);
+void point_mul_vect(struct Point *pt, vec_t *exp);
 void point_double(struct Point *pt);
 void point_add(struct Point *pt1, struct Point *pt2);
 
@@ -185,11 +185,7 @@ void point_mul_vect(struct Point *pt, uint8_t *exp){
 		else
 			point_add(&res, &ta_resist);	// add 0; timing resistance
 		
-		// point_double(&tmp);
-		// isn't just a x2 the same thing?
-		// also if its all little endian, isn't rshift a *2, not an lshift?
-		rshift_barr(tmp.x, sizeof tmp.x);
-		rshift_barr(tmp.y, sizeof tmp.y);
+		point_double(&tmp);
 	}
 	memcpy(pt, &res, sizeof pt);
 }
