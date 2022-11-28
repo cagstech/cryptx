@@ -37,40 +37,57 @@ output x as shared secret field
 (optional, but recommended) pass x to a KDF to generate symmetric key
  */
 
+#include <stdint.h>
+// import assembly functions necessary for this algorithm
+// asm/ecdh_ops.asm
+void rmemcpy(void *dest, void *src, size_t len);		// memcpy that reverses endianness
+// ^^ thanks to calc84maniac
+void bigint_lshift(void *arr, size_t arr_len, uint8_t nbits);	// shift arr n bits to the left
+void bigint_rshift(void *arr, size_t arr_len, uint8_t nbits);	// shift arr n bits to the right
+// ^^ thanks to Zeda -- WIP
+
 #define ECC_PRV_KEY_SIZE	28
 #define ECC_PUB_KEY_SIZE	(ECC_PRV_KEY_SIZE<<1)
 #define CURVE_DEGREE		224
 
-#define PLATFM_WORD_SIZE	sizeof(uint32_t)
-#define ECC_NUM_WORDS		(ECC_PRV_KEY_SIZE / PLATFM_WORD_SIZE)
+/*
+ ### Main Type Definitions ###
+*/
 
-// main type definitions for variables
-typedef uint32_t vec_t[ECC_NUM_WORDS];	// should be 24 bytes
+// Bigint for this implementation is a 28-byte big-endian encoded integer
+#define FLAG_LITTLE_ENDIAN	8
+typedef uint8_t BIGINT[ECC_PRV_KEY_SIZE];
+
 struct Point {
-	vec_t x;
-	vec_t y;
+	BIGINT x;
+	BIGINT y;
 };
+
 struct Curve {
-	vec_t polynomial;
-	vec_t coeff_a;
-	vec_t coeff_b;
-	Point base;
-	vec_t b_order;
+	BIGINT polynomial;
+	BIGINT coeff_a;
+	BIIGINT coeff_b;
+	Point G;
+	BIGINT b_order;
 	uint8_t cofactor;
 };
 
-#define
-
 // each u32 word is written little-endian
 struct Curve secp224k1 = {
-	{0xFFFFE56D, 0xFFFFFFFE, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF},	// p
-	{0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000},	// a
-	{0x00000005, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000},	// b
-	{
-		{0xB6B7A45C, 0x0F7E650E, 0xE47075A9, 0x69A467E9, 0x30FC28A1, 0x4DF099DF, 0xA1455B33},	// x
-		{0x556D61A5, 0xE2CA4BDB, 0xC0B0BD59, 0xF7E319F7, 0x82CAFBD6, 0x7FBA3442, 0x7E089FED}	// y
-	},		// G
-	{0x769FB1F7, 0xCAF0A971, 0xD2EC6184, 0x0001DCE8, 0x00000000, 0x00000000, 0x00000000},	// n
+	{	0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,		// p
+		0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFE,0xFF,0xFF,0xE5,0x6D},
+	{	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,		// a
+		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
+	{	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,		// b
+		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x05},
+	{		// G
+		{	0xA1,0x45,0x5B,0x33,0x4D,0xF0,0x99,0xDF,0x30,0xFC,0x28,0xA1,0x69,0xA4,		// G.x
+			0x67,0xE9,0xE4,0x70,0x75,0xA9,0x0F,0x7E,0x65,0x0E,0xB6,0xB7,0xA4,0x5C},
+		{	0x7E,0x08,0x9F,0xED,0x7F,0xBA,0x34,0x42,0x82,0xCA,0xFB,0xD6,0xF7,0xE3,		// G.y
+			0x19,0xF7,0xC0,0xB0,0xBD,0x59,0xE2,0xCA,0x4B,0xDB,0x55,0x6D,0x61,0xA5}
+	},
+	{	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01,		// n
+		0xDC,0xE8,0xD2,0xEC,0x61,0x84,0xCA,0xF0,0xA9,0x71,0x76,0x9F,0xB1,0xF7},
 	1		// h
 };
 struct Point ta_resist = {0};
@@ -83,16 +100,27 @@ typedef enum _ecdh_errors {
 
 
 // ec point arithmetic prototypes
-void point_mul_vect(struct Point *pt, vec_t *exp, uint24_t exp_bitlen);
+void point_mul_vect(struct Point *pt, vec_t *exp, uint24_t explen);
 void point_double(struct Point *pt);
 void point_add(struct Point *pt1, struct Point *pt2);
 
-uint24_t vect_get_bitlen(uint8_t *v, size_t v_len);
+// BIGINT arithmetic/bytearray bitshift prototypes
 
-ecdh_error_t ecdh_keygen(uint8_t *pubkey, uint8_t *privkey, size_t privkey_len, uint32_t (rand*)()){
+
+/*
+### Elliptic Curve Diffie-Hellman Main Functions ###
+ */
+
+
+ecdh_error_t ecdh_keygen(uint8_t *pubkey, uint8_t *privkey, size_t klen, uint32_t (rand*)()){
 	if((pubkey==NULL) || (privkey==NULL))
-		return ECDH_INVALID;
+		return ECDH_INVALID_ARG;
 	
+	// privkey is alice 'a'
+	// if rand is supplied, assume we need to generate the key
+	// if rand is null, assume it's already done
+	// if you use this api wrong, its your own fault
+	// it will be well documented
 	if(rand!=NULL){
 		uint32_t r;
 		for(int i=0; i<ECC_NUM_WORDS; i++){
@@ -100,28 +128,46 @@ ecdh_error_t ecdh_keygen(uint8_t *pubkey, uint8_t *privkey, size_t privkey_len, 
 			memcpy(&privkey[PLATFM_WORD_SIZE*i], &r, PLATFM_WORD_SIZE);
 		}
 	}
-	/*
-	// this is a nifty trick
-	// you're supposed to reject a privkey that is not at least half the degree of the polynomial
-	// degree of polynomial is 224, or 28 bytes
-	// so only seek a set bit for half of the private key, return zero if fails, then error out
-	size_t prkey_bitlen = vect_get_bitlen(privkey, ECC_PRV_KEY_SIZE>>1);
-	if(prkey_bitlen == 0)
-		return ECDH_PRIVKEY_INVALID;
-	// then add half the key size to the bitlen
-	prkey_bitlen += ECC_PRV_KEY_SIZE<<2;
-	*/
-	// as nifty as the trick is it's not needed because we're hard-forcing keylen to 28
-	if (privkey_len < ECC_PRV_KEY_SIZE)
+	
+	// force klen to equal ECC_PRV_KEY_SIZE
+	// it can exceed but any bytes higher than that will be discarded
+	if (klen < ECC_PRV_KEY_SIZE)
 		return ECDH_PRIVKEY_INVALID;
 	
 	// copy G from curve parameters to pkey
+	// convert to a Point
+	// reverse endianness for computational efficiency
 	struct Point pkey;
-	memcpy(pkey.x, secp224k1.base.x, ECC_PRV_KEY_SIZE);
-	memcpy(pkey.y, secp224k1.base.y, ECC_PRV_KEY_SIZE);
-	point_mul_vect(pkey, privkey, privkey_len<<3);
+	rmemcpy(pkey.x, secp224k1.G.x, ECC_PRV_KEY_SIZE);
+	rmemcpy(pkey.y, secp224k1.G.y, ECC_PRV_KEY_SIZE);
 	
-	// convert Point to bytearray => pubkey
+	// Q = a * G
+	point_mul_vect(pkey, privkey);
+	
+	// reverse endianness of Point and copy to pubkey
+	rmemcpy(pubkey, pkey.x, ECC_PRV_KEY_SIZE);
+	rmemcpy(pubkey + ECC_PRV_KEY_SIZE, pkey.y, ECC_PRV_KEY_SIZE);
+	
+	return ECDH_OK;
+}
+
+ecdh_errot_t ecdh_secret(const uint8_t *privkey, const uint8_t *rpubkey, uint8_t *secret){
+	if((privkey==NULL) || (rpubkey==NULL) || (output==NULL))
+		return ECDH_INVALID_ARG;
+	
+	// rpubkey = a big-endian encoded bytearray
+	// convert to a Point
+	// reverse endianness for computational efficiency
+	struct Point pkey;
+	rmemcpy(pkey.x, rpubkey, ECC_PRV_KEY_SIZE);
+	rmemcpy(pkey.y, rpubkey + ECC_PRV_KEY_SIZE, ECC_PRV_KEY_SIZE);
+	
+	// s = a * Q
+	point_mul_vect(pkey, privkey);
+	
+	// reverse endianness of Point and copy to pubkey
+	rmemcpy(secret, pkey.x, ECC_PRV_KEY_SIZE);
+	rmemcpy(secret + ECC_PRV_KEY_SIZE, pkey.y, ECC_PRV_KEY_SIZE);
 	
 	return ECDH_OK;
 }
@@ -131,18 +177,23 @@ ecdh_error_t ecdh_keygen(uint8_t *pubkey, uint8_t *privkey, size_t privkey_len, 
  */
 
 #define GET_BIT(byte, bitnum) ((byte) & (1<<(bitnum)))
-void point_mul_vect(struct Point *pt, uint8_t *exp, uint24_t exp_bitlen){
+void point_mul_vect(struct Point *pt, uint8_t *exp){
 // multiplies pt by exp, result in pt
 	struct Point tmp;
 	struct Point res = {0};		// point-at-infinity
 	memcpy(&tmp, pt, sizeof tmp);
 	
-	for(i = exp_bitlen; i >= 0; i--){
+	for(i = CURVE_DEGREE; i >= 0; i--){
 		if (GET_BIT(exp[i>>3], i&0x7))
 			point_add(&res, &tmp);
 		else
 			point_add(&res, &ta_resist);	// add 0; timing resistance
-		point_double(&tmp);
+		
+		// point_double(&tmp);
+		// isn't just a x2 the same thing?
+		// also if its all little endian, isn't rshift a *2, not an lshift?
+		rshift_barr(tmp.x, sizeof tmp.x);
+		rshift_barr(tmp.y, sizeof tmp.y);
 	}
 	memcpy(pt, &res, sizeof pt);
 }
@@ -172,36 +223,5 @@ static void vect_double(vec_t *v){
 	vect_lshift(v, 1);
 }
 
-static void vect_lshift(vec_t *v, int nbits){
-	int nwords = (nbits / 32);
-	
-	/* Shift whole words first if nwords > 0 */
-	int i,j;
-	for (i = 0; i < nwords; ++i)
-	{
-		/* Zero-initialize from least-significant word until offset reached */
-		v[i] = 0;
-	}
-	j = 0;
-	/* Copy to x output */
-	while (i < ECC_NUM_WORDS)
-	{
-		v[i] = v[j];
-		i += 1;
-		j += 1;
-	}
-	
-	/* Shift the rest if count was not multiple of bitsize of DTYPE */
-	nbits &= 31;
-	if (nbits != 0)
-	{
-		/* Left shift rest */
-		int i;
-		for (i = (ECC_NUM_WORDS - 1); i > 0; --i)
-		{
-			x[i]  = (x[i] << nbits) | (x[i - 1] >> (32 - nbits));
-		}
-		x[0] <<= nbits;
-	}
-		
-}
+
+

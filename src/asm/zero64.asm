@@ -1,5 +1,6 @@
 
 public _zero64
+public _rmemcpy
 
 _zero64:
 	pop de
