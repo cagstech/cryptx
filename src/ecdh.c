@@ -101,7 +101,7 @@ typedef enum _ecdh_errors {
 // ec point arithmetic prototypes
 void point_mul_vect(struct Point *pt, vec_t *exp);
 void point_double(struct Point *pt);
-void point_add(struct Point *pt1, struct Point *pt2);
+void point_add(struct Point *ptP, struct Point *ptQ);
 
 // BIGINT arithmetic/bytearray bitshift prototypes
 
@@ -190,16 +190,23 @@ void point_mul_vect(struct Point *pt, uint8_t *exp){
 	memcpy(pt, &res, sizeof pt);
 }
 
-void point_add(struct Point *pt1, struct Point *pt2){
-	// how in the 37 layers of hell do you do this??
-	// is this just a straight addition of two points or some weird bs?
-	// I'm at like 16% soul right about now
+void point_add(struct Point *ptP, struct Point *ptQ){
+	// P + Q = R
+	// (xp, yp) + (xq, yq) = (xr, yr)
+	// Y = (yq - yp)/(xq - xp)		(isn't that some kind of distance)?
+	// xr = Y^2 - xp - xq
+	// yr = Y(xp - xr) - yp
+	// assert: neither P or Q are point at infinity, and Px != Qx
+	// if P or Q is point at infinity, R = other point
+	// if P = Q, double instead
+	// if Px == Qx, set P to point at infinity
 }
 
 void point_double(struct Point *pt){
-	// same question here
-	// https://www.nayuki.io/page/elliptic-curve-point-addition-in-projective-coordinates
-	// it seems obnoxiously complex and computationally intensive
+	// P + P = R
+	// (xp, yp) + (xp, yp) = (xr, yr)
+	// Y = (3(xp)^2 + a) / 2(yp)
+	// can we defer division and then divide by [2(yp) * calls_to_double] at the end for speed?
 }
 
 
