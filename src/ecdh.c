@@ -81,11 +81,12 @@ typedef enum _ecdh_errors {
 } ecdh_error_t;
 
 
+// ec point arithmetic prototypes
+void point_mul_vect(struct Point *pt, vec_t *exp);
+void point_double(struct Point *pt);
+void point_add(struct Point *pt1, struct Point *pt2);
 
-void ecdh_point_mul_vect(struct Point *pt, vec_t *exp);
-void ecdh_point_double(struct Point *pt);
-bool ecdh_vec_getbit(vec_t *v, uint24_t bit);
-void ecdh_point_add(struct Point *pt1, struct Point *pt2);
+uint24_t vect_get_bitlen(vec_t *v);
 
 ecdh_error_t ecdh_keygen(uint8_t *pubkey, uint8_t *privkey, uint32_t (rand*)()){
 	if((pubkey==NULL) || (privkey==NULL))
@@ -99,36 +100,63 @@ ecdh_error_t ecdh_keygen(uint8_t *pubkey, uint8_t *privkey, uint32_t (rand*)()){
 		}
 	}
 	
-	// to-do: check for privkey sanity
+	// this is a nifty trick
+	// you're supposed to reject a privkey that is not at least half the degree of the polynomial
+	// degree of polynomial is 224, or 28 bytes
+	// so only seek a set bit for half of the private key, return zero if fails, then error out
+	size_t prkey_bitlen = vect_get_bitlen(privkey, ECC_PRV_KEY_SIZE>>1);
+	if(prkey_bitlen == 0)
+		return ECDH_PRIVKEY_INVALID;
+	// then add half the key size to the bitlen
+	prkey_bitlen += ECC_PRV_KEY_SIZE>>1;
+	
 	
 	struct Point pkey;
 	memcpy(pkey.x, secp224k1.base.x, ECC_PRV_KEY_SIZE);
 	memcpy(pkey.y, secp224k1.base.y, ECC_PRV_KEY_SIZE);
-	ecdh_point_mul_vect(pkey, (uint32_t*)privkey);
+	point_mul_vect(pkey, privkey, pr_bitlen);
 	
 	// point multiplication to generate pubkey
 	
 	return ECDH_OK;
 }
 
+/*
+ ### EC Point Arithmetic Functions ###
+ */
 
 #define GET_BIT(byte, bitnum) ((byte) & (1<<(bitnum)))
-void ecdh_point_mul_vect(struct Point *pt, vec_t *exp){
-	struct Point tmp = {0};
+void point_mul_vect(struct Point *pt, uint8_t *exp, uint24_t exp_bitlen){
+	struct Point tmp = {0};		// point-at-infinity
 	struct Point ta_resist = {0};
-	uint8_t *exp_octets = (uint8_t*)exp;
 	
-	for(i = nbits; i >= 0; i--){
-		ecdh_point_double(&tmp);
-		if (GET_BIT(exp_octets[bit>>3], bit&0x7))
-			ecdh_point_add(&tmp, pt);
+	for(i = exp_bitlen; i >= 0; i--){
+		point_double(&tmp);
+		if (GET_BIT(exp[i>>3], i&0x7))
+			point_add(&tmp, pt);
 		else
-			ecdh_point_add(&tmp, &ta_resist);	// add 0; timing resistance
+			point_add(&tmp, &ta_resist);	// add 0; timing resistance
 	}
 	memcpy(pt, &tmp, sizeof pt);
 }
 
+void point_add(struct Point *pt1, struct Point *pt2){
+	// how in the 37 layers of hell do you do this??
+	// is this just a straight addition of two points or some weird bs?
+}
 
-void ecdh_point_add(struct Point *pt1, struct Point *pt2){
-	// help!!!
+void point_double(struct Point *pt){
+	// same question here
+	// https://www.nayuki.io/page/elliptic-curve-point-addition-in-projective-coordinates
+	// it seems obnoxiously complex and computationally intensive
+}
+
+// assumes big-endian
+uint24_t vect_get_bitlen(uint8_t *v, size_t v_len){
+	for(int i=0; i<v_len; i++){
+		for(int j=0; j<8; j++){
+			if(GET_BIT(v[i], j)) return (v_len<<3) - (i<<3) - j;
+		}
+	}
+	return 0;
 }
