@@ -49,13 +49,15 @@ void bigint_rshift(void *arr, size_t arr_len, uint8_t nbits);	// shift arr n bit
 #define ECC_PRV_KEY_SIZE	28
 #define ECC_PUB_KEY_SIZE	(ECC_PRV_KEY_SIZE<<1)
 #define CURVE_DEGREE		224
+#define OVERFLOW_BYTES		4
 
 /*
  ### Main Type Definitions ###
 */
 
 // Bigint for this implementation is a 28-byte big-endian encoded integer
-typedef uint8_t BIGINT[ECC_PRV_KEY_SIZE];
+// additional 4 bytes added for if point operations overflow
+typedef uint8_t BIGINT[ECC_PRV_KEY_SIZE + OVERFLOW_BYTES];
 
 struct Point {
 	BIGINT x;
