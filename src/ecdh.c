@@ -196,6 +196,26 @@ void point_mul_vect(struct Point *pt, uint8_t *exp){
 	memcpy(pt, &res, sizeof pt);
 }
 
+
+
+void point_compute(struct Point *ptP, struct Point *ptQ, BIGINT *slope){
+	
+	Point res;
+	// compute result X
+	memcpy(res.x, slope, ECC_PRV_KEY_SIZE + OVERFLOW_BYTES);
+	bigint_mul(res.x, res.x);
+	bigint_sub(res.x, ptP->x);
+	bigint_sub(res.x, ptQ->x);
+	
+	// compute result Y
+	memcpy(res.y, ptP->x, CC_PRV_KEY_SIZE + OVERFLOW_BYTES);
+	bigint_sub(res.y, res.x);
+	bigint_mul(res.y, deltaX);
+	bigint_sub(res.y, ptQ->y);
+	
+	memcpy(ptP, res, sizeof ptP);
+}
+
 void point_add(struct Point *ptP, struct Point *ptQ){
 	// P + Q = R
 	// (xp, yp) + (xq, yq) = (xr, yr)
@@ -226,30 +246,15 @@ void point_add(struct Point *ptP, struct Point *ptQ){
 				}
 			}
 			else{
-				Point res;
 				BIGINT deltaY, deltaX;
-				
-				// compute slope of line between two points
 				memcpy(deltaY, ptQ->y, ECC_PRV_KEY_SIZE + OVERFLOW_BYTES);
 				memcpy(deltaX, ptQ->x, ECC_PRV_KEY_SIZE + OVERFLOW_BYTES);
-				bigint_add(deltaY, ptP->y);		// idk why ref uses add, not sub
-				bigint_add(deltaX, ptP->x);		// ...
+				bigint_sub(deltaY, ptP->y);		// idk why ref uses add, not sub
+				bigint_sub(deltaX, ptP->x);		// ...
 				bigint_invert(deltaX);
 				bigint_mul(deltaX, deltaY);		// deltaX is slope
 				
-				// compute result X
-				memcpy(res.x, deltaX, ECC_PRV_KEY_SIZE + OVERFLOW_BYTES);
-				bigint_mul(res.x, res.x);
-				bigint_add(res.x, ptP->x);
-				bigint_add(res.x, ptQ->x);
-				
-				// compute result Y
-				memcpy(res.y, ptP->x, CC_PRV_KEY_SIZE + OVERFLOW_BYTES);
-				bigint_add(res.y, res.x);
-				bigint_mul(res.y, deltaX);
-				bigint_add(res.y, ptQ->y);
-				
-				memcpy(ptP, res, sizeof ptP);
+				point_compute(ptP, ptQ, deltaX);
 			}
 		}
 	}
@@ -260,7 +265,30 @@ void point_double(struct Point *pt){
 	// (xp, yp) + (xp, yp) = (xr, yr)
 	// Y = (3(xp)^2 + a) / 2(yp)
 	// can we defer division and then divide by [2(yp) * calls_to_double] at the end for speed?
+	
+	BIGINT slope, tmp;
+	memcpy(slope, pt->x, ECC_PRV_KEY_SIZE + OVERFLOW_BYTES);
+	
+	// 3(Px)^2
+	bigint_mul(slope, slope);
+	memcpy(tmp, slope, sizeof tmp);
+	bigint_add(slope, slope);
+	bigint_add(slope, tmp);
+	
+	// + a; a == 0, so we can skip this i think
+	//bigint_add(slope, sect233k1.coeff_a);
+	
+	// 2(Py)
+	memcpy(tmp, pt->y, ECC_PRV_KEY_SIZE + OVERFLOW_BYTES);
+	bigint_add(tmp, tmp);
+	bigint_invert(tmp, tmp);
+	
+	// division as multiply by inverse
+	bigint_mul(slope, tmp);
+	
+	point_compute(pt, pt, slope);
 }
+
 
 
 static bool point_iszero(struct Point *pt){

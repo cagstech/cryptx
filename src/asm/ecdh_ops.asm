@@ -2,8 +2,8 @@ public _rmemcpy
 public _bigint_lshift
 public _bigint_rshift
 public _bigint_add
-public _bigint_mul
 public _bigint_sub
+public _bigint_mul
 public _bigint_iszero
 public _bigint_setzero
 public _bigint_isequal
@@ -317,7 +317,7 @@ _bigint_isequal:
 
 
 ; bigint_add(uint8_t *op1, uint8_t *op2);
-; hard limit to 32 bytes
+; hard limit to 34 bytes
 ; output in op1
 ; because its a binary field, add is xor
 _bigint_add:
@@ -339,29 +339,8 @@ _bigint_add:
 
 
 ; bigint_sub(uint8_t *op1, uint8_t *op2);
-; hard limit to 32 bytes
-; output in op1
-_bigint_sub:
-	ti._frameset0
-	ld hl, (ix + 6)		; op1
-	ld bc, 34
-	add hl, bc
-	ex de, hl
-	ld hl, (ix + 3)		; op2
-	add hl, bc
-	ld b, c
-; hl = op2 + 32, de = op1 + 32
-	or a
-.loop:
-	ld a,(de)
-	sbc a,(hl)
-	ld (de),a
-	dec hl
-	dec de
-	djnz .loop
-	ld sp, ix
-	pop ix
-	ret
+; on a binary field addition and subtraction are the same
+_bigint_sub := _bigint_add
 	
 	
 ; bigint_mul(uint8_t *op1, uint8_t *op2)
@@ -374,7 +353,11 @@ _bigint_mul:
 	ldir
 	ld de, (ix + 6)		; op1
 	ld hl, (ix + 3)		; op2
-.loop_op2:
+	or a
+.loop_op2_bits:
+	ld a, (hl)
+	push hl
+	rl a
 	ex de, hl			; op1 in hl for doubling
 	ld b, 32
 .loop_mul2:
@@ -382,7 +365,8 @@ _bigint_mul:
 	inc hl
 	djnz .loop_mul2
 	ex de, hl			; op2 back in hl for bit checking
-	ld
+	ld a, (hl)
+	
 	
 	
 	
