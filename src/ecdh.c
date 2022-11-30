@@ -39,55 +39,11 @@ output x as shared secret field
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-// import assembly functions necessary for this algorithm
-// asm/ecdh_ops.asm
-void rmemcpy(void *dest, void *src, size_t len);		// memcpy that reverses endianness
-// ^^ thanks to calc84maniac
-void bigint_lshift(void *arr, size_t arr_len, uint8_t nbits);	// shift arr n bits to the left
-void bigint_rshift(void *arr, size_t arr_len, uint8_t nbits);	// shift arr n bits to the right
-// ^^ thanks to Zeda -- WIP
-bool bigint_iszero(uint8_t *op);
-void bigint_setzero(uint8_t *op);
-bool bigint_isequal(uint8_t *op1, uint8_t *op2);
-void bigint_add(uint8_t *op1, uint8_t *op2);
-void bigint_sub(uint8_t *op1, uint8_t *op2);
 
-// static funcs
-static bool point_iszero(struct Point *pt){
-	return (bigint_iszero(pt->x) && bigint_iszero(pt->y));
-}
-static void point_setzero(struct Point *pt){
-	bigint_setzero(pt->x);
-	bigint_setzero(pt->y);
-}
+#include "ecdh.h"
 
-#define CURVE_DEGREE		233
-#define ECC_PRV_KEY_SIZE	29		// largest byte-aligned length < CURVE_DEGREE
-#define ECC_BIGINT_MAX_LEN	(ECC_PRV_KEY_SIZE + 3)
-#define ECC_PUB_KEY_SIZE	(ECC_BIGINT_MAX_LEN<<1)
 
-/*
- ### Main Type Definitions ###
-*/
-
-// Bigint for this implementation is a 32-byte big-endian encoded integer
-// additional 4 bytes added for if point operations overflow
-typedef uint8_t BIGINT[ECC_BIGINT_MAX_LEN];
-
-struct Point {
-	BIGINT x;
-	BIGINT y;
-};
-
-struct Curve {
-	BIGINT polynomial;
-	BIGINT coeff_a;
-	BIIGINT coeff_b;
-	Point G;
-	BIGINT b_order;
-	uint8_t cofactor;
-};
-
+// Defines standardized curve parameters (see http://www.secg.org/sec2-v2.pdf, sect233k1)
 // each entry is big-endian encoded
 struct Curve sect233k1 = {
 	{	0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x04,0x00,0x00,0x00,0x00,0x00,	// p
@@ -106,28 +62,129 @@ struct Curve sect233k1 = {
 		0x9D,0x5B,0xB9,0x15,0xBC,0xD4,0x6E,0xFB,0x1A,0xD5,0xF1,0x73,0xAB,0xDF},
 	4		// h
 };
+
+// defines a null Point to be used for timing resistance
 struct Point ta_resist = {0};
 
-typedef enum _ecdh_errors {
-	ECDH_OK,
-	ECDH_INVALID_ARG,
-	ECDH_PRIVKEY_INVALID,
-} ecdh_error_t;
+// Checks if a point is zero
+static bool point_iszero(struct Point *pt){
+	return (bigint_iszero(pt->x) && bigint_iszero(pt->y));
+}
 
-typedef struct _ecdh_ctx {
-	uint8_t privkey[ECC_PRV_KEY_SIZE];
-	uint8_t pubkey[ECC_PUB_KEY_SIZE];
-} ecdh_ctx;
+// sets a point to 0
+#define point_setzero(pt)	\
+		memset((pt), 0, sizeof(struct Point))
 
-// ec point arithmetic prototypes
-void point_mul_vect(struct Point *pt, vec_t *exp);
-void point_double(struct Point *pt);
-void point_add(struct Point *ptP, struct Point *ptQ);
+/*
+ Point Arithmetic Functions
+ */
+
+// multiplies pt by scalar exp
+#define GET_BIT(byte, bitnum) ((byte) & (1<<(bitnum)))
+void point_mul_vect(struct Point *pt, uint8_t *exp){
+	// multiplies pt by exp, result in pt
+	struct Point tmp;
+	struct Point res = {0};		// point-at-infinity
+	memcpy(&tmp, pt, sizeof tmp);
+	
+	for(int i = CURVE_DEGREE; i >= 0; i--){
+		if (GET_BIT(exp[i>>3], i&0x7))
+			point_add(&res, &tmp);
+		else
+			point_add(&res, &ta_resist);	// add 0; timing resistance
+		
+		point_double(&tmp);
+	}
+	memcpy(pt, &res, sizeof(struct Point));
+}
+
+// given ptP, ptQ, and slope, return addition/double result in ptP
+void point_compute(struct Point *ptP, struct Point *ptQ, BIGINT *slope){
+	
+	struct Point res;
+	// compute result X
+	memcpy(res.x, slope, ECC_PRV_KEY_SIZE);
+	bigint_mul(res.x, res.x);
+	bigint_sub(res.x, ptP->x);
+	bigint_sub(res.x, ptQ->x);
+	
+	// compute result Y
+	memcpy(res.y, ptP->x, ECC_PRV_KEY_SIZE);
+	bigint_sub(res.y, res.x);
+	bigint_mul(res.y, slope);
+	bigint_sub(res.y, ptQ->y);
+	
+	memcpy(ptP, &res, sizeof(struct Point));
+}
+
+// given ptP and ptQ, return addition result in ptP
+void point_add(struct Point *ptP, struct Point *ptQ){
+	// P + Q = R
+	// (xp, yp) + (xq, yq) = (xr, yr)
+	// Y = (yq - yp)/(xq - xp)		(isn't that some kind of distance)?
+	// xr = Y^2 - xp - xq
+	// yr = Y(xp - xr) - yp
+	// assert: neither P or Q are point at infinity, and Px != Qx
+	// if P or Q is point at infinity, R = other point
+	// if P = Q, double instead
+	// if Px == Qx, set P to point at infinity
+	if(!point_iszero(ptQ)) {
+		if(point_iszero(ptP)) memcpy(ptP, ptQ, sizeof(struct Point));
+		else {
+			if(bigint_isequal(ptP->x, ptQ->x)) {
+				if(bigint_isequal(ptP->y, ptQ->y)) point_double(ptP);
+				else memset(ptP, 0, sizeof(struct Point));
+			}
+			else {
+				BIGINT deltaY, deltaX;
+				memcpy(deltaY, ptQ->y, ECC_PRV_KEY_SIZE);
+				memcpy(deltaX, ptQ->x, ECC_PRV_KEY_SIZE);
+				bigint_sub(deltaY, ptP->y);		// idk why ref uses add, not sub
+				bigint_sub(deltaX, ptP->x);		// ...
+				bigint_invert(deltaX);
+				bigint_mul(deltaX, deltaY);		// deltaX is slope
+				
+				point_compute(ptP, ptQ, deltaX);
+			}
+		}
+	}
+}
+
+// given pt, return point double result in pt
+void point_double(struct Point *pt){
+	// P + P = R
+	// (xp, yp) + (xp, yp) = (xr, yr)
+	// Y = (3(xp)^2 + a) / 2(yp)
+	// can we defer division and then divide by [2(yp) * calls_to_double] at the end for speed?
+	
+	BIGINT slope, tmp;
+	memcpy(slope, pt->x, ECC_PRV_KEY_SIZE);
+	
+	// 3(Px)^2
+	bigint_mul(slope, slope);
+	memcpy(tmp, slope, sizeof tmp);
+	bigint_add(slope, slope);
+	bigint_add(slope, tmp);
+	
+	// + a; a == 0, so we can skip this i think
+	//bigint_add(slope, sect233k1.coeff_a);
+	
+	// 2(Py)
+	memcpy(tmp, pt->y, ECC_PRV_KEY_SIZE);
+	bigint_add(tmp, tmp);
+	bigint_invert(tmp, tmp);
+	
+	// division as multiply by inverse
+	bigint_mul(slope, tmp);
+	
+	point_compute(pt, pt, slope);
+}
+
+
 
 /*
 ### Elliptic Curve Diffie-Hellman Main Functions ###
  */
-
 
 ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, uint32_t (randfill*)()){
 	if(ctx==NULL)
@@ -140,10 +197,6 @@ ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, uint32_t (randfill*)()){
 	// it will be well documented
 	if(randfill != NULL)
 		randfill(ctx->privkey, sizeof ctx->privkey);
-	
-	
-	// set any bits in key > CURVE_DEGREE to 0
-	
 	
 	// copy G from curve parameters to pkey
 	// convert to a Point
@@ -185,105 +238,7 @@ ecdh_error_t ecdh_secret(const ecdh_ctx *ctx, const uint8_t *rpubkey, uint8_t *s
 	return ECDH_OK;
 }
 
-/*
- ### EC Point Arithmetic Functions ###
- */
-
-#define GET_BIT(byte, bitnum) ((byte) & (1<<(bitnum)))
-void point_mul_vect(struct Point *pt, uint8_t *exp){
-// multiplies pt by exp, result in pt
-	struct Point tmp;
-	struct Point res = {0};		// point-at-infinity
-	memcpy(&tmp, pt, sizeof tmp);
-	
-	for(int i = CURVE_DEGREE; i >= 0; i--){
-		if (GET_BIT(exp[i>>3], i&0x7))
-			point_add(&res, &tmp);
-		else
-			point_add(&res, &ta_resist);	// add 0; timing resistance
-		
-		point_double(&tmp);
-	}
-	memcpy(pt, &res, sizeof(struct Point));
-}
 
 
-void point_compute(struct Point *ptP, struct Point *ptQ, BIGINT *slope){
-	
-	struct Point res;
-	// compute result X
-	memcpy(res.x, slope, ECC_PRV_KEY_SIZE);
-	bigint_mul(res.x, res.x);
-	bigint_sub(res.x, ptP->x);
-	bigint_sub(res.x, ptQ->x);
-	
-	// compute result Y
-	memcpy(res.y, ptP->x, ECC_PRV_KEY_SIZE);
-	bigint_sub(res.y, res.x);
-	bigint_mul(res.y, slope);
-	bigint_sub(res.y, ptQ->y);
-	
-	memcpy(ptP, &res, sizeof(struct Point));
-}
 
-void point_add(struct Point *ptP, struct Point *ptQ){
-	// P + Q = R
-	// (xp, yp) + (xq, yq) = (xr, yr)
-	// Y = (yq - yp)/(xq - xp)		(isn't that some kind of distance)?
-	// xr = Y^2 - xp - xq
-	// yr = Y(xp - xr) - yp
-	// assert: neither P or Q are point at infinity, and Px != Qx
-	// if P or Q is point at infinity, R = other point
-	// if P = Q, double instead
-	// if Px == Qx, set P to point at infinity
-	if(!point_iszero(ptQ)) {
-		if(point_iszero(ptP)) memcpy(ptP, ptQ, sizeof(struct Point));
-		else {
-			if(bigint_isequal(ptP->x, ptQ->x)) {
-				if(bigint_isequal(ptP->y, ptQ->y)) point_double(ptP);
-				else memset(ptP, 0, sizeof(struct Point));
-			}
-			else {
-				BIGINT deltaY, deltaX;
-				memcpy(deltaY, ptQ->y, ECC_PRV_KEY_SIZE);
-				memcpy(deltaX, ptQ->x, ECC_PRV_KEY_SIZE);
-				bigint_sub(deltaY, ptP->y);		// idk why ref uses add, not sub
-				bigint_sub(deltaX, ptP->x);		// ...
-				bigint_invert(deltaX);
-				bigint_mul(deltaX, deltaY);		// deltaX is slope
-				
-				point_compute(ptP, ptQ, deltaX);
-			}
-		}
-	}
-}
-
-void point_double(struct Point *pt){
-	// P + P = R
-	// (xp, yp) + (xp, yp) = (xr, yr)
-	// Y = (3(xp)^2 + a) / 2(yp)
-	// can we defer division and then divide by [2(yp) * calls_to_double] at the end for speed?
-	
-	BIGINT slope, tmp;
-	memcpy(slope, pt->x, ECC_PRV_KEY_SIZE);
-	
-	// 3(Px)^2
-	bigint_mul(slope, slope);
-	memcpy(tmp, slope, sizeof tmp);
-	bigint_add(slope, slope);
-	bigint_add(slope, tmp);
-	
-	// + a; a == 0, so we can skip this i think
-	//bigint_add(slope, sect233k1.coeff_a);
-	
-	// 2(Py)
-	memcpy(tmp, pt->y, ECC_PRV_KEY_SIZE);
-	bigint_add(tmp, tmp);
-	bigint_invert(tmp, tmp);
-	
-	// division as multiply by inverse
-	bigint_mul(slope, tmp);
-	
-	point_compute(pt, pt, slope);
-}
 
