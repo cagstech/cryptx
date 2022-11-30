@@ -1,6 +1,8 @@
 public _rmemcpy
 public _bigint_lshift
 public _bigint_rshift
+public _bigint_add
+public _bigint_mul
 
 ; rmemcpy(void *dest, void *src, size_t len)
 _rmemcpy:
@@ -261,3 +263,84 @@ bigint_rshift1:
     pop bc
     pop hl
     ret
+
+
+; bigint_add(uint8_t *op1, uint8_t *op2);
+; hard limit to 32 bytes
+; output in op1
+_bigint_add:
+	ti._frameset0
+	ld hl, (ix + 3)		; op2
+	ld de, (ix + 6)		; op1
+	ld b, 32
+.loop:
+	ld a,(de)
+	adc sbc a,(hl)
+	ld (de),a
+	djnz .loop
+	ld sp, ix
+	pop ix
+	ret
+
+
+; bigint_mul(uint8_t *op1, uint8_t *op2)
+_bigint_mul:
+	ld hl, 32
+	ti._frameset
+	ld de, ix - 32		; stack mem?
+	ld hl, (ix + 6)		; op1 (save a copy)
+	ld bc, 32
+	ldir
+	ld de, (ix + 6)		; op1
+	ld hl, (ix + 3)		; op2
+	ld b, 32
+.byteloop:
+	push bc
+	ld b, 8
+.bitloop:
+	ex de, hl
+	push bc
+	ld bc, 32
+	call bigint_rshift1		; double
+	pop bc
+	ex de, hl
+	ld a, (hl)
+	rra
+	jr nc, .bitloop
+	push hl		; save current hl
+	lea hl, ix - 32
+	push hl
+	ld hl, (ix + 6)
+	push hl
+	call bigint_add			; then add
+	pop hl,hl,hl
+	djnz .bitloop
+	pop bc
+	djnz .byteloop
+	ld sp, ix
+	pop ix
+	ret
+
+
+; bigint_sub(uint8_t *op1, uint8_t *op2);
+_bigint_sub:
+	ti._frameset0
+	ld hl, (ix + 6)		; op1
+	ld bc, 32
+	add hl, bc
+	ex de, hl
+	ld hl, (ix + 3)		; op2
+	add hl, bc
+	ld b, c
+; hl = op2 + 32, de = op1 + 32
+.loop:
+	ld a,(de)
+	sbc a,(hl)
+	ld (de),a
+	djnz .loop
+	ld sp, ix
+	pop ix
+	ret
+	
+	
+	
