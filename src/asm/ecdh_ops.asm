@@ -4,6 +4,9 @@ public _bigint_rshift
 public _bigint_add
 public _bigint_mul
 public _bigint_sub
+public _bigint_iszero
+public _bigint_setzero
+public _bigint_isequal
 
 
 
@@ -268,17 +271,64 @@ bigint_rshift1:
     ret
 
 
+; bigint_iszero(uint8_t *op);
+_bigint_iszero:
+	pop hl,de
+	push de,hl
+	ld a, 0
+	ld b, 34
+.loop:
+	or (hl)
+	djnz .loop
+	or a
+	ret z
+	ld a, 1
+	ret
+
+
+;bigint_setzero(uint8_t *op);
+_bigint_setzero:
+	pop de,hl
+	push hl,de
+	ld a, 0
+	ld (de), a
+	push de
+	pop hl
+	inc de
+	ld bc, 33
+	ldir
+
+
+; bigint_isequal(uint8_t *op1, uint8_t *op2);
+_bigint_isequal:
+	call ti._frameset0
+	ld hl, (ix + 3)
+	ld de, (ix + 6)
+	ld b, 34
+.loop:
+	ld a, (de)
+	inc de
+	xor (hl)
+	djnz .loop
+	add a, -1
+	sbc a, a
+	inc a
+	ret
+
+
 ; bigint_add(uint8_t *op1, uint8_t *op2);
 ; hard limit to 32 bytes
 ; output in op1
+; because its a binary field, add is xor
 _bigint_add:
 	ti._frameset0
 	ld hl, (ix + 3)		; op2
 	ld de, (ix + 6)		; op1
-	ld b, 32
+	ld b, 34
 .loop:
 	ld a,(de)
-	adc a,(hl)
+	;adc a,(hl)
+	xor (hl)
 	ld (de),a
 	inc hl
 	inc de
@@ -288,56 +338,20 @@ _bigint_add:
 	ret
 
 
-; bigint_mul(uint8_t *op1, uint8_t *op2)
-_bigint_mul:
-	ld hl, 32
-	ti._frameset
-	ld de, ix - 32		; stack mem?
-	ld hl, (ix + 6)		; op1 (save a copy)
-	ld bc, 32
-	ldir
-	ld de, (ix + 6)		; op1
-	ld hl, (ix + 3)		; op2
-	ld b, 32
-.byteloop:
-	push bc
-	ld b, 8
-.bitloop:
-	ex de, hl
-	push bc
-	ld bc, 32
-	call bigint_rshift1		; double
-	pop bc
-	ex de, hl
-	ld a, (hl)
-	rra
-	jr nc, .bitloop
-	push hl		; save current hl
-	lea hl, ix - 32
-	push hl
-	ld hl, (ix + 6)
-	push hl
-	call bigint_add			; then add
-	pop hl,hl,hl
-	djnz .bitloop
-	pop bc
-	djnz .byteloop
-	ld sp, ix
-	pop ix
-	ret
-
-
 ; bigint_sub(uint8_t *op1, uint8_t *op2);
+; hard limit to 32 bytes
+; output in op1
 _bigint_sub:
 	ti._frameset0
 	ld hl, (ix + 6)		; op1
-	ld bc, 32
+	ld bc, 34
 	add hl, bc
 	ex de, hl
 	ld hl, (ix + 3)		; op2
 	add hl, bc
 	ld b, c
 ; hl = op2 + 32, de = op1 + 32
+	or a
 .loop:
 	ld a,(de)
 	sbc a,(hl)
@@ -350,4 +364,30 @@ _bigint_sub:
 	ret
 	
 	
+; bigint_mul(uint8_t *op1, uint8_t *op2)
+_bigint_mul:
+	ld hl, 32
+	ti._frameset
+	ld de, ix - 32		; stack mem?
+	ld hl, (ix + 6)		; op1 (save a copy)
+	ld bc, 34
+	ldir
+	ld de, (ix + 6)		; op1
+	ld hl, (ix + 3)		; op2
+.loop_op2:
+	ex de, hl			; op1 in hl for doubling
+	ld b, 32
+.loop_mul2:
+	rl (hl)
+	inc hl
+	djnz .loop_mul2
+	ex de, hl			; op2 back in hl for bit checking
+	ld
+	
+	
+	
+	djnz .byteloop
+	ld sp, ix
+	pop ix
+	ret
 	
