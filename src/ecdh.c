@@ -206,17 +206,26 @@ void point_add(struct Point *ptP, struct Point *ptQ){
 	// if P or Q is point at infinity, R = other point
 	// if P = Q, double instead
 	// if Px == Qx, set P to point at infinity
-	if(!point_iszero(ptQ)){
-		if(point_iszero(ptP)){
+	if(!point_iszero(ptQ))
+	{
+		if(point_iszero(ptP))
+		{
 			memcpy(ptP, ptQ, sizeof ptP);
-		} else {
-			if(bigint_isequal(ptP->x, ptQ->x)){
-				if(bigint_isequal(ptP->y, ptQ->y)){
+		}
+		else
+		{
+			if(bigint_isequal(ptP->x, ptQ->x))
+			{
+				if(bigint_isequal(ptP->y, ptQ->y))
+				{
 					point_double(ptP);
-				} else {
+				}
+				else
+				{
 					memset(ptP, 0, sizeof ptP);
 				}
-			} else{
+			}
+			else{
 				Point res;
 				BIGINT deltaY, deltaX;
 				

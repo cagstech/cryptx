@@ -366,9 +366,9 @@ _bigint_sub:
 	
 ; bigint_mul(uint8_t *op1, uint8_t *op2)
 _bigint_mul:
-	ld hl, 32
+	ld hl, 34
 	ti._frameset
-	ld de, ix - 32		; stack mem?
+	ld de, ix - 34		; stack mem?
 	ld hl, (ix + 6)		; op1 (save a copy)
 	ld bc, 34
 	ldir
