@@ -3,6 +3,9 @@ public _bigint_lshift
 public _bigint_rshift
 public _bigint_add
 public _bigint_mul
+public _bigint_sub
+
+
 
 ; rmemcpy(void *dest, void *src, size_t len)
 _rmemcpy:
@@ -277,6 +280,8 @@ _bigint_add:
 	ld a,(de)
 	adc sbc a,(hl)
 	ld (de),a
+	inc hl
+	inc de
 	djnz .loop
 	ld sp, ix
 	pop ix
@@ -337,6 +342,8 @@ _bigint_sub:
 	ld a,(de)
 	sbc a,(hl)
 	ld (de),a
+	dec hl
+	dec de
 	djnz .loop
 	ld sp, ix
 	pop ix
