@@ -278,7 +278,7 @@ _bigint_add:
 	ld b, 32
 .loop:
 	ld a,(de)
-	adc sbc a,(hl)
+	adc a,(hl)
 	ld (de),a
 	inc hl
 	inc de
