@@ -37,6 +37,8 @@ output x as shared secret field
  */
 
 #include <stdint.h>
+#include <stdbool.h>
+#include <string.h>
 // import assembly functions necessary for this algorithm
 // asm/ecdh_ops.asm
 void rmemcpy(void *dest, void *src, size_t len);		// memcpy that reverses endianness
@@ -46,22 +48,31 @@ void bigint_rshift(void *arr, size_t arr_len, uint8_t nbits);	// shift arr n bit
 // ^^ thanks to Zeda -- WIP
 bool bigint_iszero(uint8_t *op);
 void bigint_setzero(uint8_t *op);
-void bigint_isequal(uint8_t *op1, uint8_t *op2);
+bool bigint_isequal(uint8_t *op1, uint8_t *op2);
 void bigint_add(uint8_t *op1, uint8_t *op2);
 void bigint_sub(uint8_t *op1, uint8_t *op2);
 
+// static funcs
+static bool point_iszero(struct Point *pt){
+	return (bigint_iszero(pt->x) && bigint_iszero(pt->y));
+}
+static void point_setzero(struct Point *pt){
+	bigint_setzero(pt->x);
+	bigint_setzero(pt->y);
+}
+
 #define CURVE_DEGREE		233
-#define ECC_PRV_KEY_SIZE	32
-#define ECC_PUB_KEY_SIZE	(ECC_PRV_KEY_SIZE<<1)
-#define OVERFLOW_BYTES		2
+#define ECC_PRV_KEY_SIZE	29		// largest byte-aligned length < CURVE_DEGREE
+#define ECC_BIGINT_MAX_LEN	(ECC_PRV_KEY_SIZE + 3)
+#define ECC_PUB_KEY_SIZE	(ECC_BIGINT_MAX_LEN<<1)
 
 /*
  ### Main Type Definitions ###
 */
 
-// Bigint for this implementation is a 28-byte big-endian encoded integer
+// Bigint for this implementation is a 32-byte big-endian encoded integer
 // additional 4 bytes added for if point operations overflow
-typedef uint8_t BIGINT[ECC_PRV_KEY_SIZE + OVERFLOW_BYTES];
+typedef uint8_t BIGINT[ECC_BIGINT_MAX_LEN];
 
 struct Point {
 	BIGINT x;
@@ -103,22 +114,23 @@ typedef enum _ecdh_errors {
 	ECDH_PRIVKEY_INVALID,
 } ecdh_error_t;
 
+typedef struct _ecdh_ctx {
+	uint8_t privkey[ECC_PRV_KEY_SIZE];
+	uint8_t pubkey[ECC_PUB_KEY_SIZE];
+} ecdh_ctx;
 
 // ec point arithmetic prototypes
 void point_mul_vect(struct Point *pt, vec_t *exp);
 void point_double(struct Point *pt);
 void point_add(struct Point *ptP, struct Point *ptQ);
 
-// BIGINT arithmetic/bytearray bitshift prototypes
-
-
 /*
 ### Elliptic Curve Diffie-Hellman Main Functions ###
  */
 
 
-ecdh_error_t ecdh_keygen(uint8_t *pubkey, uint8_t *privkey, size_t klen, uint32_t (randfill*)()){
-	if((pubkey==NULL) || (privkey==NULL))
+ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, uint32_t (randfill*)()){
+	if(ctx==NULL)
 		return ECDH_INVALID_ARG;
 	
 	// privkey is alice 'a'
@@ -127,33 +139,32 @@ ecdh_error_t ecdh_keygen(uint8_t *pubkey, uint8_t *privkey, size_t klen, uint32_
 	// if you use this api wrong, its your own fault
 	// it will be well documented
 	if(randfill != NULL)
-		randfill(privkey, ECC_PRV_KEY_SIZE);
+		randfill(ctx->privkey, sizeof ctx->privkey);
 	
-	// force klen to equal ECC_PRV_KEY_SIZE
-	// it can exceed but any bytes higher than that will be discarded
-	if (klen < ECC_PRV_KEY_SIZE)
-		return ECDH_PRIVKEY_INVALID;
+	
+	// set any bits in key > CURVE_DEGREE to 0
+	
 	
 	// copy G from curve parameters to pkey
 	// convert to a Point
 	// reverse endianness for computational efficiency
 	struct Point pkey;
-	rmemcpy(pkey.x, secp233k1.G.x, ECC_PRV_KEY_SIZE);
-	rmemcpy(pkey.y, secp233k1.G.y, ECC_PRV_KEY_SIZE);
+	rmemcpy(pkey.x, sect233k1.G.x, ECC_PRV_KEY_SIZE);
+	rmemcpy(pkey.y, sect233k1.G.y, ECC_PRV_KEY_SIZE);
 	
 	// Q = a * G
 	// privkey is big-endian encoded
-	point_mul_vect(pkey, privkey);
+	point_mul_vect(pkey, ctx->privkey);
 	
 	// reverse endianness of Point and copy to pubkey
-	rmemcpy(pubkey, pkey.x, ECC_PRV_KEY_SIZE);
-	rmemcpy(pubkey + ECC_PRV_KEY_SIZE, pkey.y, ECC_PRV_KEY_SIZE);
+	rmemcpy(ctx->pubkey, pkey.x, ECC_PRV_KEY_SIZE);
+	rmemcpy(ctx->pubkey + ECC_PRV_KEY_SIZE, pkey.y, ECC_PRV_KEY_SIZE);
 	
 	return ECDH_OK;
 }
 
-ecdh_errot_t ecdh_secret(const uint8_t *privkey, const uint8_t *rpubkey, uint8_t *secret){
-	if((privkey==NULL) || (rpubkey==NULL) || (output==NULL))
+ecdh_error_t ecdh_secret(const ecdh_ctx *ctx, const uint8_t *rpubkey, uint8_t *secret){
+	if((ctx==NULL) || (rpubkey==NULL) || (secret==NULL))
 		return ECDH_INVALID_ARG;
 	
 	// rpubkey = a big-endian encoded bytearray
@@ -165,9 +176,9 @@ ecdh_errot_t ecdh_secret(const uint8_t *privkey, const uint8_t *rpubkey, uint8_t
 	
 	// s = a * Q
 	// privkey is big-endian encoded
-	point_mul_vect(pkey, privkey);
+	point_mul_vect(pkey, ctx->privkey);
 	
-	// reverse endianness of Point and copy to pubkey
+	// reverse endianness of Point and copy to secret
 	rmemcpy(secret, pkey.x, ECC_PRV_KEY_SIZE);
 	rmemcpy(secret + ECC_PRV_KEY_SIZE, pkey.y, ECC_PRV_KEY_SIZE);
 	
@@ -185,7 +196,7 @@ void point_mul_vect(struct Point *pt, uint8_t *exp){
 	struct Point res = {0};		// point-at-infinity
 	memcpy(&tmp, pt, sizeof tmp);
 	
-	for(i = CURVE_DEGREE; i >= 0; i--){
+	for(int i = CURVE_DEGREE; i >= 0; i--){
 		if (GET_BIT(exp[i>>3], i&0x7))
 			point_add(&res, &tmp);
 		else
@@ -193,27 +204,26 @@ void point_mul_vect(struct Point *pt, uint8_t *exp){
 		
 		point_double(&tmp);
 	}
-	memcpy(pt, &res, sizeof pt);
+	memcpy(pt, &res, sizeof(struct Point));
 }
-
 
 
 void point_compute(struct Point *ptP, struct Point *ptQ, BIGINT *slope){
 	
-	Point res;
+	struct Point res;
 	// compute result X
-	memcpy(res.x, slope, ECC_PRV_KEY_SIZE + OVERFLOW_BYTES);
+	memcpy(res.x, slope, ECC_PRV_KEY_SIZE);
 	bigint_mul(res.x, res.x);
 	bigint_sub(res.x, ptP->x);
 	bigint_sub(res.x, ptQ->x);
 	
 	// compute result Y
-	memcpy(res.y, ptP->x, CC_PRV_KEY_SIZE + OVERFLOW_BYTES);
+	memcpy(res.y, ptP->x, ECC_PRV_KEY_SIZE);
 	bigint_sub(res.y, res.x);
-	bigint_mul(res.y, deltaX);
+	bigint_mul(res.y, slope);
 	bigint_sub(res.y, ptQ->y);
 	
-	memcpy(ptP, res, sizeof ptP);
+	memcpy(ptP, &res, sizeof(struct Point));
 }
 
 void point_add(struct Point *ptP, struct Point *ptQ){
@@ -227,16 +237,16 @@ void point_add(struct Point *ptP, struct Point *ptQ){
 	// if P = Q, double instead
 	// if Px == Qx, set P to point at infinity
 	if(!point_iszero(ptQ)) {
-		if(point_iszero(ptP)) memcpy(ptP, ptQ, sizeof ptP);
+		if(point_iszero(ptP)) memcpy(ptP, ptQ, sizeof(struct Point));
 		else {
 			if(bigint_isequal(ptP->x, ptQ->x)) {
 				if(bigint_isequal(ptP->y, ptQ->y)) point_double(ptP);
-				else memset(ptP, 0, sizeof ptP);
+				else memset(ptP, 0, sizeof(struct Point));
 			}
 			else {
 				BIGINT deltaY, deltaX;
-				memcpy(deltaY, ptQ->y, ECC_PRV_KEY_SIZE + OVERFLOW_BYTES);
-				memcpy(deltaX, ptQ->x, ECC_PRV_KEY_SIZE + OVERFLOW_BYTES);
+				memcpy(deltaY, ptQ->y, ECC_PRV_KEY_SIZE);
+				memcpy(deltaX, ptQ->x, ECC_PRV_KEY_SIZE);
 				bigint_sub(deltaY, ptP->y);		// idk why ref uses add, not sub
 				bigint_sub(deltaX, ptP->x);		// ...
 				bigint_invert(deltaX);
@@ -255,7 +265,7 @@ void point_double(struct Point *pt){
 	// can we defer division and then divide by [2(yp) * calls_to_double] at the end for speed?
 	
 	BIGINT slope, tmp;
-	memcpy(slope, pt->x, ECC_PRV_KEY_SIZE + OVERFLOW_BYTES);
+	memcpy(slope, pt->x, ECC_PRV_KEY_SIZE);
 	
 	// 3(Px)^2
 	bigint_mul(slope, slope);
@@ -267,7 +277,7 @@ void point_double(struct Point *pt){
 	//bigint_add(slope, sect233k1.coeff_a);
 	
 	// 2(Py)
-	memcpy(tmp, pt->y, ECC_PRV_KEY_SIZE + OVERFLOW_BYTES);
+	memcpy(tmp, pt->y, ECC_PRV_KEY_SIZE);
 	bigint_add(tmp, tmp);
 	bigint_invert(tmp, tmp);
 	
@@ -275,16 +285,5 @@ void point_double(struct Point *pt){
 	bigint_mul(slope, tmp);
 	
 	point_compute(pt, pt, slope);
-}
-
-
-
-static bool point_iszero(struct Point *pt){
-	return (bigint_iszero(pt->x) && bigint_iszero(pt->y));
-}
-
-static void point_setzero(struct Point *pt){
-	bigint_setzero(pt->x);
-	bigint_setzero(pt->y);
 }
 
