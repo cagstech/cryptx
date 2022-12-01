@@ -104,16 +104,16 @@ _bigint_sub := _bigint_add
 _bigint_mul:
 	ld hl, 32
 	ti._frameset
-	ld de, ix - 32		; stack mem?
-	ld hl, (ix + 6)		; op1 (save a copy)
+	lea de, ix - 32		; stack mem?
+	ld hl, (ix + 9)		; op1 (save a copy)
 	ld bc, 32
 	ldir
 	
 	; zero out op1
-	ld de, (ix + 3)
+	ld de, (ix + 9)
 	ld (de), 0
 	inc de
-	ld hl, (ix + 3)
+	ld hl, (ix + 6)
 	ld bc, 32
 	ldir
 	
@@ -128,16 +128,21 @@ _bigint_mul:
 		sbc a,a
 		push bc, hl
 			ld c,a
-			ld de, ix - 32
-			ld hl, (ix + 3)
+			ld hl, (ix + 6)
 			ld b, 32
-.loop_mul_and_add
+.loop_mul2:
+			rl (hl)
+			inc hl
+			djnz .loop_mul2
+			lea de, ix - 0
+			ld b, 32
+.loop_mul_and_add:
 			ld a,(de)
 			and a,c
 			xor a,(hl)
 			ld (hl),a
-			inc hl
-			inc de
+			dec hl
+			dec de
 			djnz .loop_mul_and_add
 		pop hl,bc
 	pop af
