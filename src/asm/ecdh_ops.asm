@@ -194,7 +194,7 @@ _bigint_invert:
 	;	if( i < 0 )
 	;		swap tmp1, poly
 	;		swap g, res
-	;		i = -1
+	;		i = -i
 	;	h = lshift poly by i bits
 	;	add tmp, h
 	;	h = lshift g by 1 bits
