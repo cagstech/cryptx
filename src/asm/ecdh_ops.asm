@@ -111,7 +111,7 @@ _bigint_mul:
 	ldir				; ix - 32 = tmp = op1
 	
 	; zero out op1
-	ld de, (ix + 9)
+	ld de, (ix + 9)		; op 1
 	ld a, 0
 	ld (de), a
 	inc de
@@ -125,7 +125,7 @@ _bigint_mul:
 	ld a, (hl)
 	ld b, 8
 .loop_bits_in_byte:
-	rla
+	rra
 	push af
 		sbc a,a
 		push bc, hl
@@ -149,7 +149,7 @@ _bigint_mul:
 			ld b, 32
 			or a				; reset carry
 .loop_mul2:
-			dec hl
+			inc hl
 			rl (hl)
 			djnz .loop_mul2
 			
@@ -160,16 +160,21 @@ _bigint_mul:
 			bit 1, (ix - 4)		; polynomial is 233 bits, check 234th bit
 			jr z, .no_xor_poly
 
-			lea hl, ix - 32			; dest = tmp (little endian)
-			ld de, _polynomial + 31		; (big endian)
-			ld b, 32
-.xor_poly_loop:
-			ld a, (de)
-			xor a, (hl)
-			ld (hl), a
-			inc hl					; while hl increments
-			dec de					; de should decrement
-			djnz .xor_poly_loop
+			; xor byte 1 (little-endian encoding)
+			ld a, (ix - 32 + 1)
+			xor 2
+			ld (ix - 32 + 1), a
+			
+			; xor byte 21 (little endian encoding)
+			ld a, (ix - 32 + 21)
+			xor 4
+			ld (ix - 32 + 21), a
+			
+			; xor byte 28 (little endian encoding)
+			ld a, (ix - 32 + 28)
+			xor 1
+			ld (ix - 32 + 28), a
+			
 .no_xor_poly
 		pop hl,bc
 	pop af
