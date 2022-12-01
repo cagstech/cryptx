@@ -118,34 +118,33 @@ _bigint_mul:
 	ldir
 	
 	ld hl, (ix + 3)		; op2
-	ld b, 32
+	ld c, 32
 .loop_op2
 	ld a, (hl)
-	push bc
-		ld b, 8
+	ld b, 8
 .loop_bits_in_byte:
-		rla
-		push af
-			sbc a,a
+	rla
+	push af
+		sbc a,a
+		push bc, hl
 			ld c,a
-			push bc, hl
-				ld de, ix - 32
-				ld hl, (ix + 3)
-				ld b, 32
+			ld de, ix - 32
+			ld hl, (ix + 3)
+			ld b, 32
 .loop_mul_and_add
-				ld a,(de)
-				and a,c
-				xor a,(hl)
-				ld (hl),a
-				inc hl
-				inc de
-				djnz .loop_mul_and_add
-			pop hl,bc
-		pop af
+			ld a,(de)
+			and a,c
+			xor a,(hl)
+			ld (hl),a
+			inc hl
+			inc de
+			djnz .loop_mul_and_add
+		pop hl,bc
+	pop af
 	djnz .loop_bits_in_byte
-	pop bc
 	inc hl
-	djnz .loop_op2
+	dec c
+	jr nz, .loop_op2
 	ld sp, ix
 	pop ix
 	ret
