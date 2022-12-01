@@ -119,7 +119,7 @@ _bigint_mul:
 	ld bc, 31
 	ldir				; op1 = res = 0
 	
-	ld hl, (ix + 3)		; op2 = for bit in bits
+	ld hl, (ix + 6)		; op2 = for bit in bits
 	ld c, 32
 .loop_op2
 	ld a, (hl)
