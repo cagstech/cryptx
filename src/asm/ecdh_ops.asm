@@ -100,7 +100,6 @@ _bigint_add:
 _bigint_sub := _bigint_add
 	
 
-_src_zeros := FF0000h
 ; bigint_mul(uint8_t *op1, uint8_t *op2)
 _bigint_mul:
 	ld hl, 32
@@ -114,7 +113,9 @@ _bigint_mul:
 	ld b, 32
 .loop_op2
 	ld a, (hl)
-	push bc
+	push bc, hl
+		ld de, ix - 32
+		ld hl, (ix + 3)
 		ld b, 8
 .loop_bits_in_byte:
 		rla
@@ -128,11 +129,13 @@ _bigint_mul:
 				and a,c
 				xor a,(hl)
 				ld (hl),a
+				inc hl
+				inc de
 				djnz .loop_mul_and_add
 			pop bc
 		pop af
 	djnz .loop_bits_in_byte
-	pop bc
+	pop hl,bc
 	inc hl
 	djnz .loop_op2
 	ld sp, ix
