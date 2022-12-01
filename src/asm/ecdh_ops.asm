@@ -74,9 +74,9 @@ _bigint_isequal:
 
 
 ; bigint_add(uint8_t *op1, uint8_t *op2);
-; hard limit to 34 bytes
+; hard limit to 32 bytes
 ; output in op1
-; because its a binary field, add is xor
+; addition over a galois field of form GF(2^m) is mod 2 or just xor
 _bigint_add:
 	ti._frameset0
 	ld hl, (ix + 3)		; op2
@@ -101,6 +101,7 @@ _bigint_sub := _bigint_add
 	
 
 ; bigint_mul(uint8_t *op1, uint8_t *op2)
+; multiplication is add then double, then a polynomial reduction
 _bigint_mul:
 	ld hl, 32
 	ti._frameset
@@ -134,10 +135,10 @@ _bigint_mul:
 			lea de, ix - 32		; de = tmp (src)
 			ld b, 32
 .loop_add:
-			ld a,(de)
-			and a,c
-			xor a,(hl)
-			ld (hl),a
+			ld a, (de)
+			and a, c
+			xor a, (hl)
+			ld (hl), a
 			inc hl
 			inc de
 			djnz .loop_add
@@ -152,13 +153,16 @@ _bigint_mul:
 			djnz .loop_mul2
 			
 			; now xor with polynomial if tmp degree too high
+			; this means timing analysis will leak polynomial
+			; however, this is a public spec and therefore not
+			; implementation-breaking
 			bit 1, (ix - 4)		; polynomial is 233 bits, check 234th bit
 			jr z, .no_xor_poly
 
 			lea hl, ix - 32		; dest = tmp (little endian)
 			ld de, _polynomial+31	; (big endian)
 			ld b, 32
-.xor_poly_loop
+.xor_poly_loop:
 			ld a, (de)
 			xor a, (hl)
 			ld (hl), a
