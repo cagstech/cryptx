@@ -107,7 +107,7 @@ _bigint_mul:
 	lea de, ix - 32		; stack mem?
 	ld hl, (ix + 9)		; op1 (save a copy)
 	ld bc, 32
-	ldir
+	ldir				; ix - 32 = tmp = op1
 	
 	; zero out op1
 	ld de, (ix + 9)
@@ -115,9 +115,9 @@ _bigint_mul:
 	inc de
 	ld hl, (ix + 6)
 	ld bc, 32
-	ldir
+	ldir				; op1 = res = 0
 	
-	ld hl, (ix + 3)		; op2
+	ld hl, (ix + 3)		; op2 = for bit in bits
 	ld c, 32
 .loop_op2
 	ld a, (hl)
@@ -128,37 +128,44 @@ _bigint_mul:
 		sbc a,a
 		push bc, hl
 			ld c,a
-			ld hl, (ix + 6)
-			ld b, 32
-			or a
-.loop_mul2:
-			rl (hl)
-			inc hl
-			djnz .loop_mul2
-			lea de, ix - 0
+			
+			; add op1 (res) + tmp
+			ld hl, (ix +9)		; hl = op1 (dest)
+			lea de, ix - 32		; de = tmp (src)
 			ld b, 32
 .loop_add:
-			dec hl
-			dec de
 			ld a,(de)
 			and a,c
 			xor a,(hl)
 			ld (hl),a
+			inc hl
+			inc de
 			djnz .loop_add
-			add hl, 29
-			bit 1, (hl)
-			jr z, .skip_xor_poly
-			add hl, 2
-			ld de, _polynomial
+		
+			; now double tmp
+			lea hl, ix - 32		; tmp in hl
+			ld b, 32
+			or a				; reset carry
+.loop_mul2:
+			dec hl
+			rl (hl)
+			djnz .loop_mul2
+			
+			; now xor with polynomial if tmp degree too high
+			bit 1, (ix - 4)		; polynomial is 233 bits, check 234th bit
+			jr z, .no_xor_poly
+
+			lea hl, ix - 32		; dest = tmp (little endian)
+			ld de, _polynomial+31	; (big endian)
 			ld b, 32
 .xor_poly_loop
 			ld a, (de)
 			xor a, (hl)
 			ld (hl), a
-			dec hl
-			inc de
+			inc hl					; while hl increments
+			dec de					; de should decrement
 			djnz .xor_poly_loop
-.skip_xor_poly
+.no_xor_poly
 		pop hl,bc
 	pop af
 	djnz .loop_bits_in_byte
@@ -173,15 +180,8 @@ _bigint_mul:
 ; bigint_invert(BIGINT op);
 _bigint_invert:
 ; hl = ptr to bigint
-	push bc
-	ld b, 32
-	or a
-.loop:
-	rl (hl)
-	inc hl
-	djnz .loop
-	pop bc
-	ret
+	
+	
 
 
 ; after we compile, I'll remove this since its in the Curve specs
