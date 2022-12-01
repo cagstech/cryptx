@@ -112,10 +112,11 @@ _bigint_mul:
 	
 	; zero out op1
 	ld de, (ix + 9)
-	ld (de), 0
+	ld a, 0
+	ld (de), a
 	inc de
-	ld hl, (ix + 6)
-	ld bc, 32
+	ld hl, (ix + 9)
+	ld bc, 31
 	ldir				; op1 = res = 0
 	
 	ld hl, (ix + 3)		; op2 = for bit in bits
@@ -153,14 +154,14 @@ _bigint_mul:
 			djnz .loop_mul2
 			
 			; now xor with polynomial if tmp degree too high
-			; this means timing analysis will leak polynomial
+			; this means timing analysis will leak polynomial info
 			; however, this is a public spec and therefore not
 			; implementation-breaking
 			bit 1, (ix - 4)		; polynomial is 233 bits, check 234th bit
 			jr z, .no_xor_poly
 
-			lea hl, ix - 32		; dest = tmp (little endian)
-			ld de, _polynomial+31	; (big endian)
+			lea hl, ix - 32			; dest = tmp (little endian)
+			ld de, _polynomial + 31		; (big endian)
 			ld b, 32
 .xor_poly_loop:
 			ld a, (de)
@@ -183,7 +184,69 @@ _bigint_mul:
 
 ; bigint_invert(BIGINT op);
 _bigint_invert:
-; hl = ptr to bigint
+	; (ix + 6) = op
+	; tmp = op
+	; v = poly
+	; g = 0
+	; res = 1 (output)
+	; while(tmp != 1)
+	; 	i = degree(tmp) - degree(v)
+	;	if( i < 0 )
+	;		swap tmp1, poly
+	;		swap g, res
+	;		i = -1
+	;	h = lshift poly by i bits
+	;	add tmp, h
+	;	h = lshift g by 1 bits
+	;	add res, h
+	ld hl, 96
+	ti._frameset
+_tmp	:= ix - 32
+_g		:= ix - 64
+_v		:= ix - 96
+_op		:= (ix + 6)
+
+; copy op to tmp
+	ld hl, (ix + 6)
+	lea de, _tmp
+	ld bc, 32
+	ldir
+
+; then set op to 1 (its result)
+	dec hl
+	ld a, 1
+	ld (hl), a
+	ld a, 0
+	ld b, 31
+.loop_setop1to1:
+	dec hl
+	ld (hl), a
+	djnz .loop_setop1to1
+
+; set _g to zero
+	lea de, _g
+	ld a, 0
+	ld (de), a
+	inc de
+	lea hl, _g
+	ld bc, 31
+	ldir
+	
+; set _v to poly
+	ld hl, _polynomial + 31
+	lea de, _v
+	ld b, 32
+.loop_vcopy:
+	ldi
+	dec hl
+	dec hl
+	djnz .loop_vcopy
+	
+
+	
+	
+	
+	
 	
 	
 

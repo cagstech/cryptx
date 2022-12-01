@@ -120,7 +120,7 @@ void point_double(struct Point *pt){
 	// 2(Py)
 	memcpy(tmp, pt->y, ECC_PRV_KEY_SIZE);
 	bigint_add(tmp, tmp);
-	bigint_invert(tmp, tmp);
+	bigint_invert(tmp);
 	
 	// division as multiply by inverse
 	bigint_mul(slope, tmp);
