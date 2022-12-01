@@ -109,20 +109,28 @@ _bigint_mul:
 	ld bc, 32
 	ldir
 	
+	; zero out op1
+	ld de, (ix + 3)
+	ld (de), 0
+	inc de
+	ld hl, (ix + 3)
+	ld bc, 32
+	ldir
+	
 	ld hl, (ix + 3)		; op2
 	ld b, 32
 .loop_op2
 	ld a, (hl)
-	push bc, hl
-		ld de, ix - 32
-		ld hl, (ix + 3)
+	push bc
 		ld b, 8
 .loop_bits_in_byte:
 		rla
 		push af
 			sbc a,a
 			ld c,a
-			push bc
+			push bc, hl
+				ld de, ix - 32
+				ld hl, (ix + 3)
 				ld b, 32
 .loop_mul_and_add
 				ld a,(de)
@@ -132,10 +140,10 @@ _bigint_mul:
 				inc hl
 				inc de
 				djnz .loop_mul_and_add
-			pop bc
+			pop hl,bc
 		pop af
 	djnz .loop_bits_in_byte
-	pop hl,bc
+	pop bc
 	inc hl
 	djnz .loop_op2
 	ld sp, ix
