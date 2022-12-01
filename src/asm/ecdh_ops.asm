@@ -137,12 +137,12 @@ _bigint_mul:
 			lea de, ix - 0
 			ld b, 32
 .loop_mul_and_add:
+			dec hl
+			dec de
 			ld a,(de)
 			and a,c
 			xor a,(hl)
 			ld (hl),a
-			dec hl
-			dec de
 			djnz .loop_mul_and_add
 		pop hl,bc
 	pop af

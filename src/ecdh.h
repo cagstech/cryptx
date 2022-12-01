@@ -51,6 +51,7 @@ void bigint_setzero(uint8_t *op);
 bool bigint_isequal(uint8_t *op1, uint8_t *op2);
 void bigint_add(uint8_t *op1, uint8_t *op2);
 void bigint_sub(uint8_t *op1, uint8_t *op2);
+void bigint_mul(uint8_t *op1, uint8_t *op2);
 
 #endif
 
