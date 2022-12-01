@@ -188,23 +188,26 @@ _bigint_invert:
 	; tmp = op
 	; v = poly
 	; g = 0
-	; res = 1 (output)
+	; res = 1 (output) (result in op)
 	; while(tmp != 1)
 	; 	i = degree(tmp) - degree(v)
 	;	if( i < 0 )
-	;		swap tmp1, poly
+	;		swap tmp1, v (poly)
 	;		swap g, res
 	;		i = -i
-	;	h = lshift poly by i bits
+	;	h = lshift v (poly) by i bits
 	;	add tmp, h
-	;	h = lshift g by 1 bits
+	;	h = lshift g by i bits
 	;	add res, h
+	
 	ld hl, 96
 	ti._frameset
+	
+; local definitions for ease of use
 _tmp	:= ix - 32
 _g		:= ix - 64
 _v		:= ix - 96
-_op		:= (ix + 6)
+
 
 ; copy op to tmp
 	ld hl, (ix + 6)
