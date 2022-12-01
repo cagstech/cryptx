@@ -185,7 +185,7 @@ void point_mul_vect(struct Point *pt, uint8_t *exp){
 ### Elliptic Curve Diffie-Hellman Main Functions ###
  */
 
-ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, uint32_t (*randfill)()){
+ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, uint32_t (*randfill)(void *buffer, size_t size)){
 	if(ctx==NULL)
 		return ECDH_INVALID_ARG;
 	

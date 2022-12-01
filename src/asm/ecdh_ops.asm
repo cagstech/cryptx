@@ -1,6 +1,4 @@
 public _rmemcpy
-public _bigint_lshift
-public _bigint_rshift
 public _bigint_add
 public _bigint_sub
 public _bigint_mul
@@ -30,247 +28,6 @@ _rmemcpy:
     jr  .loop
 
 
-; bigint_lshift(void* arr, size_t len, uint8_t nbits)
-bigint_lshift:
-  call ti._frameset0
-  ld a,(ix + 3)
-  ld hl,(ix + 9)
-  ld bc,(ix + 6)
-  rra
-  call nc,bigint_lshift1
-  rra
-  call nc,bigint_lshift2
-  rra
-  call nc,bigint_lshift4
-  rra
-  or a
-  call nz,bigint_lshift_A_bytes
-  ld sp, ix
-  pop ix
-  ret
- 
-; bigint_rshift(void* arr, size_t len, uint8_t nbits)
-bigint_rshift:
-  call ti._frameset0
-  ld a,(ix + 3)
-  ld hl,(ix + 9)
-  ld bc,(ix + 6)
-  rra
-  call nc,bigint_rshift1
-  rra
-  call nc,bigint_rshift2
-  rra
-  call nc,bigint_rshift4
-  rra
-  or a
-  call nz,bigint_rshift_A_bytes
-  ld sp, ix
-  pop ix
-  ret
- 
- 
-bigint_lshift_A_bytes:
-; shifts the bigint left by A bytes:
-; Inputs:
-;   HL points to the int
-;   BC is the size (in bytes), ** BC<65536 **
-;   A is the number of bytes to shift
-; Destroys:
-;   DE
-;
-    ; or a
-    ; ret z
-    push hl
-    push bc
-    push af
- 
-    add hl,bc
-    dec hl
-    ex de,hl  ; DE points to the MSB, which is where we'll write
- 
-    or a,a
-    sbc hl,hl
-    ld l,a    ; HL is the number of bytes to shift by
- 
-    ; BC - A, guaranteed to not be 0
-    ld a,c
-    sub l
-    ld c,a
-    sbc a,a ; A = -carry
-    add a,b
-    ld b,a
-    ; If BC is negative, just zero out the whole int
-    ld a,l  ; restore A
-    jp m,.zero_bytes
-    ; If BC is 0, zero-out the whole int
-    jr nz,.shift_bytes
-    dec c
-    inc c
-    jr z,.zero_bytes
- 
-.shift_bytes:
-    ; want HL = DE - HL
-    ex de,hl
-    or a,a
-    sbc hl,de
-    ex de,hl  ; HL is where to read from
- 
-    ; HL is where to read from
-    ; DE is where to write to
-    ; BC is size of the bigint, minus the number of bytes to shift
-    ; A is the number of bytes to shift by
- 
-    lddr  ; copy bytes up
- 
-.zero_bytes:
-    ; zero-out the remaining bytes, A is non-zero
-    ld b,a
-    xor a
-.loop:
-    ld (de),a
-    dec de
-    djnz .loop
- 
-    pop af
-    pop bc
-    pop hl
-    ret
- 
- 
-bigint_lshift4:
-; shifts the bigint left by 4 bits
-; Inputs:
-;   HL points to the int
-;   BC is the size (in bytes)
-; Destroys:
-;   None
-    push hl
-    push bc
-    push af
-    xor a
-.loop
-    rld
-    cpi
-    jp pe,.loop
-    pop af
-    pop bc
-    pop hl
-    ret
- 
-bigint_lshift2:
-    call bigint_lshift1
-bigint_lshift1:
-    push hl
-    push bc
-    or a,a
-.loop:
-    rl (hl)
-    cpi
-    jp pe,.loop
-    pop bc
-    pop hl
-    ret
- 
- 
-bigint_rshift_A_bytes:
-; shifts the bigint right by A bytes
-; Inputs:
-;   HL points to the int
-;   BC is the size (in bytes), ** BC<65536 **
-;   A is the number of bytes to shift
-; Destroys:
-;   DE
-    ; or a
-    ; ret z
- 
-    push hl
-    push bc
-    push af
-    ex de,hl  ; DE points to the start of the string
- 
-    sbc hl,hl
-    ld l,a    ; HL is the number of bytes to shift by
- 
-    ; BC - A, guaranteed to not be 0
-    ld a,c
-    sub l
-    ld c,a
-    sbc a,a ; A = -carry
-    add a,b
-    ld b,a
-    ; If BC is negative, just zero out the whole int
-    ld a,l  ; restore A
-    jp m,.zero_bytes
-    ; If BC is 0, zero-out the whole int
-    jr nz,.shift_bytes
-    dec c
-    inc c
-    jr z,.zero_bytes
- 
-.shift_bytes:
-    add hl,de ; HL points to where to start reading
- 
-    ; HL is where to read from
-    ; DE is where to write to
-    ; BC is size of the bigint, minus the number of bytes to shift
-    ; A is the number of bytes to shift by
- 
-    ldir  ; copy bytes down
- 
-.zero_bytes:
-    ; zero-out the remaining bytes, A is non-zero
-    ld b,a
-    xor a
-.loop:
-    ld (de),a
-    inc de
-    djnz .loop
- 
-    pop af
-    pop bc
-    pop hl
-    ret
- 
-bigint_rshift4:
-; shifts the bigint right by 4 bits
-; Inputs:
-;   HL points to the int
-;   BC is the size (in bytes)
-; Destroys:
-;   None
-    push hl
-    push bc
-    push af
-    add hl,bc
-    dec hl
-    xor a
-.loop
-    rrd
-    cpd
-    jp pe,.loop
-    pop af
-    pop bc
-    pop hl
-    ret
- 
- 
-bigint_rshift2:
-    call bigint_lshift1
-bigint_rshift1:
-    push hl
-    push bc
-    add hl,bc
-    dec hl
-    or a,a
-.loop:
-    rr (hl)
-    cpd
-    jp pe,.loop
-    pop bc
-    pop hl
-    ret
-
-
 ; bigint_iszero(uint8_t *op);
 _bigint_iszero:
 	pop hl,de
@@ -295,7 +52,7 @@ _bigint_setzero:
 	push de
 	pop hl
 	inc de
-	ld bc, 33
+	ld bc, 31
 	ldir
 
 
@@ -304,7 +61,7 @@ _bigint_isequal:
 	call ti._frameset0
 	ld hl, (ix + 3)
 	ld de, (ix + 6)
-	ld b, 34
+	ld b, 32
 .loop:
 	ld a, (de)
 	inc de
@@ -324,7 +81,7 @@ _bigint_add:
 	ti._frameset0
 	ld hl, (ix + 3)		; op2
 	ld de, (ix + 6)		; op1
-	ld b, 34
+	ld b, 32
 .loop:
 	ld a,(de)
 	;adc a,(hl)
@@ -342,31 +99,47 @@ _bigint_add:
 ; on a binary field addition and subtraction are the same
 _bigint_sub := _bigint_add
 	
-	
+
+_src_zeros := FF0000h
 ; bigint_mul(uint8_t *op1, uint8_t *op2)
 _bigint_mul:
-	ld hl, 34
+	ld hl, 32
 	ti._frameset
-	ld de, ix - 34		; stack mem?
+	ld de, ix - 32		; stack mem?
 	ld hl, (ix + 6)		; op1 (save a copy)
-	ld bc, 34
+	ld bc, 32
 	ldir
-	ld de, (ix + 6)		; op1
-	ld hl, (ix + 3)		; op2
-	or a
-.loop_op2_bits:
-	ld a, (hl)
-	push hl
-	rl a
-	ex de, hl			; op1 in hl for doubling
-	ld b, 32
-.loop_mul2:
-	rl (hl)
-	inc hl
-	djnz .loop_mul2
-	ex de, hl			; op2 back in hl for bit checking
-	ld a, (hl)
 	
+	ld hl, (ix + 3)		; op2
+	ld b, 32
+.loop_op2
+	ld a, (hl)
+.loop:
+	rl a
+	jr nc, .set0
+	lea de, ix - 32
+	jr .skip_set0
+.set0:
+	ld de, _src_zeros
+.skip_set0:
+	push af,hl,bc
+		ld hl, (ix + 6)
+		ld b, 32
+.loop_mul_and_add:
+		rl (hl)				; shift byte of op1 left
+		ld a, (hl)			; load byte into a
+		ex de, hl			; get copy of op1 into hl
+		xor (hl)			; add = xor. op1 + tmp
+		ld (de), a			; result back in op1
+		ex de, hl			; op1 back in hl
+		djnz .loop_mul_and_add
+	pop bc,hl,af
+	inc hl
+	djnz .loop_op2
+	
+	
+	
+
 	
 	
 	
@@ -375,3 +148,15 @@ _bigint_mul:
 	pop ix
 	ret
 	
+
+_bigint_mul2:
+; hl = ptr to bigint
+	push bc
+	ld b, 32
+	or a
+.loop:
+	rl (hl)
+	inc hl
+	djnz .loop
+	pop bc
+	ret
