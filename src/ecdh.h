@@ -46,12 +46,12 @@ typedef enum _ecdh_errors {
 // asm/ecdh_ops.asm
 void rmemcpy(void *dest, void *src, size_t len);		// memcpy that reverses endianness
 // ^^ thanks to calc84maniac
-bool bigint_iszero(BIGINT *op);
-void bigint_setzero(BIGINT *op);
-bool bigint_isequal(BIGINT *op1, BIGINT *op2);
-void bigint_add(BIGINT *op1, BIGINT *op2);
-void bigint_sub(BIGINT *op1, BIGINT *op2);
-void bigint_mul(BIGINT *op1, BIGINT *op2);
+bool bigint_iszero(BIGINT op);
+void bigint_setzero(BIGINT op);
+bool bigint_isequal(BIGINT op1, BIGINT op2);
+void bigint_add(BIGINT op1, BIGINT op2);
+void bigint_sub(BIGINT op1, BIGINT op2);
+void bigint_mul(BIGINT op1, BIGINT op2);
 
 #endif
 

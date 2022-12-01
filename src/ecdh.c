@@ -80,7 +80,7 @@ static bool point_iszero(struct Point *pt){
  */
 
 // given ptP, ptQ, and slope, return addition/double result in ptP
-void point_compute(struct Point *ptP, struct Point *ptQ, BIGINT *slope){
+void point_compute(struct Point *ptP, struct Point *ptQ, BIGINT slope){
 	
 	struct Point res;
 	// compute result X

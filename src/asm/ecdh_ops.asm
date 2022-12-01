@@ -148,15 +148,15 @@ _bigint_mul:
 			add hl, 29
 			bit 1, (hl)
 			jr z, .skip_xor_poly
+			add hl, 2
 			ld de, _polynomial
-			ex de, hl
-			add hl, 32
-			ex de, hl
 			ld b, 32
 .xor_poly_loop
 			ld a, (de)
 			xor a, (hl)
 			ld (hl), a
+			dec hl
+			inc de
 			djnz .xor_poly_loop
 .skip_xor_poly
 		pop hl,bc
