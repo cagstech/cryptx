@@ -114,26 +114,25 @@ _bigint_mul:
 	ld b, 32
 .loop_op2
 	ld a, (hl)
-.loop:
-	rl a
-	jr nc, .set0
-	lea de, ix - 32
-	jr .skip_set0
-.set0:
-	ld de, _src_zeros
-.skip_set0:
-	push af,hl,bc
-		ld hl, (ix + 6)
-		ld b, 32
-.loop_mul_and_add:
-		rl (hl)				; shift byte of op1 left
-		ld a, (hl)			; load byte into a
-		ex de, hl			; get copy of op1 into hl
-		xor (hl)			; add = xor. op1 + tmp
-		ld (de), a			; result back in op1
-		ex de, hl			; op1 back in hl
-		djnz .loop_mul_and_add
-	pop bc,hl,af
+	push bc
+		ld b, 8
+.loop_bits_in_byte:
+		rla
+		push af
+			sbc a,a
+			ld c,a
+			push bc
+				ld b, 32
+.loop_mul_and_add
+				ld a,(de)
+				and a,c
+				xor a,(hl)
+				ld (hl),a
+				djnz .loop_mul_and_add
+			pop bc
+		pop af
+	djnz .loop_bits_in_byte
+	pop bc
 	inc hl
 	djnz .loop_op2
 	ld sp, ix
