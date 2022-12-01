@@ -136,14 +136,6 @@ _bigint_mul:
 	pop bc,hl,af
 	inc hl
 	djnz .loop_op2
-	
-	
-	
-
-	
-	
-	
-	djnz .byteloop
 	ld sp, ix
 	pop ix
 	ret
