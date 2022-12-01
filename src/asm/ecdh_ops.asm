@@ -130,6 +130,7 @@ _bigint_mul:
 			ld c,a
 			ld hl, (ix + 6)
 			ld b, 32
+			or a
 .loop_mul2:
 			rl (hl)
 			inc hl
