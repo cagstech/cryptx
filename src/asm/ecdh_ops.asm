@@ -137,14 +137,28 @@ _bigint_mul:
 			djnz .loop_mul2
 			lea de, ix - 0
 			ld b, 32
-.loop_mul_and_add:
+.loop_add:
 			dec hl
 			dec de
 			ld a,(de)
 			and a,c
 			xor a,(hl)
 			ld (hl),a
-			djnz .loop_mul_and_add
+			djnz .loop_add
+			add hl, 29
+			bit 1, (hl)
+			jr z, .skip_xor_poly
+			ld de, _polynomial
+			ex de, hl
+			add hl, 32
+			ex de, hl
+			ld b, 32
+.xor_poly_loop
+			ld a, (de)
+			xor a, (hl)
+			ld (hl), a
+			djnz .xor_poly_loop
+.skip_xor_poly
 		pop hl,bc
 	pop af
 	djnz .loop_bits_in_byte
@@ -156,7 +170,8 @@ _bigint_mul:
 	ret
 	
 
-_bigint_mul2:
+; bigint_invert(BIGINT op);
+_bigint_invert:
 ; hl = ptr to bigint
 	push bc
 	ld b, 32
@@ -167,3 +182,8 @@ _bigint_mul2:
 	djnz .loop
 	pop bc
 	ret
+
+
+; after we compile, I'll remove this since its in the Curve specs
+_polynomial:
+db 0,0,0,1,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0
