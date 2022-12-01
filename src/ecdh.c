@@ -79,25 +79,6 @@ static bool point_iszero(struct Point *pt){
  Point Arithmetic Functions
  */
 
-// multiplies pt by scalar exp
-#define GET_BIT(byte, bitnum) ((byte) & (1<<(bitnum)))
-void point_mul_vect(struct Point *pt, uint8_t *exp){
-	// multiplies pt by exp, result in pt
-	struct Point tmp;
-	struct Point res = {0};		// point-at-infinity
-	memcpy(&tmp, pt, sizeof tmp);
-	
-	for(int i = CURVE_DEGREE; i >= 0; i--){
-		if (GET_BIT(exp[i>>3], i&0x7))
-			point_add(&res, &tmp);
-		else
-			point_add(&res, &ta_resist);	// add 0; timing resistance
-		
-		point_double(&tmp);
-	}
-	memcpy(pt, &res, sizeof(struct Point));
-}
-
 // given ptP, ptQ, and slope, return addition/double result in ptP
 void point_compute(struct Point *ptP, struct Point *ptQ, BIGINT *slope){
 	
@@ -116,6 +97,37 @@ void point_compute(struct Point *ptP, struct Point *ptQ, BIGINT *slope){
 	
 	memcpy(ptP, &res, sizeof(struct Point));
 }
+
+// given pt, return point double result in pt
+void point_double(struct Point *pt){
+	// P + P = R
+	// (xp, yp) + (xp, yp) = (xr, yr)
+	// Y = (3(xp)^2 + a) / 2(yp)
+	// can we defer division and then divide by [2(yp) * calls_to_double] at the end for speed?
+	
+	BIGINT slope, tmp;
+	memcpy(slope, pt->x, ECC_PRV_KEY_SIZE);
+	
+	// 3(Px)^2
+	bigint_mul(slope, slope);
+	memcpy(tmp, slope, sizeof tmp);
+	bigint_add(slope, slope);
+	bigint_add(slope, tmp);
+	
+	// + a; a == 0, so we can skip this i think
+	//bigint_add(slope, sect233k1.coeff_a);
+	
+	// 2(Py)
+	memcpy(tmp, pt->y, ECC_PRV_KEY_SIZE);
+	bigint_add(tmp, tmp);
+	bigint_invert(tmp, tmp);
+	
+	// division as multiply by inverse
+	bigint_mul(slope, tmp);
+	
+	point_compute(pt, pt, slope);
+}
+
 
 // given ptP and ptQ, return addition result in ptP
 void point_add(struct Point *ptP, struct Point *ptQ){
@@ -150,43 +162,30 @@ void point_add(struct Point *ptP, struct Point *ptQ){
 	}
 }
 
-// given pt, return point double result in pt
-void point_double(struct Point *pt){
-	// P + P = R
-	// (xp, yp) + (xp, yp) = (xr, yr)
-	// Y = (3(xp)^2 + a) / 2(yp)
-	// can we defer division and then divide by [2(yp) * calls_to_double] at the end for speed?
+// multiplies pt by scalar exp
+#define GET_BIT(byte, bitnum) ((byte) & (1<<(bitnum)))
+void point_mul_vect(struct Point *pt, uint8_t *exp){
+	// multiplies pt by exp, result in pt
+	struct Point tmp;
+	struct Point res = {0};		// point-at-infinity
+	memcpy(&tmp, pt, sizeof tmp);
 	
-	BIGINT slope, tmp;
-	memcpy(slope, pt->x, ECC_PRV_KEY_SIZE);
-	
-	// 3(Px)^2
-	bigint_mul(slope, slope);
-	memcpy(tmp, slope, sizeof tmp);
-	bigint_add(slope, slope);
-	bigint_add(slope, tmp);
-	
-	// + a; a == 0, so we can skip this i think
-	//bigint_add(slope, sect233k1.coeff_a);
-	
-	// 2(Py)
-	memcpy(tmp, pt->y, ECC_PRV_KEY_SIZE);
-	bigint_add(tmp, tmp);
-	bigint_invert(tmp, tmp);
-	
-	// division as multiply by inverse
-	bigint_mul(slope, tmp);
-	
-	point_compute(pt, pt, slope);
+	for(int i = CURVE_DEGREE; i >= 0; i--){
+		if (GET_BIT(exp[i>>3], i&0x7))
+			point_add(&res, &tmp);
+		else
+			point_add(&res, &ta_resist);	// add 0; timing resistance
+		
+		point_double(&tmp);
+	}
+	memcpy(pt, &res, sizeof(struct Point));
 }
-
-
 
 /*
 ### Elliptic Curve Diffie-Hellman Main Functions ###
  */
 
-ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, uint32_t (randfill*)()){
+ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, uint32_t (*randfill)()){
 	if(ctx==NULL)
 		return ECDH_INVALID_ARG;
 	
@@ -207,7 +206,7 @@ ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, uint32_t (randfill*)()){
 	
 	// Q = a * G
 	// privkey is big-endian encoded
-	point_mul_vect(pkey, ctx->privkey);
+	point_mul_vect(&pkey, ctx->privkey);
 	
 	// reverse endianness of Point and copy to pubkey
 	rmemcpy(ctx->pubkey, pkey.x, ECC_PRV_KEY_SIZE);
@@ -229,7 +228,7 @@ ecdh_error_t ecdh_secret(const ecdh_ctx *ctx, const uint8_t *rpubkey, uint8_t *s
 	
 	// s = a * Q
 	// privkey is big-endian encoded
-	point_mul_vect(pkey, ctx->privkey);
+	point_mul_vect(&pkey, ctx->privkey);
 	
 	// reverse endianness of Point and copy to secret
 	rmemcpy(secret, pkey.x, ECC_PRV_KEY_SIZE);

@@ -23,7 +23,7 @@ struct Point {
 struct Curve {
 	BIGINT polynomial;
 	BIGINT coeff_a;
-	BIIGINT coeff_b;
+	BIGINT coeff_b;
 	struct Point G;
 	BIGINT b_order;
 	uint8_t cofactor;
