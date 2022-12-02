@@ -526,7 +526,7 @@ void powmod(
  * @define GF2\_BIGINT\_SIZE
  * Defines the max length of a GF2\_BIGINT.
  */
-#define GF2_BIGINT_SIZE	32
+#define GF2_BIGINT_SIZE	30
 
 /*****************************************
  * @typedef GF2\_BIGINT

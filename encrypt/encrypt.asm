@@ -6073,7 +6073,7 @@ _bigint_iszero:
 	pop hl,de
 	push de,hl
 	ld a, 0
-	ld b, 34
+	ld b, 30
 .loop:
 	or (hl)
 	djnz .loop
@@ -6092,7 +6092,7 @@ _bigint_setzero:
 	push de
 	pop hl
 	inc de
-	ld bc, 31
+	ld bc, 29
 	ldir
 
 
@@ -6101,7 +6101,7 @@ _bigint_isequal:
 	call ti._frameset0
 	ld hl, (ix + 3)
 	ld de, (ix + 6)
-	ld b, 32
+	ld b, 30
 .loop:
 	ld a, (de)
 	inc de
@@ -6121,7 +6121,7 @@ _gf2_bigint_add:
 	call ti._frameset0
 	ld hl, (ix + 9)		; op2
 	ld de, (ix + 6)		; op1
-	ld b, 32
+	ld b, 30
 .loop:
 	ld a, (de)
 	xor a, (hl)
@@ -6142,16 +6142,16 @@ _gf2_bigint_sub = _gf2_bigint_add
 ; gf2_bigint_mul(uint8_t *op1, uint8_t *op2)
 ; multiplication is add then double, then a polynomial reduction
 _gf2_bigint_mul:
-	ld hl, -32
+	ld hl, -30
 	call ti._frameset
-	lea de, ix - 32		; stack mem?
+	lea de, ix - 30		; stack mem?
 	ld hl, (ix + 6)		; op1 (save a copy)
-	ld bc, 32
+	ld bc, 30
 	ldir				; ix - 32 = tmp = op1
 	
 	; zero out op1
 	ld de, (ix + 6)		; op 1
-	ld b, 32
+	ld b, 30
 	xor a
 .loop_zero_op1:
 	ld (de), a
@@ -6159,7 +6159,7 @@ _gf2_bigint_mul:
 	djnz .loop_zero_op1		; op1 = res = 0
 	
 	ld hl, (ix + 9)		; op2 = for bit in bits
-	ld c, 32
+	ld c, 30
 .loop_op2:
 	ld a, (hl)
 	push hl
@@ -6173,8 +6173,8 @@ _gf2_bigint_mul:
 			
 				; add op1 (res) + tmp
 				ld hl, (ix + 6)		; hl = op1 (dest)
-				lea de, ix - 32		; de = tmp (src)
-				ld b, 32
+				lea de, ix - 30		; de = tmp (src)
+				ld b, 30
 .loop_add:
 				ld a, (de)
 				and a, c
@@ -6185,8 +6185,8 @@ _gf2_bigint_mul:
 				djnz .loop_add
 		
 				; now double tmp
-				lea hl, ix - 32		; tmp in hl
-				ld b, 32
+				lea hl, ix - 30		; tmp in hl
+				ld b, 30
 				or a				; reset carry
 .loop_mul2:
 				rl (hl)
@@ -6197,23 +6197,23 @@ _gf2_bigint_mul:
 				; this means timing analysis will leak polynomial info
 				; however, this is a public spec and therefore not
 				; implementation-breaking
-				bit 1, (ix - 4)		; polynomial is 233 bits, check 234th bit
+				bit 1, (ix - 2)		; polynomial is 233 bits, check 234th bit
 				jr z, .no_xor_poly
 
 				; xor byte 1 (little-endian encoding)
-				ld a, (ix - 32 + 1)
+				ld a, (ix - 30 + 1)
 				xor 2
-				ld (ix - 32 + 1), a
+				ld (ix - 30 + 1), a
 			
 				; xor byte 21 (little endian encoding)
-				ld a, (ix - 32 + 21)
+				ld a, (ix - 30 + 21)
 				xor 4
-				ld (ix - 32 + 21), a
+				ld (ix - 30 + 21), a
 				
 				; xor byte 28 (little endian encoding)
-				ld a, (ix - 32 + 28)
+				ld a, (ix - 30 + 28)
 				xor 1
-				ld (ix - 32 + 28), a
+				ld (ix - 30 + 28), a
 			
 .no_xor_poly:
 			pop bc
@@ -6232,17 +6232,17 @@ _gf2_bigint_mul:
 _gf2_bigint_invert:
 
 ; local definitions for ease of use
-; _tmp	= ix - 32
-; _g	= ix - 64
-; _v	= ix - 96
-; _h	= ix - 128
+; _tmp	= ix - 30
+; _g	= ix - 60
+; _v	= ix - 90
+; _h	= ix - 120
 	
-	ld hl, -128
+	ld hl, -120
 	call ti._frameset
 
 ; rcopy _polynomial to _v
-	ld hl, _sect233k1+31
-	lea de, ix - 96
+	ld hl, _sect233k1+29
+	lea de, ix - 90
 	ld b, 32
 .loop_copy_poly:
 	ld a, (hl)
@@ -6252,8 +6252,8 @@ _gf2_bigint_invert:
 	djnz .loop_copy_poly
 	
 ; zero out g
-	lea de, ix - 64		; g
-	ld b, 32
+	lea de, ix - 60		; g
+	ld b, 30
 	xor a
 .loop_zero_g:
 	ld (de), a
@@ -6262,13 +6262,13 @@ _gf2_bigint_invert:
 
 ; copy op to _tmp
 	ld hl, (ix + 6)
-	lea de, ix - 32
-	ld bc, 32
+	lea de, ix - 30
+	ld bc, 30
 	ldir
 
 ; then set op to 1 (it is result)
 	ld de, (ix + 6)		; op
-	ld b, 32
+	ld b, 30
 	xor a
 .loop_zero_op:
 	ld (de), a
@@ -6281,17 +6281,12 @@ _gf2_bigint_invert:
 	
 ; while tmp != 1
 .while_tmp_not_1:
-	lea hl, ix - 32
-	ld a, (hl)
-	ld b, 31
-	
-; or all bytes in tmp
-; if tmp == 1, result should be 1
+	lea hl, ix - 30
 	ld a, (hl)
 	cp 1
 	jr nz, .tmp_not_1
 	inc hl
-	ld b, 31
+	ld b, 29
 .or_tmp_loop:
 	or (hl)
 	inc hl
@@ -6302,12 +6297,12 @@ _gf2_bigint_invert:
 .tmp_not_1:
 
 ; compute degree of v (in bits)
-	lea hl, ix - 96
+	lea hl, ix - 90
 	call _get_degree
 	ld b, a						; in b
 	
 ; compute degree of tmp (in bits)
-	lea hl, ix - 32
+	lea hl, ix - 30
 	call _get_degree
 
 ; subtract degree(v) from degree(tmp)
@@ -6319,18 +6314,20 @@ _gf2_bigint_invert:
 	push af		; we will need a after the swapping is done
 	
 ;	swap polynomial with tmp
-		lea de, ix - 32
-		lea hl, ix - 96
+		lea de, ix - 30
+		lea hl, ix - 90
 		call _copy_w_swap
 		
 ;	swap result with g
 		ld de, (ix + 6)
-		lea hl, ix - 64
+		lea hl, ix - 60
 		call _copy_w_swap
 		
 ;	negate i
 	pop af
-	neg
+	cpl
+	inc a
+	; neg
 	
 .noswap:
 	
@@ -6339,9 +6336,9 @@ _gf2_bigint_invert:
 	ld c, a
 	push bc
 .loop_lshift_v:
-		lea de, ix - 128
-		lea hl, ix - 96
-		ld b, 32
+		lea de, ix - 120
+		lea hl, ix - 90
+		ld b, 30
 		or a
 .loop_lshift_v_inner:
 		ld a, (hl)
@@ -6354,9 +6351,9 @@ _gf2_bigint_invert:
 		jr nz, .loop_lshift_v
 	
 ; add h to tmp
-		lea hl, ix - 128
-		lea de, ix - 32
-		ld b, 32
+		lea hl, ix - 120
+		lea de, ix - 30
+		ld b, 30
 .loop_add_h_tmp:
 		ld a, (de)
 		xor (hl)
@@ -6368,9 +6365,9 @@ _gf2_bigint_invert:
 ; shift g left by i bits, result in h
 	pop bc		; we need c back, logic repeats for shift g
 .loop_lshift_g:
-	lea de, ix - 128
-	lea hl, ix - 64
-	ld b, 32
+	lea de, ix - 120
+	lea hl, ix - 60
+	ld b, 30
 	or a
 .loop_lshift_g_inner:
 	ld a, (hl)
@@ -6383,9 +6380,9 @@ _gf2_bigint_invert:
 	jr nz, .loop_lshift_g
 		
 ; add h to result (op)
-	lea hl, ix - 128
+	lea hl, ix - 120
 	ld de, (ix + 6)
-	ld b, 32
+	ld b, 30
 .loop_add_h_op:
 	ld a, (de)
 	xor (hl)
@@ -6404,9 +6401,9 @@ _gf2_bigint_invert:
 _get_degree:
 ; get degree of a little-endian bitvector pointed by hl
 ; degree in a
-	ld bc, 31
+	ld bc, 29
 	add hl, bc
-	ld bc, 081Fh
+	ld bc, 081Eh
 .getdegree_byteloop:
 	ld a, (hl)
 .getdegree_checkbit:
@@ -6423,18 +6420,20 @@ _get_degree:
 	rla
 	rla
 	or b
+	cpl
+	add a, 241
 	ret
 
 ; swaps data at buffers pointed to by hl and de
 ; hardcoded 32 byte buffer
 _copy_w_swap:
-	ld b, 32
+	ld b, 30
 .loop:
 	ld a, (hl)
-	ld b, a
+	ld c, a
 	ld a, (de)
 	ld (hl), a
-	ld a, b
+	ld a, c
 	ld (de), a
 	inc hl
 	inc de
@@ -6443,11 +6442,11 @@ _copy_w_swap:
  
  
  _point_compute:
-	ld	hl, -70
+	ld	hl, -66
 	call	ti._frameset
 	ld	hl, (ix + 12)
-	lea	iy, ix - 64
-	ld	(ix - 67), iy
+	lea	iy, ix - 60
+	ld	(ix - 63), iy
 	lea	de, iy
 	ld	bc, 29
 	ldir
@@ -6458,61 +6457,61 @@ _copy_w_swap:
 	pop	hl
 	ld	hl, (ix + 6)
 	push	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 63)
 	push	hl
 	call	_gf2_bigint_sub
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 9)
 	push	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 63)
 	push	hl
 	call	_gf2_bigint_sub
 	pop	hl
 	pop	hl
-	ld	iy, (ix - 67)
-	lea	de, iy + 32
-	ld	(ix - 70), de
+	ld	iy, (ix - 63)
+	lea	de, iy + 30
+	ld	(ix - 66), de
 	ld	hl, (ix + 6)
 	ld	bc, 29
 	ldir
 	push	iy
-	ld	hl, (ix - 70)
+	ld	hl, (ix - 66)
 	push	hl
 	call	_gf2_bigint_sub
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 12)
 	push	hl
-	ld	hl, (ix - 70)
+	ld	hl, (ix - 66)
 	push	hl
 	call	_gf2_bigint_mul
 	pop	hl
 	pop	hl
 	ld	iy, (ix + 9)
-	pea	iy + 32
-	ld	hl, (ix - 70)
+	pea	iy + 30
+	ld	hl, (ix - 66)
 	push	hl
 	call	_gf2_bigint_sub
 	pop	hl
 	pop	hl
 	ld	de, (ix + 6)
-	ld	hl, (ix - 67)
-	ld	bc, 64
+	ld	hl, (ix - 63)
+	ld	bc, 60
 	ldir
 	ld	sp, ix
 	pop	ix
 	ret
 	
 _point_double:
-	ld	hl, -70
+	ld	hl, -66
 	call	ti._frameset
 	ld	hl, (ix + 6)
 	ld	bc, 29
-	lea	iy, ix - 32
-	ld	(ix - 70), iy
-	lea	de, ix - 64
-	ld	(ix - 67), de
+	lea	iy, ix - 30
+	ld	(ix - 66), iy
+	lea	de, ix - 60
+	ld	(ix - 63), de
 	lea	de, iy
 	ldir
 	push	iy
@@ -6520,26 +6519,26 @@ _point_double:
 	call	_gf2_bigint_mul
 	pop	hl
 	pop	hl
-	ld	de, (ix - 67)
-	ld	iy, (ix - 70)
+	ld	de, (ix - 63)
+	ld	iy, (ix - 66)
 	lea	hl, iy
-	ld	bc, 32
+	ld	bc, 30
 	ldir
 	push	iy
 	push	iy
 	call	_gf2_bigint_add
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 63)
 	push	hl
-	ld	hl, (ix - 70)
+	ld	hl, (ix - 66)
 	push	hl
 	call	_gf2_bigint_add
 	pop	hl
 	pop	hl
 	ld	iy, (ix + 6)
-	lea	hl, iy + 32
-	ld	iy, (ix - 67)
+	lea	hl, iy + 30
+	ld	iy, (ix - 63)
 	lea	de, iy
 	ld	bc, 29
 	ldir
@@ -6548,18 +6547,18 @@ _point_double:
 	call	_gf2_bigint_add
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 63)
 	push	hl
 	call	_gf2_bigint_invert
 	pop	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 63)
 	push	hl
-	ld	hl, (ix - 70)
+	ld	hl, (ix - 66)
 	push	hl
 	call	_gf2_bigint_mul
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 70)
+	ld	hl, (ix - 66)
 	push	hl
 	ld	hl, (ix + 6)
 	push	hl
@@ -6570,7 +6569,7 @@ _point_double:
 	ret
 	
 _point_add:
-	ld	hl, -70
+	ld	hl, -66
 	call	ti._frameset
 	ld	hl, (ix + 9)
 	push	hl
@@ -6584,7 +6583,7 @@ _point_add:
 	pop	hl
 	bit	0, a
 	jr	z, .lbl_3
-	ld	bc, 64
+	ld	bc, 60
 	ld	de, (ix + 6)
 	ld	hl, (ix + 9)
 	jp	.lbl_9
@@ -6599,9 +6598,9 @@ _point_add:
 	bit	0, a
 	jr	z, .lbl_6
 	ld	iy, (ix + 9)
-	pea	iy + 32
+	pea	iy + 30
 	ld	iy, (ix + 6)
-	pea	iy + 32
+	pea	iy + 30
 	call	_bigint_isequal
 	pop	hl
 	pop	hl
@@ -6612,50 +6611,50 @@ _point_add:
 	call	_point_double
 	jr	.lbl_7
 .lbl_6:
-	lea	de, ix - 32
-	ld	(ix - 70), de
-	lea	hl, ix - 64
-	ld	(ix - 67), hl
+	lea	de, ix - 30
+	ld	(ix - 66), de
+	lea	hl, ix - 60
+	ld	(ix - 63), hl
 	ld	hl, (ix + 9)
 	push	hl
 	pop	bc
 	push	bc
 	pop	iy
-	lea	hl, iy + 32
+	lea	hl, iy + 30
 	ld	bc, 29
 	ldir
-	ld	de, (ix - 67)
+	ld	de, (ix - 63)
 	lea	hl, iy
 	ld	bc, 29
 	ldir
 	ld	hl, (ix + 6)
 	push	hl
 	pop	iy
-	pea	iy + 32
-	ld	hl, (ix - 70)
+	pea	iy + 30
+	ld	hl, (ix - 66)
 	push	hl
 	call	_gf2_bigint_sub
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 6)
 	push	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 63)
 	push	hl
 	call	_gf2_bigint_sub
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 63)
 	push	hl
 	call	_gf2_bigint_invert
 	pop	hl
-	ld	hl, (ix - 70)
+	ld	hl, (ix - 66)
 	push	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 63)
 	push	hl
 	call	_gf2_bigint_mul
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 63)
 	push	hl
 	ld	hl, (ix + 9)
 	push	hl
@@ -6672,7 +6671,7 @@ _point_add:
 	push	hl
 	pop	iy
 	inc	iy
-	ld	bc, 63
+	ld	bc, 59
 	lea	de, iy
 .lbl_9:
 	ldir
@@ -6689,7 +6688,7 @@ _point_iszero:
 	pop	hl
 	bit	0, a
 	ld	iy, (ix + 6)
-	pea	iy + 32
+	pea	iy + 30
 	ld	a, 0
 	call	nz, _bigint_iszero
 	pop	hl
@@ -6697,35 +6696,30 @@ _point_iszero:
 	ret
 	
 _point_mul_vect:
-	ld	hl, -143
+	ld	hl, -135
 	call	ti._frameset
-	lea	iy, ix - 70
-	ld	bc, -134
-	lea	hl, ix
-	add	hl, bc
-	push	ix
-	add	ix, bc
-	ld	(ix), 0
-	pop	ix
+	lea	iy, ix - 66
+	lea	hl, ix - 126
+	ld	(ix - 126), 0
 	push	hl
 	pop	de
 	inc	de
-	ld	bc, 63
+	ld	bc, 59
 	ld	(ix - 3), bc
 	push	ix
-	ld	bc, -137
+	ld	bc, -129
 	add	ix, bc
 	ld	(ix), hl
 	pop	ix
 	ld	bc, (ix - 3)
 	ldir
-	ld	bc, -140
+	ld	bc, -132
 	lea	hl, ix
 	add	hl, bc
 	ld	(hl), iy
 	lea	de, iy
 	ld	hl, (ix + 6)
-	ld	bc, 64
+	ld	bc, 60
 	ldir
 	ld	c, 3
 	ld	hl, (ix + 12)
@@ -6750,7 +6744,7 @@ _point_mul_vect:
 	add	hl, bc
 	ld	a, (hl)
 	ld	iyl, a
-	ld	bc, -143
+	ld	bc, -135
 	lea	hl, ix
 	add	hl, bc
 	ld	(hl), de
@@ -6764,7 +6758,7 @@ _point_mul_vect:
 	or	a, a
 	ld	hl, _ta_resist
 	ld	(ix - 3), bc
-	ld	bc, -140
+	ld	bc, -132
 	lea	iy, ix
 	push	af
 	add	iy, bc
@@ -6775,7 +6769,7 @@ _point_mul_vect:
 	ex	de, hl
 .lbl_4:
 	push	hl
-	ld	bc, -137
+	ld	bc, -129
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -6783,14 +6777,14 @@ _point_mul_vect:
 	call	_point_add
 	pop	hl
 	pop	hl
-	ld	bc, -140
+	ld	bc, -132
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
 	call	_point_double
 	pop	hl
-	ld	bc, -143
+	ld	bc, -135
 	lea	hl, ix
 	add	hl, bc
 	ld	de, (hl)
@@ -6798,18 +6792,18 @@ _point_mul_vect:
 	jp	.lbl_1
 .lbl_5:
 	ld	de, (ix + 6)
-	ld	bc, -137
+	ld	bc, -129
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
-	ld	bc, 64
+	ld	bc, 60
 	ldir
 	ld	sp, ix
 	pop	ix
 	ret
 	
 ecdh_keygen:
-	ld	hl, -70
+	ld	hl, -66
 	call	ti._frameset
 	ld	hl, (ix + 6)
 	add	hl, bc
@@ -6821,9 +6815,9 @@ ecdh_keygen:
 .lbl_2:
 	ld	hl, (ix + 9)
 	ld	de, 29
-	ld	iy, _sect233k1+96
-	lea	bc, ix - 64
-	ld	(ix - 67), bc
+	ld	iy, _sect233k1+90
+	lea	bc, ix - 60
+	ld	(ix - 63), bc
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
@@ -6832,25 +6826,25 @@ ecdh_keygen:
 	ld	de, (ix + 6)
 	push	de
 	call	_indcallhl
-	ld	iy, _sect233k1+96
+	ld	iy, _sect233k1+90
 	ld	de, 29
 	pop	hl
 	pop	hl
 .lbl_4:
 	push	de
 	push	iy
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 63)
 	push	hl
 	call	_rmemcpy
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	iy, (ix - 67)
-	lea	de, iy + 32
-	ld	(ix - 70), de
+	ld	iy, (ix - 63)
+	lea	de, iy + 30
+	ld	(ix - 66), de
 	ld	hl, 29
 	push	hl
-	ld	hl, _sect233k1+128
+	ld	hl, _sect233k1+120
 	push	hl
 	push	de
 	call	_rmemcpy
@@ -6861,7 +6855,7 @@ ecdh_keygen:
 	push	hl
 	ld	hl, (ix + 6)
 	push	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 63)
 	push	hl
 	call	_point_mul_vect
 	pop	hl
@@ -6869,7 +6863,7 @@ ecdh_keygen:
 	pop	hl
 	ld	hl, 29
 	push	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 63)
 	push	hl
 	ld	iy, (ix + 6)
 	pea	iy + 29
@@ -6879,7 +6873,7 @@ ecdh_keygen:
 	pop	hl
 	ld	hl, 29
 	push	hl
-	ld	hl, (ix - 70)
+	ld	hl, (ix - 66)
 	push	hl
 	ld	iy, (ix + 6)
 	pea	iy + 58
@@ -6893,9 +6887,10 @@ ecdh_keygen:
 	ld	sp, ix
 	pop	ix
 	ret
+	
  
  ecdh_secret:
-	ld	hl, -70
+	ld	hl, -66
 	call	ti._frameset
 	ld	hl, (ix + 6)
 	ld	de, 1
@@ -6916,19 +6911,19 @@ ecdh_keygen:
 	sbc	hl, bc
 	jr	z, .lbl_4
 	ld	de, 29
-	lea	hl, ix - 64
-	ld	(ix - 67), hl
+	lea	hl, ix - 60
+	ld	(ix - 63), hl
 	push	de
 	push	bc
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 63)
 	push	hl
 	call	_rmemcpy
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	iy, (ix - 67)
-	lea	de, iy + 32
-	ld	(ix - 70), de
+	ld	iy, (ix - 63)
+	lea	de, iy + 30
+	ld	(ix - 66), de
 	ld	hl, 29
 	push	hl
 	ld	iy, (ix + 9)
@@ -6942,7 +6937,7 @@ ecdh_keygen:
 	push	hl
 	ld	hl, (ix + 6)
 	push	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 63)
 	push	hl
 	call	_point_mul_vect
 	pop	hl
@@ -6950,7 +6945,7 @@ ecdh_keygen:
 	pop	hl
 	ld	hl, 29
 	push	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 63)
 	push	hl
 	ld	hl, (ix + 12)
 	push	hl
@@ -6960,7 +6955,7 @@ ecdh_keygen:
 	pop	hl
 	ld	hl, 29
 	push	hl
-	ld	hl, (ix - 70)
+	ld	hl, (ix - 66)
 	push	hl
 	ld	iy, (ix + 12)
 	pea	iy + 29
