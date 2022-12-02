@@ -12,6 +12,8 @@ CFLAGS ?= -Wall -Wextra -Oz
 CXXFLAGS ?= -Wall -Wextra -Oz
 DEBUGMODE = DEBUG
 
+HAS_PRINTF = no
+
 # ----------------------------
 
 ifndef CEDEV

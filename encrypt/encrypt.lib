@@ -1,4 +1,4 @@
-	library	ENCRYPT, 1
+	library	ENCRYPT, 2
 
 	export	csrand_init
 	export	csrand_get
@@ -8,10 +8,14 @@
 	export	aes_decrypt
 	export	rsa_encrypt
 	export	ecdh_keygen
-	export	ecdh_compute_secret
+	export	ecdh_secret
 	export	aes_ecb_unsafe_encrypt
 	export	aes_ecb_unsafe_decrypt
 	export	oaep_encode
 	export	oaep_decode
 	export	pss_encode
 	export	powmod
+	export	gf2_bigint_add
+	export	gf2_bigint_sub
+	export	gf2_bigint_mul
+	export	gf2_bigint_invert

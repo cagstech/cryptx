@@ -13,6 +13,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <hashlib.h>
+
+#define ENCRYPT_ENABLE_ADVANCED_MODE 1
 #include <encrypt.h>
 
 #define CEMU_CONSOLE ((char*)0xFB0000)
@@ -28,36 +30,52 @@ void hexdump(uint8_t *addr, size_t len, uint8_t *label){
     sprintf(CEMU_CONSOLE, "\n");
 }
 
+/*
 int main(void)
 {
-	//uint8_t privkey1[ECDH_PRIVKEY_SIZE];
-	//uint8_t pubkey1[ECDH_PUBKEY_SIZE];
-	//uint8_t secret1[ECDH_PUBKEY_SIZE];		// privkey1 * pubkey2
-	
-	uint8_t privkey[ECDH_PRIVKEY_SIZE];
-	uint8_t pubkey[ECDH_PUBKEY_SIZE] = {
-		
-	};
-	uint8_t secret[ECDH_PUBKEY_SIZE];		// privkey2 * pubkey1
+	uint8_t secret1[ECDH_PUBKEY_SIZE];		// privkey1 * pubkey2
+	uint8_t secret2[ECDH_PUBKEY_SIZE];		// privkey2 * pubkey1
     
     // Always check for false return value from csrand_init()
     if(!csrand_init(SAMPLING_FAST)) return 1;
-	
-    csrand_fill(privkey1, ECDH_PRIVKEY_SIZE);
-	csrand_fill(privkey2, ECDH_PRIVKEY_SIZE);
     
 	sprintf(CEMU_CONSOLE, "\n\n----------------------------------\nElliptic Curve Diffie-Hellman Demo\n");
 	
-	if(!ecdh_keygen(pubkey1, privkey1))
-		sprintf(CEMU_CONSOLE, "gen of pubkey1 successful\n");
-	if(!ecdh_keygen(pubkey2, privkey2))
-		sprintf(CEMU_CONSOLE, "gen of pubkey2 successful\n");
+	ecdh_ctx test1;
+	ecdh_ctx test2;
 	
-	if(!ecdh_compute_secret(privkey1, pubkey2, secret1))
-		hexdump(secret1, sizeof secret1, "---Secret 1 = Privkey1 + Pubkey2---");
+	//if(!ecdh_keygen(&test1, csrand_fill))
+	//	sprintf(CEMU_CONSOLE, "gen of keypair 1 successful\n");
+	//if(!ecdh_keygen(&test2, csrand_fill))
+	//	sprintf(CEMU_CONSOLE, "gen of keypair2 successful\n");
 	
-	if(!ecdh_compute_secret(privkey2, pubkey1, secret2))
-		hexdump(secret1, sizeof secret1, "---Secret 2 = Privkey2 + Pubkey1---");
+	//if(!ecdh_secret(&test1, test2.pubkey, secret1))
+	//	hexdump(secret1, sizeof secret1, "---Secret 1 = Privkey1 + Pubkey2---");
+	
+	//if(!ecdh_secret(&test2, test1.pubkey, secret2))
+	//	hexdump(secret1, sizeof secret1, "---Secret 2 = Privkey2 + Pubkey1---");
 	
     return 0;
+}
+*/
+
+
+int main(void){
+	GF2_BIGINT op1 = {0};
+	GF2_BIGINT op2 = {0};
+	memset(op1, 0, GF2_BIGINT_SIZE - 4);
+	memset(op2, 255, GF2_BIGINT_SIZE - 4);
+	
+	hexdump(op1, sizeof op1, "---op1---");
+	hexdump(op2, sizeof op2, "---op2---");
+	
+	sprintf(CEMU_CONSOLE, "\n\n----------------------------------\nGF2_BIGINT Unit Tests\n");
+	gf2_bigint_add(op1, op2);
+	hexdump(op1, sizeof op1, "---op1 + op2---");
+	gf2_bigint_sub(op1, op2);
+	hexdump(op1, sizeof op1, "---op1 - op2---");
+	gf2_bigint_mul(op1, op2);
+	hexdump(op1, sizeof op1, "---op1 * op2---");
+	//bigint_invert(op1);
+	//hexdump(op1, sizeof op1, "---op1 ^ -1---");
 }

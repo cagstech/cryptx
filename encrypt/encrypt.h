@@ -9,6 +9,7 @@
  * 1. Secure HWRNG
  * 2. AES-128, AES-192, AES-256
  * 3. RSA + OAEP v2.2
+ * 4. ECDH, using NIST B-571
  */
 
 #ifndef ENCRYPT_H
@@ -346,21 +347,69 @@ rsa_error_t rsa_encrypt(
 					uint8_t oaep_hash_alg);
 
 
-#define ECDH_PRIVKEY_SIZE		24
-#define ECDH_PUBKEY_SIZE		(ECDH_PRIVKEY_SIZE<<1)
-// using NIST_B163
-// no using cofactor variant
-// where possible, uses timing-resistant internals
+/*
+ Elliptic Curve Diffie-Hellman (ECDH)
+ 
+ ECDH is a variant on the Diffie-Hellman secret exchange protocol that uses
+ elliptic curve point multiplication instead of standard modular exponentiation.
+ 
+ Alice generates a random integer a in range defined by curve parameters. That is her private key.
+ Bob generates a random integer b in range defined by curve parameters. That is his private key.
+ G is an elliptic curve point multiplication alg defined by curve paramters.
+ Alice generates a public key, x = a * G.
+ Bob generates a public key, y = b * G.
+ Alice and Bob exchange public keys.
+ Alice computes s = a * y.
+ Bob computes s = b * x.
+ Both parties should not use `s` as is and should pass it to a cryptographic hash
+ or KDF to generate a symmetric key for AES.
+ 
+ This ECDH implementation uses the NIST K-233 (sect233k1) curve.
+ It provides 233 bits of EC security,
+ which is roughly the same as a 2048 bit RSA key.
+ Does not use cofactor variation.
+ */
 
-typedef enum _ecdh_error_t {
+#define ECDH_PRIVKEY_SIZE		29
+#define ECDH_PUBKEY_SIZE		(ECDH_PRIVKEY_SIZE<<1)
+
+typedef struct _ecdh_ctx {
+	uint8_t privkey[ECDH_PRIVKEY_SIZE];
+	uint8_t pubkey[ECDH_PUBKEY_SIZE];
+} ecdh_ctx;
+
+/**************************
+ * @enum ecdh\_error\_t
+ * Defines status codes for ECDH
+ */
+typedef enum _ecdh_errors {
 	ECDH_OK,
-	ECDH_ARG_ERROR,
-	ECDH_INVALID_PRIVKEY,
-	ECDH_INVALID_RPUBKEY
+	ECDH_INVALID_ARG,
+	ECDH_PRIVKEY_INVALID,
 } ecdh_error_t;
 
-ecdh_error_t ecdh_keygen(void *pubkey, void *privkey);
-ecdh_error_t ecdh_compute_secret(const uint8_t *privkey, const uint8_t *rpubkey, uint8_t *secret);
+/*******************************************
+ * @brief ECDH Generate Public Key.
+ * Generates a public key given a private key.
+ * @param pubkey Pointer to a buffer to write public key.
+ * @param privkey Pointer to private key.
+ * @note @b privkey should be filled with random bytes.
+ * @note @b pubkey should be twice the size of @b privkey.
+ * @note Expects bytearrays. You may have to serialize/deserialze if
+ * using with another cryptography library.
+ */
+ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, bool (*randfill)(void *buffer, size_t size));
+
+/*************************************************
+ * @brief ECDH Compute shared secret
+ * Given local private key and remote public key, generates secret.
+ * @param privkey Pointer to local private key.
+ * @param rpubkey Pointer to remote public key.
+ * @param secret Pointer to buffer to write shared secret to.
+ * @note Expects bytearrays. You may have to serialize/deserialize if using
+ * with another cryptography library.
+ */
+ecdh_error_t ecdh_secret(const ecdh_ctx *ctx, const uint8_t *rpubkey, uint8_t *secret);
 
 
 #ifdef ENCRYPT_ENABLE_ADVANCED_MODE
@@ -471,6 +520,26 @@ void powmod(
 		uint8_t *restrict base,
 		uint24_t exp,
 		const uint8_t *restrict mod);
+
+
+/*****************************************
+ * @define GF2\_BIGINT\_SIZE
+ * Defines the max length of a GF2\_BIGINT.
+ */
+#define GF2_BIGINT_SIZE	32
+
+/*****************************************
+ * @typedef GF2\_BIGINT
+ * Defines a BIGINT that is also a Galois field
+ * of form GF(2^m).
+ */
+typedef uint8_t GF2_BIGINT[GF2_BIGINT_SIZE];
+
+
+void gf2_bigint_add(GF2_BIGINT op1, GF2_BIGINT op2);
+void gf2_bigint_sub(GF2_BIGINT op1, GF2_BIGINT op2);
+void gf2_bigint_mul(GF2_BIGINT op1, GF2_BIGINT op2);
+void gf2_bigint_invert(GF2_BIGINT op);
 
 
 #endif
