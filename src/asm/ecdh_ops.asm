@@ -189,11 +189,7 @@ _bigint_mul:
 
 ; bigint_invert(BIGINT op);
 _bigint_invert:
-	;	h = lshift v (poly) by i bits
-	;	add tmp, h
-	;	h = lshift g by i bits
-	;	add res, h
-	
+
 ; local definitions for ease of use
 ._tmp	:=	32
 ._g		:=	64
