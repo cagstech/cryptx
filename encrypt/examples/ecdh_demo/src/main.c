@@ -74,8 +74,10 @@ int main(void){
 	hexdump(op1, sizeof op1, "---op1 + op2---");
 	gf2_bigint_sub(op1, op2);
 	hexdump(op1, sizeof op1, "---op1 - op2---");
+	
 	gf2_bigint_mul(op1, op2);
 	hexdump(op1, sizeof op1, "---op1 * op2---");
-	//bigint_invert(op1);
-	//hexdump(op1, sizeof op1, "---op1 ^ -1---");
+	
+	gf2_bigint_invert(op2);
+	hexdump(op2, sizeof op2, "---op2 ^ -1---");
 }

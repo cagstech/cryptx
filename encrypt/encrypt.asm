@@ -6144,7 +6144,7 @@ _gf2_bigint_sub = _gf2_bigint_add
 _gf2_bigint_mul:
 	ld hl, -32
 	call ti._frameset
-	ld de, ix - 32		; stack mem?
+	lea de, ix - 32		; stack mem?
 	ld hl, (ix + 6)		; op1 (save a copy)
 	ld bc, 32
 	ldir				; ix - 32 = tmp = op1
@@ -6173,7 +6173,7 @@ _gf2_bigint_mul:
 			
 				; add op1 (res) + tmp
 				ld hl, (ix + 6)		; hl = op1 (dest)
-				ld de, ix - 32		; de = tmp (src)
+				lea de, ix - 32		; de = tmp (src)
 				ld b, 32
 .loop_add:
 				ld a, (de)
@@ -6189,8 +6189,8 @@ _gf2_bigint_mul:
 				ld b, 32
 				or a				; reset carry
 .loop_mul2:
-				inc hl
 				rl (hl)
+				inc hl
 				djnz .loop_mul2
 			
 				; now xor with polynomial if tmp degree too high
@@ -6241,36 +6241,40 @@ _gf2_bigint_invert:
 	call ti._frameset
 
 ; rcopy _polynomial to _v
-	ld hl, _sect233k1
+	ld hl, _sect233k1+31
 	lea de, ix - 96
 	ld b, 32
 .loop_copy_poly:
-	ldi
+	ld a, (hl)
+	ld (de), a
 	dec hl
-	dec hl
+	inc de
 	djnz .loop_copy_poly
 	
-; set _g to 0
-	lea de, ix - 64
+; zero out g
+	lea de, ix - 64		; g
+	ld b, 32
 	xor a
+.loop_zero_g:
 	ld (de), a
-	push de
-	pop hl
 	inc de
-	ld bc, 31
-	ldir
+	djnz .loop_zero_g		; op1 = res = 0
 
 ; copy op to _tmp
-	ld hl, (ix + 3)
+	ld hl, (ix + 6)
 	lea de, ix - 32
 	ld bc, 32
 	ldir
 
 ; then set op to 1 (it is result)
-	lea hl, ix - 64			; g is filled with 0
-	ld de, (ix + 3)
-	ld bc, 32
-	ldir
+	ld de, (ix + 6)		; op
+	ld b, 32
+	xor a
+.loop_zero_op:
+	ld (de), a
+	inc de
+	djnz .loop_zero_op		; op1 = res = 0
+
 	dec de
 	ld a, 1
 	ld (de), a
@@ -6320,7 +6324,7 @@ _gf2_bigint_invert:
 		call _copy_w_swap
 		
 ;	swap result with g
-		ld de, (ix + 3)
+		ld de, (ix + 6)
 		lea hl, ix - 64
 		call _copy_w_swap
 		
@@ -6350,15 +6354,15 @@ _gf2_bigint_invert:
 		jr nz, .loop_lshift_v
 	
 ; add h to tmp
-		dec hl						; hl should already point to end of _h
-		lea de, ix - 32 + 31		; point de to end of _tmp
+		lea hl, ix - 128
+		lea de, ix - 32
 		ld b, 32
 .loop_add_h_tmp:
 		ld a, (de)
 		xor (hl)
 		ld (de), a
-		dec de
-		dec hl
+		inc de
+		inc hl
 		djnz .loop_add_h_tmp
 		
 ; shift g left by i bits, result in h
@@ -6379,19 +6383,15 @@ _gf2_bigint_invert:
 	jr nz, .loop_lshift_g
 		
 ; add h to result (op)
-	dec hl						; hl should already point to end of _h
-	ld de, (ix + 3)
-	ex de, hl
-	ld bc, 31
-	add hl, bc
-	ex de, hl					; point de to end of op
+	lea hl, ix - 128
+	ld de, (ix + 6)
 	ld b, 32
 .loop_add_h_op:
 	ld a, (de)
 	xor (hl)
 	ld (de), a
-	dec de
-	dec hl
+	inc de
+	inc hl
 	djnz .loop_add_h_op
 	
 	jq .while_tmp_not_1

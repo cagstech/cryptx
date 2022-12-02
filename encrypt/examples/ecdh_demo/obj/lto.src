@@ -89,7 +89,7 @@ _main:
 	ld	de, 0
 	lea	iy, ix - 32
 	lea	bc, ix - 64
-	ld	(ix - 70), bc
+	ld	(ix - 67), bc
 	ld	(ix - 4), de
 	ld	(ix - 1), d
 	ld	(ix - 36), de
@@ -99,10 +99,10 @@ _main:
 	inc	de
 	ld	bc, 27
 	lea	hl, iy
-	ld	(ix - 67), iy
+	ld	(ix - 70), iy
 	ldir
 	ld	(ix - 64), -1
-	ld	hl, (ix - 70)
+	ld	hl, (ix - 67)
 	push	hl
 	pop	de
 	inc	de
@@ -121,7 +121,7 @@ _main:
 	push	hl
 	ld	hl, 32
 	push	hl
-	ld	hl, (ix - 70)
+	ld	hl, (ix - 67)
 	push	hl
 	call	_hexdump
 	pop	hl
@@ -134,9 +134,9 @@ _main:
 	call	_sprintf
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 70)
-	push	hl
 	ld	hl, (ix - 67)
+	push	hl
+	ld	hl, (ix - 70)
 	push	hl
 	call	_gf2_bigint_add
 	pop	hl
@@ -145,15 +145,15 @@ _main:
 	push	hl
 	ld	hl, 32
 	push	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 70)
 	push	hl
 	call	_hexdump
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 70)
-	push	hl
 	ld	hl, (ix - 67)
+	push	hl
+	ld	hl, (ix - 70)
 	push	hl
 	call	_gf2_bigint_sub
 	pop	hl
@@ -162,20 +162,34 @@ _main:
 	push	hl
 	ld	hl, 32
 	push	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 70)
 	push	hl
 	call	_hexdump
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 70)
-	push	hl
 	ld	hl, (ix - 67)
+	push	hl
+	ld	hl, (ix - 70)
 	push	hl
 	call	_gf2_bigint_mul
 	pop	hl
 	pop	hl
 	ld	hl, _.str.8
+	push	hl
+	ld	hl, 32
+	push	hl
+	ld	hl, (ix - 70)
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 67)
+	push	hl
+	call	_gf2_bigint_invert
+	pop	hl
+	ld	hl, _.str.9
 	push	hl
 	ld	hl, 32
 	push	hl
@@ -237,7 +251,13 @@ _.str.7:
 _.str.8:
 	db	"---op1 * op2---", 0
 
+	section	.rodata,"a",@progbits
+	private	_.str.9
+_.str.9:
+	db	"---op2 ^ -1---", 0
+
 	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"
+	extern	_gf2_bigint_invert
 	extern	__frameset
 	extern	__Unwind_SjLj_Register
 	extern	_gf2_bigint_add

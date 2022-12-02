@@ -2,14 +2,14 @@ Section          Base   Top    High   Length
 ---------------- ------ ------ ------ -------
 .icon            D1A882 D1A99D           11Bh
 .init.libs       D1A99D D1A9F5            58h
-.libs            D1A9F5 D1AA15            20h
-.init.clock      D1AA15 D1AA15             0h
-.init.reruncheck D1AA15 D1AA15             0h
-.init            D1AA15 D1AA35            20h
-.fini            D1AA35 D1AA69            34h
-.text            D1AA69 D1AC27           1BEh
-.data            D1AC27 D1AC27             0h
-.rodata          D1AC27 D1ACD6            AFh
+.libs            D1A9F5 D1AA19            24h
+.init.clock      D1AA19 D1AA19             0h
+.init.reruncheck D1AA19 D1AA19             0h
+.init            D1AA19 D1AA39            20h
+.fini            D1AA39 D1AA6D            34h
+.text            D1AA6D D1AC49           1DCh
+.data            D1AC49 D1AC49             0h
+.rodata          D1AC49 D1AD07            BEh
 .init_array      000000 000000             0h
 .ctors           000000 000000             0h
 .dtors           000000 000000             0h
@@ -29,33 +29,35 @@ ___ctors_count            = 000000
 ___dtors_count            = 000000
 ___fini_array_count       = 000000
 __stack                   = D1A87E
-__frameset                = D1AA69
-_os_DisableHomeTextBuffer = D1AA77
-_os_EnableHomeTextBuffer  = D1AA89
+__frameset                = D1AA6D
+_os_DisableHomeTextBuffer = D1AA7B
+_os_EnableHomeTextBuffer  = D1AA8D
 _sprintf                  = 0000BC
-.missingappvar            = D1AC27
-.libloadname              = D1AC2C
+.missingappvar            = D1AC49
+.libloadname              = D1AC4E
 .libloadnamelen           = 000007
-.webaddress               = D1AC34
-__start                   = D1AA15
-___exithl                 = D1AA35
-skip._exit                = D1AA35
-skip.__Exit               = D1AA35
-skip._abort               = D1AA35
-_exit.sp                  = D1AA36
-_exit.flash_wait_states   = D1AA40
-_hexdump                  = D1AA9B
-_main                     = D1AB3A
-_.str                     = D1AC49
-_.str.1                   = D1AC4E
-_.str.2                   = D1AC50
-_.str.3                   = D1AC56
-_.str.4                   = D1AC60
-_.str.5                   = D1AC6A
-_.str.6                   = D1ACA6
-_.str.7                   = D1ACB6
-_.str.8                   = D1ACC6
+.webaddress               = D1AC56
+__start                   = D1AA19
+___exithl                 = D1AA39
+skip._exit                = D1AA39
+skip.__Exit               = D1AA39
+skip._abort               = D1AA39
+_exit.sp                  = D1AA3A
+_exit.flash_wait_states   = D1AA44
+_hexdump                  = D1AA9F
+_main                     = D1AB3E
+_.str                     = D1AC6B
+_.str.1                   = D1AC70
+_.str.2                   = D1AC72
+_.str.3                   = D1AC78
+_.str.4                   = D1AC82
+_.str.5                   = D1AC8C
+_.str.6                   = D1ACC8
+_.str.7                   = D1ACD8
+_.str.8                   = D1ACE8
+_.str.9                   = D1ACF8
 lib.LibLoad               = D1A9F5
 _#gf2_bigint_add          = D1AA09
 _#gf2_bigint_sub          = D1AA0D
 _#gf2_bigint_mul          = D1AA11
+_#gf2_bigint_invert       = D1AA15
