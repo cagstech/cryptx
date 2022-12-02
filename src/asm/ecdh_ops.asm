@@ -241,43 +241,32 @@ _bigint_invert:
 	
 ; or all bytes in tmp
 ; if tmp == 1, result should be 1
+	ld a, (hl)
+	cp 1
+	jr nz, .tmp_not_1
+	inc hl
+	ld b, 31
 .or_tmp_loop:
 	or (hl)
 	inc hl
 	djnz .or_tmp_loop
-	cp 1
-	jr z, .is_1			; if is 1, exit loop
+	or a
+	jq z, .tmp_is_1			; if is 1, op should contain inverse
 	
+.tmp_not_1:
 	dec hl
-; compute degree of tmp (in bits)
-; count backwards from hl to the first set bit (including current hl)
-; subtract that count from (32 * 8)
-; result in a
 
-	ld bc, 081Fh
-.getdegree_byteloop:
-	ld a, (hl)
-.getdegree_checkbit:
-	rla
-	jr c, .getdegree_found_bit
-	djnz .getdegree_checkbit
-	dec hl
-	dec c
-	jr nz, .getdegree_byteloop
+; compute degree of v (in bits)
+	ld hl, ix - ._v
+	call _get_degree		; get degree of v
+	ld b, a					; in b
 	
-.getdegree_found_bit:
-	dec b
-	ld a, c
-	rla
-	rla
-	rla
-	or b		; a has offset from right of first MSB
-	ld b, a
-	ld a, 256	; need offset from left
-	sub b		; a should now have degree
-	
-; subtract 233 from ^, result in a
-	sub 233
+; compute degree of tmp (in bits)
+	ld hl, ix - ._tmp
+	call _get_degree
+
+; subtract degree(v) from degree(tmp)
+	cp a, b
 	
 ; if no carry, skip swaps
 	jr nc, .noswap
@@ -365,12 +354,34 @@ _bigint_invert:
 	
 	jq .while_tmp_not_1
 	
-._is_1
+.tmp_is_1
 	ld sp, ix
 	pop ix
 	ret
 	
-
+_get_degree:
+; get degree of a little-endian bitvector pointed by hl
+; degree in a
+	ld bc, 32
+	add hl, 32
+	ld bc, 081Fh
+.getdegree_byteloop:
+	ld a, (hl)
+.getdegree_checkbit:
+	rla
+	jr c, .getdegree_found_bit
+	djnz .getdegree_checkbit
+	dec hl
+	dec c
+	jr nz, .getdegree_byteloop
+.getdegree_tmp_found_bit:
+	dec b
+	ld a, c
+	rla
+	rla
+	rla
+	or b
+	ret
 
 ; swaps data at buffers pointed to by hl and de
 ; hardcoded 32 byte buffer
