@@ -79,7 +79,7 @@ _bigint_isequal:
 ; output in op1
 ; addition over a galois field of form GF(2^m) is mod 2 or just xor
 _bigint_add:
-	ti._frameset0
+	call ti._frameset0
 	ld hl, (ix + 3)		; op2
 	ld de, (ix + 6)		; op1
 	ld b, 32
@@ -105,7 +105,7 @@ _bigint_sub := _bigint_add
 ; multiplication is add then double, then a polynomial reduction
 _bigint_mul:
 	ld hl, 32
-	ti._frameset
+	call ti._frameset
 	lea de, ix - 32		; stack mem?
 	ld hl, (ix + 9)		; op1 (save a copy)
 	ld bc, 32
@@ -122,7 +122,7 @@ _bigint_mul:
 	
 	ld hl, (ix + 6)		; op2 = for bit in bits
 	ld c, 32
-.loop_op2
+.loop_op2:
 	ld a, (hl)
 	ld b, 8
 .loop_bits_in_byte:
@@ -176,7 +176,7 @@ _bigint_mul:
 			xor 1
 			ld (ix - 32 + 28), a
 			
-.no_xor_poly
+.no_xor_poly:
 		pop hl,bc
 	pop af
 	djnz .loop_bits_in_byte
@@ -198,7 +198,7 @@ _bigint_invert:
 ._h		:= 	128
 	
 	ld hl, 128
-	ti._frameset
+	call ti._frameset
 
 ; copy op to _tmp
 	ld hl, (ix + 6)
@@ -257,16 +257,16 @@ _bigint_invert:
 	dec hl
 
 ; compute degree of v (in bits)
-	ld hl, ix - ._v
-	call _get_degree		; get degree of v
-	ld b, a					; in b
+	lea hl, ix - ._v
+	call _get_degree
+	ld b, a						; in b
 	
 ; compute degree of tmp (in bits)
-	ld hl, ix - ._tmp
+	lea hl, ix - ._tmp
 	call _get_degree
 
 ; subtract degree(v) from degree(tmp)
-	cp a, b
+	sub a, b
 	
 ; if no carry, skip swaps
 	jr nc, .noswap
@@ -279,12 +279,13 @@ _bigint_invert:
 		call _copy_w_swap
 		
 ;	swap result with g
-		lea de, (ix + 6)
+		ld de, (ix + 6)
 		lea hl, ix - ._g
 		call _copy_w_swap
 		
 ;	negate i
 	pop af
+	neg
 	
 .noswap:
 	
@@ -354,11 +355,13 @@ _bigint_invert:
 	
 	jq .while_tmp_not_1
 	
-.tmp_is_1
+.tmp_is_1:
 	ld sp, ix
 	pop ix
 	ret
 	
+section	.text,"ax",@progbits
+	public	_get_degree
 _get_degree:
 ; get degree of a little-endian bitvector pointed by hl
 ; degree in a
@@ -383,6 +386,8 @@ _get_degree:
 	or b
 	ret
 
+section	.text,"ax",@progbits
+	public	_copy_w_swap
 ; swaps data at buffers pointed to by hl and de
 ; hardcoded 32 byte buffer
 _copy_w_swap:
@@ -400,7 +405,16 @@ _copy_w_swap:
 	
 	
 
-
+section	.data,"aw",@progbits
+	public	polynomial
 ; after we compile, I'll remove this since its in the Curve specs
-_polynomial:
+polynomial:
 db 0,0,0,1,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0
+
+
+ti._frameset := __frameset
+ti._frameset0 := __frameset0
+
+extern __frameset
+extern __frameset0
+
