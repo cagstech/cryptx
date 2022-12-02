@@ -2,6 +2,7 @@ public _rmemcpy
 public _bigint_add
 public _bigint_sub
 public _bigint_mul
+public _bigint_invert
 public _bigint_iszero
 public _bigint_setzero
 public _bigint_isequal
@@ -252,32 +253,139 @@ _bigint_invert:
 ; count backwards from hl to the first set bit (including current hl)
 ; subtract that count from (32 * 8)
 ; result in a
+
+	ld bc, 081Fh
+.getdegree_byteloop:
+	ld a, (hl)
+.getdegree_checkbit:
+	rla
+	jr c, .getdegree_found_bit
+	djnz .getdegree_checkbit
+	dec hl
+	dec c
+	jr nz, .getdegree_byteloop
 	
-; subtract 233 from ^, result in i
+.getdegree_found_bit:
+	dec b
+	ld a, c
+	rla
+	rla
+	rla
+	or b		; a has offset from right of first MSB
+	ld b, a
+	ld a, 256	; need offset from left
+	sub b		; a should now have degree
+	
+; subtract 233 from ^, result in a
 	sub 233
-	cp a, c
 	
 ; if no carry, skip swaps
 	jr nc, .noswap
 	
-;	swap polynomial into tmp
-;	swap result into g
+	push af		; we will need a after the swapping is done
+	
+;	swap polynomial with tmp
+		lea de, ix - ._tmp
+		lea hl, ix - ._v
+		call _copy_w_swap
+		
+;	swap result with g
+		lea de, (ix + 6)
+		lea hl, ix - ._g
+		call _copy_w_swap
+		
 ;	negate i
-
+	pop af
+	
 .noswap:
 	
-; shift polynomial left by i bits, result in h
-; add h to tmp
-; shift g left by i bits, result in h
-; add h to result (op)
+; shift v left by a bits, result in h
 
+	ld c, a
+	push bc
+.loop_lshift_v:
+		lea de, ix - ._h
+		lea hl, ix - ._v
+		ld b, 32
+		or a
+.loop_lshift_v_inner:
+		ld a, (hl)
+		rla
+		ld (de), a
+		inc hl
+		inc de
+		djnz .loop_lshift_v_inner
+		dec c
+		jr nz, .loop_lshift_v
+	
+; add h to tmp
+		dec hl						; hl should already point to end of _h
+		lea de, ix - ._tmp + 31		; point de to end of _tmp
+		ld b, 32
+.loop_add_h_tmp:
+		ld a, (de)
+		xor (hl)
+		ld (de), a
+		dec de
+		dec hl
+		djnz .loop_add_h_tmp
+		
+; shift g left by i bits, result in h
+	pop bc		; we need c back, logic repeats for shift g
+.loop_lshift_g:
+	lea de, ix - ._h
+	lea hl, ix - ._g
+	ld b, 32
+	or a
+.loop_lshift_g_inner:
+	ld a, (hl)
+	rla
+	ld (de), a
+	inc hl
+	inc de
+	djnz .loop_lshift_g_inner
+	dec c
+	jr nz, .loop_lshift_g
+		
+; add h to result (op)
+	dec hl						; hl should already point to end of _h
+	ld de, (ix + 6)
+	ex de, hl
+	ld bc, 31
+	add hl, bc
+	ex de, hl					; point de to end of op
+	ld b, 32
+.loop_add_h_op:
+	ld a, (de)
+	xor (hl)
+	ld (de), a
+	dec de
+	dec hl
+	djnz .loop_add_h_op
+	
+	jq .while_tmp_not_1
 	
 ._is_1
 	ld sp, ix
 	pop ix
 	ret
 	
-	
+
+
+; swaps data at buffers pointed to by hl and de
+; hardcoded 32 byte buffer
+_copy_w_swap:
+	ld b, 32
+.loop:
+	ld a, (hl)
+	ld b, (de)
+	ld (de), a
+	ld a, b
+	ld (hl), a
+	inc hl
+	inc de
+	djnz .loop
+	ret
 	
 	
 

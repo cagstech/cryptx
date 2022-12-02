@@ -52,6 +52,7 @@ bool bigint_isequal(BIGINT op1, BIGINT op2);
 void bigint_add(BIGINT op1, BIGINT op2);
 void bigint_sub(BIGINT op1, BIGINT op2);
 void bigint_mul(BIGINT op1, BIGINT op2);
+void bigint_invert(BIGINT op);
 
 #endif
 

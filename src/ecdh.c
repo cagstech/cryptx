@@ -164,13 +164,13 @@ void point_add(struct Point *ptP, struct Point *ptQ){
 
 // multiplies pt by scalar exp
 #define GET_BIT(byte, bitnum) ((byte) & (1<<(bitnum)))
-void point_mul_vect(struct Point *pt, uint8_t *exp){
+void point_mul_vect(struct Point *pt, uint8_t *exp, size_t explen){
 	// multiplies pt by exp, result in pt
 	struct Point tmp;
 	struct Point res = {0};		// point-at-infinity
 	memcpy(&tmp, pt, sizeof tmp);
 	
-	for(int i = CURVE_DEGREE; i >= 0; i--){
+	for(int i = (explen<<3); i >= 0; i--){
 		if (GET_BIT(exp[i>>3], i&0x7))
 			point_add(&res, &tmp);
 		else
@@ -206,7 +206,7 @@ ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, uint32_t (*randfill)(void *buffer, size_
 	
 	// Q = a * G
 	// privkey is big-endian encoded
-	point_mul_vect(&pkey, ctx->privkey);
+	point_mul_vect(&pkey, ctx->privkey, sizeof ctx->privkey);
 	
 	// reverse endianness of Point and copy to pubkey
 	rmemcpy(ctx->pubkey, pkey.x, ECC_PRV_KEY_SIZE);
@@ -228,7 +228,7 @@ ecdh_error_t ecdh_secret(const ecdh_ctx *ctx, const uint8_t *rpubkey, uint8_t *s
 	
 	// s = a * Q
 	// privkey is big-endian encoded
-	point_mul_vect(&pkey, ctx->privkey);
+	point_mul_vect(&pkey, ctx->privkey, sizeof ctx->privkey);
 	
 	// reverse endianness of Point and copy to secret
 	rmemcpy(secret, pkey.x, ECC_PRV_KEY_SIZE);
