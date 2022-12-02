@@ -189,70 +189,97 @@ _bigint_mul:
 
 ; bigint_invert(BIGINT op);
 _bigint_invert:
-	; (ix + 6) = op
-	; tmp = op
-	; v = poly
-	; g = 0
-	; res = 1 (output) (result in op)
-	; while(tmp != 1)
-	; 	i = degree(tmp) - degree(v)
-	;	if( i < 0 )
-	;		swap tmp1, v (poly)
-	;		swap g, res
-	;		i = -i
 	;	h = lshift v (poly) by i bits
 	;	add tmp, h
 	;	h = lshift g by i bits
 	;	add res, h
 	
-	ld hl, 96
-	ti._frameset
-	
 ; local definitions for ease of use
-_tmp	:= ix - 32
-_g		:= ix - 64
-_v		:= ix - 96
+._tmp	:=	32
+._g		:=	64
+._v		:=	96
+._h		:= 	128
+	
+	ld hl, 128
+	ti._frameset
 
-
-; copy op to tmp
+; copy op to _tmp
 	ld hl, (ix + 6)
-	lea de, _tmp
+	lea de, ix - ._tmp
 	ld bc, 32
 	ldir
-
-; then set op to 1 (its result)
-	dec hl
-	ld a, 1
-	ld (hl), a
-	ld a, 0
-	ld b, 31
-.loop_setop1to1:
-	dec hl
-	ld (hl), a
-	djnz .loop_setop1to1
-
-; set _g to zero
-	lea de, _g
-	ld a, 0
+	
+; set _g to 0
+	xor a
 	ld (de), a
+	push de
+	pop hl
 	inc de
-	lea hl, _g
 	ld bc, 31
 	ldir
 	
-; set _v to poly
-	ld hl, _polynomial + 31
-	lea de, _v
-	ld b, 32
-.loop_vcopy:
+; rcopy _polynomial to _v
+	ld hl, polynomial + 31
+	ld b, 31
+.loop_copy_poly:
 	ldi
 	dec hl
 	dec hl
-	djnz .loop_vcopy
+	djnz .loop_copy_poly
+
+; then set op to 1 (it is result)
+	lea hl, ix - ._g	; g is filled with 0
+	ld de, (ix + 6)
+	ld bc, 32
+	ldir
+	dec de
+	ld a, 1
+	ld (de), a
 	
+; while tmp != 1
+.while_tmp_not_1:
+	lea hl, ix - ._tmp
+	ld a, (hl)
+	ld b, 31
+	
+; or all bytes in tmp
+; if tmp == 1, result should be 1
+.or_tmp_loop:
+	or (hl)
+	inc hl
+	djnz .or_tmp_loop
+	cp 1
+	jr z, .is_1			; if is 1, exit loop
+	
+	dec hl
+; compute degree of tmp (in bits)
+; count backwards from hl to the first set bit (including current hl)
+; subtract that count from (32 * 8)
+; result in a
+	
+; subtract 233 from ^, result in i
+	sub 233
+	cp a, c
+	
+; if no carry, skip swaps
+	jr nc, .noswap
+	
+;	swap polynomial into tmp
+;	swap result into g
+;	negate i
+
+.noswap:
+	
+; shift polynomial left by i bits, result in h
+; add h to tmp
+; shift g left by i bits, result in h
+; add h to result (op)
 
 	
-	
+._is_1
+	ld sp, ix
+	pop ix
+	ret
 	
 	
 	
