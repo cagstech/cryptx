@@ -6197,23 +6197,23 @@ _gf2_bigint_mul:
 				; this means timing analysis will leak polynomial info
 				; however, this is a public spec and therefore not
 				; implementation-breaking
-				bit 0, (ix - 2)		; polynomial is 233 bits, check 234th bit
+				bit 1, (ix - 1)		; polynomial is 233 bits, check 234th bit
 				jr z, .no_xor_poly
 
 				; xor byte 1 (little-endian encoding)
-				ld a, (ix - 30 + 1)
+				ld a, (ix - 1)
 				xor 2
-				ld (ix - 30 + 1), a
+				ld (ix - 1), a
 			
 				; xor byte 21 (little endian encoding)
-				ld a, (ix - 30 + 21)
+				ld a, (ix - 21)
 				xor 4
-				ld (ix - 30 + 21), a
+				ld (ix - 21), a
 				
 				; xor byte 28 (little endian encoding)
-				ld a, (ix - 30 + 28)
+				ld a, (ix - 30)
 				xor 1
-				ld (ix - 30 + 28), a
+				ld (ix - 30), a
 			
 .no_xor_poly:
 			pop bc
@@ -7003,12 +7003,12 @@ _rmemcpy:
     jr  .loop
 	
 _sect233k1:
-	db	0,1,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0
+	db	2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1
 	db	30 dup 0
-	db	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1
-	db	01h,072h,032h,0BAh,085h,03Ah,07Eh,073h,01Ah,0F1h,029h,0F2h,02Fh,0F4h,014h,095h,063h,0A4h,019h,0C2h,06Bh,0F5h,0Ah,04Ch,09Dh,06Eh,0EFh,0ADh,061h,026h
-	db	01h,0DBh,053h,07Dh,0ECh,0E8h,019h,0B7h,0F7h,0Fh,055h,05Ah,067h,0C4h,027h,0A8h,0CDh,09Bh,0F1h,08Ah,0EBh,09Bh,056h,0E0h,0C1h,010h,056h,0FAh,0E6h,0A3h
-	db	0,080h,0,0,0,0,0,0,0,0,0,0,0,0,0,06h,09Dh,05Bh,0B9h,015h,0BCh,0D4h,06Eh,0FBh,01Ah,0D5h,0F1h,073h,0ABh,0DFh
+	db	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ""
+	db	"r2∫Ö:~s", 26, "Ò)Ú/Ùïc§¬kı", 10, "LùnÔ≠a&"
+	db	"€S}ÏË∑˜UZgƒ'®ÕõÒäÎõV‡¡V˙Ê£"
+	db	0, "Ä", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "ù[πº‘n˚", 26, "’Òs´ﬂ"
 	db	4
 	
 _ta_resist:
