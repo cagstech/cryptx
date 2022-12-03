@@ -7,9 +7,9 @@ Section          Base   Top    High   Length
 .init.reruncheck D1AA19 D1AA19             0h
 .init            D1AA19 D1AA39            20h
 .fini            D1AA39 D1AA6D            34h
-.text            D1AA6D D1AC49           1DCh
-.data            D1AC49 D1AC49             0h
-.rodata          D1AC49 D1AD07            BEh
+.text            D1AA6D D1AC46           1D9h
+.data            D1AC46 D1AC46             0h
+.rodata          D1AC46 D1AD04            BEh
 .init_array      000000 000000             0h
 .ctors           000000 000000             0h
 .dtors           000000 000000             0h
@@ -33,10 +33,10 @@ __frameset                = D1AA6D
 _os_DisableHomeTextBuffer = D1AA7B
 _os_EnableHomeTextBuffer  = D1AA8D
 _sprintf                  = 0000BC
-.missingappvar            = D1AC49
-.libloadname              = D1AC4E
+.missingappvar            = D1AC46
+.libloadname              = D1AC4B
 .libloadnamelen           = 000007
-.webaddress               = D1AC56
+.webaddress               = D1AC53
 __start                   = D1AA19
 ___exithl                 = D1AA39
 skip._exit                = D1AA39
@@ -45,17 +45,18 @@ skip._abort               = D1AA39
 _exit.sp                  = D1AA3A
 _exit.flash_wait_states   = D1AA44
 _hexdump                  = D1AA9F
-_main                     = D1AB3E
-_.str                     = D1AC6B
-_.str.1                   = D1AC70
-_.str.2                   = D1AC72
-_.str.3                   = D1AC78
-_.str.4                   = D1AC82
-_.str.5                   = D1AC8C
-_.str.6                   = D1ACC8
-_.str.7                   = D1ACD8
-_.str.8                   = D1ACE8
-_.str.9                   = D1ACF8
+_bigint_tests             = D1AB3E
+_main                     = D1AC3E
+_.str                     = D1AC68
+_.str.1                   = D1AC6D
+_.str.2                   = D1AC6F
+_.str.3                   = D1AC75
+_.str.4                   = D1AC7F
+_.str.5                   = D1AC89
+_.str.6                   = D1ACC5
+_.str.7                   = D1ACD5
+_.str.8                   = D1ACE5
+_.str.9                   = D1ACF5
 lib.LibLoad               = D1A9F5
 _#gf2_bigint_add          = D1AA09
 _#gf2_bigint_sub          = D1AA0D

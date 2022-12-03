@@ -6268,16 +6268,14 @@ _gf2_bigint_invert:
 
 ; then set op to 1 (it is result)
 	ld de, (ix + 6)		; op
-	ld b, 30
+	ld a, 1
+	ld (de), a
+	ld b, 29
 	xor a
 .loop_zero_op:
 	ld (de), a
 	inc de
 	djnz .loop_zero_op		; op1 = res = 0
-
-	dec de
-	ld a, 1
-	ld (de), a
 	
 	; open debugger
 	scf
@@ -6357,7 +6355,7 @@ _gf2_bigint_invert:
 		inc hl
 		djnz .loop_add_h_tmp
 		
-; shift g left by i bits, result in h
+; t g left by i bits, result in h
 	pop bc		; we need c back, logic repeats for shift g
 	
 	lea de, ix - 120
@@ -6509,61 +6507,70 @@ _copy_w_swap:
 	ret
 	
 _point_double:
-	ld	hl, -66
+	ld	hl, -99
 	call	ti._frameset
+	ld	bc, (ix + 6)
+	lea	de, ix - 30
+	ld	(ix - 93), de
+	lea	iy, ix - 60
+	lea	hl, ix - 90
+	ld	(ix - 96), hl
+	push	bc
+	pop	hl
+	ld	bc, 29
+	ldir
+	lea	de, iy
+	ld	(ix - 99), iy
 	ld	hl, (ix + 6)
 	ld	bc, 29
-	lea	iy, ix - 30
-	ld	(ix - 66), iy
-	lea	de, ix - 60
-	ld	(ix - 63), de
-	lea	de, iy
 	ldir
-	push	iy
+	ld	hl, (ix - 96)
+	inc	hl
+	ld	(ix - 89), 0
+	push	hl
+	pop	de
+	inc	de
+	ld	bc, 28
+	ldir
+	ld	(ix - 90), 3
+	ld	hl, (ix - 93)
+	push	hl
 	push	iy
 	call	_gf2_bigint_mul
 	pop	hl
 	pop	hl
-	ld	de, (ix - 63)
-	ld	iy, (ix - 66)
-	lea	hl, iy
-	ld	bc, 30
-	ldir
-	push	iy
-	push	iy
-	call	_gf2_bigint_add
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 63)
+	ld	hl, (ix - 96)
 	push	hl
-	ld	hl, (ix - 66)
+	ld	hl, (ix - 99)
 	push	hl
-	call	_gf2_bigint_add
+	call	_gf2_bigint_mul
 	pop	hl
 	pop	hl
 	ld	iy, (ix + 6)
 	lea	hl, iy + 30
-	ld	iy, (ix - 63)
+	ld	iy, (ix - 93)
 	lea	de, iy
 	ld	bc, 29
 	ldir
+	ld	(ix - 90), 2
+	ld	hl, (ix - 96)
+	push	hl
 	push	iy
-	push	iy
-	call	_gf2_bigint_add
+	call	_gf2_bigint_mul
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 63)
+	ld	hl, (ix - 93)
 	push	hl
 	call	_gf2_bigint_invert
 	pop	hl
-	ld	hl, (ix - 63)
+	ld	hl, (ix - 93)
 	push	hl
-	ld	hl, (ix - 66)
+	ld	hl, (ix - 99)
 	push	hl
 	call	_gf2_bigint_mul
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 66)
+	ld	hl, (ix - 99)
 	push	hl
 	ld	hl, (ix + 6)
 	push	hl

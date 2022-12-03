@@ -82,46 +82,45 @@ BB0_6:
 	section	.text,"ax",@progbits
 
 	section	.text,"ax",@progbits
-	public	_main
-_main:
-	ld	hl, -70
+	public	_bigint_tests
+_bigint_tests:
+	ld	hl, -66
 	call	__frameset
-	ld	de, 0
-	lea	iy, ix - 32
-	lea	bc, ix - 64
-	ld	(ix - 67), bc
-	ld	(ix - 4), de
-	ld	(ix - 1), d
-	ld	(ix - 36), de
-	ld	(ix - 33), d
-	ld	(ix - 32), d
-	lea	de, iy
-	inc	de
-	ld	bc, 27
-	lea	hl, iy
-	ld	(ix - 70), iy
-	ldir
-	ld	(ix - 64), -1
-	ld	hl, (ix - 67)
+	lea	hl, ix - 30
+	ld	(ix - 63), hl
+	lea	iy, ix - 60
+	ld	(ix - 66), iy
+	inc	hl
+	ld	(ix - 29), 0
 	push	hl
 	pop	de
 	inc	de
-	ld	bc, 27
+	ld	bc, 28
 	ldir
+	inc	iy
+	ld	(ix - 59), 0
+	lea	de, iy
+	inc	de
+	lea	hl, iy
+	ld	bc, 28
+	ldir
+	ld	(ix - 30), 2
+	ld	(ix - 60), 2
 	ld	hl, _.str.3
 	push	hl
-	ld	hl, 32
+	ld	hl, 30
 	push	hl
-	push	iy
+	ld	hl, (ix - 63)
+	push	hl
 	call	_hexdump
 	pop	hl
 	pop	hl
 	pop	hl
 	ld	hl, _.str.4
 	push	hl
-	ld	hl, 32
+	ld	hl, 30
 	push	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 66)
 	push	hl
 	call	_hexdump
 	pop	hl
@@ -134,75 +133,79 @@ _main:
 	call	_sprintf
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 66)
 	push	hl
-	ld	hl, (ix - 70)
+	ld	hl, (ix - 63)
 	push	hl
 	call	_gf2_bigint_add
 	pop	hl
 	pop	hl
 	ld	hl, _.str.6
 	push	hl
-	ld	hl, 32
+	ld	hl, 30
 	push	hl
-	ld	hl, (ix - 70)
+	ld	hl, (ix - 63)
 	push	hl
 	call	_hexdump
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 66)
 	push	hl
-	ld	hl, (ix - 70)
+	ld	hl, (ix - 63)
 	push	hl
 	call	_gf2_bigint_sub
 	pop	hl
 	pop	hl
 	ld	hl, _.str.7
 	push	hl
-	ld	hl, 32
+	ld	hl, 30
 	push	hl
-	ld	hl, (ix - 70)
+	ld	hl, (ix - 63)
 	push	hl
 	call	_hexdump
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 66)
 	push	hl
-	ld	hl, (ix - 70)
+	ld	hl, (ix - 63)
 	push	hl
 	call	_gf2_bigint_mul
 	pop	hl
 	pop	hl
 	ld	hl, _.str.8
 	push	hl
-	ld	hl, 32
+	ld	hl, 30
 	push	hl
-	ld	hl, (ix - 70)
+	ld	hl, (ix - 63)
 	push	hl
 	call	_hexdump
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 66)
 	push	hl
 	call	_gf2_bigint_invert
 	pop	hl
 	ld	hl, _.str.9
 	push	hl
-	ld	hl, 32
+	ld	hl, 30
 	push	hl
-	ld	hl, (ix - 67)
+	ld	hl, (ix - 66)
 	push	hl
 	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	or	a, a
-	sbc	hl, hl
 	ld	sp, ix
 	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_main
+_main:
+	call	_bigint_tests
+	or	a, a
+	sbc	hl, hl
 	ret
 	section	.text,"ax",@progbits
 
