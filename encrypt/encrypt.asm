@@ -6197,7 +6197,7 @@ _gf2_bigint_mul:
 				; this means timing analysis will leak polynomial info
 				; however, this is a public spec and therefore not
 				; implementation-breaking
-				bit 1, (ix - 2)		; polynomial is 233 bits, check 234th bit
+				bit 0, (ix - 2)		; polynomial is 233 bits, check 234th bit
 				jr z, .no_xor_poly
 
 				; xor byte 1 (little-endian encoding)
@@ -6279,6 +6279,11 @@ _gf2_bigint_invert:
 	ld a, 1
 	ld (de), a
 	
+	; open debugger
+	scf
+	sbc hl,hl
+	ld (hl),2
+	
 ; while tmp != 1
 .while_tmp_not_1:
 	lea hl, ix - 30
@@ -6287,13 +6292,13 @@ _gf2_bigint_invert:
 	jr nz, .tmp_not_1
 	inc hl
 	ld b, 29
+	xor a
 .or_tmp_loop:
 	or (hl)
 	inc hl
 	djnz .or_tmp_loop
 	or a
 	jq z, .tmp_is_1			; if is 1, op should contain inverse
-	
 .tmp_not_1:
 
 ; compute degree of v (in bits)
@@ -6335,20 +6340,10 @@ _gf2_bigint_invert:
 
 	ld c, a
 	push bc
-.loop_lshift_v:
+	
 		lea de, ix - 120
 		lea hl, ix - 90
-		ld b, 30
-		or a
-.loop_lshift_v_inner:
-		ld a, (hl)
-		rla
-		ld (de), a
-		inc hl
-		inc de
-		djnz .loop_lshift_v_inner
-		dec c
-		jr nz, .loop_lshift_v
+		call _lshiftc
 	
 ; add h to tmp
 		lea hl, ix - 120
@@ -6364,20 +6359,10 @@ _gf2_bigint_invert:
 		
 ; shift g left by i bits, result in h
 	pop bc		; we need c back, logic repeats for shift g
-.loop_lshift_g:
+	
 	lea de, ix - 120
 	lea hl, ix - 60
-	ld b, 30
-	or a
-.loop_lshift_g_inner:
-	ld a, (hl)
-	rla
-	ld (de), a
-	inc hl
-	inc de
-	djnz .loop_lshift_g_inner
-	dec c
-	jr nz, .loop_lshift_g
+	call _lshiftc
 		
 ; add h to result (op)
 	lea hl, ix - 120
@@ -6398,12 +6383,33 @@ _gf2_bigint_invert:
 	pop ix
 	ret
 	
+	
+_lshiftc:
+; de = dest
+; hl = src
+; c = shift count
+	push hl, de
+		ld b, 30
+		or a
+.lshiftc_inner:
+		ld a, (hl)
+		rla
+		ld (de), a
+		inc hl
+		inc de
+		djnz .lshiftc_inner
+	pop hl, de
+	dec c
+	ret z
+	jr _lshiftc
+	
+
 _get_degree:
-; get degree of a little-endian bitvector pointed by hl
+; input: hl = ptr to binary polynomial (little endian-encoded)
 ; degree in a
 	ld bc, 29
 	add hl, bc
-	ld bc, 081Eh
+	ld bc, 081Dh
 .getdegree_byteloop:
 	ld a, (hl)
 .getdegree_checkbit:
@@ -6411,6 +6417,7 @@ _get_degree:
 	jr c, .getdegree_found_bit
 	djnz .getdegree_checkbit
 	dec hl
+	ld b, 8
 	dec c
 	jr nz, .getdegree_byteloop
 .getdegree_found_bit:
@@ -6420,8 +6427,6 @@ _get_degree:
 	rla
 	rla
 	or b
-	cpl
-	add a, 241
 	ret
 
 ; swaps data at buffers pointed to by hl and de
@@ -6991,16 +6996,16 @@ _rmemcpy:
     jr  .loop
 	
 _sect233k1:
-	db	0, 0, 0, "", 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0
-	db	32 dup 0
-	db	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ""
-	db	"r2∫Ö:~s", 26, "Ò)Ú/Ùïc§¬kı", 10, "LùnÔ≠a&", 0, 0
-	db	"€S}ÏË∑˜UZgƒ'®ÕõÒäÎõV‡¡V˙Ê£", 0, 0
-	db	"Ä", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "ù[πº‘n˚", 26, "’Òs´ﬂ", 0, 0, 0
+	db	0,1,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0
+	db	30 dup 0
+	db	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1
+	db	01h,072h,032h,0BAh,085h,03Ah,07Eh,073h,01Ah,0F1h,029h,0F2h,02Fh,0F4h,014h,095h,063h,0A4h,019h,0C2h,06Bh,0F5h,0Ah,04Ch,09Dh,06Eh,0EFh,0ADh,061h,026h
+	db	01h,0DBh,053h,07Dh,0ECh,0E8h,019h,0B7h,0F7h,0Fh,055h,05Ah,067h,0C4h,027h,0A8h,0CDh,09Bh,0F1h,08Ah,0EBh,09Bh,056h,0E0h,0C1h,010h,056h,0FAh,0E6h,0A3h
+	db	0,080h,0,0,0,0,0,0,0,0,0,0,0,0,0,06h,09Dh,05Bh,0B9h,015h,0BCh,0D4h,06Eh,0FBh,01Ah,0D5h,0F1h,073h,0ABh,0DFh
 	db	4
 	
 _ta_resist:
-	rb	64
+	rb	60
  
  
  _hexc:     db	"0123456789ABCDEF"
