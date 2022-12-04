@@ -6241,8 +6241,8 @@ _gf2_bigint_invert:
 	call ti._frameset
 
 ; rcopy _polynomial to _v
-	ld hl, _sect233k1+29
-	lea de, ix - 90
+	ld hl, _sect233k1+29		; hl needs to dec
+	lea de, ix - 90				; de needs to inc
 	ld b, 30
 .loop_copy_poly:
 	ld a, (hl)
@@ -6270,6 +6270,7 @@ _gf2_bigint_invert:
 	ld de, (ix + 6)		; op
 	ld a, 1
 	ld (de), a
+	inc de
 	ld b, 29
 	xor a
 .loop_zero_op:
@@ -6337,14 +6338,7 @@ _gf2_bigint_invert:
 ; add h to tmp
 		lea hl, ix - 120
 		lea de, ix - 30
-		ld b, 30
-.loop_add_h_tmp:
-		ld a, (de)
-		xor (hl)
-		ld (de), a
-		inc de
-		inc hl
-		djnz .loop_add_h_tmp
+		call _addloop
 		
 ; shift g left by i bits, result in h
 	pop bc		; we need c back, logic repeats for shift g
@@ -6356,14 +6350,7 @@ _gf2_bigint_invert:
 ; add h to result (op)
 	lea hl, ix - 120
 	ld de, (ix + 6)
-	ld b, 30
-.loop_add_h_op:
-	ld a, (de)
-	xor (hl)
-	ld (de), a
-	inc de
-	inc hl
-	djnz .loop_add_h_op
+	call _addloop
 	
 	jq .while_tmp_not_1
 	
@@ -6371,8 +6358,21 @@ _gf2_bigint_invert:
 	ld sp, ix
 	pop ix
 	ret
-	
-	
+
+; add hl + de mod 2, result in de
+; destroys a, b
+_addloop:
+	ld b, 30
+.loop:
+	ld a, (de)
+	xor (hl)
+	ld (de), a
+	inc de
+	inc hl
+	djnz .loop
+	ret
+
+
 _lshiftc:
 ; de = dest
 ; hl = src
@@ -6389,13 +6389,17 @@ _lshiftc:
 		djnz .lshiftc_inner
 	pop hl, de
 	dec c
-	ret z
-	jr _lshiftc
+	jr nz, _lshiftc
+	ret
 	
 
 _get_degree:
 ; input: hl = ptr to binary polynomial (little endian-encoded)
-; degree in a
+; func:
+;		jump to end of polynomial
+;		seek backwards to first set bit
+;		return its 1-indexed degree
+; output: a = degree of highest set bit + 1
 ; destroys: bc, flags
 	ld bc, 29
 	add hl, bc
@@ -6426,7 +6430,7 @@ _get_degree:
 	add a, a
 	add a, a
 	add a, a
-	or a, b
+	add a, b
 	ret
 
 ; swaps data at buffers pointed to by hl and de
