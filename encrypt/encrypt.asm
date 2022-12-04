@@ -6340,8 +6340,8 @@ _gf2_bigint_invert:
 		
 ; shift g left by i bits, result in h
 	
-	lea de, ix - 120
-	lea hl, ix - 60
+		lea de, ix - 120
+		lea hl, ix - 60
 	pop af		; we need a back, logic repeats for shift g
 	call _lshiftc
 		
@@ -6351,11 +6351,11 @@ _gf2_bigint_invert:
 	call _addloop
 	
 	jq .while_tmp_not_1
-	
 .tmp_is_1:
 	ld sp, ix
 	pop ix
 	ret
+
 
 ; add hl + de mod 2, result in de
 ; destroys a, b
@@ -6372,49 +6372,67 @@ _addloop:
 
 
 _lshiftc:
-; de = dest
-; hl = src
-; a = shift count
-	push af
-		and a, 7
-		jr z, .skip_bitshift
-		inc a
-		ld c, a
-.loop_nbits:
-		ld b, 30
-		push hl,de
-			or a
-.lshift_bits:
-			ld a, (hl)
-			rla
-			ld (de), a
-			inc hl
-			inc de
-			djnz .lshift_bits
-		pop de,hl
-		dec c
-		jr nz, .loop_nbits
-.skip_bitshift:
-	pop af
-	or a
-	rra
-	rra
-	rra
+; inputs: hl = ptr to src, de = ptr to dest, a = shift count
+; ouputs: none
+; destroys: a, b, c, flags
+; algorithm:
+;		shift a left by 3 (divide by 8)
+;		and with 30 to constrain to <- 30 bytes. skip to bit loop if a is 0
+;		set first a bytes of de to 0
+;		copy next 30-a bytes from hl to de+a
+;		restore original a and take first 3 bits of a. inc a to get value 1-8
+;		lshift the 30 bytes at hl a times
 	or a
 	ret z
-	ld bc, 0			; make sure bcu is zeroed
-	ld c, 30			; c is total length of region to copy bytes to
-	ld b, a				; b is number of bytes to set to 0
-	xor a				; zero a
-.zero_nbytes:
-	ld (de), a
-	inc de					; increase de
-	dec c					; decrease c
-	djnz .zero_nbytes		; should stop when b = 0 and c = remaining bytes to copy
-	ldir					; hl = LSB of src, de = next byte of dest
+	push af
+		push de
+			or a
+			rra
+			rra
+			rra
+		
+			and a, 30
+			or a
+			jr z, .skip_shift_bytes		; constrain a to 0 < a <= 30
+		
+			ld b, a						; ld a into b for djnz
+			ld c, 30					; set c to 30
+			xor a
+	.loop_zero_nbytes:				; zero the first a bytes of de
+			ld (de), a
+			inc de
+			dec c							; decrease c with every loop
+			djnz .loop_zero_nbytes			; when b = 0
+			xor a
+			cp a, c
+			jr z, .skip_shift_bytes
+			ld b, c							; c should = bytes to copy remaining
+	.loop_copy_bytes:
+			ld a, (hl)
+			ld (de), a						; copy (hl) to (de)
+			inc de
+			inc hl
+			djnz .loop_copy_bytes
+.skip_shift_bytes:
+		pop hl			; dest into hl now
+	pop af				; return original a
+	and 7				; and a with 7 to get a % 8
+	inc a				; inc a by 1 to make it 1-index
+	ld c, a
+.loop_nbits:
+	ld b, 30
+	or a
+	push hl
+.loop_lshift:
+		rl (hl)
+		inc hl
+		djnz .loop_lshift
+	pop hl
+	dec c
+	jr nz, .loop_nbits
 	ret
 	
-
+	
 _get_degree:
 ; input: hl = ptr to binary polynomial (little endian-encoded)
 ; func:
@@ -6436,7 +6454,6 @@ _get_degree:
 ; exit
 	ld a, 0
 	ret
-	
 .found_byte:
 ; process bits
 	ld b, 8
@@ -6445,7 +6462,6 @@ _get_degree:
 	rla
 	jr c, .found_bit
 	djnz .bit_loop
-	
 .found_bit:
 	ld a, c
 	dec a
