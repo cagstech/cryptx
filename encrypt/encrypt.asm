@@ -6321,9 +6321,7 @@ _gf2_bigint_invert:
 		
 ;	negate i
 	pop af
-	cpl
-	inc a
-	; neg
+	neg
 	
 .noswap:
 	
@@ -6404,8 +6402,7 @@ _get_degree:
 	ld c, 30
 	xor a
 .byte_loop:
-	cp (hl)
-	or a			; if byte is 0
+	cp (hl)		; if byte is 0
 	jr nz, .found_byte
 	dec hl
 	dec c
@@ -6417,6 +6414,7 @@ _get_degree:
 .found_byte:
 ; process bits
 	ld b, 8
+	ld a, (hl)
 .bit_loop:
 	rla
 	jr c, .found_bit
