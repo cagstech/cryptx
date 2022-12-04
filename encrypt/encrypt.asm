@@ -6241,8 +6241,8 @@ _gf2_bigint_invert:
 	call ti._frameset
 
 ; rcopy _polynomial to _v
-	ld hl, _sect233k1+29		; hl needs to dec
-	lea de, ix - 90				; de needs to inc
+	ld hl, _sect233k1 + 29		; skip to the end of the 30-byte binary polynomial repr.
+	lea de, ix - 90				; _h
 	ld b, 30
 .loop_copy_poly:
 	ld a, (hl)
@@ -6281,6 +6281,11 @@ _gf2_bigint_invert:
 ; while tmp != 1
 .while_tmp_not_1:
 
+	; open debugger
+	scf
+	sbc hl,hl
+	ld (hl),2
+
 ; compute degree of v (in bits)
 	lea hl, ix - 90
 	call _get_degree
@@ -6296,11 +6301,6 @@ _gf2_bigint_invert:
 	jr z, .tmp_is_1
 	
 	inc a
-	
-	; open debugger
-	scf
-	sbc hl,hl
-	ld (hl),2
 	
 ; subtract degree(v) from degree(tmp)
 	sub a, b
@@ -6328,11 +6328,9 @@ _gf2_bigint_invert:
 	
 ; shift v left by a bits, result in h
 
-	ld c, a
-	push bc
-	
-		lea de, ix - 120
-		lea hl, ix - 90
+	lea de, ix - 120
+	lea hl, ix - 90
+	push af
 		call _lshiftc
 	
 ; add h to tmp
@@ -6341,10 +6339,10 @@ _gf2_bigint_invert:
 		call _addloop
 		
 ; shift g left by i bits, result in h
-	pop bc		; we need c back, logic repeats for shift g
 	
 	lea de, ix - 120
 	lea hl, ix - 60
+	pop af		; we need c back, logic repeats for shift g
 	call _lshiftc
 		
 ; add h to result (op)
@@ -6376,20 +6374,45 @@ _addloop:
 _lshiftc:
 ; de = dest
 ; hl = src
-; c = shift count
-	push hl, de
+; a = shift count
+	push af
+		and a, 7
+		jr z, .skip_bitshift
+		ld c, a
+.loop_nbits:
 		ld b, 30
-		or a
-.lshiftc_inner:
-		ld a, (hl)
-		rla
+		push hl,de
+.lshift_bits:
+			ld a, (hl)
+			rla
+			ld (de), a
+			inc hl
+			inc de
+			djnz .lshift_bits
+		pop de,hl
+		dec c
+		jr nz, .loop_nbits
+.skip_bitshift:
+	pop af
+	or a
+	rra
+	rra
+	rra
+	or a
+	ret z
+	ld b, a
+	xor a
+	push bc
+.zero_nbytes:
 		ld (de), a
-		inc hl
 		inc de
-		djnz .lshiftc_inner
-	pop hl, de
-	dec c
-	jr nz, _lshiftc
+		djnz .zero_nbytes
+	pop bc
+	ld a, 30
+	sub a, b
+	ld bc, 0
+	ld c, a
+	lddr
 	ret
 	
 
@@ -6401,9 +6424,9 @@ _get_degree:
 ;		return its 1-indexed degree
 ; output: a = degree of highest set bit + 1
 ; destroys: bc, flags
-	ld bc, 29
+	ld bc, 29		; input is 30 bytes, jump to MSB (hl + 29)
 	add hl, bc
-	ld c, 30
+	ld c, 30		; check 30 bytes
 	xor a
 .byte_loop:
 	cp (hl)		; if byte is 0
