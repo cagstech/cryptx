@@ -6342,7 +6342,7 @@ _gf2_bigint_invert:
 	
 	lea de, ix - 120
 	lea hl, ix - 60
-	pop af		; we need c back, logic repeats for shift g
+	pop af		; we need a back, logic repeats for shift g
 	call _lshiftc
 		
 ; add h to result (op)
@@ -6378,10 +6378,12 @@ _lshiftc:
 	push af
 		and a, 7
 		jr z, .skip_bitshift
+		inc a
 		ld c, a
 .loop_nbits:
 		ld b, 30
 		push hl,de
+			or a
 .lshift_bits:
 			ld a, (hl)
 			rla
@@ -6400,19 +6402,16 @@ _lshiftc:
 	rra
 	or a
 	ret z
-	ld b, a
-	xor a
-	push bc
+	ld bc, 0			; make sure bcu is zeroed
+	ld c, 30			; c is total length of region to copy bytes to
+	ld b, a				; b is number of bytes to set to 0
+	xor a				; zero a
 .zero_nbytes:
-		ld (de), a
-		inc de
-		djnz .zero_nbytes
-	pop bc
-	ld a, 30
-	sub a, b
-	ld bc, 0
-	ld c, a
-	lddr
+	ld (de), a
+	inc de					; increase de
+	dec c					; decrease c
+	djnz .zero_nbytes		; should stop when b = 0 and c = remaining bytes to copy
+	ldir					; hl = LSB of src, de = next byte of dest
 	ret
 	
 
