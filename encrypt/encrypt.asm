@@ -6390,10 +6390,10 @@ _lshiftc:
 	ret z
 	push af
 		push de
-			or a
-			rra
-			rra
-			rra
+			
+			srl a
+			srl a
+			srl a
 		
 			and a, 30
 			or a
