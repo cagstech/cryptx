@@ -6376,12 +6376,16 @@ _lshiftc:
 ; ouputs: none
 ; destroys: a, b, c, flags
 ; algorithm:
-;		shift a left by 3 (divide by 8)
-;		and with 30 to constrain to <- 30 bytes. skip to bit loop if a is 0
-;		set first a bytes of de to 0
-;		copy next 30-a bytes from hl to de+a
-;		restore original a and take first 3 bits of a. inc a to get value 1-8
-;		lshift the 30 bytes at hl a times
+;		byte shift: shift by between 1 and 30 (inclusive) bytes by:
+;			shift a to the right 3x (div 8), then and a with 30 to constrain to 30 or less
+;		 	if a == 0, skip to the bit shift section
+;			set the first a bytes of de to 0
+;			copy 30 - a bytes from hl to de + a
+;		bit shift: shift by between 1 and 7 (inclusive) bits by:
+;			restore original a, then and with 7 to return a value mod 8
+;			return if 0
+;			shift the 30 bytes at hl to the left a times
+
 	or a
 	ret z
 	push af
@@ -6418,7 +6422,7 @@ _lshiftc:
 	pop af				; return original a
 	and a, 7			; and a with 7 to get a % 8
 	ret z
-	ld c, a
+	ld c, a				; this should only loop up to 7 times. if 8, should have been a byte
 .loop_nbits:
 	ld b, 30
 	or a
