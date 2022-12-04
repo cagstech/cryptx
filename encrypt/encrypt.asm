@@ -6403,10 +6403,10 @@ _lshiftc:
 			inc de
 			dec c							; decrease c with every loop
 			djnz .loop_zero_nbytes			; when b = 0
-			xor a
-			cp a, c
-			jr z, .skip_shift_bytes
-			ld b, c							; c should = bytes to copy remaining
+			xor a							; zero a
+			cp a, c							; if c == 0
+			jr z, .skip_shift_bytes			; skip copy bytes
+			ld b, c							; c should be non-zero and num of bytes to copy
 	.loop_copy_bytes:
 			ld a, (hl)
 			ld (de), a						; copy (hl) to (de)
@@ -6416,8 +6416,8 @@ _lshiftc:
 .skip_shift_bytes:
 		pop hl			; dest into hl now
 	pop af				; return original a
-	and 7				; and a with 7 to get a % 8
-	inc a				; inc a by 1 to make it 1-index
+	and a, 7			; and a with 7 to get a % 8
+	ret z
 	ld c, a
 .loop_nbits:
 	ld b, 30
