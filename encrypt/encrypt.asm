@@ -6279,20 +6279,6 @@ _gf2_bigint_invert:
 	
 ; while tmp != 1
 .while_tmp_not_1:
-	lea hl, ix - 30
-	ld a, (hl)
-	cp 1
-	jr nz, .tmp_not_1
-	inc hl
-	ld b, 29
-	xor a
-.or_tmp_loop:
-	or (hl)
-	inc hl
-	djnz .or_tmp_loop
-	or a
-	jq z, .tmp_is_1			; if is 1, op should contain inverse
-.tmp_not_1:
 
 ; compute degree of v (in bits)
 	lea hl, ix - 90
@@ -6304,6 +6290,11 @@ _gf2_bigint_invert:
 		lea hl, ix - 30
 		call _get_degree
 	pop bc
+	
+	dec a
+	jr z, .tmp_is_1
+	
+	inc a
 	
 	; open debugger
 	scf
@@ -6410,28 +6401,38 @@ _get_degree:
 ; destroys: bc, flags
 	ld bc, 29
 	add hl, bc
-	ld bc, 081Dh
-.getdegree_byteloop:
-	ld a, (hl)
-.getdegree_checkbit:
-	rla
-	jr c, .getdegree_found_bit
-	djnz .getdegree_checkbit
+	ld c, 30
+	xor a
+.byte_loop:
+	cp (hl)
+	or a			; if byte is 0
+	jr nz, .found_byte
 	dec hl
-	ld b, 8
 	dec c
-	jr nz, .getdegree_byteloop
-.getdegree_found_bit:
-	dec b
+	jr nz, .byte_loop
+; exit
+	ld a, 0
+	ret
+	
+.found_byte:
+; process bits
+	ld b, 8
+.bit_loop:
+	rla
+	jr c, .found_bit
+	djnz .bit_loop
+	
+.found_bit:
 	ld a, c
-	rla
-	rla
-	rla
-	or b
+	dec a
+	add a, a
+	add a, a
+	add a, a
+	or a, b
 	ret
 
 ; swaps data at buffers pointed to by hl and de
-; hardcoded 32 byte buffer
+; hardcoded 30 byte buffer
 _copy_w_swap:
 	ld b, 30
 .loop:
