@@ -6243,7 +6243,7 @@ _gf2_bigint_invert:
 ; rcopy _polynomial to _v
 	ld hl, _sect233k1+29
 	lea de, ix - 90
-	ld b, 32
+	ld b, 30
 .loop_copy_poly:
 	ld a, (hl)
 	ld (de), a
@@ -6277,11 +6277,6 @@ _gf2_bigint_invert:
 	inc de
 	djnz .loop_zero_op		; op1 = res = 0
 	
-	; open debugger
-	scf
-	sbc hl,hl
-	ld (hl),2
-	
 ; while tmp != 1
 .while_tmp_not_1:
 	lea hl, ix - 30
@@ -6303,11 +6298,18 @@ _gf2_bigint_invert:
 	lea hl, ix - 90
 	call _get_degree
 	ld b, a						; in b
+	push bc
 	
 ; compute degree of tmp (in bits)
-	lea hl, ix - 30
-	call _get_degree
-
+		lea hl, ix - 30
+		call _get_degree
+	pop bc
+	
+	; open debugger
+	scf
+	sbc hl,hl
+	ld (hl),2
+	
 ; subtract degree(v) from degree(tmp)
 	sub a, b
 	
@@ -6355,7 +6357,7 @@ _gf2_bigint_invert:
 		inc hl
 		djnz .loop_add_h_tmp
 		
-; t g left by i bits, result in h
+; shift g left by i bits, result in h
 	pop bc		; we need c back, logic repeats for shift g
 	
 	lea de, ix - 120
@@ -6405,6 +6407,7 @@ _lshiftc:
 _get_degree:
 ; input: hl = ptr to binary polynomial (little endian-encoded)
 ; degree in a
+; destroys: bc, flags
 	ld bc, 29
 	add hl, bc
 	ld bc, 081Dh
