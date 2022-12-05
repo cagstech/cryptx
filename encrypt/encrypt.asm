@@ -31,6 +31,7 @@ include_library '../hashlib/hashlib.asm'
     export gf2_bigint_sub
     export gf2_bigint_mul
     export gf2_bigint_invert
+    export bigint_lshiftc
     
 powmod = _powmod
 gf2_bigint_add = _gf2_bigint_add
@@ -6282,27 +6283,26 @@ _gf2_bigint_invert:
 .while_tmp_not_1:
 
 	; open debugger
-	scf
-	sbc hl,hl
-	ld (hl),2
+	;scf
+	;sbc hl,hl
+	;ld (hl),2
 
-; compute degree of v (in bits)
-	lea hl, ix - 90
-	call _get_degree
-	ld b, a						; in b
-	push bc
-	
 ; compute degree of tmp (in bits)
-		lea hl, ix - 30
-		call _get_degree
-	pop bc
+	lea hl, ix - 30
+	call _get_degree		; degree of 1 means value of _tmp = 1
 	
-	dec a
+	cp 1			; if degree is 1, then value is 1 and we can exit
 	jr z, .tmp_is_1
 	
-	inc a
-	
-; subtract degree(v) from degree(tmp)
+	push af
+
+; compute degree of v (in bits)
+		lea hl, ix - 90
+		call _get_degree
+		ld b, a						; in b
+	pop af
+
+; subtract degree(tmp) - degree(v)
 	sub a, b
 	
 ; if no carry, skip swaps
@@ -6350,7 +6350,7 @@ _gf2_bigint_invert:
 	ld de, (ix + 6)
 	call _addloop
 	
-	jq .while_tmp_not_1
+	jr .while_tmp_not_1
 .tmp_is_1:
 	ld sp, ix
 	pop ix
@@ -6368,6 +6368,18 @@ _addloop:
 	inc de
 	inc hl
 	djnz .loop
+	ret
+
+
+; void bigint_lshiftc(void* dest, void* src, uint8_t scount);
+bigint_lshiftc:
+	call ti._frameset0
+	ld de, (ix + 6)
+	ld hl, (ix + 9)
+	ld a, (ix + 12)
+	call _lshiftc
+	ld sp, ix
+	pop ix
 	ret
 
 
@@ -6395,13 +6407,13 @@ _lshiftc:
 			srl a
 			srl a
 		
-			and a, 30
-			or a
-			jr z, .skip_shift_bytes		; constrain a to 0 < a <= 30
-		
-			ld b, a						; ld a into b for djnz
 			ld c, 30					; set c to 30
+			
+			or a
+			jr z, .skip_shift_bytes		; if 0, skip shift bytes
+			
 			xor a
+			ld b, a						; ld a into b for djnz
 	.loop_zero_nbytes:				; zero the first a bytes of de
 			ld (de), a
 			inc de
@@ -6410,14 +6422,15 @@ _lshiftc:
 			xor a							; zero a
 			cp a, c							; if c == 0
 			jr z, .skip_shift_bytes			; skip copy bytes
+.skip_shift_bytes:
 			ld b, c							; c should be non-zero and num of bytes to copy
-	.loop_copy_bytes:
+		.loop_copy_bytes:
 			ld a, (hl)
 			ld (de), a						; copy (hl) to (de)
 			inc de
 			inc hl
 			djnz .loop_copy_bytes
-.skip_shift_bytes:
+	
 		pop hl			; dest into hl now
 	pop af				; return original a
 	and a, 7			; and a with 7 to get a % 8
@@ -6480,12 +6493,12 @@ _get_degree:
 _copy_w_swap:
 	ld b, 30
 .loop:
-	ld a, (hl)
-	ld c, a
-	ld a, (de)
-	ld (hl), a
-	ld a, c
-	ld (de), a
+	ld a, (de)			;(de) into a
+	ld c, a				; a into c to store
+	ld a, (hl)			; (hl) into a
+	ld (de), a			; a into (de)
+	ld a, c				; c back into a
+	ld (hl), a			; a into (hl)
 	inc hl
 	inc de
 	djnz .loop
@@ -6499,7 +6512,7 @@ _copy_w_swap:
 	lea	iy, ix - 60
 	ld	(ix - 63), iy
 	lea	de, iy
-	ld	bc, 29
+	ld	bc, 30
 	ldir
 	push	iy
 	push	iy
@@ -6524,7 +6537,7 @@ _copy_w_swap:
 	lea	de, iy + 30
 	ld	(ix - 66), de
 	ld	hl, (ix + 6)
-	ld	bc, 29
+	ld	bc, 30
 	ldir
 	push	iy
 	ld	hl, (ix - 66)
@@ -6565,12 +6578,12 @@ _point_double:
 	ld	(ix - 96), hl
 	push	bc
 	pop	hl
-	ld	bc, 29
+	ld	bc, 30
 	ldir
 	lea	de, iy
 	ld	(ix - 99), iy
 	ld	hl, (ix + 6)
-	ld	bc, 29
+	ld	bc, 30
 	ldir
 	ld	hl, (ix - 96)
 	inc	hl
@@ -6578,7 +6591,7 @@ _point_double:
 	push	hl
 	pop	de
 	inc	de
-	ld	bc, 28
+	ld	bc, 29
 	ldir
 	ld	(ix - 90), 3
 	ld	hl, (ix - 93)
@@ -6598,7 +6611,7 @@ _point_double:
 	lea	hl, iy + 30
 	ld	iy, (ix - 93)
 	lea	de, iy
-	ld	bc, 29
+	ld	bc, 30
 	ldir
 	ld	(ix - 90), 2
 	ld	hl, (ix - 96)
@@ -6681,11 +6694,11 @@ _point_add:
 	push	bc
 	pop	iy
 	lea	hl, iy + 30
-	ld	bc, 29
+	ld	bc, 30
 	ldir
 	ld	de, (ix - 63)
 	lea	hl, iy
-	ld	bc, 29
+	ld	bc, 30
 	ldir
 	ld	hl, (ix + 6)
 	push	hl
@@ -6902,7 +6915,7 @@ ecdh_keygen:
 	ld	iy, (ix - 63)
 	lea	de, iy + 30
 	ld	(ix - 66), de
-	ld	hl, 29
+	ld	hl, 30
 	push	hl
 	ld	hl, _sect233k1+120
 	push	hl
@@ -6911,7 +6924,7 @@ ecdh_keygen:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, 29
+	ld	hl, 30
 	push	hl
 	ld	hl, (ix + 6)
 	push	hl

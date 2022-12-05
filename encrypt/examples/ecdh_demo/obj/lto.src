@@ -184,7 +184,7 @@ _bigint_tests:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 66)
+	ld	hl, (ix - 63)
 	push	hl
 	call	_gf2_bigint_invert
 	pop	hl
@@ -192,7 +192,24 @@ _bigint_tests:
 	push	hl
 	ld	hl, 30
 	push	hl
-	ld	hl, (ix - 66)
+	ld	hl, (ix - 63)
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	pop	hl
+	call	_csrand_get
+	ld	a, l
+	ld	(ix - 30), a
+	ld	hl, (ix - 63)
+	push	hl
+	call	_gf2_bigint_invert
+	pop	hl
+	ld	hl, _.str.9
+	push	hl
+	ld	hl, 30
+	push	hl
+	ld	hl, (ix - 63)
 	push	hl
 	call	_hexdump
 	ld	sp, ix
@@ -203,9 +220,18 @@ _bigint_tests:
 	section	.text,"ax",@progbits
 	public	_main
 _main:
+	ld	hl, 1
+	push	hl
+	call	_csrand_init
+	pop	hl
+	bit	0, a
+	jr	z, BB2_2
 	call	_bigint_tests
 	or	a, a
 	sbc	hl, hl
+	ret
+BB2_2:
+	ld	hl, 1
 	ret
 	section	.text,"ax",@progbits
 
@@ -257,7 +283,7 @@ _.str.8:
 	section	.rodata,"a",@progbits
 	private	_.str.9
 _.str.9:
-	db	"---op2 ^ -1---", 0
+	db	"---op1 = op1 ^ -1---", 0
 
 	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"
 	extern	_gf2_bigint_invert
@@ -266,5 +292,7 @@ _.str.9:
 	extern	_gf2_bigint_add
 	extern	_sprintf
 	extern	__Unwind_SjLj_Unregister
+	extern	_csrand_init
+	extern	_csrand_get
 	extern	_gf2_bigint_sub
 	extern	_gf2_bigint_mul

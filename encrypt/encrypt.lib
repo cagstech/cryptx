@@ -19,3 +19,4 @@
 	export	gf2_bigint_sub
 	export	gf2_bigint_mul
 	export	gf2_bigint_invert
+	export	bigint_lshiftc

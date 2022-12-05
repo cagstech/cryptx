@@ -42,7 +42,6 @@ void ecdh_test(void) {
 	ecdh_ctx test2;
 	
 	// Always check for false return value from csrand_init()
-	if(!csrand_init(SAMPLING_FAST)) return 1;
 	
 	sprintf(CEMU_CONSOLE, "\n\n----------------------------------\nElliptic Curve Diffie-Hellman Demo\n");
 	
@@ -78,8 +77,13 @@ void bigint_tests(void){
 	gf2_bigint_mul(op1, op2);
 	hexdump(op1, sizeof op1, "---op1 * op2---");
 	
-	gf2_bigint_invert(op2);
-	hexdump(op2, sizeof op2, "---op2 ^ -1---");
+	gf2_bigint_invert(op1);
+	hexdump(op1, sizeof op1, "---op1 = op1 ^ -1---");
+	
+	op1[0] = (uint8_t)csrand_get();
+	gf2_bigint_invert(op1);
+	hexdump(op1, sizeof op1, "---op1 = op1 ^ -1---");
+	
 }
 #endif
 
@@ -87,6 +91,7 @@ void bigint_tests(void){
 
 int main(void)
 {
+	if(!csrand_init(SAMPLING_FAST)) return 1;
 #ifdef BIGINT_TESTS
 	bigint_tests();
 #endif
