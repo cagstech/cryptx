@@ -6412,8 +6412,8 @@ _lshiftc:
 			or a
 			jr z, .skip_shift_bytes		; if 0, skip shift bytes
 			
-			xor a
 			ld b, a						; ld a into b for djnz
+			xor a
 	.loop_zero_nbytes:				; zero the first a bytes of de
 			ld (de), a
 			inc de

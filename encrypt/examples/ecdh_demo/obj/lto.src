@@ -105,7 +105,7 @@ _bigint_tests:
 	ld	bc, 28
 	ldir
 	ld	(ix - 30), 2
-	ld	(ix - 60), 2
+	ld	(ix - 60), 3
 	ld	hl, _.str.3
 	push	hl
 	ld	hl, 30
@@ -133,14 +133,14 @@ _bigint_tests:
 	call	_sprintf
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 66)
-	push	hl
-	ld	hl, (ix - 63)
-	push	hl
-	call	_gf2_bigint_add
-	pop	hl
-	pop	hl
 	ld	hl, _.str.6
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	ld	hl, _.str.3
 	push	hl
 	ld	hl, 30
 	push	hl
@@ -150,11 +150,21 @@ _bigint_tests:
 	pop	hl
 	pop	hl
 	pop	hl
+	ld	hl, _.str.4
+	push	hl
+	ld	hl, 30
+	push	hl
+	ld	hl, (ix - 66)
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	pop	hl
 	ld	hl, (ix - 66)
 	push	hl
 	ld	hl, (ix - 63)
 	push	hl
-	call	_gf2_bigint_sub
+	call	_gf2_bigint_add
 	pop	hl
 	pop	hl
 	ld	hl, _.str.7
@@ -167,6 +177,80 @@ _bigint_tests:
 	pop	hl
 	pop	hl
 	pop	hl
+	ld	hl, _.str.8
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	ld	hl, _.str.3
+	push	hl
+	ld	hl, 30
+	push	hl
+	ld	hl, (ix - 63)
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, _.str.4
+	push	hl
+	ld	hl, 30
+	push	hl
+	ld	hl, (ix - 66)
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 66)
+	push	hl
+	ld	hl, (ix - 63)
+	push	hl
+	call	_gf2_bigint_sub
+	pop	hl
+	pop	hl
+	ld	hl, _.str.9
+	push	hl
+	ld	hl, 30
+	push	hl
+	ld	hl, (ix - 63)
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, _.str.10
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	call	_csrand_get
+	ld	a, l
+	ld	(ix - 30), a
+	ld	hl, _.str.3
+	push	hl
+	ld	hl, 30
+	push	hl
+	ld	hl, (ix - 63)
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, _.str.4
+	push	hl
+	ld	hl, 30
+	push	hl
+	ld	hl, (ix - 66)
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	pop	hl
 	ld	hl, (ix - 66)
 	push	hl
 	ld	hl, (ix - 63)
@@ -174,7 +258,7 @@ _bigint_tests:
 	call	_gf2_bigint_mul
 	pop	hl
 	pop	hl
-	ld	hl, _.str.8
+	ld	hl, _.str.11
 	push	hl
 	ld	hl, 30
 	push	hl
@@ -188,7 +272,7 @@ _bigint_tests:
 	push	hl
 	call	_gf2_bigint_invert
 	pop	hl
-	ld	hl, _.str.9
+	ld	hl, _.str.12
 	push	hl
 	ld	hl, 30
 	push	hl
@@ -205,7 +289,7 @@ _bigint_tests:
 	push	hl
 	call	_gf2_bigint_invert
 	pop	hl
-	ld	hl, _.str.9
+	ld	hl, _.str.12
 	push	hl
 	ld	hl, 30
 	push	hl
@@ -268,21 +352,36 @@ _.str.5:
 	section	.rodata,"a",@progbits
 	private	_.str.6
 _.str.6:
-	db	"---op1 + op2---", 0
+	db	10, "_ADDITION_", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.7
 _.str.7:
-	db	"---op1 - op2---", 0
+	db	"---op1 + op2---", 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.8
 _.str.8:
-	db	"---op1 * op2---", 0
+	db	10, "_SUBTRACTION_", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.9
 _.str.9:
+	db	"---op1 - op2---", 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.10
+_.str.10:
+	db	10, "_MULTIPLICATION_", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.11
+_.str.11:
+	db	"---op1 * op2---", 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.12
+_.str.12:
 	db	"---op1 = op1 ^ -1---", 0
 
 	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"

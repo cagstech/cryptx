@@ -63,17 +63,29 @@ void bigint_tests(void){
 	GF2_BIGINT op1 = {0};
 	GF2_BIGINT op2 = {0};
 	op1[0] = 2;
-	op2[0] = 2;
+	op2[0] = 3;
 	
 	hexdump(op1, sizeof op1, "---op1---");
 	hexdump(op2, sizeof op2, "---op2---");
 	
 	sprintf(CEMU_CONSOLE, "\n\n----------------------------------\nGF2_BIGINT Unit Tests\n");
+	
+	sprintf(CEMU_CONSOLE, "\n_ADDITION_\n");
+	hexdump(op1, sizeof op1, "---op1---");
+	hexdump(op2, sizeof op2, "---op2---");
 	gf2_bigint_add(op1, op2);
 	hexdump(op1, sizeof op1, "---op1 + op2---");
+	
+	sprintf(CEMU_CONSOLE, "\n_SUBTRACTION_\n");
+	hexdump(op1, sizeof op1, "---op1---");
+	hexdump(op2, sizeof op2, "---op2---");
 	gf2_bigint_sub(op1, op2);
 	hexdump(op1, sizeof op1, "---op1 - op2---");
 	
+	sprintf(CEMU_CONSOLE, "\n_MULTIPLICATION_\n");
+	op1[0] = (uint8_t)csrand_get();
+	hexdump(op1, sizeof op1, "---op1---");
+	hexdump(op2, sizeof op2, "---op2---");
 	gf2_bigint_mul(op1, op2);
 	hexdump(op1, sizeof op1, "---op1 * op2---");
 	

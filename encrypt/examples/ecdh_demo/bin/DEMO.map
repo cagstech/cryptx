@@ -7,9 +7,9 @@ Section          Base   Top    High   Length
 .init.reruncheck D1AA21 D1AA21             0h
 .init            D1AA21 D1AA41            20h
 .fini            D1AA41 D1AA75            34h
-.text            D1AA75 D1AC87           212h
-.data            D1AC87 D1AC87             0h
-.rodata          D1AC87 D1AD4B            C4h
+.text            D1AA75 D1AD3D           2C8h
+.data            D1AD3D D1AD3D             0h
+.rodata          D1AD3D D1AE31            F4h
 .init_array      000000 000000             0h
 .ctors           000000 000000             0h
 .dtors           000000 000000             0h
@@ -33,10 +33,10 @@ __frameset                = D1AA75
 _os_DisableHomeTextBuffer = D1AA83
 _os_EnableHomeTextBuffer  = D1AA95
 _sprintf                  = 0000BC
-.missingappvar            = D1AC87
-.libloadname              = D1AC8C
+.missingappvar            = D1AD3D
+.libloadname              = D1AD42
 .libloadnamelen           = 000007
-.webaddress               = D1AC94
+.webaddress               = D1AD4A
 __start                   = D1AA21
 ___exithl                 = D1AA41
 skip._exit                = D1AA41
@@ -46,17 +46,20 @@ _exit.sp                  = D1AA42
 _exit.flash_wait_states   = D1AA4C
 _hexdump                  = D1AAA7
 _bigint_tests             = D1AB46
-_main                     = D1AC6C
-_.str                     = D1ACA9
-_.str.1                   = D1ACAE
-_.str.2                   = D1ACB0
-_.str.3                   = D1ACB6
-_.str.4                   = D1ACC0
-_.str.5                   = D1ACCA
-_.str.6                   = D1AD06
-_.str.7                   = D1AD16
-_.str.8                   = D1AD26
-_.str.9                   = D1AD36
+_main                     = D1AD22
+_.str                     = D1AD5F
+_.str.1                   = D1AD64
+_.str.2                   = D1AD66
+_.str.3                   = D1AD6C
+_.str.4                   = D1AD76
+_.str.5                   = D1AD80
+_.str.6                   = D1ADBC
+_.str.7                   = D1ADC9
+_.str.8                   = D1ADD9
+_.str.9                   = D1ADE9
+_.str.10                  = D1ADF9
+_.str.11                  = D1AE0C
+_.str.12                  = D1AE1C
 lib.LibLoad               = D1A9F5
 _#csrand_init             = D1AA09
 _#csrand_get              = D1AA0D
