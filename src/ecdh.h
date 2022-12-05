@@ -5,7 +5,7 @@
 // Defines for algorithm bit/byte widths, bignum max, and key lengths
 #define CURVE_DEGREE		233
 #define ECC_PRV_KEY_SIZE	29		// largest byte-aligned length < CURVE_DEGREE
-#define ECC_BIGINT_MAX_LEN	(ECC_PRV_KEY_SIZE + 3)
+#define ECC_BIGINT_MAX_LEN	(ECC_PRV_KEY_SIZE + 1)
 #define ECC_PUB_KEY_SIZE	(ECC_BIGINT_MAX_LEN<<1)
 
 // Bigint for this implementation is a 32-byte big-endian encoded integer
@@ -46,9 +46,10 @@ typedef enum _ecdh_errors {
 // asm/ecdh_ops.asm
 void rmemcpy(void *dest, void *src, size_t len);		// memcpy that reverses endianness
 // ^^ thanks to calc84maniac
-bool bigint_iszero(BIGINT op);
-void bigint_setzero(BIGINT op);
-bool bigint_isequal(BIGINT op1, BIGINT op2);
+bool bigint_iszero(uint8_t *op);
+bool point_iszero(struct Point *pt);
+bool bigint_isequal(uint8_t *op1, uint8_t *op2);
+bool point_isequal(struct Point *pt1, struct Point *pt2);
 void bigint_add(BIGINT op1, BIGINT op2);
 void bigint_sub(BIGINT op1, BIGINT op2);
 void bigint_mul(BIGINT op1, BIGINT op2);

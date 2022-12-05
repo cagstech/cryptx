@@ -30,11 +30,16 @@ _rmemcpy:
 
 
 ; bigint_iszero(uint8_t *op);
+; point_iszero(struct Point *pt)
+_point_iszero:
+	ld b, 60
+	jr _iszero_begin
 _bigint_iszero:
-	pop hl,de
-	push de,hl
-	ld a, 0
-	ld b, 34
+	ld b, 30
+_iszero_begin:
+	pop de,hl
+	push hl,de
+	or a
 .loop:
 	or (hl)
 	djnz .loop
@@ -44,29 +49,25 @@ _bigint_iszero:
 	ret
 
 
-;bigint_setzero(uint8_t *op);
-_bigint_setzero:
-	pop de,hl
-	push hl,de
-	ld a, 0
-	ld (de), a
-	push de
-	pop hl
-	inc de
-	ld bc, 31
-	ldir
-
-
 ; bigint_isequal(uint8_t *op1, uint8_t *op2);
+; point_isequal(struct Point *pt1, struct Point *pt2);
+_point_isequal:
+	ld b, 60
+	jr _isequal_begin
 _bigint_isequal:
+	ld b, 30
+_isequal_begin:
 	call ti._frameset0
-	ld hl, (ix + 3)
-	ld de, (ix + 6)
-	ld b, 32
+	ld hl, (ix + 6)
+	ld de, (ix + 9)
+	ld c, 0
 .loop:
 	ld a, (de)
-	inc de
 	xor (hl)
+	or a, c
+	ld c, a
+	inc de
+	inc hl
 	djnz .loop
 	add a, -1
 	sbc a, a

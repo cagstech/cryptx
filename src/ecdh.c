@@ -46,30 +46,25 @@ output x as shared secret field
 // Defines standardized curve parameters (see http://www.secg.org/sec2-v2.pdf, sect233k1)
 // each entry is big-endian encoded
 struct Curve sect233k1 = {
-	{	0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x04,0x00,0x00,0x00,0x00,0x00,	// p
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x02,0x00},
-	{	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,	// a
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
-	{	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,	// b
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01},
+	{	0x02,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+		0x00,0x00,0x00,0x00,0x00,0x04,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01},	// poly
+	{	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,		// a
+		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
+	{	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,		// b
+		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01},
 	{		// G
 		{	0x01,0x72,0x32,0xBA,0x85,0x3A,0x7E,0x73,0x1A,0xF1,0x29,0xF2,0x2F,0xF4,0x14,		// x
 			0x95,0x63,0xA4,0x19,0xC2,0x6B,0xF5,0x0A,0x4C,0x9D,0x6E,0xEF,0xAD,0x61,0x26},
 		{	0x01,0xDB,0x53,0x7D,0xEC,0xE8,0x19,0xB7,0xF7,0x0F,0x55,0x5A,0x67,0xC4,0x27,		// y
 			0xA8,0xCD,0x9B,0xF1,0x8A,0xEB,0x9B,0x56,0xE0,0xC1,0x10,0x56,0xFA,0xE6,0xA3}
 	},
-	{	0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x06,
-		0x9D,0x5B,0xB9,0x15,0xBC,0xD4,0x6E,0xFB,0x1A,0xD5,0xF1,0x73,0xAB,0xDF},
+	{	0x00,0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,			// n
+		0x06,0x9D,0x5B,0xB9,0x15,0xBC,0xD4,0x6E,0xFB,0x1A,0xD5,0xF1,0x73,0xAB,0xDF},
 	4		// h
 };
 
 // defines a null Point to be used for timing resistance
 struct Point ta_resist = {0};
-
-// Checks if a point is zero
-static bool point_iszero(struct Point *pt){
-	return (bigint_iszero(pt->x) && bigint_iszero(pt->y));
-}
 
 // sets a point to 0
 #define point_setzero(pt)	\
@@ -80,17 +75,20 @@ static bool point_iszero(struct Point *pt){
  */
 
 // given ptP, ptQ, and slope, return addition/double result in ptP
+
 void point_compute(struct Point *ptP, struct Point *ptQ, BIGINT slope){
 	
 	struct Point res;
+	BIGINT tmp;
 	// compute result X
-	memcpy(res.x, slope, ECC_PRV_KEY_SIZE);
-	bigint_mul(res.x, res.x);
+	memcpy(res.x, slope, 30);
+	memcpy(tmp, slope, 30);
+	bigint_mul(res.x, tmp);
 	bigint_sub(res.x, ptP->x);
 	bigint_sub(res.x, ptQ->x);
 	
 	// compute result Y
-	memcpy(res.y, ptP->x, ECC_PRV_KEY_SIZE);
+	memcpy(res.y, ptP->x, 30);
 	bigint_sub(res.y, res.x);
 	bigint_mul(res.y, slope);
 	bigint_sub(res.y, ptQ->y);
@@ -105,27 +103,29 @@ void point_double(struct Point *pt){
 	// Y = (3(xp)^2 + a) / 2(yp)
 	// can we defer division and then divide by [2(yp) * calls_to_double] at the end for speed?
 	
-	BIGINT slope, tmp;
-	memcpy(slope, pt->x, ECC_PRV_KEY_SIZE);
+	BIGINT n_tmp = {0}, slope_sq = {0}, n_const = {0};
+	memcpy(n_tmp, pt->x, sizeof n_tmp);			// slope and slope_sq should contain
+	memcpy(slope_sq, pt->x, sizeof slope_sq);		// the same value
+	memset(n_const, 0, sizeof n_const);
+	n_const[0] = 3;									// n_const set to 3
 	
-	// 3(Px)^2
-	bigint_mul(slope, slope);
-	memcpy(tmp, slope, sizeof tmp);
-	bigint_add(slope, slope);
-	bigint_add(slope, tmp);
+	// square the slope, result in slope_sq
+	bigint_mul(slope_sq, n_tmp);			// (Px^2)
+	bigint_mul(slope_sq, n_const);			// 3(Px^2)
 	
 	// + a; a == 0, so we can skip this i think
 	//bigint_add(slope, sect233k1.coeff_a);
 	
 	// 2(Py)
-	memcpy(tmp, pt->y, ECC_PRV_KEY_SIZE);
-	bigint_add(tmp, tmp);
-	bigint_invert(tmp);
+	memcpy(n_tmp, pt->y, sizeof n_tmp);
+	n_const[0] = 2;									// n_const set to 2
+	bigint_mul(n_tmp, n_const);
+	bigint_invert(n_tmp);
 	
 	// division as multiply by inverse
-	bigint_mul(slope, tmp);
+	bigint_mul(slope_sq, n_tmp);
 	
-	point_compute(pt, pt, slope);
+	point_compute(pt, pt, slope_sq);
 }
 
 
@@ -140,24 +140,21 @@ void point_add(struct Point *ptP, struct Point *ptQ){
 	// if P or Q is point at infinity, R = other point
 	// if P = Q, double instead
 	// if Px == Qx, set P to point at infinity
+		
 	if(!point_iszero(ptQ)) {
 		if(point_iszero(ptP)) memcpy(ptP, ptQ, sizeof(struct Point));
+		else if(point_isequal(ptP, ptQ)) point_double(ptP);
+		else if(bigint_isequal(ptP->x, ptQ->x)) memset(ptP, 0, sizeof(struct Point));
 		else {
-			if(bigint_isequal(ptP->x, ptQ->x)) {
-				if(bigint_isequal(ptP->y, ptQ->y)) point_double(ptP);
-				else memset(ptP, 0, sizeof(struct Point));
-			}
-			else {
-				BIGINT deltaY, deltaX;
-				memcpy(deltaY, ptQ->y, ECC_PRV_KEY_SIZE);
-				memcpy(deltaX, ptQ->x, ECC_PRV_KEY_SIZE);
-				bigint_sub(deltaY, ptP->y);		// idk why ref uses add, not sub
-				bigint_sub(deltaX, ptP->x);		// ...
-				bigint_invert(deltaX);
-				bigint_mul(deltaX, deltaY);		// deltaX is slope
-				
-				point_compute(ptP, ptQ, deltaX);
-			}
+			BIGINT deltaY, deltaX;
+			memcpy(deltaY, ptQ->y, sizeof deltaY);
+			memcpy(deltaX, ptQ->x, sizeof deltaX);
+			bigint_sub(deltaY, ptP->y);		// idk why ref uses add, not sub
+			bigint_sub(deltaX, ptP->x);		// ...
+			bigint_invert(deltaX);
+			bigint_mul(deltaX, deltaY);		// deltaX is slope
+			
+			point_compute(ptP, ptQ, deltaX);
 		}
 	}
 }
@@ -166,11 +163,11 @@ void point_add(struct Point *ptP, struct Point *ptQ){
 #define GET_BIT(byte, bitnum) ((byte) & (1<<(bitnum)))
 void point_mul_vect(struct Point *pt, uint8_t *exp, size_t explen){
 	// multiplies pt by exp, result in pt
-	struct Point tmp;
 	struct Point res = {0};		// point-at-infinity
+	struct Point tmp;
 	memcpy(&tmp, pt, sizeof tmp);
 	
-	for(int i = (explen<<3); i >= 0; i--){
+	for(int i = (explen<<3)-1; i >= 0; i--){
 		if (GET_BIT(exp[i>>3], i&0x7))
 			point_add(&res, &tmp);
 		else
@@ -201,8 +198,8 @@ ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, uint32_t (*randfill)(void *buffer, size_
 	// convert to a Point
 	// reverse endianness for computational efficiency
 	struct Point pkey;
-	rmemcpy(pkey.x, sect233k1.G.x, ECC_PRV_KEY_SIZE);
-	rmemcpy(pkey.y, sect233k1.G.y, ECC_PRV_KEY_SIZE);
+	rmemcpy(pkey.x, sect233k1.G.x, 30);
+	rmemcpy(pkey.y, sect233k1.G.y, 30);
 	
 	// Q = a * G
 	// privkey is big-endian encoded
