@@ -6419,9 +6419,6 @@ _lshiftc:
 			inc de
 			dec c							; decrease c with every loop
 			djnz .loop_zero_nbytes			; when b = 0
-			xor a							; zero a
-			cp a, c							; if c == 0
-			jr z, .skip_shift_bytes			; skip copy bytes
 .skip_shift_bytes:
 			ld b, c							; c should be non-zero and num of bytes to copy
 		.loop_copy_bytes:

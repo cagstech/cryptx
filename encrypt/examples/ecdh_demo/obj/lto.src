@@ -268,11 +268,14 @@ _bigint_tests:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 63)
-	push	hl
-	call	_gf2_bigint_invert
-	pop	hl
 	ld	hl, _.str.12
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	ld	hl, _.str.3
 	push	hl
 	ld	hl, 30
 	push	hl
@@ -282,14 +285,32 @@ _bigint_tests:
 	pop	hl
 	pop	hl
 	pop	hl
-	call	_csrand_get
-	ld	a, l
-	ld	(ix - 30), a
 	ld	hl, (ix - 63)
 	push	hl
 	call	_gf2_bigint_invert
 	pop	hl
-	ld	hl, _.str.12
+	ld	hl, _.str.13
+	push	hl
+	ld	hl, 30
+	push	hl
+	ld	hl, (ix - 63)
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	de, (ix - 66)
+	ld	iy, (ix - 63)
+	lea	hl, iy
+	ld	bc, 30
+	ldir
+	ld	hl, (ix - 66)
+	push	hl
+	push	iy
+	call	_gf2_bigint_mul
+	pop	hl
+	pop	hl
+	ld	hl, _.str.14
 	push	hl
 	ld	hl, 30
 	push	hl
@@ -382,7 +403,17 @@ _.str.11:
 	section	.rodata,"a",@progbits
 	private	_.str.12
 _.str.12:
-	db	"---op1 = op1 ^ -1---", 0
+	db	10, "_INVERSE_", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.13
+_.str.13:
+	db	"---op1 ^ -1---", 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.14
+_.str.14:
+	db	"---op1 * op1 ^ -1---", 0
 
 	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"
 	extern	_gf2_bigint_invert

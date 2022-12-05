@@ -89,12 +89,13 @@ void bigint_tests(void){
 	gf2_bigint_mul(op1, op2);
 	hexdump(op1, sizeof op1, "---op1 * op2---");
 	
+	sprintf(CEMU_CONSOLE, "\n_INVERSE_\n");
+	hexdump(op1, sizeof op1, "---op1---");
 	gf2_bigint_invert(op1);
-	hexdump(op1, sizeof op1, "---op1 = op1 ^ -1---");
-	
-	op1[0] = (uint8_t)csrand_get();
-	gf2_bigint_invert(op1);
-	hexdump(op1, sizeof op1, "---op1 = op1 ^ -1---");
+	hexdump(op1, sizeof op1, "---op1 ^ -1---");
+	memcpy(op2, op1, sizeof op2);
+	gf2_bigint_mul(op1, op2);
+	hexdump(op1, sizeof op1, "---op1 * op1 ^ -1---");
 	
 }
 #endif
