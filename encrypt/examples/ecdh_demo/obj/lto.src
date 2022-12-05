@@ -82,240 +82,54 @@ BB0_6:
 	section	.text,"ax",@progbits
 
 	section	.text,"ax",@progbits
-	public	_bigint_tests
-_bigint_tests:
-	ld	hl, -66
+	public	_ecdh_test
+_ecdh_test:
+	ld	hl, -90
 	call	__frameset
-	lea	hl, ix - 30
-	ld	(ix - 63), hl
-	lea	iy, ix - 60
-	ld	(ix - 66), iy
-	inc	hl
-	ld	(ix - 29), 0
-	push	hl
-	pop	de
-	inc	de
-	ld	bc, 28
-	ldir
-	inc	iy
-	ld	(ix - 59), 0
-	lea	de, iy
-	inc	de
-	lea	hl, iy
-	ld	bc, 28
-	ldir
-	ld	(ix - 30), 2
-	ld	(ix - 60), 3
+	ld	de, -327680
 	ld	hl, _.str.3
+	lea	bc, ix - 87
+	ld	(ix - 90), bc
 	push	hl
-	ld	hl, 30
-	push	hl
-	ld	hl, (ix - 63)
-	push	hl
-	call	_hexdump
+	push	de
+	call	_sprintf
 	pop	hl
 	pop	hl
-	pop	hl
+	ld	hl, _csrand_fill
+	push	hl
+	ld	hl, (ix - 90)
+	push	hl
+	call	_ecdh_keygen
+	pop	de
+	pop	de
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	nz, BB1_2
 	ld	hl, _.str.4
-	push	hl
-	ld	hl, 30
-	push	hl
-	ld	hl, (ix - 66)
-	push	hl
-	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, _.str.5
 	push	hl
 	ld	hl, -327680
 	push	hl
 	call	_sprintf
+	pop	hl
+	pop	hl
+BB1_2:
+	ld	hl, _.str.5
+	push	hl
+	ld	hl, 29
+	push	hl
+	ld	hl, (ix - 90)
+	push	hl
+	call	_hexdump
+	pop	hl
 	pop	hl
 	pop	hl
 	ld	hl, _.str.6
 	push	hl
-	ld	hl, -327680
+	ld	hl, 58
 	push	hl
-	call	_sprintf
-	pop	hl
-	pop	hl
-	ld	hl, _.str.3
-	push	hl
-	ld	hl, 30
-	push	hl
-	ld	hl, (ix - 63)
-	push	hl
-	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, _.str.4
-	push	hl
-	ld	hl, 30
-	push	hl
-	ld	hl, (ix - 66)
-	push	hl
-	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 66)
-	push	hl
-	ld	hl, (ix - 63)
-	push	hl
-	call	_gf2_bigint_add
-	pop	hl
-	pop	hl
-	ld	hl, _.str.7
-	push	hl
-	ld	hl, 30
-	push	hl
-	ld	hl, (ix - 63)
-	push	hl
-	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, _.str.8
-	push	hl
-	ld	hl, -327680
-	push	hl
-	call	_sprintf
-	pop	hl
-	pop	hl
-	ld	hl, _.str.3
-	push	hl
-	ld	hl, 30
-	push	hl
-	ld	hl, (ix - 63)
-	push	hl
-	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, _.str.4
-	push	hl
-	ld	hl, 30
-	push	hl
-	ld	hl, (ix - 66)
-	push	hl
-	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 66)
-	push	hl
-	ld	hl, (ix - 63)
-	push	hl
-	call	_gf2_bigint_sub
-	pop	hl
-	pop	hl
-	ld	hl, _.str.9
-	push	hl
-	ld	hl, 30
-	push	hl
-	ld	hl, (ix - 63)
-	push	hl
-	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, _.str.10
-	push	hl
-	ld	hl, -327680
-	push	hl
-	call	_sprintf
-	pop	hl
-	pop	hl
-	call	_csrand_get
-	ld	a, l
-	ld	(ix - 30), a
-	ld	hl, _.str.3
-	push	hl
-	ld	hl, 30
-	push	hl
-	ld	hl, (ix - 63)
-	push	hl
-	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, _.str.4
-	push	hl
-	ld	hl, 30
-	push	hl
-	ld	hl, (ix - 66)
-	push	hl
-	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 66)
-	push	hl
-	ld	hl, (ix - 63)
-	push	hl
-	call	_gf2_bigint_mul
-	pop	hl
-	pop	hl
-	ld	hl, _.str.11
-	push	hl
-	ld	hl, 30
-	push	hl
-	ld	hl, (ix - 63)
-	push	hl
-	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, _.str.12
-	push	hl
-	ld	hl, -327680
-	push	hl
-	call	_sprintf
-	pop	hl
-	pop	hl
-	ld	hl, _.str.3
-	push	hl
-	ld	hl, 30
-	push	hl
-	ld	hl, (ix - 63)
-	push	hl
-	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 63)
-	push	hl
-	call	_gf2_bigint_invert
-	pop	hl
-	ld	hl, _.str.13
-	push	hl
-	ld	hl, 30
-	push	hl
-	ld	hl, (ix - 63)
-	push	hl
-	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	de, (ix - 66)
-	ld	iy, (ix - 63)
-	lea	hl, iy
-	ld	bc, 30
-	ldir
-	ld	hl, (ix - 66)
-	push	hl
-	push	iy
-	call	_gf2_bigint_mul
-	pop	hl
-	pop	hl
-	ld	hl, _.str.14
-	push	hl
-	ld	hl, 30
-	push	hl
-	ld	hl, (ix - 63)
-	push	hl
+	ld	iy, (ix - 90)
+	pea	iy + 29
 	call	_hexdump
 	ld	sp, ix
 	pop	ix
@@ -331,7 +145,7 @@ _main:
 	pop	hl
 	bit	0, a
 	jr	z, BB2_2
-	call	_bigint_tests
+	call	_ecdh_test
 	or	a, a
 	sbc	hl, hl
 	ret
@@ -358,71 +172,28 @@ _.str.2:
 	section	.rodata,"a",@progbits
 	private	_.str.3
 _.str.3:
-	db	"---op1---", 0
+	db	10, 10, "----------------------------------", 10, "Elliptic Curve Diffie-Hellman Demo", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.4
 _.str.4:
-	db	"---op2---", 0
+	db	"gen of keypair 1 successful", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.5
 _.str.5:
-	db	10, 10, "----------------------------------", 10, "GF2_BIGINT Unit Tests", 10, 0
+	db	"---keypair 1 private---", 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.6
 _.str.6:
-	db	10, "_ADDITION_", 10, 0
-
-	section	.rodata,"a",@progbits
-	private	_.str.7
-_.str.7:
-	db	"---op1 + op2---", 0
-
-	section	.rodata,"a",@progbits
-	private	_.str.8
-_.str.8:
-	db	10, "_SUBTRACTION_", 10, 0
-
-	section	.rodata,"a",@progbits
-	private	_.str.9
-_.str.9:
-	db	"---op1 - op2---", 0
-
-	section	.rodata,"a",@progbits
-	private	_.str.10
-_.str.10:
-	db	10, "_MULTIPLICATION_", 10, 0
-
-	section	.rodata,"a",@progbits
-	private	_.str.11
-_.str.11:
-	db	"---op1 * op2---", 0
-
-	section	.rodata,"a",@progbits
-	private	_.str.12
-_.str.12:
-	db	10, "_INVERSE_", 10, 0
-
-	section	.rodata,"a",@progbits
-	private	_.str.13
-_.str.13:
-	db	"---op1 ^ -1---", 0
-
-	section	.rodata,"a",@progbits
-	private	_.str.14
-_.str.14:
-	db	"---op1 * op1 ^ -1---", 0
+	db	"---keypair 1 public---", 0
 
 	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"
-	extern	_gf2_bigint_invert
+	extern	_csrand_fill
+	extern	_ecdh_keygen
+	extern	_csrand_init
 	extern	__frameset
 	extern	__Unwind_SjLj_Register
-	extern	_gf2_bigint_add
-	extern	_sprintf
 	extern	__Unwind_SjLj_Unregister
-	extern	_csrand_init
-	extern	_csrand_get
-	extern	_gf2_bigint_sub
-	extern	_gf2_bigint_mul
+	extern	_sprintf

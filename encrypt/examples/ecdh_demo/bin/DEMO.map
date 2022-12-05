@@ -2,14 +2,14 @@ Section          Base   Top    High   Length
 ---------------- ------ ------ ------ -------
 .icon            D1A882 D1A99D           11Bh
 .init.libs       D1A99D D1A9F5            58h
-.libs            D1A9F5 D1AA21            2Ch
-.init.clock      D1AA21 D1AA21             0h
-.init.reruncheck D1AA21 D1AA21             0h
-.init            D1AA21 D1AA41            20h
-.fini            D1AA41 D1AA75            34h
-.text            D1AA75 D1AD6C           2F7h
-.data            D1AD6C D1AD6C             0h
-.rodata          D1AD6C D1AE7B           10Fh
+.libs            D1A9F5 D1AA15            20h
+.init.clock      D1AA15 D1AA15             0h
+.init.reruncheck D1AA15 D1AA15             0h
+.init            D1AA15 D1AA35            20h
+.fini            D1AA35 D1AA69            34h
+.text            D1AA69 D1ABC6           15Dh
+.data            D1ABC6 D1ABC6             0h
+.rodata          D1ABC6 D1AC8A            C4h
 .init_array      000000 000000             0h
 .ctors           000000 000000             0h
 .dtors           000000 000000             0h
@@ -29,43 +29,32 @@ ___ctors_count            = 000000
 ___dtors_count            = 000000
 ___fini_array_count       = 000000
 __stack                   = D1A87E
-__frameset                = D1AA75
-_os_DisableHomeTextBuffer = D1AA83
-_os_EnableHomeTextBuffer  = D1AA95
+__frameset                = D1AA69
+_os_DisableHomeTextBuffer = D1AA77
+_os_EnableHomeTextBuffer  = D1AA89
 _sprintf                  = 0000BC
-.missingappvar            = D1AD6C
-.libloadname              = D1AD71
+.missingappvar            = D1ABC6
+.libloadname              = D1ABCB
 .libloadnamelen           = 000007
-.webaddress               = D1AD79
-__start                   = D1AA21
-___exithl                 = D1AA41
-skip._exit                = D1AA41
-skip.__Exit               = D1AA41
-skip._abort               = D1AA41
-_exit.sp                  = D1AA42
-_exit.flash_wait_states   = D1AA4C
-_hexdump                  = D1AAA7
-_bigint_tests             = D1AB46
-_main                     = D1AD51
-_.str                     = D1AD8E
-_.str.1                   = D1AD93
-_.str.2                   = D1AD95
-_.str.3                   = D1AD9B
-_.str.4                   = D1ADA5
-_.str.5                   = D1ADAF
-_.str.6                   = D1ADEB
-_.str.7                   = D1ADF8
-_.str.8                   = D1AE08
-_.str.9                   = D1AE18
-_.str.10                  = D1AE28
-_.str.11                  = D1AE3B
-_.str.12                  = D1AE4B
-_.str.13                  = D1AE57
-_.str.14                  = D1AE66
+.webaddress               = D1ABD3
+__start                   = D1AA15
+___exithl                 = D1AA35
+skip._exit                = D1AA35
+skip.__Exit               = D1AA35
+skip._abort               = D1AA35
+_exit.sp                  = D1AA36
+_exit.flash_wait_states   = D1AA40
+_hexdump                  = D1AA9B
+_ecdh_test                = D1AB3A
+_main                     = D1ABAB
+_.str                     = D1ABE8
+_.str.1                   = D1ABED
+_.str.2                   = D1ABEF
+_.str.3                   = D1ABF5
+_.str.4                   = D1AC3E
+_.str.5                   = D1AC5B
+_.str.6                   = D1AC73
 lib.LibLoad               = D1A9F5
 _#csrand_init             = D1AA09
-_#csrand_get              = D1AA0D
-_#gf2_bigint_add          = D1AA11
-_#gf2_bigint_sub          = D1AA15
-_#gf2_bigint_mul          = D1AA19
-_#gf2_bigint_invert       = D1AA1D
+_#csrand_fill             = D1AA0D
+_#ecdh_keygen             = D1AA11

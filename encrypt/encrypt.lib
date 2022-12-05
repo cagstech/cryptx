@@ -20,3 +20,4 @@
 	export	gf2_bigint_mul
 	export	gf2_bigint_invert
 	export	bigint_lshiftc
+	export	exp_getdegree

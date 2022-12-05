@@ -541,6 +541,7 @@ void gf2_bigint_sub(GF2_BIGINT op1, GF2_BIGINT op2);
 void gf2_bigint_mul(GF2_BIGINT op1, GF2_BIGINT op2);
 void gf2_bigint_invert(GF2_BIGINT op);
 void bigint_lshiftc(GF2_BIGINT dest, GF2_BIGINT src, uint8_t nbits);
+uint8_t exp_getdegree(GF2_BIGINT op);
 
 
 #endif

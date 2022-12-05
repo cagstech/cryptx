@@ -32,6 +32,7 @@ include_library '../hashlib/hashlib.asm'
     export gf2_bigint_mul
     export gf2_bigint_invert
     export bigint_lshiftc
+    export exp_getdegree
     
 powmod = _powmod
 gf2_bigint_add = _gf2_bigint_add
@@ -6069,48 +6070,77 @@ _powmod:
    lddr ; leaks size, assuming that base and stack are in normal ram
    ret
  
- ; bigint_iszero(uint8_t *op);
-_bigint_iszero:
-	pop hl,de
-	push de,hl
-	ld a, 0
-	ld b, 30
+; point_iszero(struct Point *pt)
+_point_iszero:
+	pop bc,hl
+	push hl,bc
+	ld b, 60
+	xor a
 .loop:
 	or (hl)
+	inc hl
 	djnz .loop
 	or a
 	ret z
 	ld a, 1
 	ret
 
-
-;bigint_setzero(uint8_t *op);
-_bigint_setzero:
-	pop de,hl
-	push hl,de
-	ld a, 0
-	ld (de), a
-	push de
-	pop hl
-	inc de
-	ld bc, 29
-	ldir
-
-
-; bigint_isequal(uint8_t *op1, uint8_t *op2);
-_bigint_isequal:
-	call ti._frameset0
-	ld hl, (ix + 3)
-	ld de, (ix + 6)
+; bigint_iszero(uint8_t *op);
+_bigint_iszero:
+	pop bc,hl
+	push hl,bc
 	ld b, 30
+	xor a
+.loop:
+	or (hl)
+	inc hl
+	djnz .loop
+	or a
+	ret z
+	ld a, 1
+	ret
+
+; point_isequal(struct Point *pt1, struct Point *pt2);
+_point_isequal:
+	call ti._frameset0
+	ld hl, (ix + 6)
+	ld de, (ix + 9)
+	ld b, 60
 .loop:
 	ld a, (de)
-	inc de
 	xor (hl)
+	or a, c
+	ld c, a
+	inc de
+	inc hl
 	djnz .loop
 	add a, -1
 	sbc a, a
 	inc a
+	ld sp, ix
+	pop ix
+	ret
+	
+; bigint_isequal(uint8_t *op1, uint8_t *op2);
+_bigint_isequal:
+	call ti._frameset0
+	ld hl, (ix + 6)
+	ld de, (ix + 9)
+	ld b, 30
+	ld c, 0
+.loop:
+	ld a, (de)
+	xor (hl)
+	or a, c
+	ld c, a
+	inc de
+	inc hl
+	djnz .loop
+	add a, -1
+	sbc a, a
+	inc a
+	ld sp, ix
+	pop ix
 	ret
 
 
@@ -6195,25 +6225,23 @@ _gf2_bigint_mul:
 				djnz .loop_mul2
 			
 				; now xor with polynomial if tmp degree too high
-				; this means timing analysis will leak polynomial info
-				; however, this is a public spec and therefore not
-				; implementation-breaking
-				bit 1, (ix - 1)		; polynomial is 233 bits, check 234th bit
-				jr z, .no_xor_poly
-
-				; xor byte 1 (little-endian encoding)
-				ld a, (ix - 1)
-				xor 2
-				ld (ix - 1), a
-			
-				; xor byte 21 (little endian encoding)
-				ld a, (ix - 21)
-				xor 4
+				; method below is constant-time
+				
+				ld b, (ix - 1)
+				ld c, b
+				res 0, b
+				res 1, c
+				
+				ld (ix - 1), c
+				
+				ld a, b
+				rlca
+				xor a, (ix - 21)
 				ld (ix - 21), a
 				
-				; xor byte 28 (little endian encoding)
-				ld a, (ix - 30)
-				xor 1
+				ld a, b
+				rrca
+				xor a, (ix - 30)
 				ld (ix - 30), a
 			
 .no_xor_poly:
@@ -6237,8 +6265,12 @@ _gf2_bigint_invert:
 ; _g	= ix - 60
 ; _v	= ix - 90
 ; _h	= ix - 120
-	
-	ld hl, -120
+; ptr_op	= ix - 123
+; ptr_tmp	= ix - 126
+; ptr_g		= ix - 129
+; ptr_v		= ix - 132
+
+	ld hl, -132
 	call ti._frameset
 
 ; rcopy _polynomial to _v
@@ -6279,6 +6311,25 @@ _gf2_bigint_invert:
 	inc de
 	djnz .loop_zero_op		; op1 = res = 0
 	
+	; save pointer to op
+	lea iy, ix - 123
+	ld hl, (ix + 6)
+	ld (iy - 0), hl
+	
+	lea hl, ix - 30
+	ld (iy - 3), hl
+	
+	lea hl, ix - 60
+	ld (iy - 6), hl
+	
+	lea hl, ix - 90
+	ld (iy - 9), hl
+	
+; (iy - 0) = op
+; (iy - 3) = tmp
+; (iy - 6) = g
+; (iy - 9) = v
+	
 ; while tmp != 1
 .while_tmp_not_1:
 
@@ -6288,7 +6339,7 @@ _gf2_bigint_invert:
 	;ld (hl),2
 
 ; compute degree of tmp (in bits)
-	lea hl, ix - 30
+	ld hl, (iy - 3)
 	call _get_degree		; degree of 1 means value of _tmp = 1
 	
 	cp 1			; if degree is 1, then value is 1 and we can exit
@@ -6297,7 +6348,7 @@ _gf2_bigint_invert:
 	push af
 
 ; compute degree of v (in bits)
-		lea hl, ix - 90
+		ld hl, (iy - 9)
 		call _get_degree
 		ld b, a						; in b
 	pop af
@@ -6310,15 +6361,17 @@ _gf2_bigint_invert:
 	
 	push af		; we will need a after the swapping is done
 	
-;	swap polynomial with tmp
-		lea de, ix - 30
-		lea hl, ix - 90
-		call _copy_w_swap
+;	swap polynomial with tmp (pointer swap, not data swap)
+		ld hl, (iy - 3)
+		ld de, (iy - 9)
+		ld (iy - 3), de
+		ld (iy - 9), hl
 		
 ;	swap result with g
-		ld de, (ix + 6)
-		lea hl, ix - 60
-		call _copy_w_swap
+		ld hl, (iy - 0)
+		ld de, (iy - 6)
+		ld (iy - 0), de
+		ld (iy - 6), hl
 		
 ;	negate i
 	pop af
@@ -6329,29 +6382,38 @@ _gf2_bigint_invert:
 ; shift v left by a bits, result in h
 
 	lea de, ix - 120
-	lea hl, ix - 90
+	ld hl, (iy - 9)
 	push af
 		call _lshiftc
 	
 ; add h to tmp
 		lea hl, ix - 120
-		lea de, ix - 30
+		ld de, (iy - 3)
 		call _addloop
 		
 ; shift g left by i bits, result in h
 	
 		lea de, ix - 120
-		lea hl, ix - 60
+		ld hl, (iy - 6)
 	pop af		; we need a back, logic repeats for shift g
 	call _lshiftc
 		
 ; add h to result (op)
 	lea hl, ix - 120
-	ld de, (ix + 6)
+	ld de, (iy - 0)
 	call _addloop
 	
 	jr .while_tmp_not_1
+; if tmp is 1, exit
 .tmp_is_1:
+	ld hl, (iy - 0)
+	ld de, (ix + 6)
+	sbc hl, de		; if hl and de are equal, don't need to copy
+	jr z, .exit
+	add hl, de
+	ld bc, 30
+	ldir
+.exit:
 	ld sp, ix
 	pop ix
 	ret
@@ -6397,9 +6459,6 @@ _lshiftc:
 ;			restore original a, then and with 7 to return a value mod 8
 ;			return if 0
 ;			shift the 30 bytes at hl to the left a times
-
-	or a
-	ret z
 	push af
 		push de
 			
@@ -6410,7 +6469,7 @@ _lshiftc:
 			ld c, 30					; set c to 30
 			
 			or a
-			jr z, .skip_shift_bytes		; if 0, skip shift bytes
+			jr z, .skip_shift_bytes		; if a==0, skip shift bytes
 			
 			ld b, a						; ld a into b for djnz
 			xor a
@@ -6435,8 +6494,8 @@ _lshiftc:
 	ld c, a				; this should only loop up to 7 times. if 8, should have been a byte
 .loop_nbits:
 	ld b, 30
-	or a
 	push hl
+	or a
 .loop_lshift:
 		rl (hl)
 		inc hl
@@ -6446,7 +6505,14 @@ _lshiftc:
 	jr nz, .loop_nbits
 	ret
 	
-	
+
+; exp_getdegree(poly)
+exp_getdegree:
+	pop bc,hl
+	push hl,bc
+	call _get_degree
+	ret
+
 _get_degree:
 ; input: hl = ptr to binary polynomial (little endian-encoded)
 ; func:
@@ -6460,7 +6526,7 @@ _get_degree:
 	ld c, 30		; check 30 bytes
 	xor a
 .byte_loop:
-	cp (hl)		; if byte is 0
+	or (hl)		; if byte is 0
 	jr nz, .found_byte
 	dec hl
 	dec c
@@ -6485,79 +6551,68 @@ _get_degree:
 	add a, b
 	ret
 
-; swaps data at buffers pointed to by hl and de
-; hardcoded 30 byte buffer
-_copy_w_swap:
-	ld b, 30
-.loop:
-	ld a, (de)			;(de) into a
-	ld c, a				; a into c to store
-	ld a, (hl)			; (hl) into a
-	ld (de), a			; a into (de)
-	ld a, c				; c back into a
-	ld (hl), a			; a into (hl)
-	inc hl
-	inc de
-	djnz .loop
-	ret
- 
  
  _point_compute:
-	ld	hl, -66
+	ld	hl, -96
 	call	ti._frameset
 	ld	hl, (ix + 12)
-	lea	iy, ix - 60
-	ld	(ix - 63), iy
+	ld	bc, 30
+	lea	de, ix - 60
+	ld	(ix - 93), de
+	lea	iy, ix - 90
+	ldir
 	lea	de, iy
+	ld	hl, (ix + 12)
 	ld	bc, 30
 	ldir
 	push	iy
-	push	iy
+	ld	hl, (ix - 93)
+	push	hl
 	call	_gf2_bigint_mul
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 6)
 	push	hl
-	ld	hl, (ix - 63)
+	ld	hl, (ix - 93)
 	push	hl
 	call	_gf2_bigint_sub
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 9)
 	push	hl
-	ld	hl, (ix - 63)
+	ld	hl, (ix - 93)
 	push	hl
 	call	_gf2_bigint_sub
 	pop	hl
 	pop	hl
-	ld	iy, (ix - 63)
+	ld	iy, (ix - 93)
 	lea	de, iy + 30
-	ld	(ix - 66), de
+	ld	(ix - 96), de
 	ld	hl, (ix + 6)
 	ld	bc, 30
 	ldir
 	push	iy
-	ld	hl, (ix - 66)
+	ld	hl, (ix - 96)
 	push	hl
 	call	_gf2_bigint_sub
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 12)
 	push	hl
-	ld	hl, (ix - 66)
+	ld	hl, (ix - 96)
 	push	hl
 	call	_gf2_bigint_mul
 	pop	hl
 	pop	hl
 	ld	iy, (ix + 9)
 	pea	iy + 30
-	ld	hl, (ix - 66)
+	ld	hl, (ix - 96)
 	push	hl
 	call	_gf2_bigint_sub
 	pop	hl
 	pop	hl
 	ld	de, (ix + 6)
-	ld	hl, (ix - 63)
+	ld	hl, (ix - 93)
 	ld	bc, 60
 	ldir
 	ld	sp, ix
@@ -6588,7 +6643,7 @@ _point_double:
 	push	hl
 	pop	de
 	inc	de
-	ld	bc, 29
+	ld	bc, 28
 	ldir
 	ld	(ix - 90), 3
 	ld	hl, (ix - 93)
@@ -6637,6 +6692,7 @@ _point_double:
 	ld	sp, ix
 	pop	ix
 	ret
+
 	
 _point_add:
 	ld	hl, -66
@@ -6656,8 +6712,22 @@ _point_add:
 	ld	bc, 60
 	ld	de, (ix + 6)
 	ld	hl, (ix + 9)
-	jp	.lbl_9
+	jr	.lbl_7
 .lbl_3:
+	ld	hl, (ix + 9)
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	call	_point_isequal
+	pop	hl
+	pop	hl
+	bit	0, a
+	jr	z, .lbl_5
+	ld	hl, (ix + 6)
+	push	hl
+	call	_point_double
+	jp	.lbl_9
+.lbl_5:
 	ld	hl, (ix + 9)
 	push	hl
 	ld	hl, (ix + 6)
@@ -6666,21 +6736,18 @@ _point_add:
 	pop	hl
 	pop	hl
 	bit	0, a
-	jr	z, .lbl_6
-	ld	iy, (ix + 9)
-	pea	iy + 30
-	ld	iy, (ix + 6)
-	pea	iy + 30
-	call	_bigint_isequal
-	pop	hl
-	pop	hl
-	ld	hl, (ix + 6)
-	bit	0, a
 	jr	z, .lbl_8
+	ld	hl, (ix + 6)
+	ld	(hl), 0
 	push	hl
-	call	_point_double
-	jr	.lbl_7
-.lbl_6:
+	pop	iy
+	inc	iy
+	ld	bc, 59
+	lea	de, iy
+.lbl_7:
+	ldir
+	jr	.lbl_10
+.lbl_8:
 	lea	de, ix - 30
 	ld	(ix - 66), de
 	lea	hl, ix - 60
@@ -6733,44 +6800,19 @@ _point_add:
 	call	_point_compute
 	pop	hl
 	pop	hl
-.lbl_7:
-	pop	hl
-	jr	.lbl_10
-.lbl_8:
-	ld	(hl), 0
-	push	hl
-	pop	iy
-	inc	iy
-	ld	bc, 59
-	lea	de, iy
 .lbl_9:
-	ldir
+	pop	hl
 .lbl_10:
 	ld	sp, ix
-	pop	ix
-	ret
-	
-_point_iszero:
-	call	ti._frameset0
-	ld	hl, (ix + 6)
-	push	hl
-	call	_bigint_iszero
-	pop	hl
-	bit	0, a
-	ld	iy, (ix + 6)
-	pea	iy + 30
-	ld	a, 0
-	call	nz, _bigint_iszero
-	pop	hl
 	pop	ix
 	ret
 	
 _point_mul_vect:
 	ld	hl, -135
 	call	ti._frameset
-	lea	iy, ix - 66
-	lea	hl, ix - 126
-	ld	(ix - 126), 0
+	lea	hl, ix - 66
+	lea	iy, ix - 126
+	ld	(ix - 66), 0
 	push	hl
 	pop	de
 	inc	de
@@ -6797,6 +6839,7 @@ _point_mul_vect:
 	push	hl
 	pop	de
 .lbl_1:
+	dec	de
 	ld	bc, 0
 	push	de
 	pop	hl
@@ -6858,7 +6901,6 @@ _point_mul_vect:
 	lea	hl, ix
 	add	hl, bc
 	ld	de, (hl)
-	dec	de
 	jp	.lbl_1
 .lbl_5:
 	ld	de, (ix + 6)

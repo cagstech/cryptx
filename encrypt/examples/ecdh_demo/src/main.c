@@ -17,8 +17,8 @@
 #define ENCRYPT_ENABLE_ADVANCED_MODE
 #include <encrypt.h>
 
-#define	BIGINT_TESTS	1		// uncomment to enable BIGINT tests. Comment to disable.
-//#define ECDH_TEST	1			// uncomment to enable ECDH unit test. Comment to disable.
+//#define	BIGINT_TESTS	1		// uncomment to enable BIGINT tests. Comment to disable.
+#define ECDH_TEST	1			// uncomment to enable ECDH unit test. Comment to disable.
 
 #define CEMU_CONSOLE ((char*)0xFB0000)
 void hexdump(uint8_t *addr, size_t len, uint8_t *label){
@@ -47,14 +47,16 @@ void ecdh_test(void) {
 	
 	if(!ecdh_keygen(&test1, csrand_fill))
 		sprintf(CEMU_CONSOLE, "gen of keypair 1 successful\n");
-	if(!ecdh_keygen(&test2, csrand_fill))
-		sprintf(CEMU_CONSOLE, "gen of keypair2 successful\n");
+	hexdump(test1.privkey, sizeof test1.privkey, "---keypair 1 private---");
+	hexdump(test1.pubkey, sizeof test1.pubkey, "---keypair 1 public---");
+	//if(!ecdh_keygen(&test2, csrand_fill))
+		//sprintf(CEMU_CONSOLE, "gen of keypair 2 successful\n");
 	
-	if(!ecdh_secret(&test1, test2.pubkey, secret1))
-		hexdump(secret1, sizeof secret1, "---Secret 1 = Privkey1 + Pubkey2---");
+	//if(!ecdh_secret(&test1, test2.pubkey, secret1))
+	//	hexdump(secret1, sizeof secret1, "---Secret 1 = Privkey1 + Pubkey2---");
 	
-	if(!ecdh_secret(&test2, test1.pubkey, secret2))
-		hexdump(secret1, sizeof secret1, "---Secret 2 = Privkey2 + Pubkey1---");
+	//if(!ecdh_secret(&test2, test1.pubkey, secret2))
+	//	hexdump(secret1, sizeof secret1, "---Secret 2 = Privkey2 + Pubkey1---");
 }
 #endif
 
@@ -65,11 +67,8 @@ void bigint_tests(void){
 	op1[0] = 2;
 	op2[0] = 3;
 	
-	hexdump(op1, sizeof op1, "---op1---");
-	hexdump(op2, sizeof op2, "---op2---");
-	
 	sprintf(CEMU_CONSOLE, "\n\n----------------------------------\nGF2_BIGINT Unit Tests\n");
-	
+	/*
 	sprintf(CEMU_CONSOLE, "\n_ADDITION_\n");
 	hexdump(op1, sizeof op1, "---op1---");
 	hexdump(op2, sizeof op2, "---op2---");
@@ -88,15 +87,30 @@ void bigint_tests(void){
 	hexdump(op2, sizeof op2, "---op2---");
 	gf2_bigint_mul(op1, op2);
 	hexdump(op1, sizeof op1, "---op1 * op2---");
+	*/
 	
-	sprintf(CEMU_CONSOLE, "\n_INVERSE_\n");
-	hexdump(op1, sizeof op1, "---op1---");
-	gf2_bigint_invert(op1);
-	hexdump(op1, sizeof op1, "---op1 ^ -1---");
-	memcpy(op2, op1, sizeof op2);
-	gf2_bigint_mul(op1, op2);
-	hexdump(op1, sizeof op1, "---op1 * op1 ^ -1---");
+	//*((uint8_t*)-1) = 2;
 	
+	for(int i = 0 ; i < 3; i++){
+		op1[0] = (uint8_t)csrand_get();
+		sprintf(CEMU_CONSOLE, "\n_INVERSE_\n");
+		hexdump(op1, sizeof op1, "---op1---");
+		memcpy(op2, op1, sizeof op2);
+		gf2_bigint_invert(op1);
+		hexdump(op1, sizeof op1, "---op1 ^ -1---");
+		gf2_bigint_mul(op1, op2);
+		hexdump(op1, sizeof op1, "---op1 * op1 ^ -1---");
+	}
+	for(int i = 0 ; i < 3; i++){
+		csrand_fill(op1, 16);
+		sprintf(CEMU_CONSOLE, "\n_INVERSE_\n");
+		hexdump(op1, sizeof op1, "---op1---");
+		memcpy(op2, op1, sizeof op2);
+		gf2_bigint_invert(op1);
+		hexdump(op1, sizeof op1, "---op1 ^ -1---");
+		gf2_bigint_mul(op1, op2);
+		hexdump(op1, sizeof op1, "---op1 * op1 ^ -1---");
+	}
 }
 #endif
 
