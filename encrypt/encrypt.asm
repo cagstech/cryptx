@@ -6081,8 +6081,9 @@ _point_iszero:
 	inc hl
 	djnz .loop
 	or a
-	ret z
 	ld a, 1
+	ret nz
+	ld a, 0
 	ret
 
 ; bigint_iszero(uint8_t *op);
@@ -6096,8 +6097,9 @@ _bigint_iszero:
 	inc hl
 	djnz .loop
 	or a
-	ret z
 	ld a, 1
+	ret nz
+	ld a, 0
 	ret
 
 ; point_isequal(struct Point *pt1, struct Point *pt2);
@@ -6144,7 +6146,7 @@ _bigint_isequal:
 	ret
 
 
-; gf2_bigint_add(uint8_t *op1, uint8_t *op2);
+; gf2_bigint_add(uint8_t *out, uint8_t *op1, uint8_t *op2);
 ; hard limit to 32 bytes
 ; output in op1
 ; addition over a galois field of form GF(2^m) is mod 2 or just xor
@@ -6152,6 +6154,10 @@ _gf2_bigint_add:
 	call ti._frameset0
 	ld hl, (ix + 9)		; op2
 	ld de, (ix + 6)		; op1
+	ld bc, 30
+	ldir
+	ld hl, (ix + 12)
+	ld de, (ix + 6)
 	ld b, 30
 .loop:
 	ld a, (de)
@@ -6170,17 +6176,17 @@ _gf2_bigint_add:
 _gf2_bigint_sub = _gf2_bigint_add
 	
 
-; gf2_bigint_mul(uint8_t *op1, uint8_t *op2)
+; gf2_bigint_mul(uint8_t *out, uint8_t *op1, uint8_t *op2)
 ; multiplication is add then double, then a polynomial reduction
 _gf2_bigint_mul:
 	ld hl, -30
 	call ti._frameset
 	lea de, ix - 30		; stack mem?
-	ld hl, (ix + 6)		; op1 (save a copy)
+	ld hl, (ix + 9)		; op1 (save a copy)
 	ld bc, 30
 	ldir				; ix - 32 = tmp = op1
 	
-	; zero out op1
+	; zero out output
 	ld de, (ix + 6)		; op 1
 	ld b, 30
 	xor a
@@ -6189,7 +6195,7 @@ _gf2_bigint_mul:
 	inc de
 	djnz .loop_zero_op1		; op1 = res = 0
 	
-	ld hl, (ix + 9)		; op2 = for bit in bits
+	ld hl, (ix + 12)		; op2 = for bit in bits
 	ld c, 30
 .loop_op2:
 	ld a, (hl)
@@ -6203,7 +6209,7 @@ _gf2_bigint_mul:
 				ld c,a
 			
 				; add op1 (res) + tmp
-				ld hl, (ix + 6)		; hl = op1 (dest)
+				ld hl, (ix + 6)		; hl = (dest)
 				lea de, ix - 30		; de = tmp (src)
 				ld b, 30
 .loop_add:
@@ -6257,7 +6263,7 @@ _gf2_bigint_mul:
 	ret
 	
 
-; gf2_bigint_invert(BIGINT op);
+; gf2_bigint_invert(BIGINT out, BIGINT op);
 _gf2_bigint_invert:
 
 ; local definitions for ease of use
@@ -6294,7 +6300,7 @@ _gf2_bigint_invert:
 	djnz .loop_zero_g		; op1 = res = 0
 
 ; copy op to _tmp
-	ld hl, (ix + 6)
+	ld hl, (ix + 9)
 	lea de, ix - 30
 	ld bc, 30
 	ldir
@@ -6552,150 +6558,115 @@ _get_degree:
 	ret
 
  
- _point_compute:
-	ld	hl, -96
+ _point_double:
+	ld	hl, -36
 	call	ti._frameset
-	ld	hl, (ix + 12)
-	ld	bc, 30
-	lea	de, ix - 60
-	ld	(ix - 93), de
-	lea	iy, ix - 90
-	ldir
-	lea	de, iy
-	ld	hl, (ix + 12)
-	ld	bc, 30
-	ldir
-	push	iy
-	ld	hl, (ix - 93)
-	push	hl
-	call	_gf2_bigint_mul
-	pop	hl
-	pop	hl
 	ld	hl, (ix + 6)
 	push	hl
-	ld	hl, (ix - 93)
-	push	hl
-	call	_gf2_bigint_sub
+	call	_bigint_iszero
 	pop	hl
-	pop	hl
-	ld	hl, (ix + 9)
-	push	hl
-	ld	hl, (ix - 93)
-	push	hl
-	call	_gf2_bigint_sub
-	pop	hl
-	pop	hl
-	ld	iy, (ix - 93)
-	lea	de, iy + 30
-	ld	(ix - 96), de
+	bit	0, a
+	jr	z, .lbl_2
 	ld	hl, (ix + 6)
-	ld	bc, 30
-	ldir
-	push	iy
-	ld	hl, (ix - 96)
 	push	hl
-	call	_gf2_bigint_sub
-	pop	hl
-	pop	hl
-	ld	hl, (ix + 12)
-	push	hl
-	ld	hl, (ix - 96)
-	push	hl
-	call	_gf2_bigint_mul
-	pop	hl
-	pop	hl
-	ld	iy, (ix + 9)
-	pea	iy + 30
-	ld	hl, (ix - 96)
-	push	hl
-	call	_gf2_bigint_sub
-	pop	hl
-	pop	hl
-	ld	de, (ix + 6)
-	ld	hl, (ix - 93)
-	ld	bc, 60
-	ldir
-	ld	sp, ix
-	pop	ix
-	ret
-	
-_point_double:
-	ld	hl, -99
-	call	ti._frameset
-	ld	bc, (ix + 6)
-	lea	de, ix - 30
-	ld	(ix - 93), de
-	lea	iy, ix - 60
-	lea	hl, ix - 90
-	ld	(ix - 96), hl
-	push	bc
-	pop	hl
-	ld	bc, 30
-	ldir
-	lea	de, iy
-	ld	(ix - 99), iy
-	ld	hl, (ix + 6)
-	ld	bc, 30
-	ldir
-	ld	hl, (ix - 96)
-	inc	hl
-	ld	(ix - 89), 0
+	pop	iy
+	lea	hl, iy + 30
+	ld	(iy + 30), 0
 	push	hl
 	pop	de
 	inc	de
-	ld	bc, 28
+	ld	bc, 29
 	ldir
-	ld	(ix - 90), 3
-	ld	hl, (ix - 93)
+	jp	.lbl_3
+.lbl_2:
+	ld	hl, -327680
+	ld	de, _.str
+	lea	bc, ix - 30
+	ld	(ix - 33), bc
+	push	de
 	push	hl
-	push	iy
-	call	_gf2_bigint_mul
+	call	ti.sprintf
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 96)
+	ld	hl, (ix + 6)
 	push	hl
-	ld	hl, (ix - 99)
+	ld	hl, (ix - 33)
 	push	hl
-	call	_gf2_bigint_mul
+	call	_gf2_bigint_invert
 	pop	hl
 	pop	hl
 	ld	iy, (ix + 6)
 	lea	hl, iy + 30
-	ld	iy, (ix - 93)
-	lea	de, iy
-	ld	bc, 30
-	ldir
-	ld	(ix - 90), 2
-	ld	hl, (ix - 96)
+	ld	(ix - 36), hl
 	push	hl
-	push	iy
-	call	_gf2_bigint_mul
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 93)
+	ld	hl, (ix - 33)
 	push	hl
-	call	_gf2_bigint_invert
-	pop	hl
-	ld	hl, (ix - 93)
-	push	hl
-	ld	hl, (ix - 99)
 	push	hl
 	call	_gf2_bigint_mul
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 99)
+	pop	hl
+	ld	hl, (ix + 6)
+	push	hl
+	ld	hl, (ix - 33)
+	push	hl
+	push	hl
+	call	_gf2_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix + 6)
+	push	hl
+	push	hl
+	ld	hl, (ix - 36)
+	push	hl
+	call	_gf2_bigint_mul
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 33)
+	push	hl
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	call	_gf2_bigint_mul
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 33)
 	push	hl
 	ld	hl, (ix + 6)
 	push	hl
 	push	hl
-	call	_point_compute
+	call	_gf2_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix + 6)
+	push	hl
+	ld	hl, (ix - 33)
+	push	hl
+	push	hl
+	call	_gf2_bigint_mul
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 33)
+	push	hl
+	ld	hl, (ix - 36)
+	push	hl
+	push	hl
+	call	_gf2_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+.lbl_3:
 	ld	sp, ix
 	pop	ix
 	ret
-
 	
 _point_add:
-	ld	hl, -66
+	ld	hl, -141
 	call	ti._frameset
 	ld	hl, (ix + 9)
 	push	hl
@@ -6746,58 +6717,189 @@ _point_add:
 	lea	de, iy
 .lbl_7:
 	ldir
-	jr	.lbl_10
+	jp	.lbl_10
 .lbl_8:
-	lea	de, ix - 30
-	ld	(ix - 66), de
-	lea	hl, ix - 60
-	ld	(ix - 63), hl
-	ld	hl, (ix + 9)
+	lea	de, ix - 36
+	ld	bc, -135
+	lea	hl, ix
+	add	hl, bc
+	ld	(hl), de
+	lea	hl, ix - 66
+	ld	bc, -138
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	lea	hl, ix - 96
+	push	ix
+	ld	bc, -132
+	add	ix, bc
+	ld	(ix), hl
+	pop	ix
+	lea	hl, ix - 126
+	push	ix
+	ld	bc, -129
+	add	ix, bc
+	ld	(ix), hl
+	pop	ix
+	ld	hl, (ix + 6)
 	push	hl
-	pop	bc
-	push	bc
 	pop	iy
 	lea	hl, iy + 30
-	ld	bc, 30
-	ldir
-	ld	de, (ix - 63)
-	lea	hl, iy
-	ld	bc, 30
-	ldir
-	ld	hl, (ix + 6)
+	ld	bc, -141
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	push	hl
+	ld	hl, (ix + 9)
 	push	hl
 	pop	iy
 	pea	iy + 30
-	ld	hl, (ix - 66)
-	push	hl
-	call	_gf2_bigint_sub
+	push	de
+	call	_gf2_bigint_add
+	pop	hl
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 6)
 	push	hl
-	ld	hl, (ix - 63)
+	ld	hl, (ix + 9)
 	push	hl
-	call	_gf2_bigint_sub
+	ld	bc, -138
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_gf2_bigint_add
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 63)
+	pop	hl
+	ld	bc, -138
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -132
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
 	push	hl
 	call	_gf2_bigint_invert
 	pop	hl
-	ld	hl, (ix - 66)
+	pop	hl
+	ld	bc, -135
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
 	push	hl
-	ld	hl, (ix - 63)
+	ld	bc, -132
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
 	push	hl
 	call	_gf2_bigint_mul
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 63)
+	pop	hl
+	ld	bc, -132
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
 	push	hl
-	ld	hl, (ix + 9)
+	push	hl
+	ld	bc, -129
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_gf2_bigint_mul
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -132
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -129
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	push	hl
+	call	_gf2_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -138
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -129
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	push	hl
+	call	_gf2_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -129
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
 	push	hl
 	ld	hl, (ix + 6)
 	push	hl
-	call	_point_compute
+	push	hl
+	call	_gf2_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -132
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	ld	bc, -135
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_gf2_bigint_mul
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -129
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -135
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	push	hl
+	call	_gf2_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -135
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -141
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	push	hl
+	call	_gf2_bigint_add
 	pop	hl
 	pop	hl
 .lbl_9:
@@ -6808,111 +6910,71 @@ _point_add:
 	ret
 	
 _point_mul_vect:
-	ld	hl, -135
+	ld	hl, -66
 	call	ti._frameset
-	lea	hl, ix - 66
-	lea	iy, ix - 126
-	ld	(ix - 66), 0
+	ld	iy, (ix + 12)
+	lea	hl, ix - 60
+	ld	(ix - 60), 0
 	push	hl
 	pop	de
 	inc	de
 	ld	bc, 59
-	ld	(ix - 3), bc
-	push	ix
-	ld	bc, -129
-	add	ix, bc
-	ld	(ix), hl
-	pop	ix
-	ld	bc, (ix - 3)
+	ld	(ix - 66), hl
 	ldir
-	ld	bc, -132
-	lea	hl, ix
-	add	hl, bc
-	ld	(hl), iy
-	lea	de, iy
-	ld	hl, (ix + 6)
-	ld	bc, 60
-	ldir
-	ld	c, 3
-	ld	hl, (ix + 12)
-	call	ti._ishl
-	push	hl
-	pop	de
 .lbl_1:
-	dec	de
-	ld	bc, 0
-	push	de
-	pop	hl
+	dec	iy
+	ld	de, 0
+	lea	hl, iy
 	or	a, a
-	sbc	hl, bc
+	sbc	hl, de
 	call	pe, ti._setflag
-	jp	m, .lbl_5
-	push	de
+	jp	m, .lbl_6
+	ld	hl, (ix - 66)
+	push	hl
+	ld	(ix - 63), iy
+	call	_point_double
 	pop	hl
+	ld	hl, (ix - 63)
 	ld	c, 3
 	call	ti._ishru
 	push	hl
-	pop	bc
+	pop	de
 	ld	hl, (ix + 9)
-	add	hl, bc
-	ld	a, (hl)
-	ld	iyl, a
-	ld	bc, -135
-	lea	hl, ix
-	add	hl, bc
-	ld	(hl), de
-	ex	de, hl
+	add	hl, de
+	ld	e, (hl)
+	ld	hl, (ix - 63)
 	ld	bc, 7
 	call	ti._iand
 	ld	a, 1
 	ld	b, l
 	call	ti._bshl
-	and	a, iyl
+	and	a, e
+	ld	de, (ix - 66)
 	or	a, a
+	jr	nz, .lbl_4
 	ld	hl, _ta_resist
-	ld	(ix - 3), bc
-	ld	bc, -132
-	lea	iy, ix
-	push	af
-	add	iy, bc
-	pop	af
-	ld	de, (iy)
-	ld	bc, (ix - 3)
-	jr	z, .lbl_4
-	ex	de, hl
+	jr	.lbl_5
 .lbl_4:
+	ld	hl, (ix + 6)
+.lbl_5:
 	push	hl
-	ld	bc, -129
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
+	push	de
 	call	_point_add
 	pop	hl
 	pop	hl
-	ld	bc, -132
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_point_double
-	pop	hl
-	ld	bc, -135
-	lea	hl, ix
-	add	hl, bc
-	ld	de, (hl)
-	jp	.lbl_1
-.lbl_5:
+	ld	iy, (ix - 63)
+	jr	.lbl_1
+.lbl_6:
 	ld	de, (ix + 6)
-	ld	bc, -129
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 66)
 	ld	bc, 60
 	ldir
 	ld	sp, ix
 	pop	ix
 	ret
+	
+_.str:
+	db	"this ran", 0
 	
 ecdh_keygen:
 	ld	hl, -66
@@ -6926,25 +6988,25 @@ ecdh_keygen:
 	jp	.lbl_5
 .lbl_2:
 	ld	hl, (ix + 9)
-	ld	de, 29
-	ld	iy, _sect233k1+90
-	lea	bc, ix - 60
-	ld	(ix - 63), bc
+	ld	bc, _sect233k1+90
+	lea	de, ix - 60
+	ld	(ix - 63), de
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
 	jr	z, .lbl_4
+	ld	de, 29
 	push	de
 	ld	de, (ix + 6)
 	push	de
 	call	_indcallhl
-	ld	iy, _sect233k1+90
-	ld	de, 29
+	ld	bc, _sect233k1+90
 	pop	hl
 	pop	hl
 .lbl_4:
-	push	de
-	push	iy
+	ld	hl, 30
+	push	hl
+	push	bc
 	ld	hl, (ix - 63)
 	push	hl
 	call	_rmemcpy
@@ -6963,7 +7025,7 @@ ecdh_keygen:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, 30
+	ld	hl, 232
 	push	hl
 	ld	hl, (ix + 6)
 	push	hl
