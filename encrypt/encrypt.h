@@ -386,6 +386,7 @@ typedef enum _ecdh_errors {
 	ECDH_OK,
 	ECDH_INVALID_ARG,
 	ECDH_PRIVKEY_INVALID,
+	ECDH_RPUBKEY_INVALID
 } ecdh_error_t;
 
 /*******************************************

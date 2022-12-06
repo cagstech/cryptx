@@ -6080,10 +6080,9 @@ _point_iszero:
 	or (hl)
 	inc hl
 	djnz .loop
-	or a
-	ld a, 1
-	ret nz
-	ld a, 0
+	add a, -1
+	sbc a, a
+	inc a
 	ret
 
 ; bigint_iszero(uint8_t *op);
@@ -6096,10 +6095,9 @@ _bigint_iszero:
 	or (hl)
 	inc hl
 	djnz .loop
-	or a
-	ld a, 1
-	ret nz
-	ld a, 0
+	add a, -1
+	sbc a, a
+	inc a
 	ret
 
 ; point_isequal(struct Point *pt1, struct Point *pt2);
@@ -6579,19 +6577,11 @@ _get_degree:
 	ldir
 	jp	.lbl_3
 .lbl_2:
-	ld	hl, -327680
-	ld	de, _.str
-	lea	bc, ix - 30
-	ld	(ix - 33), bc
-	push	de
-	push	hl
-	call	ti.sprintf
-	pop	hl
-	pop	hl
+	lea	de, ix - 30
+	ld	(ix - 33), de
 	ld	hl, (ix + 6)
 	push	hl
-	ld	hl, (ix - 33)
-	push	hl
+	push	de
 	call	_gf2_bigint_invert
 	pop	hl
 	pop	hl
@@ -6683,22 +6673,8 @@ _point_add:
 	ld	bc, 60
 	ld	de, (ix + 6)
 	ld	hl, (ix + 9)
-	jr	.lbl_7
-.lbl_3:
-	ld	hl, (ix + 9)
-	push	hl
-	ld	hl, (ix + 6)
-	push	hl
-	call	_point_isequal
-	pop	hl
-	pop	hl
-	bit	0, a
-	jr	z, .lbl_5
-	ld	hl, (ix + 6)
-	push	hl
-	call	_point_double
 	jp	.lbl_9
-.lbl_5:
+.lbl_3:
 	ld	hl, (ix + 9)
 	push	hl
 	ld	hl, (ix + 6)
@@ -6707,18 +6683,21 @@ _point_add:
 	pop	hl
 	pop	hl
 	bit	0, a
-	jr	z, .lbl_8
+	jr	z, .lbl_6
+	ld	iy, (ix + 9)
+	pea	iy + 30
+	ld	iy, (ix + 6)
+	pea	iy + 30
+	call	_bigint_isequal
+	pop	hl
+	pop	hl
 	ld	hl, (ix + 6)
-	ld	(hl), 0
+	bit	0, a
+	jp	z, .lbl_8
 	push	hl
-	pop	iy
-	inc	iy
-	ld	bc, 59
-	lea	de, iy
-.lbl_7:
-	ldir
-	jp	.lbl_10
-.lbl_8:
+	call	_point_double
+	jp	.lbl_7
+.lbl_6:
 	lea	de, ix - 36
 	ld	bc, -135
 	lea	hl, ix
@@ -6749,19 +6728,19 @@ _point_add:
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), hl
-	push	hl
-	ld	hl, (ix + 9)
-	push	hl
+	ld	bc, (ix + 9)
+	push	bc
 	pop	iy
 	pea	iy + 30
+	push	hl
 	push	de
 	call	_gf2_bigint_add
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, (ix + 6)
-	push	hl
 	ld	hl, (ix + 9)
+	push	hl
+	ld	hl, (ix + 6)
 	push	hl
 	ld	bc, -138
 	lea	hl, ix
@@ -6902,8 +6881,18 @@ _point_add:
 	call	_gf2_bigint_add
 	pop	hl
 	pop	hl
-.lbl_9:
+.lbl_7:
 	pop	hl
+	jr	.lbl_10
+.lbl_8:
+	ld	(hl), 0
+	push	hl
+	pop	iy
+	inc	iy
+	ld	bc, 59
+	lea	de, iy
+.lbl_9:
+	ldir
 .lbl_10:
 	ld	sp, ix
 	pop	ix
@@ -6912,146 +6901,202 @@ _point_add:
 _point_mul_vect:
 	ld	hl, -66
 	call	ti._frameset
+	ld	hl, (ix + 6)
 	ld	iy, (ix + 12)
-	lea	hl, ix - 60
-	ld	(ix - 60), 0
-	push	hl
-	pop	de
-	inc	de
-	ld	bc, 59
-	ld	(ix - 66), hl
+	ld	bc, 60
+	lea	de, ix - 60
+	ld	(ix - 63), de
 	ldir
-.lbl_1:
-	dec	iy
+	ld	hl, (ix + 6)
+	ld	(hl), 0
+	inc	hl
+	ld	bc, 59
+	ex	de, hl
+	ld	hl, (ix + 6)
+	ldir
 	ld	de, 0
+.lbl_1:
 	lea	hl, iy
 	or	a, a
 	sbc	hl, de
-	call	pe, ti._setflag
-	jp	m, .lbl_6
-	ld	hl, (ix - 66)
-	push	hl
-	ld	(ix - 63), iy
-	call	_point_double
+	jr	z, .lbl_5
+	push	de
 	pop	hl
-	ld	hl, (ix - 63)
 	ld	c, 3
 	call	ti._ishru
+	push	de
+	pop	bc
 	push	hl
 	pop	de
 	ld	hl, (ix + 9)
 	add	hl, de
 	ld	e, (hl)
-	ld	hl, (ix - 63)
+	ld	(ix - 66), bc
+	push	bc
+	pop	hl
 	ld	bc, 7
 	call	ti._iand
 	ld	a, 1
 	ld	b, l
 	call	ti._bshl
 	and	a, e
-	ld	de, (ix - 66)
 	or	a, a
-	jr	nz, .lbl_4
 	ld	hl, _ta_resist
-	jr	.lbl_5
+	jr	z, .lbl_4
+	ld	hl, (ix - 63)
 .lbl_4:
-	ld	hl, (ix + 6)
-.lbl_5:
 	push	hl
-	push	de
+	ld	hl, (ix + 6)
+	push	hl
 	call	_point_add
 	pop	hl
 	pop	hl
-	ld	iy, (ix - 63)
+	ld	hl, (ix - 63)
+	push	hl
+	call	_point_double
+	pop	hl
+	ld	de, (ix - 66)
+	inc	de
+	ld	iy, (ix + 12)
 	jr	.lbl_1
-.lbl_6:
-	ld	de, (ix + 6)
-	ld	hl, (ix - 66)
-	ld	bc, 60
-	ldir
+.lbl_5:
 	ld	sp, ix
 	pop	ix
 	ret
 	
-_.str:
-	db	"this ran", 0
-	
-ecdh_keygen:
-	ld	hl, -66
+_point_isvalid:
+	ld	hl, -69
 	call	ti._frameset
 	ld	hl, (ix + 6)
+	push	hl
+	call	_point_iszero
+	pop	hl
+	bit	0, a
+	jr	z, .lbl_2
+	ld	a, 1
+	jr	.lbl_3
+.lbl_2:
+	lea	de, ix - 30
+	ld	(ix - 66), de
+	lea	hl, ix - 60
+	ld	(ix - 63), hl
+	ld	hl, (ix + 6)
+	push	hl
+	push	hl
+	push	de
+	call	_gf2_bigint_mul
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix + 6)
+	push	hl
+	ld	hl, (ix - 66)
+	push	hl
+	push	hl
+	call	_gf2_bigint_mul
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	a, (ix - 1)
+	xor	a, 1
+	ld	(ix - 1), a
+	ld	iy, (ix + 6)
+	lea	hl, iy + 30
+	ld	(ix - 69), hl
+	push	hl
+	push	hl
+	ld	hl, (ix - 63)
+	push	hl
+	call	_gf2_bigint_mul
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 63)
+	push	hl
+	ld	hl, (ix - 66)
+	push	hl
+	push	hl
+	call	_gf2_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 69)
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	ld	hl, (ix - 63)
+	push	hl
+	call	_gf2_bigint_mul
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 63)
+	push	hl
+	ld	hl, (ix - 66)
+	push	hl
+	call	_bigint_isequal
+	pop	hl
+	pop	hl
+.lbl_3:
+	ld	sp, ix
+	pop	ix
+	ret
+	
+ecdh_keygen:
+	ld	hl, -3
+	call	ti._frameset
+	ld	iy, (ix + 6)
+	lea	hl, iy
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
 	jr	nz, .lbl_2
 	ld	hl, 1
-	jp	.lbl_5
+	jr	.lbl_5
 .lbl_2:
 	ld	hl, (ix + 9)
-	ld	bc, _sect233k1+90
-	lea	de, ix - 60
-	ld	(ix - 63), de
+	ld	de, _sect233k1+90
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
 	jr	z, .lbl_4
 	ld	de, 29
 	push	de
-	ld	de, (ix + 6)
-	push	de
+	push	iy
 	call	_indcallhl
-	ld	bc, _sect233k1+90
+	ld	de, _sect233k1+90
+	ld	iy, (ix + 6)
 	pop	hl
 	pop	hl
 .lbl_4:
+	ld	(iy + 29), 0
+	lea	bc, iy + 30
+	ld	(ix - 3), bc
 	ld	hl, 30
 	push	hl
+	push	de
 	push	bc
-	ld	hl, (ix - 63)
-	push	hl
 	call	_rmemcpy
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	iy, (ix - 63)
-	lea	de, iy + 30
-	ld	(ix - 66), de
 	ld	hl, 30
 	push	hl
 	ld	hl, _sect233k1+120
 	push	hl
-	push	de
+	ld	iy, (ix + 6)
+	pea	iy + 60
 	call	_rmemcpy
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, 232
+	ld	hl, 240
 	push	hl
 	ld	hl, (ix + 6)
 	push	hl
-	ld	hl, (ix - 63)
+	ld	hl, (ix - 3)
 	push	hl
 	call	_point_mul_vect
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, 29
-	push	hl
-	ld	hl, (ix - 63)
-	push	hl
-	ld	iy, (ix + 6)
-	pea	iy + 29
-	call	_rmemcpy
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, 29
-	push	hl
-	ld	hl, (ix - 66)
-	push	hl
-	ld	iy, (ix + 6)
-	pea	iy + 58
-	call	_rmemcpy
 	pop	hl
 	pop	hl
 	pop	hl
@@ -7064,86 +7109,152 @@ ecdh_keygen:
 	
  
  ecdh_secret:
-	ld	hl, -66
+	ld	hl, -1
 	call	ti._frameset
-	ld	hl, (ix + 6)
+	ld	iy, (ix + 6)
 	ld	de, 1
+	lea	hl, iy
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	z, .lbl_4
+	jr	z, .lbl_7
 	ld	bc, (ix + 9)
 	push	bc
 	pop	hl
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	z, .lbl_4
+	jr	z, .lbl_7
 	ld	hl, (ix + 12)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	z, .lbl_4
-	ld	de, 29
-	lea	hl, ix - 60
-	ld	(ix - 63), hl
-	push	de
+	jr	z, .lbl_7
+	ld	hl, (ix + 12)
+	ex	de, hl
 	push	bc
-	ld	hl, (ix - 63)
+	pop	hl
+	ld	bc, 60
+	ldir
+	ld	a, (_sect233k1+180)
+	ld	(ix - 1), a
+	ld	hl, 240
 	push	hl
-	call	_rmemcpy
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	iy, (ix - 63)
-	lea	de, iy + 30
-	ld	(ix - 66), de
-	ld	hl, 29
-	push	hl
-	ld	iy, (ix + 9)
-	pea	iy + 29
-	push	de
-	call	_rmemcpy
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, 29
-	push	hl
-	ld	hl, (ix + 6)
-	push	hl
-	ld	hl, (ix - 63)
+	push	iy
+	ld	hl, (ix + 12)
 	push	hl
 	call	_point_mul_vect
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, 29
-	push	hl
-	ld	hl, (ix - 63)
-	push	hl
+	ld	a, (ix - 1)
+.lbl_4:
+	cp	a, 2
+	jr	c, .lbl_6
+	ld	(ix - 1), a
 	ld	hl, (ix + 12)
 	push	hl
-	call	_rmemcpy
+	call	_point_double
 	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, 29
-	push	hl
-	ld	hl, (ix - 66)
-	push	hl
-	ld	iy, (ix + 12)
-	pea	iy + 29
-	call	_rmemcpy
-	pop	hl
-	pop	hl
-	pop	hl
+	ld	a, (ix - 1)
+	srl	a
+	jr	.lbl_4
+.lbl_6:
 	ld	de, 0
-.lbl_4:
+.lbl_7:
 	ex	de, hl
+	inc	sp
+	pop	ix
+	ret
+
+_hexdump:
+	ld	hl, -4
+	call	ti._frameset
+	ld	hl, (ix + 12)
+	ld	bc, -327680
+	ld	de, _.str.1
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	nz, .lbl_2
+	push	de
+	push	bc
+	call	ti.sprintf
+	jr	.lbl_3
+.lbl_2:
+	ld	de, _.str
+	push	hl
+	push	de
+	push	bc
+	call	ti.sprintf
+	pop	hl
+.lbl_3:
+	pop	hl
+	pop	hl
+	ld	iy, (ix + 6)
+	ld	de, (ix + 9)
+	ld	bc, -327680
+	or	a, a
+	sbc	hl, hl
+	ld	(ix - 3), hl
+	ex	de, hl
+.lbl_4:
+	ld	de, (ix - 3)
+	ld	a, e
+	inc	a
+	or	a, a
+	sbc	hl, de
+	jr	z, .lbl_6
+	lea	hl, iy
+	ld	de, (ix - 3)
+	add	hl, de
+	ld	de, 0
+	ld	e, (hl)
+	push	de
+	ld	hl, _.str.2
+	push	hl
+	push	bc
+	ld	(ix - 4), a
+	call	ti.sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	a, (ix - 4)
+	and	a, 15
+	or	a, a
+	ld	hl, _.str.1
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	z, ti.sprintf
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 3)
+	inc	hl
+	ld	(ix - 3), hl
+	ld	bc, -327680
+	ld	iy, (ix + 6)
+	ld	hl, (ix + 9)
+	jr	.lbl_4
+.lbl_6:
+	ld	hl, _.str.1
+	push	hl
+	push	bc
+	call	ti.sprintf
 	ld	sp, ix
 	pop	ix
 	ret
 	
+_.str:
+	db	10, "%s", 10, 0
+_.str.1:
+	db	10, 0
+_.str.2:
+	db	"%02X ", 0
+_.str.3:
+	db	"---base X---", 0
+_.str.4:
+	db	"---base Y---", 0
 	
 ; rmemcpy(void *dest, void *src, size_t len)
 _rmemcpy:
@@ -7167,14 +7278,14 @@ _rmemcpy:
 _sect233k1:
 	db	2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1
 	db	30 dup 0
-	db	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ""
-	db	"r2∫Ö:~s", 26, "Ò)Ú/Ùïc§¬kı", 10, "LùnÔ≠a&"
-	db	"€S}ÏË∑˜UZgƒ'®ÕõÒäÎõV‡¡V˙Ê£"
+	db	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+	db	$01,$72,$32,$BA,$85,$3A,$7E,$73,$1A,$F1,$29,$F2,$2F,$F4,$14,$95,$63,$A4,$19,$C2,$6B,$F5,$0A,$4C,$9D,$6E,$EF,$AD,$61,$26
+	db	$01,$DB,$53,$7D,$EC,$E8,$19,$B7,$F7,$0F,$55,$5A,$67,$C4,$27,$A8,$CD,$9B,$F1,$8A,$EB,$9B,$56,$E0,$C1,$10,$56,$FA,$E6,$A3
 	db	0, "Ä", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "ù[πº‘n˚", 26, "’Òs´ﬂ"
 	db	4
 	
 _ta_resist:
-	rb	60
+	db	60 dup 0
  
  
  _hexc:     db	"0123456789ABCDEF"

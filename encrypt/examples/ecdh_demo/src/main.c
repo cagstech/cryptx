@@ -17,7 +17,7 @@
 #define ENCRYPT_ENABLE_ADVANCED_MODE
 #include <encrypt.h>
 
-//#define	BIGINT_TESTS	1		// uncomment to enable BIGINT tests. Comment to disable.
+#define	BIGINT_TESTS	1		// uncomment to enable BIGINT tests. Comment to disable.
 #define ECDH_TEST	1			// uncomment to enable ECDH unit test. Comment to disable.
 
 #define CEMU_CONSOLE ((char*)0xFB0000)
@@ -40,23 +40,37 @@ void ecdh_test(void) {
 	
 	ecdh_ctx test1;
 	ecdh_ctx test2;
+	ecdh_error_t err;
 	
 	// Always check for false return value from csrand_init()
 	
 	sprintf(CEMU_CONSOLE, "\n\n----------------------------------\nElliptic Curve Diffie-Hellman Demo\n");
 	
-	if(!ecdh_keygen(&test1, csrand_fill))
-		sprintf(CEMU_CONSOLE, "gen of keypair 1 successful\n");
-	hexdump(test1.privkey, sizeof test1.privkey, "---keypair 1 private---");
-	hexdump(test1.pubkey, sizeof test1.pubkey, "---keypair 1 public---");
-	//if(!ecdh_keygen(&test2, csrand_fill))
-		//sprintf(CEMU_CONSOLE, "gen of keypair 2 successful\n");
+	err = ecdh_keygen(&test1, csrand_fill);
+	sprintf(CEMU_CONSOLE, "gen of keypair 1 complete, exit code:%u\n", err);
+	if(!err){
+		hexdump(test1.privkey, sizeof test1.privkey, "---keypair 1 private---");
+		hexdump(test1.pubkey, sizeof test1.pubkey, "---keypair 1 public---");
+	}
 	
-	//if(!ecdh_secret(&test1, test2.pubkey, secret1))
-	//	hexdump(secret1, sizeof secret1, "---Secret 1 = Privkey1 + Pubkey2---");
 	
-	//if(!ecdh_secret(&test2, test1.pubkey, secret2))
-	//	hexdump(secret1, sizeof secret1, "---Secret 2 = Privkey2 + Pubkey1---");
+	err = ecdh_keygen(&test2, csrand_fill);
+	sprintf(CEMU_CONSOLE, "gen of keypair 2 complete, exit code:%u\n", err);
+	if(!err){
+		hexdump(test2.privkey, sizeof test2.privkey, "---keypair 2 private---");
+		hexdump(test2.pubkey, sizeof test2.pubkey, "---keypair 2 public---");
+	}
+	
+	err = ecdh_secret(&test1, test2.pubkey, secret1);
+	sprintf(CEMU_CONSOLE, "gen of secret1 complete, exit code:%u\n", err);
+	if(!err)
+		hexdump(secret1, sizeof secret1, "---Secret 1 = Privkey1 + Pubkey2---");
+	
+	err = ecdh_secret(&test2, test1.pubkey, secret2);
+	sprintf(CEMU_CONSOLE, "gen of secret2 complete, exit code:%u\n", err);
+	if(!err)
+		hexdump(secret2, sizeof secret2, "---Secret 2 = Privkey2 + Pubkey1---");
+	
 }
 #endif
 
