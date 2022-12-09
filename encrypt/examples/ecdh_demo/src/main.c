@@ -42,10 +42,8 @@ int main(void)
 	
 	sprintf(CEMU_CONSOLE, "\n\n----------------------------------\nElliptic Curve Diffie-Hellman Demo\n");
 	
-	timer_Set(1, 0);
 	err = ecdh_keygen(&test1, csrand_fill);
-	timer_GetSafe(1, TIMER_UP);
-	sprintf(CEMU_CONSOLE, "gen of keypair 1 complete in %u ms, exit code:%u\n", err);
+	sprintf(CEMU_CONSOLE, "gen of keypair 1 complete, exit code:%u\n", err);
 	if(!err){
 		hexdump(test1.privkey, sizeof test1.privkey, "---keypair 1 private---");
 		hexdump(test1.pubkey, sizeof test1.pubkey, "---keypair 1 public---");

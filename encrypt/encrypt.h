@@ -397,7 +397,7 @@ rsa_error_t rsa_encrypt(
  * particulars of finite field arithmetic. The private key will be trimmed
  * to not exceed 233 bits.
  */
-#define ECDH_PRIVKEY_SIZE		32
+#define ECDH_PRIVKEY_SIZE		30
 
 /*********************************************
  * @def ECDH\_PUBKEY\_SIZE

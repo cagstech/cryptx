@@ -74,7 +74,7 @@
 						Symmetric Encryption Key = KDF(secret)<br />
 						// KDF = some key derivation function
 						</span><br />
-					The ECDH algorithm provided by this library uses the SECT233k1 elliptic curve. It has a degree of 233 bits and a base order of 232 bits (29 bytes) which is also the maximum length of the private key. It provides an effective security level rivaling that of 2048 bit RSA and standard Diffie-Hellman. Why is the elliptic curve variant so much more secure? Because a finite field of degree 233 contains many more elements than the field of prime numbers bounded by the same bit width, lending to a much larger keyspace.
+					The ECDH algorithm provided by this library uses the SECT233k1 elliptic curve. It has a degree of 233 bits and a base order of 232 bits (29 bytes) which is also the maximum length of the private key. It provides an effective security level rivaling that of 2048 bit RSA and standard Diffie-Hellman. Why is the elliptic curve variant so much more secure? Firstly, the basis of elliptic curve cryptography (how curves are structured algebraically over finite fields) lends itself to the creation of keys that are more mathemtically complicated to crack than the prime factorization methods of non-elliptic curve cryptography. Also the keyspace over such a finite field is typically larger than the keyspace of primes of the same bit width.
 					</dd>
 			</dl>
 			<div class="major-header">Macros</div>

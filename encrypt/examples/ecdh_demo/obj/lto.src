@@ -84,7 +84,7 @@ BB0_6:
 	section	.text,"ax",@progbits
 	public	_main
 _main:
-	ld	hl, -341
+	ld	hl, -321
 	call	__frameset
 	ld	hl, 1
 	push	hl
@@ -92,20 +92,20 @@ _main:
 	pop	hl
 	bit	0, a
 	jp	z, BB1_10
-	ld	de, -326
+	ld	de, -306
 	lea	iy, ix
 	add	iy, de
 	ld	bc, -327680
 	ld	hl, _.str.3
-	lea	de, iy + 96
+	lea	de, iy + 90
 	ld	(ix - 3), bc
 	push	ix
-	ld	bc, -329
+	ld	bc, -309
 	add	ix, bc
 	ld	(ix), de
 	pop	ix
 	lea	de, iy
-	ld	bc, -332
+	ld	bc, -312
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), de
@@ -117,13 +117,13 @@ _main:
 	pop	hl
 	ld	hl, _csrand_fill
 	push	hl
-	ld	bc, -329
+	ld	bc, -309
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
 	call	_ecdh_keygen
-	ld	bc, -335
+	ld	bc, -315
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), hl
@@ -138,7 +138,7 @@ _main:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -335
+	ld	bc, -315
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -148,9 +148,9 @@ _main:
 	jr	nz, BB1_3
 	ld	hl, _.str.5
 	push	hl
-	ld	hl, 32
+	ld	hl, 30
 	push	hl
-	ld	bc, -329
+	ld	bc, -309
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -161,32 +161,32 @@ _main:
 	pop	hl
 	ld	hl, _.str.6
 	push	hl
-	ld	hl, 64
+	ld	hl, 60
 	push	hl
-	ld	bc, -329
+	ld	bc, -309
 	lea	hl, ix
 	add	hl, bc
 	ld	iy, (hl)
-	pea	iy + 32
+	pea	iy + 30
 	call	_hexdump
 	pop	hl
 	pop	hl
 	pop	hl
 BB1_3:
-	lea	hl, ix - 70
-	ld	bc, -335
+	lea	hl, ix - 66
+	ld	bc, -315
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), hl
 	ld	hl, _csrand_fill
 	push	hl
-	ld	bc, -332
+	ld	bc, -312
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
 	call	_ecdh_keygen
-	ld	bc, -338
+	ld	bc, -318
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), hl
@@ -201,7 +201,7 @@ BB1_3:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -338
+	ld	bc, -318
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -211,9 +211,9 @@ BB1_3:
 	jr	nz, BB1_5
 	ld	hl, _.str.8
 	push	hl
-	ld	hl, 32
+	ld	hl, 30
 	push	hl
-	ld	bc, -332
+	ld	bc, -312
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -224,42 +224,40 @@ BB1_3:
 	pop	hl
 	ld	hl, _.str.9
 	push	hl
-	ld	hl, 64
+	ld	hl, 60
 	push	hl
-	ld	bc, -332
+	ld	bc, -312
 	lea	hl, ix
 	add	hl, bc
 	ld	iy, (hl)
-	pea	iy + 32
+	pea	iy + 30
 	call	_hexdump
 	pop	hl
 	pop	hl
 	pop	hl
 BB1_5:
-	ld	bc, -134
-	lea	hl, ix
-	add	hl, bc
-	ld	bc, -338
+	lea	hl, ix - 126
+	ld	bc, -318
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), hl
-	ld	bc, -335
+	ld	bc, -315
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -332
+	ld	bc, -312
 	lea	hl, ix
 	add	hl, bc
 	ld	iy, (hl)
-	pea	iy + 32
-	ld	bc, -329
+	pea	iy + 30
+	ld	bc, -309
 	lea	iy, ix
 	add	iy, bc
 	ld	hl, (iy)
 	push	hl
 	call	_ecdh_secret
-	ld	bc, -341
+	ld	bc, -321
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), hl
@@ -275,7 +273,7 @@ BB1_5:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -341
+	ld	bc, -321
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -285,9 +283,9 @@ BB1_5:
 	jr	nz, BB1_7
 	ld	hl, _.str.11
 	push	hl
-	ld	hl, 64
+	ld	hl, 60
 	push	hl
-	ld	bc, -335
+	ld	bc, -315
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -297,23 +295,23 @@ BB1_5:
 	pop	hl
 	pop	hl
 BB1_7:
-	ld	bc, -338
+	ld	bc, -318
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -329
+	ld	bc, -309
 	lea	hl, ix
 	add	hl, bc
 	ld	iy, (hl)
-	pea	iy + 32
-	ld	bc, -332
+	pea	iy + 30
+	ld	bc, -312
 	lea	iy, ix
 	add	iy, bc
 	ld	hl, (iy)
 	push	hl
 	call	_ecdh_secret
-	ld	bc, -329
+	ld	bc, -309
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), hl
@@ -329,7 +327,7 @@ BB1_7:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -329
+	ld	bc, -309
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -339,9 +337,9 @@ BB1_7:
 	jr	nz, BB1_9
 	ld	hl, _.str.13
 	push	hl
-	ld	hl, 64
+	ld	hl, 60
 	push	hl
-	ld	bc, -338
+	ld	bc, -318
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
