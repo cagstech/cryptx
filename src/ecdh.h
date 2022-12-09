@@ -4,7 +4,7 @@
 
 // Defines for algorithm bit/byte widths, bignum max, and key lengths
 #define CURVE_DEGREE		233
-#define ECC_PRV_KEY_SIZE	32		// largest byte-aligned length < CURVE_DEGREE
+#define ECC_PRV_KEY_SIZE	30		// largest byte-aligned length < CURVE_DEGREE
 #define ECC_BIGINT_MAX_LEN	(ECC_PRV_KEY_SIZE)
 #define ECC_PUB_KEY_SIZE	(ECC_BIGINT_MAX_LEN<<1)
 
