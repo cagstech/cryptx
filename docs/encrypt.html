@@ -6,6 +6,7 @@
 		<link rel="stylesheet" href="scripts/highlight/styles/default.min.css">
 			<script src="scripts/highlight/highlight.min.js"></script>
 		<style>
+			.code {display:inline-block; padding:5px;}
 		</style>
 	</head>
 	<body>
@@ -58,6 +59,23 @@
 					</span><br />
 					Common key lengths are between 1024 and 2048 bits (128 bytes and 256 bytes), though 1024-bit RSA has been broken for some time. It is recommended to use a length on the higher end of the range, but do keep in mind that computation will take longer.</dd>
 				</dd><br />
+				<dt>Elliptic Curve Diffie-Hellman (ECDH)</dt>
+				<dd>Diffie-Hellman is a key negotiation protocol used to allow two parties to agree on a shared secret to use for symmetric encryption. Both parties first generate a private key and then use that key with a generator, G, to generate a public key. The key generation can be described using the following formulae:<br />
+					<span class="code">
+						// Public Key Generation<br />
+						Alice:	alice private key * G = alice public key<br />
+						Bob:	bob private key * G = bob public key
+						</span><br />
+					In the case of elliptic curve cryptography G is a base point on an elliptic curve and the public key is the result of multiplying that point by the private key. The properties of this algorithm are such that, for both parties, multiplying your private key by the other party&apos;s public key yields the same shared secret.<br />
+					<span class="code">
+						// Secret Computation<br />
+						Alice:	alice private key * bob public key = secret<br />
+						Bob:	bob private key * alice public key = secret<br />
+						Symmetric Encryption Key = KDF(secret)<br />
+						// KDF = some key derivation function
+						</span><br />
+					The ECDH algorithm provided by this library uses the SECT233k1 elliptic curve. It has a degree of 233 bits and a base order of 232 bits (29 bytes) which is also the maximum length of the private key. It provides an effective security level rivaling that of 2048 bit RSA and standard Diffie-Hellman. Why is the elliptic curve variant so much more secure? Because a finite field of degree 233 contains many more elements than the field of prime numbers bounded by the same bit width, lending to a much larger keyspace.
+					</dd>
 			</dl>
 			<div class="major-header">Macros</div>
 			<div class="function-doc">#define AES_CTR_NONCELEN(len)   ((0x0f & len)&lt;&lt;4)</div>
@@ -73,6 +91,10 @@
 			<p>Defines a macro to return the necessary length for a padded AES plaintext.</p>
 			<div class="function-doc">#define aes_extoutsize(len) \<br />(aes_outsize((len)) + AES_IVSIZE)</div>
 			<p>Defines a macro to return the necessary length for a padded AES plaintext plus a single block for the IV.</p>
+			<div class="function-doc">#define ECDH_PRIVKEY_SIZE   32</div>
+			<p>Defines the length of the ECDH private key.</p>
+			<div class="function-doc">#define ECDH_PUBKEY_SIZE   32</div>
+			<p>Defines the length of the ECDH public key.</p>
 			<div class="major-header">Enumerations</div>
 			<div class="function-doc">enum aes_cipher_modes { AES_MODE_CBC, AES_MODE_CTR };</div>
 			<p>Defines supported AES cipher modes.</p>
@@ -83,9 +105,14 @@
 			<div class="function-doc">typedef enum { RSA_OK, RSA_INVALID_ARG,  RSA_INVALID_MSG, RSA_INVALID_MODULUS, RSA_ENCODING_ERROR } rsa_error_t;</div>
 			<p>Defines possible response codes from calls to the RSA API
 			</p>
+			<div class="function-doc">typedef enum { ECDH_OK, ECDH_INVALID_ARG,  ECDH_PRIVKEY_INVALID, ECDH_RPUBKEY_INVALID } ecdh_error_t;</div>
+			<p>Defines possible response codes from calls to the ECDH API
+			</p>
 			<div class="major-header">Structs</div>
 			<div class="function-doc">typedef struct aes_ctx;</div>
 			<p>Defines state data for an AES context.</p>
+			<div class="function-doc">typedef struct ecdh_ctx;</div>
+			<p>Defines state data for an ECDH context.</p>
 			<div class="major-header">Functions</div>
 			<div class="function-doc">bool csrand_init(bool sampling_mode);</div>
 			<p>Initializes the secure RNG.<br /><br />
@@ -145,6 +172,31 @@
 			<span class="param">pubkey</span>: Pointer to public modulus to encrypt with<br />
 			<span class="param">keylen</span>: Length, in bytes, of the public modulus<br />
 			<span class="return">output</span>: An rsa_error_t indicating the status of the RSA operation
+			</p>
+			<div class="function-doc">ecdh_error_t ecdh_keygen(ecdh_ctx* ctx, bool (*randfill)(void* buffer, size_t size));</div>
+			<p>Generates an ECDH public key given an ECDH context. If <span style="font-weight:bold">randfill</span> is provided, the private key is filled with random bytes prior to public key generation.<br /><br />
+			<span class="param">ctx</span>: Pointer to an ECDH context<br />
+			<span class="param">randfill</span>: Pointer to a function used to fill a buffer with random bytes.<br />&emsp;&emsp;<span style="font-weight:bold">csrand_fill</span> is recommended for this.<br />
+			<span class="return">output</span>: An ecdh_error_t indicating the status of the ECDH operation<br />
+			&emsp;&emsp;The context is updated with the public key, accessible at ctx.pubkey.<br />
+			&emsp;&emsp;The private key is also accessible at ctx.privkey.
+			<span class="more-info">
+				If you pass NULL for <span style="font-weight:bold;">randfill</span>, it will be assumed that you have generated and random-filled the private key yourself. Do not do this if you do not know what you are doing. If you choose to generate your own private key, the length must be between half the base order and the base order, in bits (116 - 232). This is 15-29 bytes. Using a smaller key results in a lower effective security level.<br />
+				Do not edit the context manually after calling this function, you will corrupt the state.<br />
+				Only access these structure members for reading out the public key.
+			</span>
+			</p>
+			<div class="function-doc">ecdh_error_t ecdh_secret(ecdh_ctx* ctx, const uint8_t* rpubkey, uint8_t* secret);</div>
+			<p>Generates a shared secret given an ECDH context and a remote public key.<br />
+			Uses the cofactor variant of ECDH. SECT233k1 has a cofactor of 4.<br /><br />
+			<span class="param">ctx</span>: Pointer to an ECDH context<br />
+			<span class="param">rpubkey</span>: Pointer to a remote public key<br />
+			<span class="param">secret</span>: Pointer to buffer to write the secret to<br />
+			<span class="return">output</span>: An ecdh_error_t indicating the status of the ECDH operation<br />
+			<span class="more-info">
+				Do not edit the context manually, you will corrupt the state.<br />
+				Do not use the generated secret directly for symmetric encryption. Pass it to a KDF or cryptographic hash to generate a digest and use that as your encryption key.
+			</span>
 			</p>
 			<div class="major-header">Addendum: Authenticated Encryption</div>
 			<p>Authenticated encryption is an encryption scheme that produces a ciphertext that is not only obfuscated but also has its integrity and authenticity verifiable. This can be accomplished in a few ways, the most common of which are: (1) appending a signature, hash, or keyed hash to a message, and (2) implementing a cipher mode that integrates authentication.</p>

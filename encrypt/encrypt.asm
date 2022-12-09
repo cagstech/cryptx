@@ -6277,25 +6277,23 @@ _bigint_invert:
 ; _tmp	= ix - 32
 ; _g	= ix - 64
 ; _v	= ix - 96
-; _h	= ix - 128
-; ptr_op	= ix - 131
-; ptr_tmp	= ix - 134
-; ptr_g		= ix - 137
-; ptr_v		= ix - 140
+; ptr_op	= ix - 99
+; ptr_tmp	= ix - 102
+; ptr_g		= ix - 105
+; ptr_v		= ix - 108
 
-	ld hl, -140
+	ld hl, -108
 	call ti._frameset
 
 ; rcopy _polynomial to _v
 	ld hl, _sect233k1 + 31		; skip to the end of the 30-byte binary polynomial repr.
-	lea de, ix - 96				; _h
-	ld b, 32
+	lea de, ix - 96				; _v
+	ld bc, 32
 .loop_copy_poly:
-	ld a, (hl)
-	ld (de), a
+	ldi
 	dec hl
-	inc de
-	djnz .loop_copy_poly
+	dec hl
+	jp pe, .loop_copy_poly
 	
 ; zero out g
 	lea de, ix - 64			; g
@@ -6312,43 +6310,42 @@ _bigint_invert:
 	ld bc, 32
 	ldir
 
-; then set op to 1 (it is result)
-	ld de, (ix + 6)		; op
+; then set res to 1 (it is result)
+	ld de, (ix + 6)		; res
+	push de
+	ld hl, (ix + 6)
+	xor a
+	ld (de), a
+	inc de
+	ld bc, 31
+	ldir
+	pop de
 	ld a, 1
 	ld (de), a
-	inc de
-	ld b, 31
-	xor a
-.loop_zero_op:
-	ld (de), a
-	inc de
-	djnz .loop_zero_op		; op1 = res = 0
 	
 	; save pointer to op
-	lea iy, ix - 128
-	lea iy, iy - 3
 	ld hl, (ix + 6)
-	ld (iy - 0), hl
+	ld (ix - 99), hl
 	
 	lea hl, ix - 32
-	ld (iy - 3), hl
+	ld (ix - 102), hl
 	
 	lea hl, ix - 64
-	ld (iy - 6), hl
+	ld (ix - 105), hl
 	
 	lea hl, ix - 96
-	ld (iy - 9), hl
+	ld (ix - 108), hl
 	
-; (iy - 0) = op
-; (iy - 3) = tmp
-; (iy - 6) = g
-; (iy - 9) = v
+; (ix - 99) = op
+; (ix - 102) = tmp
+; (ix - 105) = g
+; (ix - 108) = v
 	
 ; while tmp != 1
 .while_tmp_not_1:
 
 ; compute degree of tmp (in bits)
-	ld hl, (iy - 3)
+	ld hl, (ix - 102)
 	call _get_degree		; degree of 1 means value of _tmp = 1
 	
 	cp 1			; if degree is 1, then value is 1 and we can exit
@@ -6357,7 +6354,7 @@ _bigint_invert:
 	push af
 
 ; compute degree of v (in bits)
-		ld hl, (iy - 9)
+		ld hl, (ix - 108)
 		call _get_degree
 		ld b, a						; in b
 	pop af
@@ -6371,16 +6368,16 @@ _bigint_invert:
 	push af		; we will need a after the swapping is done
 	
 ;	swap polynomial with tmp (pointer swap, not data swap)
-		ld hl, (iy - 3)
-		ld de, (iy - 9)
-		ld (iy - 3), de
-		ld (iy - 9), hl
+		ld hl, (ix - 102)
+		ld de, (ix - 108)
+		ld (ix - 102), de
+		ld (ix - 108), hl
 		
 ;	swap result with g
-		ld hl, (iy - 0)
-		ld de, (iy - 6)
-		ld (iy - 0), de
-		ld (iy - 6), hl
+		ld hl, (ix - 99)
+		ld de, (ix - 105)
+		ld (ix - 99), de
+		ld (ix - 105), hl
 		
 ;	negate i
 	pop af
@@ -6388,34 +6385,24 @@ _bigint_invert:
 	
 .noswap:
 	
-; shift v left by a bits, result in h
+; shift v left by a bits, xor with tmp
 
-	lea de, ix - 128
-	ld hl, (iy - 9)
+	ld iy, (ix - 108)
+	ld de, (ix - 102)
 	push af
-		call _lshiftc
-	
-; add h to tmp
-		lea hl, ix - 128
-		ld de, (iy - 3)
-		call _addloop
+		call _lshift_add
 		
-; shift g left by i bits, result in h
+; shift g left by i bits, xor with op
 	
-		lea de, ix - 128
-		ld hl, (iy - 6)
+		ld iy, (ix - 105)
+		ld de, (ix - 99)
 	pop af		; we need a back, logic repeats for shift g
-	call _lshiftc
-		
-; add h to result (op)
-	lea hl, ix - 128
-	ld de, (iy - 0)
-	call _addloop
+	call _lshift_add
 	
 	jr .while_tmp_not_1
 ; if tmp is 1, exit
 .tmp_is_1:
-	ld hl, (iy - 0)
+	ld hl, (ix - 99)
 	ld de, (ix + 6)
 	sbc hl, de		; if hl and de are equal, don't need to copy
 	jr z, .exit
@@ -6428,85 +6415,55 @@ _bigint_invert:
 	ret
 
 
-; add hl + de mod 2, result in de
-; destroys a, b
-_addloop:
-	ld b, 32
-.loop:
-	ld a, (de)
-	xor (hl)
-	ld (de), a
-	inc de
-	inc hl
-	djnz .loop
-	ret
+_lshift_add:
+; inputs: iy = ptr to src, de = ptr to dest, a = shift count
+; outputs: (de) += (iy) << a
+; destroys: af, bc, de, hl, iy
+    ; divide a by 8 and put bits multiplier in c
+    or a, a
+    sbc hl, hl
+    inc hl
+    rra
+    jr nc, .bit0
+    add hl, hl
+.bit0:
+    rra
+    jr nc, .bit1
+    add hl, hl
+    add hl, hl
+.bit1:
+    rra
+    jr nc, .bit2
+    add hl, hl
+    add hl, hl
+    add hl, hl
+    add hl, hl
+.bit2:
+    ld c, l
+    ; put byte shift in hl
+    ld l, a
+    ; put byte loop counter in b
+    ld a, 32
+    sub a, l
+    ld b, a
+    ; adjust dest pointer into hl
+    add hl, de
+    ; initial shift-in is 0
+    xor a, a
+.loop_lshift_add:
+    ld e, (iy)
+    ld d, c
+    mlt de
+    or a, e
+    xor a, (hl)
+    ld (hl), a
+    ; set shift-in of next iteration to shift-out of this one
+    ld a, d
+    inc iy
+    inc hl
+    djnz .loop_lshift_add
+    ret
 
-
-_lshiftc:
-; inputs: hl = ptr to src, de = ptr to dest, a = shift count
-; ouputs: none
-; destroys: a, b, c, flags
-; algorithm:
-;		byte shift: shift by between 1 and 32 (inclusive) bytes by:
-;			shift a to the right 3x (div 8), then and a with 30 to constrain to 30 or less
-;		 	if a == 0, skip to the bit shift section
-;			set the first a bytes of de to 0
-;			copy 32 - a bytes from hl to de + a
-;		bit shift: shift by between 1 and 7 (inclusive) bits by:
-;			restore original a, then and with 7 to return a value mod 8
-;			return if 0
-;			shift the 32 bytes at hl to the left a times
-	push af
-		push de
-			
-			srl a
-			srl a
-			srl a
-		
-			ld c, 32					; set c to 32
-			
-			or a
-			jr z, .skip_shift_bytes		; if a==0, skip shift bytes
-			
-			ld b, a						; ld a into b for djnz
-			xor a
-	.loop_zero_nbytes:				; zero the first a bytes of de
-			ld (de), a
-			inc de
-			dec c							; decrease c with every loop
-			djnz .loop_zero_nbytes			; when b = 0
-.skip_shift_bytes:
-			ld b, c							; c should be non-zero and num of bytes to copy
-		.loop_copy_bytes:
-			ld a, (hl)
-			ld (de), a						; copy (hl) to (de)
-			inc de
-			inc hl
-			djnz .loop_copy_bytes
-	
-		pop hl			; dest into hl now
-	pop af				; return original a
-	and a, 7			; and a with 7 to get a % 8
-	ret z
-	ld c, a				; this should only loop up to 7 times. if 8, should have been a byte
-.loop_nbits:
-	ld b, 32
-	push hl
-	or a
-.loop_lshift:
-		rl (hl)
-		inc hl
-		djnz .loop_lshift
-	pop hl
-	dec c
-	jr nz, .loop_nbits
-	ret
-
-
-; uint8_t ec_poly_get_degree(void* polynomial);
-ec_poly_get_degree:
-	pop bc,hl
-	push hl,bc
 _get_degree:
 ; input: hl = ptr to binary polynomial (little endian-encoded)
 ; func:
@@ -6515,35 +6472,32 @@ _get_degree:
 ;		return its 1-indexed degree
 ; output: a = degree of highest set bit + 1
 ; destroys: bc, flags
-	ld bc, 31		; input is 30 bytes, jump to MSB (hl + 29)
-	add hl, bc
-	ld c, 32		; check 32 bytes
-	xor a
+	ld bc, 31       ; input is 32 bytes, jump to MSB (hl + 31)
+    add hl, bc
+    ld b, 32        ; check 32 bytes
+    xor a
 .byte_loop:
-	or (hl)		; if byte is 0
-	jr nz, .found_byte
-	dec hl
-	dec c
-	jr nz, .byte_loop
+    or (hl)     ; if byte is 0
+    jr nz, .found_byte
+    dec hl
+    djnz .byte_loop
 ; exit
-	ld a, 0
-	ret
+    ; a is already 0
+    ret
 .found_byte:
 ; process bits
-	ld b, 8
-	ld a, (hl)
+    ld c, 1
 .bit_loop:
-	rla
-	jr c, .found_bit
-	djnz .bit_loop
-.found_bit:
-	ld a, c
-	dec a
-	add a, a
-	add a, a
-	add a, a
-	add a, b
-	ret
+    dec c
+    rla
+    jr nc, .bit_loop
+    ld a, b
+    add a, a
+    add a, a
+    add a, a
+    add a, c
+    ret
+
 
  
  _point_double:
@@ -7059,6 +7013,7 @@ _point_isvalid:
 	ret
 	
 ecdh_keygen:
+	save_interrupts
 	ld	hl, -3
 	call	ti._frameset
 	ld	iy, (ix + 6)
@@ -7133,12 +7088,12 @@ ecdh_keygen:
 	or	a, a
 	sbc	hl, hl
 .lbl_8:
-	ld	sp, ix
-	pop	ix
-	ret
+	restore_interrupts_noret ecdh_keygen
+	jp stack_clear
 	
  
  ecdh_secret:
+	save_interrupts
 	ld	hl, -1
 	call	ti._frameset
 	ld	hl, (ix + 6)
@@ -7207,9 +7162,8 @@ ecdh_keygen:
 .lbl_10:
 	push	bc
 	pop	hl
-	inc	sp
-	pop	ix
-	ret
+	restore_interrupts_noret ecdh_secret
+	jp stack_clear
 	
 ;bool bigint_frombytes(BIGINT dest, const void *restrict src, size_t len, bool big_endian);
 bigint_frombytes:

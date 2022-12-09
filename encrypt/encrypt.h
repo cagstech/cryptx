@@ -431,7 +431,7 @@ typedef enum _ecdh_errors {
  * @param ctx Pointer to an ECDH context containing reserved public and private key buffers.
  * @param randfill Pointer to a function that can fill a buffer with random bytes.
  * @note If @b randfill is @b NULL it is assumed that you have initialized the key with
- * random bytes yourself. If you do not know what you are doing @b do_not_do_this.
+ * random bytes yourself. If you do not know what you are doing @b DO_NOT_DO_THIS.
  * Just pass @b csrand_fill to the @b randfill parameter.
  * @note Output public key is a point on the curve expressed as two 32-byte coordinates
  * encoded in little endian byte order and padded with zeros if needed. You may have to
@@ -451,23 +451,22 @@ ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, bool (*randfill)(void *buffer, size_t si
  * encoded in little endian byte order and padded with zeros if needed. You may have to
  * deserialize the secret and then serialize it into a different format for compatibility with
  * other encryption libraries.
+ * @note It is generally not recommended to use the computed secret as an encryption key as is.
+ * It is preferred to pass the secret to a KDF or a cryptographic primitive such as a hash function and use
+ * that output as your symmetric key.
  */
 ecdh_error_t ecdh_secret(const ecdh_ctx *ctx, const uint8_t *rpubkey, uint8_t *secret);
 
-
-#ifdef ENCRYPT_ENABLE_AES_INTERNAL
 
 /*
  #### INTERNAL FUNCTIONS ####
  For advanced users only!!!
  
- To enable advanced mode place the directive:
- #define ENCRYPT_ENABLE_ADVANCED_MODE
- above any inclusion of this header file.
  
- If you know what you are doing and want to implement your own cipher modes,
- or signature algorithms, a few internal functions are exposed here.
  */
+
+
+#ifdef ENCRYPT_ENABLE_AES_INTERNAL
 
 /*****************************************************
  * @brief AES single-block ECB mode encryption function
