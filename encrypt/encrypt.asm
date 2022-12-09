@@ -6165,8 +6165,13 @@ _bigint_add:
 	ldir
 	ld hl, (ix + 12)
 	ld de, (ix + 6)
-	ld b, 30
+	ld b, 15
 .loop:
+	ld a, (de)
+	xor a, (hl)
+	ld (de), a
+	inc hl
+	inc de
 	ld a, (de)
 	xor a, (hl)
 	ld (de), a
@@ -6218,8 +6223,14 @@ _bigint_mul:
 				; add op1 (res) + tmp
 				ld hl, (ix + 6)		; hl = (dest)
 				lea de, ix - 30		; de = tmp (src)
-				ld b, 30
+				ld b, 15
 .loop_add:
+				ld a, (de)
+				and a, c
+				xor a, (hl)
+				ld (hl), a
+				inc hl
+				inc de
 				ld a, (de)
 				and a, c
 				xor a, (hl)
@@ -6230,9 +6241,13 @@ _bigint_mul:
 		
 				; now double tmp
 				lea hl, ix - 30		; tmp in hl
-				ld b, 30
+				ld b, 10
 				or a				; reset carry
 .loop_mul2:
+				rl (hl)
+				inc hl
+				rl (hl)
+				inc hl
 				rl (hl)
 				inc hl
 				djnz .loop_mul2
@@ -6422,26 +6437,21 @@ _lshift_add:
     ; divide a by 8 and put bits multiplier in c
     or a, a
     sbc hl, hl
-    inc hl
     rra
-    jr nc, .bit0
-    add hl, hl
-.bit0:
-    rra
-    jr nc, .bit1
-    add hl, hl
-    add hl, hl
-.bit1:
-    rra
-    jr nc, .bit2
-    add hl, hl
-    add hl, hl
-    add hl, hl
-    add hl, hl
-.bit2:
-    ld c, l
-    ; put byte shift in hl
     ld l, a
+    sbc a, a
+    xor a, $55
+    ld c, a
+    srl l
+    sbc a, a
+    xor a, $33
+    and a, c
+    ld c, a
+    srl l
+    sbc a, a
+    xor a, $0F
+    and a, c
+    ld c, a
     ; put byte loop counter in b
     ld a, 30
     sub a, l
