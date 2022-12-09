@@ -7143,48 +7143,58 @@ ecdh_keygen:
 	ld	hl, -1
 	call	ti._frameset
 	ld	hl, (ix + 6)
-	ld	de, 1
+	ld	bc, 1
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	z, .lbl_9
+	jr	z, .lbl_10
 	ld	iy, (ix + 9)
 	lea	hl, iy
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	z, .lbl_9
+	jr	z, .lbl_10
 	ld	hl, (ix + 12)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	z, .lbl_9
-	ex	de, hl
+	jr	z, .lbl_10
 	ld	bc, 64
+	ex	de, hl
 	lea	hl, iy
 	ldir
 	ld	a, (_sect233k1+96)
 	ld	(ix - 1), a
 	ld	hl, (ix + 12)
 	push	hl
+	call	_point_iszero
+	pop	hl
+	bit	0, a
+	jr	z, .lbl_5
+	ld	bc, 3
+	jr	.lbl_10
+.lbl_5:
+	ld	hl, (ix + 12)
+	push	hl
 	call	_point_isvalid
 	pop	hl
 	bit	0, a
-	jr	z, .lbl_7
+	ld	de, (ix + 12)
+	ld	bc, 3
+	jr	z, .lbl_10
 	ld	hl, 256
 	push	hl
 	ld	hl, (ix + 6)
 	push	hl
-	ld	hl, (ix + 12)
-	push	hl
+	push	de
 	call	_point_mul_scalar
 	pop	hl
 	pop	hl
 	pop	hl
 	ld	a, (ix - 1)
-.lbl_5:
+.lbl_7:
 	cp	a, 2
-	jr	c, .lbl_8
+	jr	c, .lbl_9
 	ld	(ix - 1), a
 	ld	hl, (ix + 12)
 	push	hl
@@ -7192,18 +7202,16 @@ ecdh_keygen:
 	pop	hl
 	ld	a, (ix - 1)
 	srl	a
-	jr	.lbl_5
-.lbl_7:
-	ld	de, 3
-	jr	.lbl_9
-.lbl_8:
-	ld	de, 0
+	jr	.lbl_7
 .lbl_9:
-	ex	de, hl
+	ld	bc, 0
+.lbl_10:
+	push	bc
+	pop	hl
 	inc	sp
 	pop	ix
 	ret
-
+	
 ;bool bigint_frombytes(BIGINT dest, const void *restrict src, size_t len, bool big_endian);
 bigint_frombytes:
 	call ti._frameset0

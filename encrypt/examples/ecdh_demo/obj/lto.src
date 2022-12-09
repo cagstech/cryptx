@@ -82,10 +82,16 @@ BB0_6:
 	section	.text,"ax",@progbits
 
 	section	.text,"ax",@progbits
-	public	_ecdh_test
-_ecdh_test:
+	public	_main
+_main:
 	ld	hl, -341
 	call	__frameset
+	ld	hl, 1
+	push	hl
+	call	_csrand_init
+	pop	hl
+	bit	0, a
+	jp	z, BB1_10
 	ld	de, -326
 	lea	iy, ix
 	add	iy, de
@@ -139,7 +145,7 @@ _ecdh_test:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	nz, BB1_2
+	jr	nz, BB1_3
 	ld	hl, _.str.5
 	push	hl
 	ld	hl, 32
@@ -166,7 +172,7 @@ _ecdh_test:
 	pop	hl
 	pop	hl
 	pop	hl
-BB1_2:
+BB1_3:
 	lea	hl, ix - 70
 	ld	bc, -335
 	lea	iy, ix
@@ -202,7 +208,7 @@ BB1_2:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	nz, BB1_4
+	jr	nz, BB1_5
 	ld	hl, _.str.8
 	push	hl
 	ld	hl, 32
@@ -229,7 +235,7 @@ BB1_2:
 	pop	hl
 	pop	hl
 	pop	hl
-BB1_4:
+BB1_5:
 	ld	bc, -134
 	lea	hl, ix
 	add	hl, bc
@@ -276,7 +282,7 @@ BB1_4:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	nz, BB1_6
+	jr	nz, BB1_7
 	ld	hl, _.str.11
 	push	hl
 	ld	hl, 64
@@ -290,7 +296,7 @@ BB1_4:
 	pop	hl
 	pop	hl
 	pop	hl
-BB1_6:
+BB1_7:
 	ld	bc, -338
 	lea	hl, ix
 	add	hl, bc
@@ -330,7 +336,7 @@ BB1_6:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	nz, BB1_8
+	jr	nz, BB1_9
 	ld	hl, _.str.13
 	push	hl
 	ld	hl, 64
@@ -344,223 +350,15 @@ BB1_6:
 	pop	hl
 	pop	hl
 	pop	hl
-BB1_8:
+BB1_9:
+	or	a, a
+	sbc	hl, hl
+	jr	BB1_11
+BB1_10:
+	ld	hl, 1
+BB1_11:
 	ld	sp, ix
 	pop	ix
-	ret
-	section	.text,"ax",@progbits
-
-	section	.text,"ax",@progbits
-	public	_point_arith_tests
-_point_arith_tests:
-	ld	hl, -206
-	call	__frameset
-	ld	bc, 30
-	lea	hl, ix - 36
-	ld	de, -206
-	lea	iy, ix
-	add	iy, de
-	ld	(iy), hl
-	lea	iy, ix - 66
-	push	ix
-	ld	de, -203
-	add	ix, de
-	ld	(ix), iy
-	pop	ix
-	ld	(ix - 3), bc
-	push	ix
-	ld	bc, -130
-	add	ix, bc
-	lea	de, ix
-	pop	ix
-	push	ix
-	ld	bc, -197
-	add	ix, bc
-	ld	(ix), de
-	pop	ix
-	push	ix
-	ld	bc, -194
-	add	ix, bc
-	lea	de, ix
-	pop	ix
-	push	ix
-	ld	bc, -200
-	add	ix, bc
-	ld	(ix), de
-	pop	ix
-	ex	de, hl
-	ld	hl, ___const.point_arith_tests.test_point_x
-	ld	bc, (ix - 3)
-	ldir
-	lea	de, iy
-	ld	hl, ___const.point_arith_tests.test_point_y
-	ld	bc, 30
-	push	bc
-	pop	iy
-	ldir
-	or	a, a
-	sbc	hl, hl
-	push	hl
-	lea	hl, iy
-	push	hl
-	ld	bc, -206
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -197
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_gf2_bigint_frombytes
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	or	a, a
-	sbc	hl, hl
-	push	hl
-	ld	hl, 30
-	push	hl
-	ld	bc, -203
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -197
-	lea	hl, ix
-	add	hl, bc
-	ld	iy, (hl)
-	pea	iy + 32
-	call	_gf2_bigint_frombytes
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	bc, -200
-	lea	hl, ix
-	add	hl, bc
-	ld	de, (hl)
-	ld	bc, -197
-	lea	iy, ix
-	add	iy, bc
-	ld	iy, (iy)
-	lea	hl, iy
-	ld	bc, 64
-	ldir
-	ld	hl, _.str.14
-	push	hl
-	ld	hl, 64
-	push	hl
-	push	iy
-	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, _.str.15
-	push	hl
-	ld	hl, 64
-	push	hl
-	ld	bc, -200
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	bc, -197
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_ecc_point_double
-	pop	hl
-	ld	hl, _.str.16
-	push	hl
-	ld	hl, 64
-	push	hl
-	ld	bc, -197
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, _.str.14
-	push	hl
-	ld	hl, 64
-	push	hl
-	ld	bc, -197
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, _.str.15
-	push	hl
-	ld	hl, 64
-	push	hl
-	ld	bc, -200
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	bc, -200
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -197
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_ecc_point_add
-	pop	hl
-	pop	hl
-	ld	hl, _.str.17
-	push	hl
-	ld	hl, 64
-	push	hl
-	ld	bc, -197
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_hexdump
-	ld	sp, ix
-	pop	ix
-	ret
-	section	.text,"ax",@progbits
-
-	section	.text,"ax",@progbits
-	public	_main
-_main:
-	ld	hl, 1
-	push	hl
-	call	_csrand_init
-	pop	hl
-	bit	0, a
-	jr	z, BB3_2
-	call	_point_arith_tests
-	call	_ecdh_test
-	or	a, a
-	sbc	hl, hl
-	ret
-BB3_2:
-	ld	hl, 1
 	ret
 	section	.text,"ax",@progbits
 
@@ -622,7 +420,7 @@ _.str.10:
 	section	.rodata,"a",@progbits
 	private	_.str.11
 _.str.11:
-	db	"---Secret 1 = Privkey1 + Pubkey2---", 0
+	db	"---Secret 1 = Privkey1 * Pubkey2 * Cofactor---", 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.12
@@ -632,47 +430,14 @@ _.str.12:
 	section	.rodata,"a",@progbits
 	private	_.str.13
 _.str.13:
-	db	"---Secret 2 = Privkey2 + Pubkey1---", 0
-
-	section	.rodata,"a",@progbits
-	private	___const.point_arith_tests.test_point_x
-___const.point_arith_tests.test_point_x:
-	db	"r2∫Ö:~s", 26, "Ò)Ú/Ùïc§¬kı", 10, "LùnÔ≠a&"
-
-	section	.rodata,"a",@progbits
-	private	___const.point_arith_tests.test_point_y
-___const.point_arith_tests.test_point_y:
-	db	"€S}ÏË∑˜UZgƒ'®ÕõÒäÎõV‡¡V˙Ê£"
-
-	section	.rodata,"a",@progbits
-	private	_.str.14
-_.str.14:
-	db	"---Point 1---", 0
-
-	section	.rodata,"a",@progbits
-	private	_.str.15
-_.str.15:
-	db	"---Point 2---", 0
-
-	section	.rodata,"a",@progbits
-	private	_.str.16
-_.str.16:
-	db	"---Point 1 Double---", 0
-
-	section	.rodata,"a",@progbits
-	private	_.str.17
-_.str.17:
-	db	"---Point 1 + Point 2---", 0
+	db	"---Secret 2 = Privkey2 * Pubkey1 * Cofactor---", 0
 
 	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"
 	extern	_csrand_fill
-	extern	__Unwind_SjLj_Register
 	extern	_csrand_init
 	extern	__frameset
-	extern	_sprintf
-	extern	_ecc_point_add
-	extern	_ecc_point_double
+	extern	__Unwind_SjLj_Register
 	extern	_ecdh_keygen
+	extern	_sprintf
 	extern	__Unwind_SjLj_Unregister
-	extern	_gf2_bigint_frombytes
 	extern	_ecdh_secret
