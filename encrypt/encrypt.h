@@ -370,7 +370,7 @@ rsa_error_t rsa_encrypt(
  Does not use cofactor variation.
  */
 
-#define ECDH_PRIVKEY_SIZE		29
+#define ECDH_PRIVKEY_SIZE		32
 #define ECDH_PUBKEY_SIZE		(ECDH_PRIVKEY_SIZE<<1)
 
 typedef struct _ecdh_ctx {
@@ -413,7 +413,7 @@ ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, bool (*randfill)(void *buffer, size_t si
 ecdh_error_t ecdh_secret(const ecdh_ctx *ctx, const uint8_t *rpubkey, uint8_t *secret);
 
 
-#ifdef ENCRYPT_ENABLE_ADVANCED_MODE
+#ifdef ENCRYPT_ENABLE_AES_UNSAFE
 
 /*
  #### INTERNAL FUNCTIONS ####
@@ -448,6 +448,10 @@ void aes_ecb_unsafe_encrypt(const void *block_in, void *block_out, aes_ctx *ks);
  *     Use ECB-mode block encryptors as a constructor for custom cipher modes only.
  */
 void aes_ecb_unsafe_decrypt(const void *block_in, void *block_out, aes_ctx *ks);
+
+#endif
+
+#ifdef ENCRYPT_ENABLE_RSA_UNSAFE
 
 /*************************************************************
  * @brief Optimal Asymmetric Encryption Padding (OAEP) encoder for RSA
@@ -522,12 +526,15 @@ void powmod(
 		uint24_t exp,
 		const uint8_t *restrict mod);
 
+#endif
+
+#ifdef ENCRYPT_ENABLE_GF2_BIGINT
 
 /*****************************************
  * @define GF2\_BIGINT\_SIZE
  * Defines the max length of a GF2\_BIGINT.
  */
-#define GF2_BIGINT_SIZE	30
+#define GF2_BIGINT_SIZE		ECDH_PRIVKEY_SIZE
 
 /*****************************************
  * @typedef GF2\_BIGINT
@@ -536,12 +543,22 @@ void powmod(
  */
 typedef uint8_t GF2_BIGINT[GF2_BIGINT_SIZE];
 
-
+bool gf2_bigint_frombytes(GF2_BIGINT dest, const void *restrict src, size_t len, bool big_endian);
+bool gf2_bigint_tobytes(void *dest, const GF2_BIGINT src, bool big_endian);
 void gf2_bigint_add(GF2_BIGINT res, GF2_BIGINT op1, GF2_BIGINT op2);
 void gf2_bigint_sub(GF2_BIGINT res, GF2_BIGINT op1, GF2_BIGINT op2);
 void gf2_bigint_mul(GF2_BIGINT res, GF2_BIGINT op1, GF2_BIGINT op2);
 void gf2_bigint_invert(GF2_BIGINT res, GF2_BIGINT op);
 
+#endif
+
+#ifdef ENCRYPT_ENABLE_ECC_POINT_ARITHMETIC
+
+typedef struct _ecc_point { GF2_BIGINT x; GF2_BIGINT y; } ecc_point;
+void ecc_point_add(ecc_point *p, ecc_point *q);
+void ecc_point_double(ecc_point *p);
+void ecc_point_mul_scalar(ecc_point *p, const uint8_t *scalar, size_t scalar_bit_width);
+void rmemcpy(void *dest, const void *src, size_t len);
 
 #endif
 
