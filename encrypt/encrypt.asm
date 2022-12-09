@@ -36,7 +36,6 @@ include_library '../hashlib/hashlib.asm'
     export ecc_point_add
     export ecc_point_double
     export ecc_point_mul_scalar
-    export ec_poly_get_degree
     
 powmod = _powmod
 gf2_bigint_frombytes = bigint_frombytes

@@ -24,4 +24,3 @@
 	export	ecc_point_add
 	export	ecc_point_double
 	export	ecc_point_mul_scalar
-	export	ec_poly_get_degree

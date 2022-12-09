@@ -9,7 +9,10 @@
  * 1. Secure HWRNG
  * 2. AES-128, AES-192, AES-256
  * 3. RSA + OAEP v2.2
- * 4. ECDH, using NIST B-571
+ * 4. ECDH, using NIST K-233, cofactor variant.
+ *
+ * Access to some internal functions through defines that should be placed in your source before including this header:
+ *
  */
 
 #ifndef ENCRYPT_H
@@ -350,27 +353,57 @@ rsa_error_t rsa_encrypt(
 /*
  Elliptic Curve Diffie-Hellman (ECDH)
  
- ECDH is a variant on the Diffie-Hellman secret exchange protocol that uses
- elliptic curve point multiplication instead of standard modular exponentiation.
+ Elliptic Curve Diffie-Hellman is a variant on the Diffie-Hellman secret exchange protocol
+ that uses elliptic curve point multiplication instead of standard modular exponentiation.
+ In this variant of Diffie-Hellman you provide a private key initialized with securely random
+ bytes (or pass a random-fill function to the keygen function) and that private key acts as a
+ scalar for point multiplication. A base point (G) defined by the curve specification is multiplied
+ by the scalar, yielding another point on the curve, (x, y) that is the public key. This public key
+ can be sent in the clear to another party. Both the private key, (x, y), and G are very large integers
+ in the order of the degree of the selected curve. This means that the curve defines the bitwise security
+ level of the encryption. The key generation can be represented in formula like so:
  
- Alice generates a random integer a in range defined by curve parameters. That is her private key.
- Bob generates a random integer b in range defined by curve parameters. That is his private key.
- G is an elliptic curve point multiplication alg defined by curve paramters.
- Alice generates a public key, x = a * G.
- Bob generates a public key, y = b * G.
- Alice and Bob exchange public keys.
- Alice computes s = a * y.
- Bob computes s = b * x.
- Both parties should not use `s` as is and should pass it to a cryptographic hash
- or KDF to generate a symmetric key for AES.
+ Alice:	aP * G = aU			<== aP = alice private key, G = base point on curve, aU = alice public key
+ Bob:	bP * G = bU			<== bP = bob private key, G = base point on curve, bU = bob public key
  
- This ECDH implementation uses the NIST K-233 (sect233k1) curve.
- It provides 233 bits of EC security,
- which is roughly the same as a 2048 bit RSA key.
- Does not use cofactor variation.
+ To compute a shared secret, both parties take their own private key and use it as a scalar to
+ perform point multiplication on the other party's public key. Before doing so, each endpoint should
+ validate the public key by confirming that it is (1) non-zero, and (2) a point on the curve.
+ Performing the point multiplication should yield the same secret for both parties.
+ Once the secret is computed, it should be passed to a KDF or a cryptographic hash to generate a
+ key for symmetric encryption. The secret derivation can be represented in formula like so:
+ 
+ Alice:
+	aP * bU = S,		<== aP = alice private key, bU = bob public key, S = shared secret
+	K = KDF(S)		 	<== K = symmetric encryption key, KDF = some key derivation function
+ Bob:
+	bP * aU = S,		<== bP = bob private key, bU = alice public key, S = shared secret
+	K = KDF(S)			<== K = symmetric encryption key, KDF = some key derivation function
+ 
+ As with RSA, ECDH is not intended to be used for sustained encrypted communication. It is another method
+ of exchanging a secret. Once the secret is negotiated (either via RSA or ECDH), use that secret to set up
+ an AES session and use AES for sustained encryption. It is much faster.
+ 
+ This ECDH implementation uses the NIST K-233 (sect233k1) curve, a binary polynomial with degree 233.
+ It uses a key size of up to 233 bits (though this implementation encourages the use of 29 bytes (232 bits).
+ This spec provides roughly the same security level as a 2048 bit RSA key.
  */
 
+/**************************************************
+ * @def ECDH\_PRIVKEY\_SIZE
+ * Defines the byte length of the ECDH private key.
+ * @note This is defined as 32 for compatibility with other libraries.
+ * However, all points worked with do not exceed 233 bits due to the
+ * particulars of finite field arithmetic. The private key will be trimmed
+ * to not exceed 233 bits.
+ */
 #define ECDH_PRIVKEY_SIZE		32
+
+/*********************************************
+ * @def ECDH\_PUBKEY\_SIZE
+ * Defines the byte length of the ECDH public key.
+ * @note This is twice the length of the private key.
+ */
 #define ECDH_PUBKEY_SIZE		(ECDH_PRIVKEY_SIZE<<1)
 
 typedef struct _ecdh_ctx {
@@ -389,31 +422,40 @@ typedef enum _ecdh_errors {
 	ECDH_RPUBKEY_INVALID
 } ecdh_error_t;
 
-/*******************************************
+/************************************************************************
  * @brief ECDH Generate Public Key.
- * Generates a public key given a private key.
- * @param pubkey Pointer to a buffer to write public key.
- * @param privkey Pointer to private key.
- * @note @b privkey should be filled with random bytes.
- * @note @b pubkey should be twice the size of @b privkey.
- * @note Expects bytearrays. You may have to serialize/deserialze if
- * using with another cryptography library.
+ * If @b randfill is provided, generates a random private key
+ * 29 bytes long (largest byte length less than 233 bits). Otherwise
+ * assumes that the key was generated by the user.
+ * Then generates the public key given the private key and generator G.
+ * @param ctx Pointer to an ECDH context containing reserved public and private key buffers.
+ * @param randfill Pointer to a function that can fill a buffer with random bytes.
+ * @note If @b randfill is @b NULL it is assumed that you have initialized the key with
+ * random bytes yourself. If you do not know what you are doing @b do_not_do_this.
+ * Just pass @b csrand_fill to the @b randfill parameter.
+ * @note Output public key is a point on the curve expressed as two 32-byte coordinates
+ * encoded in little endian byte order and padded with zeros if needed. You may have to
+ * deserialize the key and then serialize it into a different format to use it with
+ * some encryption libraries.
  */
 ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, bool (*randfill)(void *buffer, size_t size));
 
 /*************************************************
- * @brief ECDH Compute shared secret
- * Given local private key and remote public key, generates secret.
- * @param privkey Pointer to local private key.
+ * @brief ECDH Compute Shared Secret
+ * Given local private key and remote public key, generate a secret.
+ * @param ctx Pointer to context containing local private key.
  * @param rpubkey Pointer to remote public key.
  * @param secret Pointer to buffer to write shared secret to.
- * @note Expects bytearrays. You may have to serialize/deserialize if using
- * with another cryptography library.
+ * @note @b secret must be at least @b ECDH_PUBKEY_SIZE bytes.
+ * @note Output secret is a point on the curve expressed as two 32-byte coordinates
+ * encoded in little endian byte order and padded with zeros if needed. You may have to
+ * deserialize the secret and then serialize it into a different format for compatibility with
+ * other encryption libraries.
  */
 ecdh_error_t ecdh_secret(const ecdh_ctx *ctx, const uint8_t *rpubkey, uint8_t *secret);
 
 
-#ifdef ENCRYPT_ENABLE_AES_UNSAFE
+#ifdef ENCRYPT_ENABLE_AES_INTERNAL
 
 /*
  #### INTERNAL FUNCTIONS ####
@@ -451,7 +493,7 @@ void aes_ecb_unsafe_decrypt(const void *block_in, void *block_out, aes_ctx *ks);
 
 #endif
 
-#ifdef ENCRYPT_ENABLE_RSA_UNSAFE
+#ifdef ENCRYPT_ENABLE_RSA_INTERNAL
 
 /*************************************************************
  * @brief Optimal Asymmetric Encryption Padding (OAEP) encoder for RSA
@@ -528,7 +570,12 @@ void powmod(
 
 #endif
 
-#ifdef ENCRYPT_ENABLE_GF2_BIGINT
+#ifdef ENCRYPT_ENABLE_ECC_INTERNAL
+
+/*
+	GF2_BIGINT, GALOIS FIELD ARITHMETIC, ELLIPTIC CURVE ARITHMETIC
+	** All Galois field operations are defined by the sect233k1 elliptic curve. **
+ */
 
 /*****************************************
  * @define GF2\_BIGINT\_SIZE
@@ -543,22 +590,102 @@ void powmod(
  */
 typedef uint8_t GF2_BIGINT[GF2_BIGINT_SIZE];
 
-bool gf2_bigint_frombytes(GF2_BIGINT dest, const void *restrict src, size_t len, bool big_endian);
-bool gf2_bigint_tobytes(void *dest, const GF2_BIGINT src, bool big_endian);
-void gf2_bigint_add(GF2_BIGINT res, GF2_BIGINT op1, GF2_BIGINT op2);
-void gf2_bigint_sub(GF2_BIGINT res, GF2_BIGINT op1, GF2_BIGINT op2);
-void gf2_bigint_mul(GF2_BIGINT res, GF2_BIGINT op1, GF2_BIGINT op2);
-void gf2_bigint_invert(GF2_BIGINT res, GF2_BIGINT op);
-
-#endif
-
-#ifdef ENCRYPT_ENABLE_ECC_POINT_ARITHMETIC
+/*******************************************
+ * @typedef ecc\_point
+ * Defines a point to be used for elliptic curve point arithmetic.
+ */
 
 typedef struct _ecc_point { GF2_BIGINT x; GF2_BIGINT y; } ecc_point;
+
+/*************************************************************
+ * @brief Converts a bytearray to a Galois Field (2^m) big integer.
+ * @param dest Pointer to a @b GF2_BIGINT type to load bytes into.
+ * @param src Pointer to a bytearray to load.
+ * @param len Length of the input bytearray.
+ * @param big_endian Determines the endianness of the GF2\_BIGINT. If @b true, then
+ * the integer will be encoded big endian. If false, it will be encoded little endian.
+ */
+bool gf2_bigint_frombytes(GF2_BIGINT dest, const void *restrict src, size_t len, bool big_endian);
+
+/*************************************************************
+ * @brief Converts a Galois Field (2^m) big integer to a bytearray.
+ * @param dest Pointer to a buffer to write bytes to.
+ * @param src Pointer to a GF2\_BIGINT to convert to bytes.
+ * @param big_endian Indicates the endianness of the BIGINT. If @b true, then
+ * this function is essentially a @b memcpy of 32 bytes from  @b src to @b dest.
+ * If @b false, then the bytes will be copied backwards.
+ */
+bool gf2_bigint_tobytes(void *dest, const GF2_BIGINT src, bool big_endian);
+
+/***********************************************************
+ * @brief Performs a Galois field addition of two big integers.
+ * @param res A big integer to write result to.
+ * @param op1 The first big integer operand.
+ * @param op2 The second big integer operand.
+ * @note @b res and @b op1 are aliasable.
+ * @note This is not a not a normal addition of two big integers. It is binary Galois
+ * field addition (addition modulo 2), or simply just XOR.
+ */
+void gf2_bigint_add(GF2_BIGINT res, GF2_BIGINT op1, GF2_BIGINT op2);
+
+/***********************************************************
+ * @brief Performs a Galois field subtraction of two big integers.
+ * @param res A big integer to write result to.
+ * @param op1 The first big integer operand.
+ * @param op2 The second big integer operand.
+ * @note @b res and @b op1 are aliasable.
+ * @note This is not a not a normal subtraction of two big integers. It is binary Galois
+ * field subtraction (subtraction modulo 2), or simply just XOR.
+ * @note If you think this seems to be interchangeable with addition, you'd be right.
+ */
+void gf2_bigint_sub(GF2_BIGINT res, GF2_BIGINT op1, GF2_BIGINT op2);
+
+/***********************************************************
+ * @brief Performs a Galois field multiplication of two big integers.
+ * @param res A big integer to write result to.
+ * @param op1 The first big integer operand.
+ * @param op2 The second big integer operand.
+ * @note @b res and @b op1 are aliasable.
+ * @note @b op1 and @b op2 are aliasable.
+ * @warning @b res and @b op2 ARE NOT ALIASABLE.
+ * @note This is not a not a normal multiplication of two big integers. It is a
+ * multiplication over the finite field defined by the polynomial: x^233 + x^74 + 1.
+ */
+void gf2_bigint_mul(GF2_BIGINT res, GF2_BIGINT op1, GF2_BIGINT op2);
+
+/***********************************************************
+ * @brief Performs a Galois field inversion of a big integer.
+ * @param res A big integer to write result to.
+ * @param op The big integer operand.
+ * @note @b res and @b op are aliasable.
+ * @note This is not a not a normal multiplicative inverse. It is an inversion
+ * over the finite field defined by the polynomial: x^233 + x^74 + 1.
+ */
+void gf2_bigint_invert(GF2_BIGINT res, GF2_BIGINT op);
+
+/**********************************************
+ * @brief Performs a point addition over the sect233k1 curve.
+ * @param p Defines the first input point.
+ * @param q Defines the second input point.
+ * @returns The resulting point in @b p.
+ */
 void ecc_point_add(ecc_point *p, ecc_point *q);
+
+/**********************************************
+ * @brief Performs a point double over the sect233k1 curve.
+ * @param p Defines the input point to double.
+ * @returns The resulting point in @b p.
+ */
 void ecc_point_double(ecc_point *p);
+
+/**********************************************************
+ * @brief Performs a scalar multiplication of a point over the sect233k1 curve.
+ * @param p Defines the input point to multiply.
+ * @param scalar Defines the scalar to multiply by.
+ * @param scalar_bit_width The length of the scalar, in bits.
+ * @returns The resulting point in @b p.
+ */
 void ecc_point_mul_scalar(ecc_point *p, const uint8_t *scalar, size_t scalar_bit_width);
-void rmemcpy(void *dest, const void *src, size_t len);
 
 #endif
 
