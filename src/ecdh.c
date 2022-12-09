@@ -211,7 +211,6 @@ void hexdump(uint8_t *addr, size_t len, uint8_t *label){
 /*
 ### Elliptic Curve Diffie-Hellman Main Functions ###
  */
-
 #define BASE_ORDER_BYTES	29
 ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, uint32_t (*randfill)(void *buffer, size_t size)){
 	if(ctx==NULL)
@@ -222,6 +221,7 @@ ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, uint32_t (*randfill)(void *buffer, size_
 	// if rand is null, assume it's already done
 	// if you use this api wrong, its your own fault
 	// it will be well documented
+	
 	if(randfill != NULL)
 		randfill(ctx->privkey, BASE_ORDER_BYTES);
 	
@@ -254,7 +254,7 @@ ecdh_error_t ecdh_secret(const ecdh_ctx *ctx, const uint8_t *rpubkey, uint8_t *s
 	struct Point *pkey = (struct Point*)secret;
 	uint8_t cofactor = sect233k1.cofactor;
 	
-	if(!point_isvalid(pkey)) return ECDH_RPUBKEY_INVALID;
+	if(point_iszero(pkey) || (!point_isvalid(pkey))) return ECDH_RPUBKEY_INVALID;
 	
 	// s = a * Q
 	// privkey is big-endian encoded
