@@ -4,7 +4,7 @@
 
 // Defines for algorithm bit/byte widths, bignum max, and key lengths
 #define CURVE_DEGREE		233
-#define ECC_PRV_KEY_SIZE	30		// largest byte-aligned length < CURVE_DEGREE
+#define ECC_PRV_KEY_SIZE	32		// largest byte-aligned length < CURVE_DEGREE
 #define ECC_BIGINT_MAX_LEN	(ECC_PRV_KEY_SIZE)
 #define ECC_PUB_KEY_SIZE	(ECC_BIGINT_MAX_LEN<<1)
 
@@ -22,10 +22,7 @@ struct Point {
 // A structure for defining curve parameters
 struct Curve {
 	BIGINT polynomial;
-	BIGINT coeff_a;
-	BIGINT coeff_b;
 	struct Point G;
-	BIGINT b_order;
 	uint8_t cofactor;
 };
 
@@ -55,6 +52,7 @@ void bigint_add(BIGINT res, BIGINT op1, BIGINT op2);
 void bigint_sub(BIGINT res, BIGINT op1, BIGINT op2);
 void bigint_mul(BIGINT res, BIGINT op1, BIGINT op2);
 void bigint_invert(BIGINT res, BIGINT op);
+uint8_t ec_poly_get_degree(void* polynomial);
 
 #endif
 

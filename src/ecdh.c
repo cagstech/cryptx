@@ -6,6 +6,7 @@
 using curve sect233k1
 define curve T = (p, a, b, G, n, h), where
 finite field Fp is defined by:
+ poly: 00000200 00000000 00000000 00000000 00000000 00000400 00000000 00000001
 	f(x) = x^233 + x^74 + 1
 curve E: y^2 = x^3 + ax + b over Fp is defined by:
  a = 0000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
@@ -47,29 +48,20 @@ output x as shared secret field
 // Defines standardized curve parameters (see http://www.secg.org/sec2-v2.pdf, sect233k1)
 // each entry is big-endian encoded
 struct Curve sect233k1 = {
-	{	0x02,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-		0x00,0x00,0x00,0x00,0x00,0x04,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01},	// poly
-	{	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,		// a
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
-	{	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,		// b
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01},
+	{	0x00,0x00,0x02,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+		0x00,0x00,0x00,0x00,0x00,0x00,0x04,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01},	// poly
+	// a = 0, b = 1
 	{		// G
-		{	0x01,0x72,0x32,0xBA,0x85,0x3A,0x7E,0x73,0x1A,0xF1,0x29,0xF2,0x2F,0xF4,0x14,		// x
-			0x95,0x63,0xA4,0x19,0xC2,0x6B,0xF5,0x0A,0x4C,0x9D,0x6E,0xEF,0xAD,0x61,0x26},
-		{	0x01,0xDB,0x53,0x7D,0xEC,0xE8,0x19,0xB7,0xF7,0x0F,0x55,0x5A,0x67,0xC4,0x27,		// y
-			0xA8,0xCD,0x9B,0xF1,0x8A,0xEB,0x9B,0x56,0xE0,0xC1,0x10,0x56,0xFA,0xE6,0xA3}
+		{	0x00,0x00,0x01,0x72,0x32,0xBA,0x85,0x3A,0x7E,0x73,0x1A,0xF1,0x29,0xF2,0x2F,0xF4,		// x
+			0x14,0x95,0x63,0xA4,0x19,0xC2,0x6B,0xF5,0x0A,0x4C,0x9D,0x6E,0xEF,0xAD,0x61,0x26},
+		{	0x00,0x00,0x01,0xDB,0x53,0x7D,0xEC,0xE8,0x19,0xB7,0xF7,0x0F,0x55,0x5A,0x67,0xC4,		// y
+			0x27,0xA8,0xCD,0x9B,0xF1,0x8A,0xEB,0x9B,0x56,0xE0,0xC1,0x10,0x56,0xFA,0xE6,0xA3}
 	},
-	{	0x00,0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,			// n
-		0x06,0x9D,0x5B,0xB9,0x15,0xBC,0xD4,0x6E,0xFB,0x1A,0xD5,0xF1,0x73,0xAB,0xDF},
 	4		// h
 };
 
 // defines a null Point to be used for timing resistance
 struct Point ta_resist = {0};
-
-// sets a point to 0
-#define point_setzero(pt)	\
-		memset((pt), 0, sizeof(struct Point))
 
 /*
  Point Arithmetic Functions
@@ -86,29 +78,20 @@ void point_double(struct Point *p){
 	
 	if(bigint_iszero(p->y)) memset(p, 0, sizeof(struct Point));
 	else{
-		struct Point r;
-		BIGINT slope, a={0}, b={0}, c={0};
-		b[(sizeof b)-1] = 3;
-		c[(sizeof c)-1] = 2;
+		BIGINT l;
 		
-		// (3x^2 + a)/(2y)
-		bigint_mul(a, p->x, p->x);		// a = px^2
-		bigint_mul(slope, a, b);		// slope = a * 3
-		// we can skip the a step because a is 0
-		// we can now also nuke b, constant is used
-		bigint_mul(a, p->y, c);			// a = 2(py)
-		bigint_invert(b, a);			// b = a^-1
-		bigint_mul(slope, slope, b);	// slope = slope * b
-		
-		// x = slope * slope - 2px
-		bigint_mul(r.x, slope, slope);		// rx = slope * slope
-		bigint_mul(a, p->x, c);				// a = 2px
-		bigint_add(r.x, r.x, a);			// rx = rx - a
-		
-		// y = (px - rx) * slope - py
-		bigint_add(r.y, p->x, r.x);		// y = px - rx
-		bigint_mul(r.y, r.y, slope);		// y = y * slope
-		bigint_add(r.y, r.y, p->y);		// y = y - py
+		bigint_invert(l, p->x);
+		bigint_mul(l, l, p->y);
+		bigint_add(l, l, p->x);
+		bigint_mul(p->y, p->x, p->x);
+		bigint_mul(p->x, l, l);
+
+		//bigint_inc(l);	if coeff_a != 0
+
+		bigint_add(p->x, p->x, l);
+		bigint_mul(l, l, p->x);
+		bigint_add(p->y, p->y, l);
+		bigint_add(p->y, p->y, p->x);
 	}
 }
 
@@ -118,7 +101,7 @@ void point_add(struct Point *p, struct Point *q){
 	// P + Q = R
 	// (xp, yp) + (xq, yq) = (xr, yr)
 	// Y = (yq - yp)/(xq - xp)		(isn't that some kind of distance)?
-	// xr = Y^2 - xp - xq
+	// xr = Y^2 + Y - xp - xq
 	// yr = Y(xp - xr) - yp
 	// assert: neither P or Q are point at infinity, and Px != Qx
 	// if P or Q is point at infinity, R = other point
@@ -131,26 +114,36 @@ void point_add(struct Point *p, struct Point *q){
 			if(point_isequal(p, q)) point_double(p);
 			else if(bigint_isequal(p->x, q->x)) memset(p, 0, sizeof(struct Point));
 			else {
-				struct Point r;
-				BIGINT slope,a,b,c;
 				
-				// slope = (py - qy)/(px - qx)
-				bigint_add(a, p->x, q->x);		// a = px - qx
-				bigint_invert(c, a);			// c = a^1
-				bigint_add(b, p->y, q->y);		// b = py - qy
-				bigint_mul(slope, b, c);		// slope = b * c
+				BIGINT t1,t2,t3,t4;
 				
-				// x = slope * slope - px - qx
-				bigint_mul(r.x, slope, slope);		// x = slope * slope
-				bigint_add(r.x, r.x, p->x);		// x = x - px
-				bigint_add(r.x, r.x, q->x);		// x = x - qx
+				// Yp + Yq
+				bigint_add(t1, p->y, q->y);
+				// Xp + Xq
+				bigint_add(t2, p->x, q->x);
+				// inv(t2)
+				bigint_invert(t3, t2);
+				// (Py + Yq) / (Xp + Xq)
+				bigint_mul(t1, t1, t3);		// t1 = slope
 				
-				// y = (px - rx) * slope - py
-				bigint_add(r.y, p->x, r.x);		// y = px - rx
-				bigint_mul(r.y, r.y, slope);		// y = y * slope
-				bigint_add(r.y, r.y, p->y);		// y = y - py
+				// slope^2
+				bigint_mul(t4, t1, t1);
+				// + slope
+				bigint_add(t4, t4, t1);
+				// + Xp + Xq
+				bigint_add(t4, t4, t2);	// we have Xres
 				
-				memcpy(p, &r, sizeof(struct Point));
+				// Xp - Xres
+				bigint_add(t3, p->x, t4);
+				// * slope
+				bigint_mul(t3, t3, t1);
+				// + Yq
+				bigint_add(t3, t3, p->y);
+				
+				// copy Xres and Y res to P
+				memcpy(p->x, t4, sizeof t4);
+				bigint_add(p->y, t3, p->x);
+				
 			}
 		}
 	}
@@ -158,44 +151,46 @@ void point_add(struct Point *p, struct Point *q){
 
 // multiplies pt by scalar exp
 #define GET_BIT(byte, bitnum) ((byte) & (1<<(bitnum)))
-void point_mul_scalar(struct Point *pt, uint8_t *exp, uint8_t explen){
+void point_mul_scalar(struct Point *p, uint8_t *exp, int explen){
 	// multiplies pt by exp, result in pt
 	struct Point tmp;
-	memcpy(&tmp, pt, sizeof tmp);
-	memset(pt, 0, sizeof(struct Point));
+	memcpy(&tmp, p, sizeof tmp);
+	memset(p, 0, sizeof(struct Point));
 	
 	
-	for(int i = 0; i < explen; i++){
+	for(int i = (explen-1); i >= 0; i--){
 		
+		point_double(p);
 		if (GET_BIT(exp[i>>3], i&0x7))
-			point_add(pt, &tmp);
+			point_add(p, &tmp);
 		else
-			point_add(pt, &ta_resist);	// add 0; timing resistance
-		
-		point_double(&tmp);
-		
+			point_add(p, &ta_resist);	// add 0; timing resistance
 	}
 }
 
-bool point_isvalid(struct Point *pt)
+bool point_isvalid(struct Point *p)
 {
 	BIGINT a, b;
 	
-	if (point_iszero(pt))
+	if (point_iszero(p))
 	{
 		return true;
 	}
 	else
 	{
+		// check if y^2 + x*y = x^3 + 1 holds
 		// coeff stuff
-		bigint_mul(a, pt->x, pt->x);
-		bigint_mul(a, a, pt->x);
-
-		//gf2field_add(a, a, coeff_b);
-		a[29] ^= 1;		// coeff_b = 1
-		bigint_mul(b, pt->y, pt->y);
+		bigint_mul(a, p->x, p->x);
+		bigint_mul(a, a, p->x);
+		a[0] ^= 1;		// coeff_b = 1, so just xor LSB with 1
+		
+		// y^2
+		bigint_mul(b, p->y, p->y);
+		
+		// sub y^2 from both sides
 		bigint_add(a, a, b);
-		bigint_mul(b, pt->x, pt->y);
+		// x * y
+		bigint_mul(b, p->x, p->y);
 		
 		return bigint_isequal(a, b);
 	}
@@ -217,6 +212,7 @@ void hexdump(uint8_t *addr, size_t len, uint8_t *label){
 ### Elliptic Curve Diffie-Hellman Main Functions ###
  */
 
+#define BASE_ORDER_BYTES	29
 ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, uint32_t (*randfill)(void *buffer, size_t size)){
 	if(ctx==NULL)
 		return ECDH_INVALID_ARG;
@@ -227,8 +223,11 @@ ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, uint32_t (*randfill)(void *buffer, size_
 	// if you use this api wrong, its your own fault
 	// it will be well documented
 	if(randfill != NULL)
-		randfill(ctx->privkey, sizeof ctx->privkey - 1);
-	ctx->privkey[(sizeof ctx->privkey)-1] = 0;
+		randfill(ctx->privkey, BASE_ORDER_BYTES);
+	
+	// zero all bits > base order
+	for(int i = BASE_ORDER_BYTES; i < (sizeof ctx->privkey); i++)
+		ctx->privkey[i] = 0;
 	
 	// copy G from curve parameters to pkey
 	// convert to a Point
@@ -239,7 +238,7 @@ ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, uint32_t (*randfill)(void *buffer, size_
 	
 	// Q = a * G
 	// privkey is big-endian encoded
-	point_mul_scalar(pkey, (uint8_t*)ctx->privkey, sizeof ctx->privkey);
+	point_mul_scalar(pkey, (uint8_t*)ctx->privkey, (sizeof ctx->privkey)<<3);
 	
 	return ECDH_OK;
 }
@@ -253,19 +252,16 @@ ecdh_error_t ecdh_secret(const ecdh_ctx *ctx, const uint8_t *rpubkey, uint8_t *s
 	// reverse endianness for computational efficiency
 	memcpy(secret, rpubkey, sizeof(struct Point));
 	struct Point *pkey = (struct Point*)secret;
-	uint8_t cofac = sect233k1.cofactor;
+	uint8_t cofactor = sect233k1.cofactor;
 	
-	//if(!point_isvalid(pkey)) return ECDH_RPUBKEY_INVALID;
+	if(!point_isvalid(pkey)) return ECDH_RPUBKEY_INVALID;
 	
 	// s = a * Q
 	// privkey is big-endian encoded
-	point_mul_scalar(pkey, (uint8_t*)ctx->privkey, sizeof ctx->privkey);
+	point_mul_scalar(pkey, (uint8_t*)ctx->privkey, (sizeof ctx->privkey)<<3);
 	
 	// apply cofactor
-	while(cofac > 1){
-		point_double(pkey);
-		cofac>>=1;
-	}
+	for(; cofactor > 1; cofactor>>=1) point_double(pkey);
 	
 	return ECDH_OK;
 }

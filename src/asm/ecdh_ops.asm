@@ -404,7 +404,48 @@ _copy_w_swap:
 	djnz .loop
 	ret
 	
-	
+; uint8_t ec_poly_get_degree(void* polynomial);
+ec_poly_get_degree:
+	pop bc,hl
+	push hl,bc
+_get_degree:
+; input: hl = ptr to binary polynomial (little endian-encoded)
+; func:
+;		jump to end of polynomial
+;		seek backwards to first set bit
+;		return its 1-indexed degree
+; output: a = degree of highest set bit + 1
+; destroys: bc, flags
+	ld bc, 31		; input is 30 bytes, jump to MSB (hl + 29)
+	add hl, bc
+	ld c, 32		; check 32 bytes
+	xor a
+.byte_loop:
+	or (hl)		; if byte is 0
+	jr nz, .found_byte
+	dec hl
+	dec c
+	jr nz, .byte_loop
+; exit
+	ld a, 0
+	ret
+.found_byte:
+; process bits
+	ld b, 8
+	ld a, (hl)
+.bit_loop:
+	rla
+	jr c, .found_bit
+	djnz .bit_loop
+.found_bit:
+	ld a, c
+	dec a
+	add a, a
+	add a, a
+	add a, a
+	add a, b
+	ret
+
 
 section	.data,"aw",@progbits
 	public	polynomial
