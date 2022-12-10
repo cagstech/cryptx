@@ -49,6 +49,7 @@ bool point_iszero(struct Point *pt);
 bool bigint_isequal(uint8_t *op1, uint8_t *op2);
 bool point_isequal(struct Point *pt1, struct Point *pt2);
 void bigint_add(BIGINT res, BIGINT op1, BIGINT op2);
+void bigint_add_internal(BIGINT op1, BIGINT op2);
 void bigint_sub(BIGINT res, BIGINT op1, BIGINT op2);
 void bigint_mul(BIGINT res, BIGINT op1, BIGINT op2);
 void bigint_invert(BIGINT res, BIGINT op);

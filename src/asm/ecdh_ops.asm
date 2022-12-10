@@ -1,5 +1,6 @@
 public _rmemcpy
 public _bigint_add
+public _bigint_add_internal
 public _bigint_sub
 public _bigint_mul
 public _bigint_invert
@@ -83,6 +84,7 @@ _bigint_add:
 	call ti._frameset0
 	ld hl, (ix + 3)		; op2
 	ld de, (ix + 6)		; op1
+_bigint_add_internal:
 	ld b, 32
 .loop:
 	ld a,(de)

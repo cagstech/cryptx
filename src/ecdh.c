@@ -115,7 +115,7 @@ void point_add(struct Point *p, struct Point *q){
 			else if(bigint_isequal(p->x, q->x)) memset(p, 0, sizeof(struct Point));
 			else {
 				
-				BIGINT t1,t2,t3,t4;
+				BIGINT t1,t2,t3;
 				
 				// Yp + Yq
 				bigint_add(t1, p->y, q->y);
@@ -127,22 +127,22 @@ void point_add(struct Point *p, struct Point *q){
 				bigint_mul(t1, t1, t3);		// t1 = slope
 				
 				// slope^2
-				bigint_mul(t4, t1, t1);
-				// + slope
-				bigint_add(t4, t4, t1);
+				bigint_mul(t3, t1, t1);
 				// + Xp + Xq
-				bigint_add(t4, t4, t2);	// we have Xres
+				bigint_add(t3, t3, t2);	// free up t2
+				// + slope
+				bigint_add(t3, t3, t1);	// xres in t3
 				
 				// Xp - Xres
-				bigint_add(t3, p->x, t4);
+				bigint_add(t2, p->x, t3);	// free up t3
+				memcpy(p->x, t3, sizeof t3);	// output resx
 				// * slope
-				bigint_mul(t3, t3, t1);
+				bigint_mul(t2, t2, t1);
 				// + Yq
-				bigint_add(t3, t3, p->y);
+				bigint_add(t2, t2, p->y);
 				
-				// copy Xres and Y res to P
-				memcpy(p->x, t4, sizeof t4);
-				bigint_add(p->y, t3, p->x);
+				// computed y + computed x = y, output y
+				bigint_add(p->y, t2, p->x);
 				
 			}
 		}
