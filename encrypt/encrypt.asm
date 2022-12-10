@@ -6283,6 +6283,13 @@ _bigint_mul:
 	ret
 	
 
+_bigint_square:
+;[#] [Zeroko] So something like a loop of RLA \ ADC HL,HL \ ADD HL,HL to convert one input byte into two output bytes, plus reductions to get back to the right total number of bits.
+; Erm, ADD HL,HL \ RLA \ ADC HL,HL, rather.
+	ti._frameset0
+	ret
+
+
 ; gf2_bigint_invert(BIGINT out, BIGINT op);
 _bigint_invert:
 
@@ -6433,7 +6440,7 @@ _lshift_add:
 ; outputs: (de) += (iy) << a
 ; destroys: af, bc, de, hl, iy
     ; divide a by 8 and put bits multiplier in c
-   or a, a
+ `  or a, a
     sbc hl, hl
     ex de, hl
     rra
