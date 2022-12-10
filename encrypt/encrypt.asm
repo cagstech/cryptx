@@ -6163,6 +6163,8 @@ _bigint_add:
 	ldir
 	ld hl, (ix + 12)
 	ld de, (ix + 6)
+	pop ix
+_ibigint_add:
 	ld b, 15
 .loop:
 	ld a, (de)
@@ -6176,29 +6178,8 @@ _bigint_add:
 	inc hl
 	inc de
 	djnz .loop
-	pop ix
 	ret
 	
-_bigint_add_internal:
-	call ti._frameset0
-	ld hl, (ix + 9)
-	ld de, (ix + 6)
-	ld b, 15
-.loop:
-	ld a, (de)
-	xor a, (hl)
-	ld (de), a
-	inc hl
-	inc de
-	ld a, (de)
-	xor a, (hl)
-	ld (de), a
-	inc hl
-	inc de
-	djnz .loop
-	pop ix
-	ret
-
 
 ; gf2_bigint_sub(uint8_t *op1, uint8_t *op2);
 ; on a binary field addition and subtraction are the same
@@ -6566,14 +6547,8 @@ _get_degree:
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 6)
-	push	hl
-	ld	hl, (ix - 33)
-	push	hl
-	push	hl
-	call	_bigint_add
-	pop	hl
-	pop	hl
-	pop	hl
+	ld	de, (ix - 33)
+	call	_ibigint_add
 	ld	hl, (ix + 6)
 	push	hl
 	push	hl
@@ -6593,14 +6568,8 @@ _get_degree:
 	pop	hl
 	pop	hl
 	ld	hl, (ix - 33)
-	push	hl
-	ld	hl, (ix + 6)
-	push	hl
-	push	hl
-	call	_bigint_add
-	pop	hl
-	pop	hl
-	pop	hl
+	ld	de, (ix + 6)
+	call	_ibigint_add
 	ld	hl, (ix + 6)
 	push	hl
 	ld	hl, (ix - 33)
@@ -6611,23 +6580,11 @@ _get_degree:
 	pop	hl
 	pop	hl
 	ld	hl, (ix - 33)
-	push	hl
-	ld	hl, (ix - 36)
-	push	hl
-	push	hl
-	call	_bigint_add
-	pop	hl
-	pop	hl
-	pop	hl
+	ld	de, (ix - 36)
+	call	_ibigint_add
 	ld	hl, (ix + 6)
-	push	hl
-	ld	hl, (ix - 36)
-	push	hl
-	push	hl
-	call	_bigint_add
-	pop	hl
-	pop	hl
-	pop	hl
+	ld	de, (ix - 36)
+	call	_ibigint_add
 .lbl_3:
 	ld	sp, ix
 	pop	ix
@@ -6694,9 +6651,7 @@ _point_add:
 	ld	(ix - 93), hl
 	lea	hl, ix - 90
 	ld	(ix - 96), hl
-	ld	hl, (ix + 6)
-	push	hl
-	pop	iy
+	ld	iy, (ix + 6)
 	lea	hl, iy + 30
 	ld	(ix - 102), hl
 	ld	de, (ix + 9)
@@ -6713,61 +6668,37 @@ _point_add:
 	push	hl
 	ld	hl, (ix + 6)
 	push	hl
-	ld	hl, (ix - 93)
-	push	hl
+	pea ix - 60
 	call	_bigint_add
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 93)
-	push	hl
-	ld	hl, (ix - 96)
-	push	hl
+	pea ix - 60
+	pea ix - 90
 	call	_bigint_invert
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 96)
-	push	hl
-	ld	hl, (ix - 99)
-	push	hl
-	push	hl
+	pea ix - 90
+	pea ix - 30
+	pea ix - 30
 	call	_bigint_mul
 	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 99)
-	push	hl
-	push	hl
-	ld	hl, (ix - 96)
-	push	hl
+	pea ix - 90
 	call	_bigint_mul
 	pop	hl
 	pop	hl
 	pop	hl
 	ld	hl, (ix - 93)
-	push	hl
-	ld	hl, (ix - 96)
-	push	hl
-	push	hl
-	call	_bigint_add
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 99)
-	push	hl
-	ld	hl, (ix - 96)
-	push	hl
-	push	hl
-	call	_bigint_add
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 96)
-	push	hl
+	ld	de, (ix - 96)
+	push de
+		call	_ibigint_add
+		ld	hl, (ix - 99)
+	pop de
+	call	_ibigint_add
+	pea ix - 90
 	ld	hl, (ix + 6)
 	push	hl
-	ld	hl, (ix - 93)
-	push	hl
+	pea ix - 60
 	call	_bigint_add
 	pop	hl
 	pop	hl
@@ -6776,28 +6707,19 @@ _point_add:
 	ld	hl, (ix - 96)
 	ld	bc, 30
 	ldir
-	ld	hl, (ix - 99)
-	push	hl
-	ld	hl, (ix - 93)
-	push	hl
-	push	hl
+	pea ix - 30
+	pea ix - 60
+	pea ix - 60
 	call	_bigint_mul
 	pop	hl
 	pop	hl
 	pop	hl
 	ld	hl, (ix - 102)
-	push	hl
-	ld	hl, (ix - 93)
-	push	hl
-	push	hl
-	call	_bigint_add
-	pop	hl
-	pop	hl
-	pop	hl
+	ld	de, (ix - 93)
+	call	_ibigint_add
 	ld	hl, (ix + 6)
 	push	hl
-	ld	hl, (ix - 93)
-	push	hl
+	pea ix - 60
 	ld	hl, (ix - 102)
 	push	hl
 	call	_bigint_add
