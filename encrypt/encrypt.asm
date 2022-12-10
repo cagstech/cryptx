@@ -6433,45 +6433,56 @@ _lshift_add:
 ; outputs: (de) += (iy) << a
 ; destroys: af, bc, de, hl, iy
     ; divide a by 8 and put bits multiplier in c
-    or a, a
+   or a, a
     sbc hl, hl
+    ex de, hl
     rra
-    ld l, a
+    ld e, a
     sbc a, a
     xor a, $55
     ld c, a
-    srl l
+    srl e
     sbc a, a
     xor a, $33
     and a, c
     ld c, a
-    srl l
+    srl e
     sbc a, a
     xor a, $0F
     and a, c
     ld c, a
-    ; put byte loop counter in b
-    ld a, 30
-    sub a, l
-    ld b, a
-    ; adjust dest pointer into hl
+    ; adjust dest pointer in hl
     add hl, de
-    ; initial shift-in is 0
-    xor a, a
+    ; put loop counter in b
+    ld a, 30+1
+    sub a, e
+    rra
+    ld b, a
+    jr nc, .loop_lshift_add_entry
+    inc iy
 .loop_lshift_add:
+    ld a, d
+    ld e, (iy - 1)
+    ld d, c
+    mlt de
+    or a, e
+    xor a, (hl)
+    ld (hl), a
+    inc hl
+.loop_lshift_add_entry:
+    ld a, d
     ld e, (iy)
     ld d, c
     mlt de
     or a, e
     xor a, (hl)
     ld (hl), a
-    ; set shift-in of next iteration to shift-out of this one
-    ld a, d
-    inc iy
     inc hl
+    lea iy, iy + 2
     djnz .loop_lshift_add
     ret
-
+    
+    
 _get_degree:
 ; input: hl = ptr to binary polynomial (little endian-encoded)
 ; func:
@@ -6482,18 +6493,29 @@ _get_degree:
 ; destroys: bc, flags
 	ld bc, 29       ; input is 32 bytes, jump to MSB (hl + 31)
     add hl, bc
-    ld b, 30        ; check 32 bytes
+    inc bc        ; check 30 bytes
     xor a
 .byte_loop:
-    or (hl)     ; if byte is 0
+    cpd     		; cp hl with a, dec hl, bc
     jr nz, .found_byte
-    dec hl
-    djnz .byte_loop
+    cpd
+    jr nz, .found_byte
+    cpd
+    jr nz, .found_byte
+    cpd
+    jr nz, .found_byte
+    cpd
+    jr nz, .found_byte
+    jp pe, .byte_loop
 ; exit
-    ; a is already 0
+	xor a
     ret
 .found_byte:
 ; process bits
+	ld b, c
+	inc b
+	inc hl
+	ld a, (hl)
     ld c, 1
 .bit_loop:
     dec c
