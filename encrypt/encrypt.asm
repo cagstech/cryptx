@@ -6126,7 +6126,6 @@ _point_isequal:
 	add a, -1
 	sbc a, a
 	inc a
-	ld sp, ix
 	pop ix
 	ret
 	
@@ -6148,7 +6147,6 @@ _bigint_isequal:
 	add a, -1
 	sbc a, a
 	inc a
-	ld sp, ix
 	pop ix
 	ret
 
@@ -6178,7 +6176,26 @@ _bigint_add:
 	inc hl
 	inc de
 	djnz .loop
-	ld sp, ix
+	pop ix
+	ret
+	
+_bigint_add_internal:
+	call ti._frameset0
+	ld hl, (ix + 9)
+	ld de, (ix + 6)
+	ld b, 15
+.loop:
+	ld a, (de)
+	xor a, (hl)
+	ld (de), a
+	inc hl
+	inc de
+	ld a, (de)
+	xor a, (hl)
+	ld (de), a
+	inc hl
+	inc de
+	djnz .loop
 	pop ix
 	ret
 
@@ -6618,7 +6635,7 @@ _get_degree:
 	
 
 _point_add:
-	ld	hl, -141
+	ld	hl, -102
 	call	ti._frameset
 	ld	hl, (ix + 9)
 	push	hl
@@ -6671,36 +6688,17 @@ _point_add:
 	ldir
 	jp	.lbl_10
 .lbl_8:
-	lea	bc, ix - 36
-	ld	de, -135
-	lea	hl, ix
-	add	hl, de
-	ld	(hl), bc
-	lea	hl, ix - 66
-	ld	de, -138
-	lea	iy, ix
-	add	iy, de
-	ld	(iy), hl
-	lea	hl, ix - 96
-	push	ix
-	ld	de, -129
-	add	ix, de
-	ld	(ix), hl
-	pop	ix
-	lea	hl, ix - 126
-	push	ix
-	ld	de, -132
-	add	ix, de
-	ld	(ix), hl
-	pop	ix
+	lea	bc, ix - 30
+	ld	(ix - 99), bc
+	lea	hl, ix - 60
+	ld	(ix - 93), hl
+	lea	hl, ix - 90
+	ld	(ix - 96), hl
 	ld	hl, (ix + 6)
 	push	hl
 	pop	iy
 	lea	hl, iy + 30
-	ld	de, -141
-	lea	iy, ix
-	add	iy, de
-	ld	(iy), hl
+	ld	(ix - 102), hl
 	ld	de, (ix + 9)
 	push	de
 	pop	iy
@@ -6715,152 +6713,92 @@ _point_add:
 	push	hl
 	ld	hl, (ix + 6)
 	push	hl
-	ld	bc, -138
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 93)
 	push	hl
 	call	_bigint_add
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -138
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 93)
 	push	hl
-	ld	bc, -129
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 96)
 	push	hl
 	call	_bigint_invert
 	pop	hl
 	pop	hl
-	ld	bc, -129
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 96)
 	push	hl
-	ld	bc, -135
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 99)
 	push	hl
 	push	hl
 	call	_bigint_mul
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -135
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 99)
 	push	hl
 	push	hl
-	ld	bc, -132
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 96)
 	push	hl
 	call	_bigint_mul
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -135
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 93)
 	push	hl
-	ld	bc, -132
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 96)
 	push	hl
 	push	hl
 	call	_bigint_add
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -138
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 99)
 	push	hl
-	ld	bc, -132
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 96)
 	push	hl
 	push	hl
 	call	_bigint_add
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -132
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 96)
 	push	hl
 	ld	hl, (ix + 6)
 	push	hl
-	ld	bc, -129
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 93)
 	push	hl
 	call	_bigint_add
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -135
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	de, (ix + 6)
+	ld	hl, (ix - 96)
+	ld	bc, 30
+	ldir
+	ld	hl, (ix - 99)
 	push	hl
-	ld	bc, -129
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 93)
 	push	hl
 	push	hl
 	call	_bigint_mul
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -141
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 102)
 	push	hl
-	ld	bc, -129
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 93)
 	push	hl
 	push	hl
 	call	_bigint_add
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	iy, (ix + 6)
-	lea	de, iy
-	ld	bc, -132
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	ld	bc, 30
-	ldir
-	push	iy
-	ld	bc, -129
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix + 6)
 	push	hl
-	ld	bc, -141
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 93)
+	push	hl
+	ld	hl, (ix - 102)
 	push	hl
 	call	_bigint_add
 	pop	hl
