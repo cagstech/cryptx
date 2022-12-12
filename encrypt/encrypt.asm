@@ -6172,27 +6172,20 @@ _bigint_isequal:
 ; addition over a galois field of form GF(2^m) is mod 2 or just xor
 _bigint_add:
 	call ti._frameset0
-	ld hl, (ix + 9)		; op2
-	ld de, (ix + 6)		; op1
-	ld bc, 30
-	ldir
-	ld hl, (ix + 12)
-	ld de, (ix + 6)
-	pop ix
+	ld hl, (ix + 9)		; op1
+	ld de, (ix + 12)		; op2
+	ld ix, (ix + 6)		; out
 _ibigint_add:
-	ld b, 15
+	ld b, 30
 .loop:
 	ld a, (de)
 	xor a, (hl)
-	ld (de), a
+	ld (ix), a
 	inc hl
 	inc de
-	ld a, (de)
-	xor a, (hl)
-	ld (de), a
-	inc hl
-	inc de
+	inc ix
 	djnz .loop
+	pop ix
 	ret
 	
 
@@ -6236,14 +6229,8 @@ _bigint_mul:
 				; add op1 (res) + tmp
 				ld hl, (ix + 6)		; hl = (dest)
 				lea de, ix - 30		; de = tmp (src)
-				ld b, 15
+				ld b, 30
 .loop_add:
-				ld a, (de)
-				and a, c
-				xor a, (hl)
-				ld (hl), a
-				inc hl
-				inc de
 				ld a, (de)
 				and a, c
 				xor a, (hl)
@@ -6254,13 +6241,9 @@ _bigint_mul:
 		
 				; now double tmp
 				lea hl, ix - 30		; tmp in hl
-				ld b, 10
+				ld b, 30
 				or a				; reset carry
 .loop_mul2:
-				rl (hl)
-				inc hl
-				rl (hl)
-				inc hl
 				rl (hl)
 				inc hl
 				djnz .loop_mul2
