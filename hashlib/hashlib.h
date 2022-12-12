@@ -74,7 +74,6 @@ struct cryptx_hash_ctx {
 	void (*update)(void* ctx, const void* data, size_t len);
 	void (*final)(void* ctx, void* output);
 	cryptx_hash_internal_h meta;
-	uint8_t digest_len;
 };
  
  /*******************************
