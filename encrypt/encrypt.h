@@ -19,28 +19,27 @@
 #define encrypt_h
 #include <hashlib.h>
 
-/*
- Cryptographically-Secure Random Number Generator (CSRNG)
+//***********************************************************************************************
+/*	Cryptographically-Secure Random Number Generator (CSRNG)
  
- This library provides an entropy-based hardware (HW)RNG. The entropy is sourced
- from bus noise derived from the behavior of bit lines in floating memory.
- For further details, see the documentation.
+	This library provides an entropy-based hardware (HW)RNG. The entropy is sourced
+	from bus noise derived from the behavior of bit lines in floating memory.
+	For further details, see the documentation.
  
- Many random number generators, including the rand() implementation provided by
- the toolchain are only statistically random, but not unpredictable. That suffices
- for many applications but not for cryptography. Otherwise secure cryptography can be defeated
- if the primative that generates keys and salts is predictable. To that end, the developers
- of this library put significant effort into constructing a generator that satifies the
- constraints for cryptographic security to the best level possible on the hardware.
- */
+	Many random number generators, including the rand() implementation provided by
+	the toolchain are only statistically random, but not unpredictable. That suffices
+	for many applications but not for cryptography. Otherwise-secure cryptography can be defeated
+	if the primative that generates keys and salts is predictable. To that end, the developers
+	of this library put significant effort into constructing a generator that satifies the
+	constraints for cryptographic security to the best extent possible on the hardware. */
 
-/************************************
- * @enum sampling\_mode
- * Defines sampling modes for @b csrand\_init
+/*******************************************
+ * @enum cryptx\_srng\_sampling\_mode
+ * Defines sampling modes for @b cryptx\_csrand\_init
  */
-enum cryptx_srng_sampling_mode {
-	SAMPLING_THOROUGH,
-	SAMPLING_FAST
+enum cryptx_csrng_sampling_mode {
+	SAMPLING_THOROUGH	= 0,
+	SAMPLING_FAST		= 1
 };
 
 /*******************************************************************************
@@ -68,30 +67,30 @@ uint32_t cryptx_csrand_get(void);
  */
 bool cryptx_csrand_fill(void* buffer, size_t size);
 
-/*
- Advanced Encryption Standard (AES)
+//***********************************************************************************************
+/*	Advanced Encryption Standard (AES)
  
- AES is a form of symmetric encryption, and also is a form of block cipher.
- Symmetric encryption means that the same key works in both directions.
- A block cipher is an encryption algorithm that operates on data in segments (for AES, 16 bytes),
- moving through it one segment at a time.
- 
- Symmetric encryption is usually fast, and is generally more secure for smaller key sizes.
- AES is one of the most secure encryption systems in use today.
- The most secure version of the algorithm is AES-256 (uses a 256-bit key).
- AES is one of the open-source encryption schemes believed secure enough to withstand even
- the advent of quantum computing.
- */
+	AES is form of symmetric encryption. It is a fast algorithm that can encrypt
+	arbitrary lengths of data in blocks of 128 bits (16 bytes).
 
-/*******************************
- * @struct aes_ctx
- * Stores AES cipher configuration data.
- */
+	The AES algorithm has 3 variants, each of which takes a key of different length.
+	AES-128 takes a 128 bit (16 byte) key and performs 10 rounds of encryption.
+	AES-192 takes a 192 bit (24 byte) key and performs 12 rounds of encryption.
+	AES-256 takes a 256 bit (32 byte) key and performs 14 rounds of encryption.
+ 
+	AES is one of the most secure encryption systems in use today.
+	AES-256 is the most secure variant of the algorithm. */
+
+// Internal Structures. End users do not need these.
 struct _cryptx_aes_cbc { uint8_t padding_mode; };
-struct _cryptxaes_ctr {
+struct _cryptx_aes_ctr {
 	uint8_t counter_pos_start; uint8_t counter_len;
 	uint8_t last_block_stop; uint8_t last_block[16]; };
 
+/*******************************
+ * @struct cryptx\_aes\_ctx
+ * Stores AES cipher configuration data.
+ */
 struct cryptx_aes_ctx {
 	uint24_t keysize;                       /**< the size of the key, in bits */
 	uint32_t round_keys[60];                /**< round keys */
@@ -123,40 +122,45 @@ enum cryptx_aes_padding_schemes {
 	PAD_DEFAULT = PAD_PKCS7,	/**< selects the scheme marked DEFAULT.
 								 Using this is recommended in case a change to the standards
 								 would set a stronger padding scheme as default */
-	PAD_ISO2 = 4,               /**< ISO-9797 M2 padding */
+	PAD_ISO2					/**< ISO-9797 M2 padding */
 };
 
+
+#define CRYPTX_AES128_KEYLEN	16
+#define CRYPTX_AES192_KEYLEN	24
+#define CRYPTX_AES256_KEYLEN	32
+
 /**********************************
- * @def AES_BLOCKSIZE
+ * @def AES\_BLOCKSIZE
  * Defines the block size of the AES cipher.
  */
-#define AES_BLOCKSIZE	16
+#define CRYPTX_AES_BLOCK_SIZE		16
 
 /*****************************************
  * @def AES_IVSIZE
  * Defines the length of the AES initialization vector (IV)
  */
-#define AES_IVSIZE		AES_BLOCKSIZE
+#define CRYPTX_AES_IV_SIZE		CRYPTX_AES_BLOCK_SIZE
 
 /**********************************************************
  * @define AES\_CIPHERTEXT\_LEN(plaintext\_len)
  * Defines a macro to return the size of an AES ciphertext given a plaintext length..
  */
-#define AES_CIPHERTEXT_LEN(plaintext_len) \
-((((plaintext_len)%AES_BLOCKSIZE)==0) ? (len) + AES_BLOCKSIZE : (((len)>>4) + 1)<<4)
+#define CRYPTX_AES_CIPHERTEXT_LEN(plaintext_len) \
+	((((plaintext_len)%AES_BLOCKSIZE)==0) ? (len) + AES_BLOCKSIZE : (((len)>>4) + 1)<<4)
 
 /*************************************************************
  * @define AES\_CBC\_FLAGS
  * Defines a macro for enabling CBC cipher mode and setting relevant configuration.
  */
-#define AES_CBC_FLAGS(padding_mode) \
-	(padding_mode) | AES_MODE_CBC
+#define CRYTPX_AES_CBC_FLAGS(padding_mode) \
+	((padding_mode)<<2) | AES_MODE_CBC
 
 /*************************************************************
  * @define AES\_CTR\_FLAGS
  * Defines a macro for enabling CTR cipher mode and setting relevant configuration.
  */
-#define AES_CTR_FLAGS(nonce_len, counter_len)	\
+#define CRYPTX_AES_CTR_FLAGS(nonce_len, counter_len)	\
 	((0x0f & (counter_len))<<8) | ((0x0f & (nonce_len))<<4) | AES_MODE_CTR
 
 /*******************
@@ -171,7 +175,7 @@ typedef enum {
 	AES_INVALID_PADDINGMODE,            /**< AES operation failed, padding mode undefined */
 	AES_INVALID_CIPHERTEXT,             /**< AES operation failed, ciphertext error */
 	AES_INVALID_OPERATION               /**< AES operation failed, used encrypt context for decrypt or vice versa */
-} aes_error;
+} aes_error_t;
 
 /********************************************************************
  * @brief Initializes a stateful AES cipher context to be used for encryption or decryption.
@@ -188,7 +192,7 @@ typedef enum {
  * If you want a truly secure scheme, always append an HMAC to your message and use an application secret or unique key generated using a CSRNG to key the HMAC at both endpoints.
  * @return AES_OK if success, non-zero if failed. See aes_error_t.
  */
-aes_error cryptx_aes_init(
+aes_error_t cryptx_aes_init(
 				struct cryptx_aes_ctx* context,
 				const void* key,
 				size_t keylen,
@@ -211,7 +215,7 @@ aes_error cryptx_aes_init(
  * @note Once a  context is used for encryption, a stateful flag is set preventing the same context from being used for decryption.
  * @returns AES_OK if success, non-zero if failed. See aes_error_t.
  */
-aes_error cryptx_aes_encrypt(
+aes_error_t cryptx_aes_encrypt(
 					const struct cryptx_aes_ctx* context,
 					const void* plaintext,
 					size_t len,
@@ -229,7 +233,7 @@ aes_error cryptx_aes_encrypt(
  * @note Once a context is used for decryption, a stateful flag is set preventing the same context from being used for encryption.
  * @returns AES_OK if success, non-zero if failed. See aes_error_t.
  */
-aes_error cryptx_aes_decrypt(
+aes_error_t cryptx_aes_decrypt(
 					const struct cryptx_aes_ctx* context,
 					const void* ciphertext,
 					size_t len,
@@ -267,7 +271,7 @@ typedef enum {
 	RSA_INVALID_MSG,                /**< RSA encryption failed, bad msg or msg too long */
 	RSA_INVALID_MODULUS,            /**< RSA encryption failed, modulus invalid */
 	RSA_ENCODING_ERROR              /**< RSA encryption failed, OAEP encoding error */
-} rsa_error;
+} rsa_error_t;
 
 
 /******************
@@ -295,7 +299,7 @@ typedef enum {
  * @note msg and pubkey are both treated as byte arrays.
  * @return rsa_error_t
  */
-rsa_error cryptx_rsa_encrypt(
+rsa_error_t cryptx_rsa_encrypt(
 					const void* msg,
 					size_t msglen,
 					void* ciphertext,
@@ -351,7 +355,7 @@ rsa_error cryptx_rsa_encrypt(
  * particulars of finite field arithmetic. The private key will be trimmed
  * to not exceed 233 bits.
  */
-#define ECDH_PRIVKEY_SIZE		29
+#define ECDH_PRIVKEY_SIZE		30
 
 /*********************************************
  * @def ECDH\_PUBKEY\_SIZE
@@ -374,7 +378,7 @@ typedef enum _ecdh_error {
 	ECDH_INVALID_ARG,
 	ECDH_PRIVKEY_INVALID,
 	ECDH_RPUBKEY_INVALID
-} ecdh_error;
+} ecdh_error_t;
 
 /************************************************************************
  * @brief ECDH Generate Public Key.
@@ -392,7 +396,7 @@ typedef enum _ecdh_error {
  * deserialize the key and then serialize it into a different format to use it with
  * some encryption libraries.
  */
-ecdh_error cryptx_ecdh_keygen(struct cryptx_ecdh_ctx* context, bool (*randfill)(void *buffer, size_t size));
+ecdh_error_t cryptx_ecdh_keygen(struct cryptx_ecdh_ctx* context, bool (*randfill)(void *buffer, size_t size));
 
 /*************************************************
  * @brief ECDH Compute Shared Secret
@@ -409,7 +413,7 @@ ecdh_error cryptx_ecdh_keygen(struct cryptx_ecdh_ctx* context, bool (*randfill)(
  * It is preferred to pass the secret to a KDF or a cryptographic primitive such as a hash function and use
  * that output as your symmetric key.
  */
-ecdh_error cryptx_ecdh_secret(const struct cryptx_ecdh_ctx *context, const uint8_t *rpubkey, uint8_t *secret);
+ecdh_error_t cryptx_ecdh_secret(const struct cryptx_ecdh_ctx *context, const uint8_t *rpubkey, uint8_t *secret);
 
 
 /*
@@ -539,7 +543,7 @@ bool cryptx_internal_gf2_frombytes(uint8_t* gf2_bigint, const void *restrict src
  * this function is essentially a @b memcpy of 32 bytes from  @b src to @b dest.
  * If @b false, then the bytes will be copied backwards.
  */
-bool cryptx_internal_gf2_tobytes(void *dest, const uint8_t* gf2_bigint, bool big_endian);
+bool cryptx_internal_gf2_tobytes(void *dest, const uint8_t restrict* gf2_bigint, bool big_endian);
 
 /***********************************************************
  * @brief Performs a Galois field addition of two big integers.
@@ -587,11 +591,14 @@ void cryptx_internal_gf2_invert(uint8_t* res, uint8_t* op);
 
 
 /*******************************************
- * @typedef ecc\_point
+ * @struct cryptx\_ecc\_point
  * Defines a point to be used for elliptic curve point arithmetic.
  */
 
-struct cryptx_ecc_point { uint8_t x[GF2_INTLEN]; uint8_t y[GF2_INTLEN]; }
+struct cryptx_ecc_point {
+	uint8_t x[GF2_INTLEN];
+	uint8_t y[GF2_INTLEN];
+}
 
 /**********************************************
  * @brief Performs a point addition over the sect233k1 curve.
