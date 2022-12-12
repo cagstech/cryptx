@@ -13,8 +13,8 @@
  * 6. Buffer to hexstring
  */
 
-#ifndef HASHLIB_H
-#define HASHLIB_H
+#ifndef hashlib_h
+#define hashlib_h
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -53,33 +53,33 @@ or has been tampered with.
  * Defines hash-state data for an instance of SHA-256.
  * This structure is internal. You should never need to use this.
  */
-typedef struct _sha256_ctx {
+struct _hashlib_sha256 {
 	uint8_t data[64];		/**< holds sha-256 block for transformation */
 	uint8_t datalen;		/**< holds the current length of data in data[64] */
 	uint8_t bitlen[8];		/**< holds the current length of transformed data */
 	uint32_t state[8];		/**< holds hash state for transformed data */
-} sha256_ctx;
+};
 
 /**************************************
  * @typedef hash_ctx
  * Defines universal hash-state data, including pointer to algorithm-specific handling methods and
  * a union of computational states for various hashes.
  */
-typedef struct _hash_ctx {
-    bool (*init)(void* ctx);                    /**< pointer to an initialization method for the given hash algorithm */
-    void (*update)(void* ctx, const void* data, size_t len);	/**< pointer to the update method for the given hash algorithm */
-    void (*final)(void* ctx, void* output);		/**< pointer to the digest output method for the given hash algorithm */
-    union _hash {           /**< a union of computational states for various hashes */
-        sha256_ctx sha256;
-    } Hash;
+struct cryptx_hash_ctx {
+	bool (*init)(void* ctx);
+	void (*update)(void* ctx, const void* data, size_t len);
+	void (*final)(void* ctx, void* output);
+	union {
+		struct _hashlib_sha256 sha256;
+	} _internal;
 	uint8_t digest_len;
-} hash_ctx;
+};
  
  /*******************************
   * @enum hash_algorithms
   * Idenitifiers for selecting hash types.
   */
-enum hash_algorithms {
+enum cryptx_hash_algorithms {
     SHA256,             /**< algorithm type identifier for SHA-256 */
 };
 
@@ -97,7 +97,7 @@ enum hash_algorithms {
  *  @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.
  *  @return Boolean. True if hash initialization succeeded. False if hash ID invalid.
  */
-bool hash_init(hash_ctx* ctx, uint8_t hash_alg);
+bool cryptx_hash_init(struct cryptx_hash_ctx* context, uint8_t hash_alg);
 
 /*********************************************************
  *	@brief Updates the hash context for the given data.
@@ -108,7 +108,7 @@ bool hash_init(hash_ctx* ctx, uint8_t hash_alg);
  *      If doing so, you must pass @b &ctx.Hash instead of @b &ctx.
  *	@warning You must have an initialized hash context or a crash will ensue.
  */
-void hash_update(hash_ctx* ctx, const void* data, size_t len);
+void cryptx_hash_update(struct cryptx_hash_ctx* context, const void* data, size_t len);
 
 /*****************************************************
  *	@brief Finalize context and render digest for hash
@@ -119,7 +119,7 @@ void hash_update(hash_ctx* ctx, const void* data, size_t len);
  *      If doing so, you must pass @b &ctx.Hash instead of @b &ctx.
  *  @warning You must have an initialized hash context or a crash will ensue.
  */
-void hash_final(hash_ctx* ctx, void* digest);
+void cryptx_hash_final(struct cryptx_hash_ctx* context, void* digest);
 
 /*************************************************
  *	@brief Arbitrary Length Hashing Function
@@ -133,7 +133,7 @@ void hash_final(hash_ctx* ctx, void* digest);
  *  @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.
  *	@note @b outbuf must be at least @b outlen bytes large.
  */
-bool hash_mgf1(const void* data, size_t datalen, void* outbuf, size_t outlen, uint8_t hash_alg);
+bool cryptx_hash_mgf1(const void* data, size_t datalen, void* outbuf, size_t outlen, uint8_t hash_alg);
 
 
 /*
@@ -148,27 +148,27 @@ verified by anyone, only the parties with the key can validate using a HMAC hash
  * @typedef sha256hmac_ctx
  * Defines hash-state data for an instance of SHA-256.
  */
-typedef struct _sha256hmac_ctx {
+struct _cryptx_sha256hmac {
     uint8_t ipad[64];       /**< holds the key xored with a magic value to be hashed with the inner digest */
     uint8_t opad[64];       /**< holds the key xored with a magic value to be hashed with the outer digest */
     uint8_t data[64];		/**< holds sha-256 block for transformation */
 	uint8_t datalen;		/**< holds the current length of data in data[64] */
 	uint8_t bitlen[8];		/**< holds the current length of transformed data */
 	uint32_t state[8];		/**< holds hash state for transformed data */
-} sha256hmac_ctx;
+};
 
 /*************************************
  * @typedef hmac_ctx
  * Defines hash-state data for an HMAC instance.
  */
-typedef struct _hmac_ctx {
-    bool (*init)(void* ctx, const void* key, size_t keylen);     /**< pointer to an initialization method for the given hash algorithm */
-    void (*update)(void* ctx, const void* data, size_t len);     /**< pointer to the update method for the given hash algorithm */
-    void (*final)(void* ctx, void* output);                      /**< pointer to the digest output method for the given hash algorithm */
-    union _hmac {           /**< a union of computational states for various hashes */
-        sha256hmac_ctx sha256hmac;
-    } Hmac;
-} hmac_ctx;
+struct cryptx_hmac_ctx {
+    bool (*init)(void* ctx, const void* key, size_t keylen);
+    void (*update)(void* ctx, const void* data, size_t len);
+    void (*final)(void* ctx, void* output);
+    union {
+        struct _cryptx_sha256hmac sha256hmac;
+    } _internal;
+};
 
 /*************************************************************
  *	@brief Context Initializer for HMAC
@@ -181,7 +181,7 @@ typedef struct _hmac_ctx {
  *  @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.
  *  @return Boolean. True if hash initialization succeeded. False if hash ID invalid.
  */
-bool hmac_init(hmac_ctx* ctx, const void* key, size_t keylen, uint8_t hash_alg);
+bool cryptx_hmac_init(struct cryptx_hmac_ctx* context, const void* key, size_t keylen, uint8_t hash_alg);
 
 /*********************************************
  *	@brief Updates the hmac context for the given data.
@@ -192,7 +192,7 @@ bool hmac_init(hmac_ctx* ctx, const void* key, size_t keylen, uint8_t hash_alg);
  *      If doing so, you must pass @b &ctx.Hmac instead of @b &ctx.
  *	@warning You must have an initialized hash context or a crash will ensue.
  */
-void hmac_update(hmac_ctx* ctx, const void* data, size_t len);
+void cryptx_hmac_update(struct cryptx_hmac_ctx* context, const void* data, size_t len);
 
 /*************************************************
  *	@brief Finalize Context and Render Digest for HMAC
@@ -203,7 +203,7 @@ void hmac_update(hmac_ctx* ctx, const void* data, size_t len);
  *      If doing so, you must pass @b &ctx.Hmac instead of @b &ctx.
  *  @warning You must have an initialized hash context or a crash will ensue.
  */
-void hmac_final(hmac_ctx* ctx, void* output);
+void cryptx_hmac_final(struct cryptx_hmac_ctx* context, void* output);
 
 /*********************************************
  * @brief Password-Based Key Derivation Function
@@ -224,7 +224,7 @@ void hmac_final(hmac_ctx* ctx, void* output);
  * a more secure key, but more time spent generating it. Current cryptography standards recommend in excess of 1000
  * rounds but that may not be feasible on the CE.
  */
-bool hmac_pbkdf2(
+bool cryptx_hmac_pbkdf2(
     const char* password,
     size_t passlen,
     void* key,
@@ -243,7 +243,7 @@ bool hmac_pbkdf2(
  * @param len Number of bytes at @b digest to convert.
  * @param hexstr A buffer to write the output hex string to. Must be at least 2 * len + 1 bytes large.
  */
-bool digest_tostring(const void* digest, size_t len, char* hexstr);
+bool cryptx_digest_tostring(const void* digest, size_t len, char* hexstr);
 
 
 /*********************************************
@@ -256,7 +256,7 @@ bool digest_tostring(const void* digest, size_t len, char* hexstr);
  * @param len The number of bytes to compare.
  * @return True if the buffers were equal. False if not equal.
  */
-bool digest_compare(const void* digest1, const void* digest2, size_t len);
+bool cryptx_digest_compare(const void* digest1, const void* digest2, size_t len);
 
 
 #endif

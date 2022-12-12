@@ -9,44 +9,59 @@ include_library '../hashlib/hashlib.asm'
 ;------------------------------------------
 
 ;v1 functions
-    export csrand_init
-    export csrand_get
-    export csrand_fill
+    export cryptx_csrand_init
+    export cryptx_csrand_get
+    export cryptx_csrand_fill
     
-    export aes_init
-    export aes_encrypt
-    export aes_decrypt
-    export rsa_encrypt
+    export cryptx_aes_init
+    export cryptx_aes_encrypt
+    export cryptx_aes_decrypt
+    export cryptx_rsa_encrypt
+    export cryptx_ecdh_keygen
+    export cryptx_ecdh_secret
     
-    export ecdh_keygen
-    export ecdh_secret
-    
-    export aes_ecb_unsafe_encrypt
-    export aes_ecb_unsafe_decrypt
-    export oaep_encode
-    export oaep_decode
-    export pss_encode
-    export powmod
-    export gf2_bigint_frombytes
-    export gf2_bigint_tobytes
-    export gf2_bigint_add
-    export gf2_bigint_sub
-    export gf2_bigint_mul
-    export gf2_bigint_invert
-    export ecc_point_add
-    export ecc_point_double
-    export ecc_point_mul_scalar
-    
-powmod = _powmod
-gf2_bigint_frombytes = bigint_frombytes
-gf2_bigint_tobytes = bigint_tobytes
-gf2_bigint_add	= _bigint_add
-gf2_bigint_sub	= _bigint_sub
-gf2_bigint_mul	= _bigint_mul
-gf2_bigint_invert	= _bigint_invert
-ecc_point_add	=	_point_add
-ecc_point_double	= _point_double
-ecc_point_mul_scalar	= _point_mul_scalar
+    export cryptx_internal_aes_ecb_encrypt
+    export cryptx_internal_aes_ecb_decrypt
+    export cryptx_internal_rsa_oaep_encode
+    export cryptx_internal_rsa_oaep_decode
+    export cryptx_internal_rsa_pss_encode
+    export cryptx_internal_powmod
+    export cryptx_internal_gf2_frombytes
+    export cryptx_internal_gf2_tobytes
+    export cryptx_internal_gf2_add
+    export cryptx_internal_gf2_mul
+    export cryptx_internal_gf2_square
+    export cryptx_internal_gf2_invert
+    export cryptx_internal_ecc_point_add
+    export cryptx_internal_ecc_point_double
+    export cryptx_internal_ecc_point_mul_scalar
+   
+   
+cryptx_csrand_init		= csrand_init
+cryptx_csrand_get		= csrand_get
+cryptx_csrand_fill		= csrand_fill
+cryptx_aes_init			= aes_init
+cryptx_aes_encrypt		= aes_encrypt
+cryptx_aes_decrypt		= aes_decrypt
+cryptx_rsa_encrypt		= rsa_encrypt
+cryptx_ecdh_keygen		= ecdh_keygen
+cryptx_ecdh_secret		= ecdh_secret
+
+cryptx_internal_aes_ecb_encrypt		= aes_ecb_unsafe_encrypt
+cryptx_internal_aes_ecb_decrypt		= aes_ecb_unsafe_decrypt
+cryptx_internal_rsa_oaep_encode		= oaep_encode
+cryptx_internal_rsa_oaep_decode		= oaep_decode
+cryptx_internal_rsa_pss_encode		= pss_encode
+cryptx_internal_powmod				= _powmod
+cryptx_internal_gf2_frombytes		= bigint_frombytes
+cryptx_internal_gf2_tobytes			= bigint_tobytes
+cryptx_internal_gf2_add				= _bigint_add
+cryptx_internal_gf2_mul				= _bigint_mul
+cryptx_internal_gf2_square			= _bigint_square
+cryptx_internal_gf2_invert			= _bigint_invert
+cryptx_internal_ecc_point_add		= _point_add
+cryptx_internal_ecc_point_double	= _point_double
+cryptx_internal_ecc_point_mul_scalar	= _point_mul_scalar
 
     
     
@@ -359,19 +374,19 @@ csrand_get:
 	push hl
 	ld hl, _sprng_hash_ctx
 	push hl
-	call hash_init
+	call hashlib_hash_init
 	pop bc, hl
 	ld hl, 119
 	push hl
 	ld hl, _sprng_entropy_pool
 	push hl
 	push bc
-	call hash_update
+	call hashlib_hash_update
 	pop bc, hl, hl
 	ld hl, _sprng_sha_digest
 	push hl
 	push bc
-	call hash_final
+	call hashlib_hash_final
 	pop bc, hl
 	
 ; xor hash cyclically into _rand
@@ -4600,7 +4615,7 @@ oaep_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hash_init
+	call	hashlib_hash_init
 	pop	hl
 	pop	hl
 	ld	l, 1
@@ -4633,7 +4648,7 @@ oaep_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hash_update
+	call	hashlib_hash_update
 	pop	hl
 	pop	hl
 	pop	hl
@@ -4655,7 +4670,7 @@ oaep_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hash_final
+	call	hashlib_hash_final
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 12)
@@ -4730,7 +4745,7 @@ oaep_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hash_mgf1
+	call	hashlib_mgf1
 	ld	de, -385
 	lea	hl, ix + 0
 	add	hl, de
@@ -4783,7 +4798,7 @@ oaep_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hash_mgf1
+	call	hashlib_mgf1
 	ld	de, (ix + 15)
 	pop	bc
 	pop	bc
@@ -4965,7 +4980,7 @@ oaep_decode:
 	pop	ix
 	push	de
 	push	hl
-	call	hash_mgf1
+	call	hashlib_mgf1
 	pop	hl
 	pop	hl
 	pop	hl
@@ -5085,7 +5100,7 @@ oaep_decode:
 	ld	bc, (ix + -3)
 	push	bc
 	push	hl
-	call	hash_mgf1
+	call	hashlib_mgf1
 	ld	bc, -702
 	lea	hl, ix + 0
 	add	hl, bc
@@ -5130,7 +5145,7 @@ oaep_decode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hash_init
+	call	hashlib_hash_init
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 15)
@@ -5149,7 +5164,7 @@ oaep_decode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hash_update
+	call	hashlib_hash_update
 	pop	hl
 	pop	hl
 	pop	hl
@@ -5164,7 +5179,7 @@ oaep_decode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hash_final
+	call	hashlib_hash_final
 	pop	hl
 	pop	hl
 	ld	bc, -705
@@ -5179,7 +5194,7 @@ oaep_decode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	digest_compare
+	call	hashlib_digest_compare
 	pop	hl
 	pop	hl
 	pop	hl
@@ -5437,7 +5452,7 @@ pss_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hash_init
+	call	hashlib_hash_init
 	pop	hl
 	pop	hl
 	ld	l, 1
@@ -5470,7 +5485,7 @@ pss_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hash_update
+	call	hashlib_hash_update
 	pop	hl
 	pop	hl
 	pop	hl
@@ -5484,7 +5499,7 @@ pss_encode:
 	add	iy, bc
 	ld	hl, (iy + 0)
 	push	hl
-	call	hash_final
+	call	hashlib_hash_final
 	ld	de, (ix + 18)
 	pop	hl
 	pop	hl
@@ -5592,7 +5607,7 @@ pss_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hash_init
+	call	hashlib_hash_init
 	pop	hl
 	pop	hl
 	ld	bc, -582
@@ -5610,7 +5625,7 @@ pss_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hash_update
+	call	hashlib_hash_update
 	pop	hl
 	pop	hl
 	pop	hl
@@ -5624,7 +5639,7 @@ pss_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hash_final
+	call	hashlib_hash_final
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 12)
@@ -5676,7 +5691,7 @@ pss_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hash_mgf1
+	call	hashlib_mgf1
 	ld	de, -594
 	lea	hl, ix + 0
 	add	hl, de
@@ -6282,11 +6297,65 @@ _bigint_mul:
 	pop ix
 	ret
 	
-
+	
 _bigint_square:
-;[#] [Zeroko] So something like a loop of RLA \ ADC HL,HL \ ADD HL,HL to convert one input byte into two output bytes, plus reductions to get back to the right total number of bits.
-; Erm, ADD HL,HL \ RLA \ ADC HL,HL, rather.
-	ti._frameset0
+; Destination needs space for 61 bytes during computation (But at the end, only the first 30 bytes contain valid data)
+; Input: DE: Start of source, IY: Start of destination
+; Output: A destroyed, B=C=0, DE: Start of destination + 10, HL: Start of destination + 9, IY: Start of destination + 31
+	ld hl, -61
+	call ti._frameset
+	lea iy, ix - 61			; using a temp buffer for dest
+	ld de, (ix + 9)			; iy = src
+	ld c, 30
+.byteLoop:
+	ld a, (de)
+	inc de
+	ld b, 8
+	.bitLoop:
+		add hl, hl
+		rla
+		adc hl, hl
+		djnz .bitLoop
+	ld (iy), hl
+	lea iy, iy + 2
+	dec c
+	jr nz, .byteLoop
+	
+	ld b, 29
+	.reduceLoop:
+		dec iy
+		ld hl, (iy - 2)
+		ld a, h
+		rra
+		ld a, l
+		rra
+		xor a, (iy - 31)
+		ld (iy - 31), a
+		add hl, hl
+		lea de, iy - 21
+		ld a, (de)
+		xor a, h
+		ld (de), a
+		djnz .reduceLoop
+	
+	ld a, l
+	rrca
+	and a, 1
+	ld (iy - 2), a
+	rlca
+	xor a, l
+	lea hl, iy - 22
+	xor a, (hl)
+	ld (hl), a
+	
+	; copy tmp buffer to dest
+	ld de, (ix + 6)
+	lea hl, ix - 61
+	ld bc, 30
+	ldir
+	
+	ld sp, ix
+	pop ix
 	ret
 
 
@@ -6440,7 +6509,7 @@ _lshift_add:
 ; outputs: (de) += (iy) << a
 ; destroys: af, bc, de, hl, iy
     ; divide a by 8 and put bits multiplier in c
- `  or a, a
+    or a, a
     sbc hl, hl
     ex de, hl
     rra
@@ -6576,44 +6645,64 @@ _get_degree:
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 6)
-	ld	de, (ix - 33)
-	call	_ibigint_add
-	ld	hl, (ix + 6)
 	push	hl
+	ld	hl, (ix - 33)
+	push	hl
+	push	hl
+	call	_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix + 6)
 	push	hl
 	ld	hl, (ix - 36)
 	push	hl
+	call	_bigint_square
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 33)
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	call	_bigint_square
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 33)
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	push	hl
+	call	_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix + 6)
+	push	hl
+	ld	hl, (ix - 33)
+	push	hl
+	push	hl
 	call	_bigint_mul
 	pop	hl
 	pop	hl
 	pop	hl
 	ld	hl, (ix - 33)
 	push	hl
+	ld	hl, (ix - 36)
 	push	hl
+	push	hl
+	call	_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
 	ld	hl, (ix + 6)
 	push	hl
-	call	_bigint_mul
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 33)
-	ld	de, (ix + 6)
-	call	_ibigint_add
-	ld	hl, (ix + 6)
-	push	hl
-	ld	hl, (ix - 33)
+	ld	hl, (ix - 36)
 	push	hl
 	push	hl
-	call	_bigint_mul
+	call	_bigint_add
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 33)
-	ld	de, (ix - 36)
-	call	_ibigint_add
-	ld	hl, (ix + 6)
-	ld	de, (ix - 36)
-	call	_ibigint_add
 .lbl_3:
 	ld	sp, ix
 	pop	ix
@@ -6680,7 +6769,9 @@ _point_add:
 	ld	(ix - 93), hl
 	lea	hl, ix - 90
 	ld	(ix - 96), hl
-	ld	iy, (ix + 6)
+	ld	hl, (ix + 6)
+	push	hl
+	pop	iy
 	lea	hl, iy + 30
 	ld	(ix - 102), hl
 	ld	de, (ix + 9)
@@ -6697,37 +6788,59 @@ _point_add:
 	push	hl
 	ld	hl, (ix + 6)
 	push	hl
-	pea ix - 60
+	ld	hl, (ix - 93)
+	push	hl
 	call	_bigint_add
 	pop	hl
 	pop	hl
 	pop	hl
-	pea ix - 60
-	pea ix - 90
+	ld	hl, (ix - 93)
+	push	hl
+	ld	hl, (ix - 96)
+	push	hl
 	call	_bigint_invert
 	pop	hl
 	pop	hl
-	pea ix - 90
-	pea ix - 30
-	pea ix - 30
+	ld	hl, (ix - 96)
+	push	hl
+	ld	hl, (ix - 99)
+	push	hl
+	push	hl
 	call	_bigint_mul
 	pop	hl
-	pea ix - 90
-	call	_bigint_mul
 	pop	hl
+	pop	hl
+	ld	hl, (ix - 99)
+	push	hl
+	ld	hl, (ix - 96)
+	push	hl
+	call	_bigint_square
 	pop	hl
 	pop	hl
 	ld	hl, (ix - 93)
-	ld	de, (ix - 96)
-	push de
-		call	_ibigint_add
-		ld	hl, (ix - 99)
-	pop de
-	call	_ibigint_add
-	pea ix - 90
+	push	hl
+	ld	hl, (ix - 96)
+	push	hl
+	push	hl
+	call	_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 99)
+	push	hl
+	ld	hl, (ix - 96)
+	push	hl
+	push	hl
+	call	_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 96)
+	push	hl
 	ld	hl, (ix + 6)
 	push	hl
-	pea ix - 60
+	ld	hl, (ix - 93)
+	push	hl
 	call	_bigint_add
 	pop	hl
 	pop	hl
@@ -6736,19 +6849,28 @@ _point_add:
 	ld	hl, (ix - 96)
 	ld	bc, 30
 	ldir
-	pea ix - 30
-	pea ix - 60
-	pea ix - 60
+	ld	hl, (ix - 99)
+	push	hl
+	ld	hl, (ix - 93)
+	push	hl
+	push	hl
 	call	_bigint_mul
 	pop	hl
 	pop	hl
 	pop	hl
 	ld	hl, (ix - 102)
-	ld	de, (ix - 93)
-	call	_ibigint_add
+	push	hl
+	ld	hl, (ix - 93)
+	push	hl
+	push	hl
+	call	_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
 	ld	hl, (ix + 6)
 	push	hl
-	pea ix - 60
+	ld	hl, (ix - 93)
+	push	hl
 	ld	hl, (ix - 102)
 	push	hl
 	call	_bigint_add
@@ -6760,6 +6882,7 @@ _point_add:
 	ld	sp, ix
 	pop	ix
 	ret
+	
 	
 ; void ecc_point_mul_scalar(struct Point *p, uint8_t *scalar, uint8_t scalar_len);
 _point_mul_scalar:

@@ -20,6 +20,7 @@
 	export	gf2_bigint_add
 	export	gf2_bigint_sub
 	export	gf2_bigint_mul
+	export	gf2_bigint_square
 	export	gf2_bigint_invert
 	export	ecc_point_add
 	export	ecc_point_double

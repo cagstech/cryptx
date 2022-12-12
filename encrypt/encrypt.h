@@ -15,59 +15,30 @@
  *
  */
 
-#ifndef ENCRYPT_H
-#define ENCRYPT_H
+#ifndef encrypt_h
+#define encrypt_h
 #include <hashlib.h>
 
 /*
  Cryptographically-Secure Random Number Generator (CSRNG)
  
- Many of the psuedorandom number generators (PRNGs) you find in computers and
- even the one within the C toolchain for the CE are insecure for cryptographic
- purposes. They produce statistical randomness, but the state is generally seeded
- using a value such as rtc_Time(). If an adversary reconstructs the seed, every
- output of the PRNG becomes computable with little effort. These types of PRNGs
- are called deterministic algorithms--given the input, the output is predictable.
- These PRNGs work for games and other applications where the illusion of randomness
- is sufficient, but they are not safe for cryptography.
+ This library provides an entropy-based hardware (HW)RNG. The entropy is sourced
+ from bus noise derived from the behavior of bit lines in floating memory.
+ For further details, see the documentation.
  
- A secure PRNG is an random number generator that is not only statistically random, but
- also passes the next-bit and state compromise tests. The _next-bit test_ is defined like so:
- given the prior output of the PRNG (bits 0=>i), the next bit (i+1) of the output cannot be
- predicted by a polynomial-time statistical test with a probability non-negligibly greater than 50%.
- In simpler terms, a secure PRNG must be unpredictable, or "entropic".
- The _state compromise test_ means that an adversary gaining knowledge of the initial state of
- the PRNG does not gain any information about its output.
- 
- The SRNG previded by HASHLIB solves both tests like so:
- (next-bit)
- <>  The SRNG's output is derived from a 119-byte entropy pool created by reading
- data from the most entropic byte located within floating memory on the device.
- <>  The "entropic byte" is a byte containing a bit that that, out of 1024 test reads,
- has the closest to a 50/50 split between 1's and 0's.
- <>  The byte containing that bit is read in xor mode seven times per byte to offset
- any hardware-based correlation between subsequent reads from the entropic byte.
- <>  The entropy pool is then run through a cryptographic hash to spread that entropy
- evenly through the returned random value.
- <>  The SRNG produces 96.51 bits of entropy per 32 bit number returned.
- <>  Assertion: A source of randomness with sufficient entropy passed through a cryptographic hash
- will produce output that passes all statistical randomness tests as well as the next-bit test.
- (state compromise)
- <>  The entropy pool is discarded after it is used once, and a new pool is
- generated for the next random number.
- <>  ^ This means that the prior state has no bearing on the next output of the PRNG.
- <>  The SRNG destroys its own state after the random number is generated so that
- the state used to generate it does not persist in memory.
- 
- *   Due to the derivation of entropy from subtle variations in the electrical state of
- unmapped memory, this SRNG can also be considered a _hardware-based RNG_ (HWRNG).
+ Many random number generators, including the rand() implementation provided by
+ the toolchain are only statistically random, but not unpredictable. That suffices
+ for many applications but not for cryptography. Otherwise secure cryptography can be defeated
+ if the primative that generates keys and salts is predictable. To that end, the developers
+ of this library put significant effort into constructing a generator that satifies the
+ constraints for cryptographic security to the best level possible on the hardware.
  */
 
 /************************************
  * @enum sampling\_mode
  * Defines sampling modes for @b csrand\_init
  */
-enum sampling_mode {
+enum cryptx_srng_sampling_mode {
 	SAMPLING_THOROUGH,
 	SAMPLING_FAST
 };
@@ -82,20 +53,20 @@ enum sampling_mode {
  * @note Using the faster sampling mode may result in a less-entropic source byte being selected due to less
  * samples being collected. It is recommended to use THOROUGH.
  */
-bool csrand_init(bool sampling_mode);
+bool cryptx_csrand_init(bool sampling_mode);
 
 /***********************************************
  * @brief Returns a securely psuedo-random 32-bit integer
  * @return [uint32_t] A 32-bit random number.
  */
-uint32_t csrand_get(void);
+uint32_t cryptx_csrand_get(void);
 
 /**************************************************
  * @brief Fills a buffer with securely pseduo-random bytes
  * @param buffer Pointer to a buffer to fill with random bytes
  * @param size Size of the buffer to fill
  */
-bool csrand_fill(void* buffer, size_t size);
+bool cryptx_csrand_fill(void* buffer, size_t size);
 
 /*
  Advanced Encryption Standard (AES)
@@ -113,32 +84,32 @@ bool csrand_fill(void* buffer, size_t size);
  */
 
 /*******************************
- * @typedef aes_ctx
+ * @struct aes_ctx
  * Stores AES cipher configuration data.
  */
-typedef struct _aes_cbc { uint8_t padding_mode; } aes_cbc_t;
-typedef struct _aes_ctr {
+struct _cryptx_aes_cbc { uint8_t padding_mode; };
+struct _cryptxaes_ctr {
 	uint8_t counter_pos_start; uint8_t counter_len;
-	uint8_t last_block_stop; uint8_t last_block[16]; } aes_ctr_t;
+	uint8_t last_block_stop; uint8_t last_block[16]; };
 
-typedef struct _aes_ctx {
+struct cryptx_aes_ctx {
 	uint24_t keysize;                       /**< the size of the key, in bits */
 	uint32_t round_keys[60];                /**< round keys */
 	uint8_t iv[16];                         /**< IV state for next block */
 	uint8_t ciphermode;                     /**< selected operational mode of the cipher */
 	union {
-		aes_ctr_t ctr;                      /**< metadata for counter mode */
-		aes_cbc_t cbc;                      /**< metadata for cbc mode */
-	} mode;
+		struct _cryptx_aes_cbc ctr;                      /**< metadata for counter mode */
+		struct _cryptx_aes_ctr cbc;                      /**< metadata for cbc mode */
+	} _internal;
 	uint8_t op_assoc;                       /**< state-flag indicating if context is for encryption or decryption*/
-} aes_ctx;
+};
 
 
 /*************************
  * @enum aes_cipher_modes
  * Supported AES cipher modes
  */
-enum aes_cipher_modes {
+enum cryptx_aes_cipher_modes {
 	AES_MODE_CBC,       /**< selects CBC mode */
 	AES_MODE_CTR        /**< selects CTR mode */
 };
@@ -147,30 +118,13 @@ enum aes_cipher_modes {
  * @enum aes_padding_schemes
  * Supported AES padding schemes
  */
-enum aes_padding_schemes {
+enum cryptx_aes_padding_schemes {
 	PAD_PKCS7,                  /**< PKCS#7 padding | DEFAULT */
 	PAD_DEFAULT = PAD_PKCS7,	/**< selects the scheme marked DEFAULT.
 								 Using this is recommended in case a change to the standards
 								 would set a stronger padding scheme as default */
 	PAD_ISO2 = 4,               /**< ISO-9797 M2 padding */
 };
-
-
-/********************************************
- * @def AES_CTR_NONCELEN
- * Only has an effect when cipher is initialized to CTR mode.
- * Sets the length of the fixed prefix portion of the IV
- * Valid lengths: 1<= len < block size
- */
-#define AES_CTR_NONCELEN(len)   ((0x0f & len)<<4)
-
-/***********************************************
- * @def AES_CTR_COUNTERLEN
- * Only has an effect when cipher is initialized to CTR mode.
- * Stores the length of the counter portion of the IV.
- * Valid lengths: 1 <= len < block size.
- */
-#define AES_CTR_COUNTERLEN(len) ((0x0f & len)<<8)
 
 /**********************************
  * @def AES_BLOCKSIZE
@@ -185,19 +139,25 @@ enum aes_padding_schemes {
 #define AES_IVSIZE		AES_BLOCKSIZE
 
 /**********************************************************
- * @def aes_outsize()
- * Defines a macro to return the size of an AES ciphertext given a plaintext length.
- * Does not include space for an IV-prepend. See @b aes_extoutsize(len) for that.
+ * @define AES\_CIPHERTEXT\_LEN(plaintext\_len)
+ * Defines a macro to return the size of an AES ciphertext given a plaintext length..
  */
-#define aes_outsize(len) \
-((((len)%AES_BLOCKSIZE)==0) ? (len) + AES_BLOCKSIZE : (((len)>>4) + 1)<<4)
+#define AES_CIPHERTEXT_LEN(plaintext_len) \
+((((plaintext_len)%AES_BLOCKSIZE)==0) ? (len) + AES_BLOCKSIZE : (((len)>>4) + 1)<<4)
 
-/***********************************************************************
- * @def aes_extoutsize()
- * Defines a macro to return the size of an AES ciphertext with with an extra block added for the IV.
+/*************************************************************
+ * @define AES\_CBC\_FLAGS
+ * Defines a macro for enabling CBC cipher mode and setting relevant configuration.
  */
-#define aes_extoutsize(len) \
-(aes_outsize((len)) + AES_IVSIZE)
+#define AES_CBC_FLAGS(padding_mode) \
+	(padding_mode) | AES_MODE_CBC
+
+/*************************************************************
+ * @define AES\_CTR\_FLAGS
+ * Defines a macro for enabling CTR cipher mode and setting relevant configuration.
+ */
+#define AES_CTR_FLAGS(nonce_len, counter_len)	\
+	((0x0f & (counter_len))<<8) | ((0x0f & (nonce_len))<<4) | AES_MODE_CTR
 
 /*******************
  * @enum aes_error_t
@@ -211,7 +171,7 @@ typedef enum {
 	AES_INVALID_PADDINGMODE,            /**< AES operation failed, padding mode undefined */
 	AES_INVALID_CIPHERTEXT,             /**< AES operation failed, ciphertext error */
 	AES_INVALID_OPERATION               /**< AES operation failed, used encrypt context for decrypt or vice versa */
-} aes_error_t;
+} aes_error;
 
 /********************************************************************
  * @brief Initializes a stateful AES cipher context to be used for encryption or decryption.
@@ -219,13 +179,7 @@ typedef enum {
  * @param key Pointer to an 128, 192, or 256 bit key to load into the AES context.
  * @param keylen The size, in bytes, of the key to load.
  * @param iv Initialization vector, a buffer equal to the block size that is pseudo-random.
- * @param flags A series of flags to configure the AES context with. This is the bitwise OR of any non-default cipher options. Ex:
- *      @code
- *          aes_init(ctx, key, sizeof key, iv, AES_MODE_CTR | AES_CTR_COUNTERLEN(4));
- *          // this sets CTR mode and sets the counter to 4 bytes (32 bits)
- *          // since the nonce length is 8 bytes by default, this actually means the IV format is:
- *          // [nonce 8 bytes] [counter 4 bytes] [suffix 4 bytes]
- *      @endcode
+ * @param flags A series of flags to configure the AES context with. Use the provided @b AES_CTR_FLAGS or @b AES_CBC_FLAGS macro for this.
  * @note Do not edit a context manually. You may corrupt the cipher state.
  * @note Contexts are not bidirectional due to being stateful. If you need to process both encryption and decryption, initialize seperate contexts for encryption and decryption. Both contexts will use the same key, but different initialization vectors.
  * @warning It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.
@@ -234,8 +188,8 @@ typedef enum {
  * If you want a truly secure scheme, always append an HMAC to your message and use an application secret or unique key generated using a CSRNG to key the HMAC at both endpoints.
  * @return AES_OK if success, non-zero if failed. See aes_error_t.
  */
-aes_error_t aes_init(
-				aes_ctx* ctx,
+aes_error cryptx_aes_init(
+				struct cryptx_aes_ctx* context,
 				const void* key,
 				size_t keylen,
 				const void* iv,
@@ -257,8 +211,8 @@ aes_error_t aes_init(
  * @note Once a  context is used for encryption, a stateful flag is set preventing the same context from being used for decryption.
  * @returns AES_OK if success, non-zero if failed. See aes_error_t.
  */
-aes_error_t aes_encrypt(
-					const aes_ctx* ctx,
+aes_error cryptx_aes_encrypt(
+					const struct cryptx_aes_ctx* context,
 					const void* plaintext,
 					size_t len,
 					void* ciphertext);
@@ -275,8 +229,8 @@ aes_error_t aes_encrypt(
  * @note Once a context is used for decryption, a stateful flag is set preventing the same context from being used for encryption.
  * @returns AES_OK if success, non-zero if failed. See aes_error_t.
  */
-aes_error_t aes_decrypt(
-					const aes_ctx* ctx,
+aes_error cryptx_aes_decrypt(
+					const struct cryptx_aes_ctx* context,
 					const void* ciphertext,
 					size_t len,
 					void* plaintext);
@@ -313,7 +267,7 @@ typedef enum {
 	RSA_INVALID_MSG,                /**< RSA encryption failed, bad msg or msg too long */
 	RSA_INVALID_MODULUS,            /**< RSA encryption failed, modulus invalid */
 	RSA_ENCODING_ERROR              /**< RSA encryption failed, OAEP encoding error */
-} rsa_error_t;
+} rsa_error;
 
 
 /******************
@@ -341,7 +295,7 @@ typedef enum {
  * @note msg and pubkey are both treated as byte arrays.
  * @return rsa_error_t
  */
-rsa_error_t rsa_encrypt(
+rsa_error cryptx_rsa_encrypt(
 					const void* msg,
 					size_t msglen,
 					void* ciphertext,
@@ -397,7 +351,7 @@ rsa_error_t rsa_encrypt(
  * particulars of finite field arithmetic. The private key will be trimmed
  * to not exceed 233 bits.
  */
-#define ECDH_PRIVKEY_SIZE		30
+#define ECDH_PRIVKEY_SIZE		29
 
 /*********************************************
  * @def ECDH\_PUBKEY\_SIZE
@@ -406,21 +360,21 @@ rsa_error_t rsa_encrypt(
  */
 #define ECDH_PUBKEY_SIZE		(ECDH_PRIVKEY_SIZE<<1)
 
-typedef struct _ecdh_ctx {
+struct cryptx_ecdh_ctx {
 	uint8_t privkey[ECDH_PRIVKEY_SIZE];
 	uint8_t pubkey[ECDH_PUBKEY_SIZE];
-} ecdh_ctx;
+};
 
 /**************************
  * @enum ecdh\_error\_t
  * Defines status codes for ECDH
  */
-typedef enum _ecdh_errors {
+typedef enum _ecdh_error {
 	ECDH_OK,
 	ECDH_INVALID_ARG,
 	ECDH_PRIVKEY_INVALID,
 	ECDH_RPUBKEY_INVALID
-} ecdh_error_t;
+} ecdh_error;
 
 /************************************************************************
  * @brief ECDH Generate Public Key.
@@ -438,7 +392,7 @@ typedef enum _ecdh_errors {
  * deserialize the key and then serialize it into a different format to use it with
  * some encryption libraries.
  */
-ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, bool (*randfill)(void *buffer, size_t size));
+ecdh_error cryptx_ecdh_keygen(struct cryptx_ecdh_ctx* context, bool (*randfill)(void *buffer, size_t size));
 
 /*************************************************
  * @brief ECDH Compute Shared Secret
@@ -455,18 +409,15 @@ ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, bool (*randfill)(void *buffer, size_t si
  * It is preferred to pass the secret to a KDF or a cryptographic primitive such as a hash function and use
  * that output as your symmetric key.
  */
-ecdh_error_t ecdh_secret(const ecdh_ctx *ctx, const uint8_t *rpubkey, uint8_t *secret);
+ecdh_error cryptx_ecdh_secret(const struct cryptx_ecdh_ctx *context, const uint8_t *rpubkey, uint8_t *secret);
 
 
 /*
  #### INTERNAL FUNCTIONS ####
  For advanced users only!!!
- 
- 
  */
 
-
-#ifdef ENCRYPT_ENABLE_AES_INTERNAL
+#ifdef CRYPTX_ENABLE_INTERNAL
 
 /*****************************************************
  * @brief AES single-block ECB mode encryption function
@@ -477,7 +428,7 @@ ecdh_error_t ecdh_secret(const ecdh_ctx *ctx, const uint8_t *rpubkey, uint8_t *s
  * @warning ECB mode encryption is insecure (see many-time pad vulnerability).
  *     Use ECB-mode block encryptors as a constructor for custom cipher modes only.
  */
-void aes_ecb_unsafe_encrypt(const void *block_in, void *block_out, aes_ctx *ks);
+void cryptx_internal_aes_ecb_encrypt(const void *block_in, void *block_out, aes_ctx *ks);
 
 /*****************************************************
  * @brief AES single-block ECB mode decryption function
@@ -488,11 +439,7 @@ void aes_ecb_unsafe_encrypt(const void *block_in, void *block_out, aes_ctx *ks);
  * @warning ECB mode encryption is insecure (see many-time pad vulnerability).
  *     Use ECB-mode block encryptors as a constructor for custom cipher modes only.
  */
-void aes_ecb_unsafe_decrypt(const void *block_in, void *block_out, aes_ctx *ks);
-
-#endif
-
-#ifdef ENCRYPT_ENABLE_RSA_INTERNAL
+void cryptx_internal_aes_ecb_decrypt(const void *block_in, void *block_out, aes_ctx *ks);
 
 /*************************************************************
  * @brief Optimal Asymmetric Encryption Padding (OAEP) encoder for RSA
@@ -505,7 +452,7 @@ void aes_ecb_unsafe_decrypt(const void *block_in, void *block_out, aes_ctx *ks);
  * @return Boolean | True if encoding succeeded, False if encoding failed.
  * @note @b plaintext and @b encoded are aliasable.
  */
-bool oaep_encode(
+bool cryptx_internal_rsa_oaep_encode(
 			const void *plaintext,
 			size_t len,
 			void *encoded,
@@ -523,7 +470,7 @@ bool oaep_encode(
  * @return Boolean | True if encoding succeeded, False if encoding failed.
  * @note @b plaintext and @b encoded are aliasable.
  */
-bool oaep_decode(
+bool cryptx_internal_rsa_oaep_decode(
 			const void *encoded,
 			size_t len,
 			void *plaintext,
@@ -542,7 +489,7 @@ bool oaep_decode(
  * @note Generally, to encode a message, pass NULL as salt.
  *      To verify a message, pass a pointer to the salt field in the message you are looking to verify.
  */
-bool pss_encode(
+bool cryptx_internal_rsa_pss_encode(
 			const void *plaintext,
 			size_t len,
 			void *encoded,
@@ -561,40 +508,18 @@ bool pss_encode(
  * @note @b exp must be non-zero.
  * @note @b modulus must be odd.
  */
-void powmod(
+void cryptx_internal_powmod(
 		uint8_t size,
 		uint8_t *restrict base,
 		uint24_t exp,
 		const uint8_t *restrict mod);
 
-#endif
-
-#ifdef ENCRYPT_ENABLE_ECC_INTERNAL
-
-/*
-	GF2_BIGINT, GALOIS FIELD ARITHMETIC, ELLIPTIC CURVE ARITHMETIC
-	** All Galois field operations are defined by the sect233k1 elliptic curve. **
- */
 
 /*****************************************
  * @define GF2\_BIGINT\_SIZE
  * Defines the max length of a GF2\_BIGINT.
  */
-#define GF2_BIGINT_SIZE		ECDH_PRIVKEY_SIZE
-
-/*****************************************
- * @typedef GF2\_BIGINT
- * Defines a BIGINT that is also a Galois field
- * of form GF(2^m).
- */
-typedef uint8_t GF2_BIGINT[GF2_BIGINT_SIZE];
-
-/*******************************************
- * @typedef ecc\_point
- * Defines a point to be used for elliptic curve point arithmetic.
- */
-
-typedef struct _ecc_point { GF2_BIGINT x; GF2_BIGINT y; } ecc_point;
+#define GF2_INTLEN		ECDH_PRIVKEY_SIZE
 
 /*************************************************************
  * @brief Converts a bytearray to a Galois Field (2^m) big integer.
@@ -604,7 +529,7 @@ typedef struct _ecc_point { GF2_BIGINT x; GF2_BIGINT y; } ecc_point;
  * @param big_endian Determines the endianness of the GF2\_BIGINT. If @b true, then
  * the integer will be encoded big endian. If false, it will be encoded little endian.
  */
-bool gf2_bigint_frombytes(GF2_BIGINT dest, const void *restrict src, size_t len, bool big_endian);
+bool cryptx_internal_gf2_frombytes(uint8_t* gf2_bigint, const void *restrict src, size_t len, bool big_endian);
 
 /*************************************************************
  * @brief Converts a Galois Field (2^m) big integer to a bytearray.
@@ -614,7 +539,7 @@ bool gf2_bigint_frombytes(GF2_BIGINT dest, const void *restrict src, size_t len,
  * this function is essentially a @b memcpy of 32 bytes from  @b src to @b dest.
  * If @b false, then the bytes will be copied backwards.
  */
-bool gf2_bigint_tobytes(void *dest, const GF2_BIGINT src, bool big_endian);
+bool cryptx_internal_gf2_tobytes(void *dest, const uint8_t* gf2_bigint, bool big_endian);
 
 /***********************************************************
  * @brief Performs a Galois field addition of two big integers.
@@ -625,19 +550,7 @@ bool gf2_bigint_tobytes(void *dest, const GF2_BIGINT src, bool big_endian);
  * @note This is not a not a normal addition of two big integers. It is binary Galois
  * field addition (addition modulo 2), or simply just XOR.
  */
-void gf2_bigint_add(GF2_BIGINT res, GF2_BIGINT op1, GF2_BIGINT op2);
-
-/***********************************************************
- * @brief Performs a Galois field subtraction of two big integers.
- * @param res A big integer to write result to.
- * @param op1 The first big integer operand.
- * @param op2 The second big integer operand.
- * @note @b res and @b op1 are aliasable.
- * @note This is not a not a normal subtraction of two big integers. It is binary Galois
- * field subtraction (subtraction modulo 2), or simply just XOR.
- * @note If you think this seems to be interchangeable with addition, you'd be right.
- */
-void gf2_bigint_sub(GF2_BIGINT res, GF2_BIGINT op1, GF2_BIGINT op2);
+void cryptx_internal_gf2_add(uint8_t* res, uint8_t* op1, uint8_t* op2);
 
 /***********************************************************
  * @brief Performs a Galois field multiplication of two big integers.
@@ -650,7 +563,17 @@ void gf2_bigint_sub(GF2_BIGINT res, GF2_BIGINT op1, GF2_BIGINT op2);
  * @note This is not a not a normal multiplication of two big integers. It is a
  * multiplication over the finite field defined by the polynomial: x^233 + x^74 + 1.
  */
-void gf2_bigint_mul(GF2_BIGINT res, GF2_BIGINT op1, GF2_BIGINT op2);
+void cryptx_internal_gf2_mul(uint8_t* res, uint8_t* op1, uint8_t* op2);
+
+/***********************************************************
+ * @brief Performs a Galois field squaring of a big integer.
+ * @param res A big integer to write result to.
+ * @param op The big integer operand.
+ * @note @b res and @b op are aliasable.
+ * @note This is not a not a normal squaring. It is a square
+ * over the finite field defined by the polynomial: x^233 + x^74 + 1.
+ */
+void cryptx_internal_gf2_square(uint8_t* res, uint8_t* op);
 
 /***********************************************************
  * @brief Performs a Galois field inversion of a big integer.
@@ -660,7 +583,15 @@ void gf2_bigint_mul(GF2_BIGINT res, GF2_BIGINT op1, GF2_BIGINT op2);
  * @note This is not a not a normal multiplicative inverse. It is an inversion
  * over the finite field defined by the polynomial: x^233 + x^74 + 1.
  */
-void gf2_bigint_invert(GF2_BIGINT res, GF2_BIGINT op);
+void cryptx_internal_gf2_invert(uint8_t* res, uint8_t* op);
+
+
+/*******************************************
+ * @typedef ecc\_point
+ * Defines a point to be used for elliptic curve point arithmetic.
+ */
+
+struct cryptx_ecc_point { uint8_t x[GF2_INTLEN]; uint8_t y[GF2_INTLEN]; }
 
 /**********************************************
  * @brief Performs a point addition over the sect233k1 curve.
@@ -668,14 +599,14 @@ void gf2_bigint_invert(GF2_BIGINT res, GF2_BIGINT op);
  * @param q Defines the second input point.
  * @returns The resulting point in @b p.
  */
-void ecc_point_add(ecc_point *p, ecc_point *q);
+void cryptx_internal_ecc_point_add(cryptx_ecc_point* p, cryptx_ecc_point* q);
 
 /**********************************************
  * @brief Performs a point double over the sect233k1 curve.
  * @param p Defines the input point to double.
  * @returns The resulting point in @b p.
  */
-void ecc_point_double(ecc_point *p);
+void cryptx_internal_ecc_point_double(cryptx_ecc_point* p);
 
 /**********************************************************
  * @brief Performs a scalar multiplication of a point over the sect233k1 curve.
@@ -684,7 +615,7 @@ void ecc_point_double(ecc_point *p);
  * @param scalar_bit_width The length of the scalar, in bits.
  * @returns The resulting point in @b p.
  */
-void ecc_point_mul_scalar(ecc_point *p, const uint8_t *scalar, size_t scalar_bit_width);
+void cryptx_internal_ecc_point_mul_scalar(cryptx_ecc_point* p, const uint8_t* scalar, size_t scalar_bit_width);
 
 #endif
 

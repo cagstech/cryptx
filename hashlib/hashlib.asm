@@ -2,23 +2,36 @@
 include '../../include/library.inc'
 
 ;------------------------------------------
-library HASHLIB, 10
+library HASHLIB, 11
 
 ;------------------------------------------
 
 ;v10 functions
-    export hash_init
-	export hash_update
-	export hash_final
-	export hash_mgf1
+    export cryptx_hash_init
+	export cryptx_hash_update
+	export cryptx_hash_final
+	export cryptx_hash_mgf1
     
-    export hmac_init
-    export hmac_update
-    export hmac_final
-    export hmac_pbkdf2
+    export cryptx_hmac_init
+    export cryptx_hmac_update
+    export cryptx_hmac_final
+    export cryptx_hmac_pbkdf2
     
-    export digest_compare
-    export digest_tostring
+    export cryptx_digest_compare
+    export cryptx_digest_tostring
+    
+    
+; redefine functions as library namespace
+cryptx_hash_init	= hash_init
+cryptx_hash_update	= hash_update
+cryptx_hash_final	= hash_final
+cryptx_hash_mgf1	= hash_mgf1
+cryptx_hmac_init	= hmac_init
+cryptx_hmac_update	= hmac_update
+cryptx_hmac_final	= hmac_final
+cryptx_hmac_pbkdf2	= hmac_pbkdf2
+cryptx_digest_compare	= digest_compare
+cryptx_digest_tostring	= digest_tostring
     
     
     
