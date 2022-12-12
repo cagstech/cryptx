@@ -35,33 +35,37 @@
 #define fastRam_Unsafe		((void*)0xE30800)
  
  
-/*
-Cryptographic Hashes
+//***********************************************************************************************
+/*	Cryptographic Hashes
  
-A cryptographic hash is used to validate that data is unchanged between two endpoints.
-It is similar to a checksum, but checksums can be easily fooled; cryptographic hashes
-are a lot harder to fool due to how they distribute the bits in a data stream.
-The general use of a hash is as follows: the party sending a message hashes it and
-includes that hash as part of the message. The recipient hashes the message (except the hash)
-themselves and then compares that hash to the one included in the message. If the hashes match,
-the message is complete and unaltered. If the hashes do not match, the message is incomplete
-or has been tampered with.
-*/
+	A cryptographic hash is a cryptographic `primitve` (def: a low-level algorithm used
+	to build protocols) that is used for data integrity verification. It is similar to a
+	checksum, but unlike checksums, which can be easily fooled, cryptographic hashes
+	are a lot harder to fool due to how they work. The general use of a hash is as follows:
+	the party sending a message hashes it and includes that hash as part of the message.
+	The recipient hashes the message (except the hash) themselves and then compares that hash
+	to the one included in the message. If the hashes match, the message is complete and unaltered.
+	If the hashes do not match, the message is incomplete or has been tampered with and should be
+	discarded (and possibly a new copy of the message requested from origin). */
 
 /**********************************************
- * @typedef sha256_ctx
+ * @struct \_cryptx\_sha256\_ctx
  * Defines hash-state data for an instance of SHA-256.
  * This structure is internal. You should never need to use this.
  */
-struct _hashlib_sha256 {
+struct cryptx_hash_sha256 {
 	uint8_t data[64];		/**< holds sha-256 block for transformation */
 	uint8_t datalen;		/**< holds the current length of data in data[64] */
 	uint8_t bitlen[8];		/**< holds the current length of transformed data */
 	uint32_t state[8];		/**< holds hash state for transformed data */
 };
 
+typedef union {
+	struct cryptx_hash_sha256;
+} cryptx_hash_internal_h;
+
 /**************************************
- * @typedef hash_ctx
+ * @struct hash\_ctx
  * Defines universal hash-state data, including pointer to algorithm-specific handling methods and
  * a union of computational states for various hashes.
  */
@@ -69,9 +73,7 @@ struct cryptx_hash_ctx {
 	bool (*init)(void* ctx);
 	void (*update)(void* ctx, const void* data, size_t len);
 	void (*final)(void* ctx, void* output);
-	union {
-		struct _hashlib_sha256 sha256;
-	} _internal;
+	cryptx_hash_internal_h meta;
 	uint8_t digest_len;
 };
  
@@ -87,7 +89,7 @@ enum cryptx_hash_algorithms {
  * @def SHA256_DIGEST_LEN
  * Binary length of the SHA-256 hash output.
  */
-#define SHA256_DIGEST_LEN   32
+#define CRYPTX_SHA256_DIGEST_LEN   32
 
 /**************************************************************
  *	@brief Hash initializer.
