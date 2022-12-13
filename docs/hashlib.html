@@ -58,6 +58,9 @@
 				<span class="param">context</span>: Pointer to a hash state context to initalize.<br />
 				<span class="param">hash_alg</span>: Identifier for the hash algorithm to use (see cryptx_hash_algorithms).<br />
 				<span class="return">returns</span>: true on success, false on failure.
+				<span class="more-info">
+					Once the context is initialized, the digest length of the active hash algorithm can be accessed at <span style="font-weight:bold;">context.digest_len</span>.
+				</span>
 			</p>
 			<div class="function-doc">void&emsp;cryptx_hash_update(struct cryptx_hash_ctx* context, const void* data, size_t len);</div>
 			<p>Updates the hash state for the given data.<br />
@@ -90,6 +93,9 @@
 			<span class="param">keylen</span>: Length of the key.<br />
 			<span class="param">hash_alg</span>: Identifier for the hash algorithm to use (see cryptx_hash_algorithms).<br />
 			<span class="return">returns</span>: true on success, false on failure.
+			<span class="more-info">
+				Once the context is initialized, the digest length of the active hash algorithm can be accessed at <span style="font-weight:bold;">context.digest_len</span>.
+			</span>
 			</p>
 			<div class="function-doc">void&emsp;cryptx_hmac_update(struct cryptx_hmac_ctx* context, const void* data, size_t len);</div>
 			<p>Updates the hmac state for the given data.<br />

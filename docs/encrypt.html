@@ -277,6 +277,9 @@
 			</ul>
 			<span style="font-weight:bold;">Example of authenticated encryption, CryptX. by Anthony Cagliano</span>
 			<pre class="code"><code class="language-c">
+#include &lt;hashlib.h&gt;
+#include &lt;encrypt.h&gt;
+
 // this assumes that the AES secret ‘aes_key‘ and the HMAC secret ‘hmac_key‘
 // have been negotiated beforehand.
 
@@ -288,28 +291,32 @@ char* msg = "The daring fox jumped over the moon."
 size_t header = sizeof(msg)+AES_IVSIZE;
 
 // allocate the memory we need
+cryptx_aes_ctx ctx;
+cryptx_hmac_ctx hmac;
 uint8_t iv[AES_IVSIZE];
-uint8_t hmac_digest[SHA256_DIGEST_LEN];
-aes_ctx ctx;
-hmac_ctx hmac;
+
+// doing this first allows us to
+hmac_init(&hmac, hmac_key, sizeof hmac_key, SHA256);
+
+// allocate a digest of the size we need
+uint8_t hmac_digest[hmac.digest_len];
 
 // !!!! NEVER PROCEED IF csrand_init() FAILS !!!
-if(!csrand_init()) return false;
-csrand_fill(iv, AES_IVSIZE);
+if(!cryptx_csrand_init()) return false;
+cryptx_csrand_fill(iv, AES_IVSIZE);
 
 // initialize AES context with mode , key , and iv
-aes_init(&ctx, aes_key, sizeof aes_key, iv, AES_MODE_CTR);
+cryptx_aes_init(&ctx, aes_key, sizeof aes_key, iv, CRYPTX_AES_CTR_FLAGS(8, 8));
 
 // encrypt message
 // aes_encrypt supports in-place encryption
-aes_encrypt(&ctx, msg, strlen(msg), msg);
+cryptx_aes_encrypt(&ctx, msg, strlen(msg), msg);
 
 // hash everything you are sending, except the hash itself
-hmac_init(&hmac, hmac_key, sizeof hmac_key, SHA256);
-hmac_update(&hmac, &header, sizeof header);
-hmac_update(&hmac, iv, sizeof iv);
-hmac_update(&hmac, msg, strlen(msg));
-hmac_final(&hmac, hmac_digest);
+cryptx_hmac_update(&hmac, &header, sizeof header);
+cryptx_hmac_update(&hmac, iv, sizeof iv);
+cryptx_hmac_update(&hmac, msg, strlen(msg));
+cryptx_hmac_final(&hmac, hmac_digest);
 
 // ps_queue/send are psuedo functions implying queueing data to send
 // and then sending it
