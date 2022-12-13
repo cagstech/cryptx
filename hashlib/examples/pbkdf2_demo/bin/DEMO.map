@@ -2,14 +2,14 @@ Section          Base   Top    High   Length
 ---------------- ------ ------ ------ -------
 .icon            D1A882 D1A99D           11Bh
 .init.libs       D1A99D D1A9F5            58h
-.libs            D1A9F5 D1AA03             Eh
-.init.clock      D1AA03 D1AA03             0h
-.init.reruncheck D1AA03 D1AA03             0h
-.init            D1AA03 D1AA23            20h
-.fini            D1AA23 D1AA57            34h
-.text            D1AA57 D1C5D4          1B7Dh
-.data            D1C5D4 D1C5EF            1Bh
-.rodata          D1C5EF D1C6D1            E2h
+.libs            D1A9F5 D1AA0D            18h
+.init.clock      D1AA0D D1AA0D             0h
+.init.reruncheck D1AA0D D1AA0D             0h
+.init            D1AA0D D1AA2D            20h
+.fini            D1AA2D D1AA61            34h
+.text            D1AA61 D1C7F3          1D92h
+.data            D1C7F3 D1C80E            1Bh
+.rodata          D1C80E D1C925           117h
 .init_array      000000 000000             0h
 .ctors           000000 000000             0h
 .dtors           000000 000000             0h
@@ -29,73 +29,89 @@ ___ctors_count            = 000000
 ___dtors_count            = 000000
 ___fini_array_count       = 000000
 __stack                   = D1A87E
-_os_DisableHomeTextBuffer = D1AA57
-_os_EnableHomeTextBuffer  = D1AA69
-__vsnprintf               = D1AA7B
-LJTI1_0                   = D1C5EF
-LJTI1_1                   = D1C60D
-_sprintf                  = D1BA71
-__out_buffer              = D1BAA0
-__out_null                = D1BABC
-__atoi                    = D1BAC3
-__ntoa_long               = D1BB1B
-__ftoa                    = D1BE53
-__out_rev                 = D1C39C
-L_.str                    = D1C652
-__ftoa.pow10              = D1C658
-L_.str.1                  = D1C680
-L_.str.2                  = D1C684
-L_.str.3                  = D1C689
-L_.str.4                  = D1C68E
-__fneg                    = D1C4A6
-__frameset                = D1C4B3
-__frameset0               = D1C4C1
-__indcallhl               = D1C4CC
-__fadd                    = 000270
+__frameset                = D1AA61
+__frameset0               = D1AA6F
+__iand                    = D1AA7A
+__imulu                   = D1AA93
+__indcallhl               = D1AAC3
+__ineg                    = D1AAC4
+__ior                     = D1AACD
+__ixor                    = D1AAE6
+__ladd                    = D1AAFF
+__land                    = D1AB05
+__lcmpu                   = D1AB20
+__lcmpzero                = D1AB28
+__lladd                   = D1AB30
+__lland                   = D1AB54
+__llcmpu                  = D1AB91
+__llcmpzero               = D1ABBB
+__llctlz                  = D1ABD0
+__lldivs                  = D1ABE8
+__lldivu                  = D1AC38
+__lldvrmu                 = D1AC4C
+__lldvrmu.hijack          = D1AC53
+__llmulu                  = D1ACAA
+__llneg                   = D1ACFF
+__llshl                   = D1AD18
+__llshrs.hijack_llshru    = D1AD46
+__llshrs.finish           = D1AD65
+__llshru                  = D1AD69
+__llsub                   = D1AD83
+__lshrs.hijack_lshru      = D1ADB1
+__lshru                   = D1ADC0
 __fcmp                    = 000274
-__fdiv                    = 000278
-__fmul                    = 000288
-__fsub                    = 000290
 __ftol                    = 00027C
-__iand                    = 000134
-__idivs                   = 00013C
-__imulu                   = 000158
-__indcall                 = 00015C
-__ior                     = 000168
-__ishl                    = 000174
-__ishrs                   = 00017C
-__ishru                   = 000184
-__ixor                    = 000198
-__ladd                    = 00019C
-__land                    = 0001A4
-__lcmpu                   = 0001AC
-__lcmpzero                = 0001B0
-__ldivu                   = 0001B8
-__lmulu                   = 0001CC
-__lor                     = 0001D8
-__lshrs                   = 0001E8
+__ftoul                   = 00027C
 __ltof                    = 000284
-__lxor                    = 0001FC
 __setflag                 = 000218
 __ultof                   = 000280
+_os_DisableHomeTextBuffer = D1ADD0
+_os_EnableHomeTextBuffer  = D1ADE2
+_npf_vpprintf             = D1ADF4
+JTI0_0                    = D1C80E
+JTI0_1                    = D1C82C
+JTI0_2                    = D1C871
+JTI0_3                    = D1C892
+JTI0_4                    = D1C8AA
+JTI0_5                    = D1C8C2
+_npf_utoa_rev             = D1C4B8
+__printf_c                = D1C580
+__vsnprintf_c             = D1C59F
+_npf_bufputc              = D1C602
+_npf_bufputc_nop          = D1C627
+__snprintf_c              = D1C62E
+__vsprintf_c              = D1C656
+__vprintf_c               = D1C674
+_npf_putc_std             = D1C694
+__sprintf_c               = D1C6A4
+_.str                     = D1C8DA
+_.str.1                   = D1C8DE
+_.str.2                   = D1C8E2
+__ishl                    = 000174
+__ishru                   = 000184
 _strlen                   = 0000D4
-.missingappvar            = D1C692
-.libloadname              = D1C697
+_outchar                  = D1C6CD
+_sprintf                  = D1C6A4
+_vprintf                  = D1C674
+_vsnprintf                = D1C59F
+.missingappvar            = D1C8E6
+.libloadname              = D1C8EB
 .libloadnamelen           = 000007
-.webaddress               = D1C69F
-__start                   = D1AA03
-___exithl                 = D1AA23
-skip._exit                = D1AA23
-skip.__Exit               = D1AA23
-skip._abort               = D1AA23
-_exit.sp                  = D1AA24
-_exit.flash_wait_states   = D1AA2E
-_hexdump                  = D1C4CD
-_main                     = D1C563
-_salt                     = D1C5D4
-_passwd                   = D1C5E4
-L_.str                    = D1C6B4
-L_.str.1                  = D1C6B9
-L_.str.2                  = D1C6BB
-L_.str.3                  = D1C6C1
-_#hmac_pbkdf2             = D1A9FF
+.webaddress               = D1C8F3
+__start                   = D1AA0D
+___exithl                 = D1AA2D
+skip._exit                = D1AA2D
+skip.__Exit               = D1AA2D
+skip._abort               = D1AA2D
+_exit.sp                  = D1AA2E
+_exit.flash_wait_states   = D1AA38
+_hexdump                  = D1C6E3
+_main                     = D1C782
+_salt                     = D1C7F3
+_passwd                   = D1C803
+_.str                     = D1C908
+_.str.1                   = D1C90D
+_.str.2                   = D1C90F
+_.str.3                   = D1C915
+lib.LibLoad               = D1A9F5
+_#cryptx_hmac_pbkdf2      = D1AA09

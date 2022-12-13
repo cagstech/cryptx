@@ -1043,322 +1043,281 @@ _sha256_transform:
 hash_mgf1:
 	save_interrupts
 
-   	ld	hl, -328
+ 	ld	hl, -332
 	call	ti._frameset
-	ld	bc, -302
-	lea	iy, ix + 0
+	ld	bc, -304
+	lea	iy, ix
 	add	iy, bc
-	ld	a, (ix + 18)
-	ld	hl, _hash_out_lens
-	ld	de, 0
+	or	a, a
+	sbc	hl, hl
 	push	ix
-	ld	bc, -308
+	ld	bc, -307
 	add	ix, bc
-	ld	(ix + 0), de
+	ld	(ix), hl
 	pop	ix
-	push	ix
-	ld	de, -311
-	add	ix, de
-	ld	(ix + 0), iy
-	pop	ix
-	lea	bc, iy + 114
-	ld	de, 0
-	ld	(ix + -3), bc
-	ld	bc, -305
-	lea	iy, ix + 0
-	add	iy, bc
-	ld	(iy + 0), de
-	ld	e, a
-	add	hl, de
-	ld	l, (hl)
-	push	ix
-	ld	de, -320
-	add	ix, de
-	ld	(ix + 0), l
-	pop	ix
-	ld	l, a
+	ld	bc, -310
+	lea	hl, ix
+	add	hl, bc
+	ld	(hl), iy
+	lea	de, iy + 115
+	ld	l, (ix + 18)
 	push	hl
-	ld	bc, (ix + -3)
-	ld	de, -314
-	lea	hl, ix + 0
-	add	hl, de
-	ld	(hl), bc
-	push	bc
-	call	hash_init
-	ld	e, a
+	ld	bc, -313
+	lea	hl, ix
+	add	hl, bc
+	ld	(hl), de
+	push	de
+	call	cryptx_hash_init
 	pop	hl
 	pop	hl
-	ld	l, 1
-	xor	a, l
 	bit	0, a
-	jq	nz, .lbl_6
+	jp	z, .lbl_6
 	ld	hl, (ix + 6)
-	ld	bc, -321
-	lea	iy, ix + 0
-	add	iy, bc
-	ld	(iy + 0), e
 	ld	de, (ix + 9)
-	lea	bc, ix + -70
-	ld	(ix + -3), de
-	push	ix
-	ld	de, -324
-	add	ix, de
-	ld	(ix + 0), bc
-	pop	ix
-	push	ix
-	ld	de, -311
-	add	ix, de
-	ld	iy, (ix + 0)
-	pop	ix
-	lea	bc, iy + 0
-	ld	de, -317
-	lea	iy, ix + 0
-	add	iy, de
-	ld	(iy + 0), bc
-	push	ix
-	ld	de, -305
-	add	ix, de
-	ld	bc, (ix + 0)
-	pop	ix
-	push	ix
+	lea	bc, ix - 70
+	ld	(ix - 3), de
 	ld	de, -320
-	add	ix, de
-	ld	a, (ix + 0)
-	pop	ix
-	ld	c, a
+	lea	iy, ix
+	add	iy, de
+	ld	(iy), bc
 	push	ix
-	ld	de, -305
+	ld	de, -310
 	add	ix, de
-	ld	(ix + 0), bc
+	ld	iy, (ix)
 	pop	ix
-	ld	de, (ix + -3)
+	lea	bc, iy
+	push	ix
+	ld	de, -323
+	add	ix, de
+	ld	(ix), bc
+	pop	ix
+	ld	bc, 0
+	ld	c, (iy + 124)
+	ld	de, -316
+	lea	iy, ix
+	add	iy, de
+	ld	(iy), bc
+	ld	de, (ix - 3)
 	push	de
 	push	hl
-	ld	bc, -314
-	lea	hl, ix + 0
+	ld	bc, -313
+	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hash_update
-	ld	bc, (ix + 15)
-	ld	(ix + -3), bc
-	ld	bc, -321
-	lea	hl, ix + 0
+	ld	bc, -317
+	lea	hl, ix
 	add	hl, bc
-	ld	e, (hl)
+	ld	(hl), a
+	call	cryptx_hash_update
+	ld	de, (ix + 15)
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, (ix + -3)
-	ld	(ix + -3), de
-	ld	de, -311
-	lea	hl, ix + 0
-	add	hl, de
-	ld	(hl), bc
-	xor	a, a
-	ld	iy, 0
-	ld	de, (ix + -3)
-.lbl_2:
-	lea	hl, iy + 0
-	or	a, a
-	sbc	hl, bc
-	jq	nc, .lbl_6
-	ld	bc, -320
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	(hl), iy
-	ld	bc, -305
-	lea	iy, ix + 0
-	add	iy, bc
-	ld	de, (iy + 0)
-	push	de
-	pop	hl
-	ld	(ix + -3), de
-	push	ix
-	ld	de, -311
-	add	ix, de
-	ld	bc, (ix + 0)
-	pop	ix
-	or	a, a
-	sbc	hl, bc
-	ld	de, (ix + -3)
-	jq	c, .lbl_5
-	push	bc
-	pop	de
-.lbl_5:
-	ld	(ix + -3), bc
-	ld	bc, -328
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	(hl), de
-	ld	bc, -308
-	lea	iy, ix + 0
-	add	iy, bc
-	ld	de, (iy + 0)
-	ld	bc, (ix + -3)
-	ld	(ix + -3), de
-	push	ix
-	ld	de, -311
-	add	ix, de
-	ld	(ix + 0), bc
-	pop	ix
-	ld	de, (ix + -3)
 	push	de
 	pop	bc
-	ld	(ix + -3), de
+	xor	a, a
+	ld	(ix - 3), bc
+	ld	bc, -310
+	lea	hl, ix
+	add	hl, bc
+	ld	(hl), a
+	ld	bc, -317
+	lea	iy, ix
+	add	iy, bc
+	ld	a, (iy)
+	ld	iy, 0
+	ld	bc, (ix - 3)
+.lbl_2:
+	lea	hl, iy
+	or	a, a
+	sbc	hl, de
+	jp	nc, .lbl_6
+	ld	de, -326
+	lea	hl, ix
+	add	hl, de
+	ld	(hl), iy
+	push	bc
+	pop	hl
+	ld	(ix - 3), bc
+	ld	bc, -316
+	lea	iy, ix
+	add	iy, bc
+	ld	de, (iy)
+	or	a, a
+	sbc	hl, de
+	ld	bc, (ix - 3)
+	ld	(ix - 3), de
+	ld	de, -329
+	lea	hl, ix
+	push	af
+	add	hl, de
+	pop	af
+	ld	(hl), bc
+	ld	de, (ix - 3)
+	jr	c, .lbl_5
+	push	de
+	pop	bc
+.lbl_5:
+	ld	de, -332
+	lea	hl, ix
+	add	hl, de
+	ld	(hl), bc
+	ld	bc, -307
+	lea	iy, ix
+	add	iy, bc
+	ld	de, (iy)
+	push	de
+	pop	bc
+	ld	(ix - 3), de
 	push	ix
-	ld	de, -325
+	ld	de, -310
 	add	ix, de
-	ld	(ix + 0), a
+	ld	a, (ix)
 	pop	ix
 	ld	l, 24
 	call	ti._lshru
 	ld	a, c
-	ld	(ix + -74), a
-	ld	de, (ix + -3)
+	ld	(ix - 74), a
+	ld	de, (ix - 3)
 	push	de
 	pop	bc
-	ld	(ix + -3), de
+	ld	(ix - 3), de
 	push	ix
-	ld	de, -325
+	ld	de, -310
 	add	ix, de
-	ld	a, (ix + 0)
+	ld	a, (ix)
 	pop	ix
 	ld	l, 16
 	call	ti._lshru
 	ld	a, c
-	ld	(ix + -73), a
-	ld	de, (ix + -3)
+	ld	(ix - 73), a
+	ld	de, (ix - 3)
 	push	ix
-	ld	bc, -308
+	ld	bc, -307
 	add	ix, bc
-	ld	(ix + 0), de
+	ld	(ix), de
 	pop	ix
 	ld	a, d
-	ld	(ix + -72), a
+	ld	(ix - 72), a
 	ld	a, e
-	ld	(ix + -71), a
-	ld	hl, 114
-	push	hl
-	ld	bc, -314
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -317
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	ti._memcpy
-	pop	hl
-	pop	hl
-	pop	hl
+	ld	(ix - 71), a
+	push	ix
+	ld	bc, -323
+	add	ix, bc
+	ld	de, (ix)
+	pop	ix
+	push	de
+	pop	iy
+	push	ix
+	ld	bc, -313
+	add	ix, bc
+	ld	hl, (ix)
+	pop	ix
+	ld	bc, 115
+	ldir
 	ld	hl, 4
 	push	hl
-	pea	ix + -74
-	ld	bc, -317
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	hash_update
+	pea	ix - 74
+	push	iy
+	call	cryptx_hash_update
 	pop	hl
-	pop	hl
-	pop	hl
-	ld	bc, -324
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -317
-	lea	hl, ix + 0
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	hash_final
 	pop	hl
 	pop	hl
 	ld	bc, -320
-	lea	hl, ix + 0
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -323
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	cryptx_hash_final
+	pop	hl
+	pop	hl
+	ld	bc, -326
+	lea	hl, ix
 	add	hl, bc
 	ld	de, (hl)
 	ld	hl, (ix + 12)
 	add	hl, de
-	push	ix
-	ld	bc, -328
-	add	ix, bc
-	ld	de, (ix + 0)
-	pop	ix
+	ld	bc, -332
+	lea	iy, ix
+	add	iy, bc
+	ld	de, (iy)
 	push	de
 	push	ix
-	ld	bc, -324
+	ld	bc, -320
 	add	ix, bc
-	ld	de, (ix + 0)
+	ld	de, (ix)
 	pop	ix
 	push	de
 	push	hl
 	call	ti._memcpy
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	bc, -320
-	lea	hl, ix + 0
+	ld	bc, -326
+	lea	hl, ix
 	add	hl, bc
 	ld	iy, (hl)
-	push	ix
-	ld	bc, -305
-	add	ix, bc
-	ld	de, (ix + 0)
-	pop	ix
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -316
+	lea	hl, ix
+	add	hl, bc
+	ld	de, (hl)
 	add	iy, de
 	push	ix
-	ld	bc, -308
+	ld	bc, -307
 	add	ix, bc
-	ld	hl, (ix + 0)
+	ld	hl, (ix)
 	pop	ix
 	push	ix
-	ld	bc, -325
+	ld	bc, -310
 	add	ix, bc
-	ld	e, (ix + 0)
+	ld	e, (ix)
 	pop	ix
 	ld	bc, 1
 	xor	a, a
 	call	ti._ladd
-	ld	(ix + -3), bc
+	ld	(ix - 3), bc
 	push	ix
-	ld	bc, -308
+	ld	bc, -307
 	add	ix, bc
-	ld	(ix + 0), hl
-	pop	ix
-	ld	a, e
-	push	ix
-	ld	bc, -311
-	add	ix, bc
-	ld	hl, (ix + 0)
+	ld	(ix), hl
 	pop	ix
 	push	ix
-	ld	bc, -305
+	ld	bc, -310
 	add	ix, bc
-	ld	de, (ix + 0)
+	ld	(ix), e
+	pop	ix
+	push	ix
+	ld	bc, -329
+	add	ix, bc
+	ld	hl, (ix)
+	pop	ix
+	push	ix
+	ld	bc, -316
+	add	ix, bc
+	ld	de, (ix)
 	pop	ix
 	or	a, a
 	sbc	hl, de
+	ld	bc, (ix - 3)
+	push	hl
+	pop	bc
 	push	ix
-	ld	bc, -311
-	add	ix, bc
-	ld	(ix + 0), hl
+	ld	de, -317
+	add	ix, de
+	ld	a, (ix)
 	pop	ix
-	push	ix
-	ld	bc, -321
-	add	ix, bc
-	ld	e, (ix + 0)
-	pop	ix
-	ld	bc, (ix + -3)
-	ld	bc, (ix + 15)
-	jq	.lbl_2
+	ld	de, (ix + 15)
+	jp	.lbl_2
 .lbl_6:
-	ld	a, e
+	ld	sp, ix
+	pop	ix
+	ret
     restore_interrupts_noret hash_mgf1
 	jp stack_clear
  
