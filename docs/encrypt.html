@@ -13,7 +13,7 @@
 		<div id="sidebar">
 			<div id="title"><a href="index.html">
 				CryptX
-				<span style="font-size:50%;">10.0</span>
+				<span style="font-size:50%;">11</span>
 			</a></div><br />
 			<div class="major-header">INTRODUCTION</div>
 				<div class="navitem"><a href="index.html">What is CryptX?</a></div>
@@ -39,160 +39,227 @@
 			</ul>
 			<div class="major-header">Definitions</div>
 			<dl>
-				<dt>SRNG (Secure Random Number Generator)</dt>
-				<dd>A random number generator that provides (1) statistical randomness, (2) unpredictability, (3) resistance to state compromise.</dd><br />
+				<dt>CSRNG (Cryptographically-Secure Random Number Generator)</dt>
+				<dd>Many random number generators, including the rand() implementation provided by
+					the toolchain are only statistically random, but not unpredictable. That suffices for many applications but not for cryptography. Otherwise-secure cryptography can be defeated if the primative that generates keys and salts is predictable. To that end, the developers of this library put significant effort into constructing a generator that satifies the constraints for cryptographic security to the best extent possible on the hardware. Those constraints are as follows:<br />
+					<ul>
+						<li>Statistically-random (passes all statistical randomness tests)</li>
+						<li>Unpredictable (ref: next-bit test)</li>
+						<li>Resistant to state-compromise; state compromise yields nothing of value</li>
+						</ul>
+				</dd><br />
 				<dt>Encryption</dt>
-				<dd>A reversible transformation of data designed to render it difficult for an unauthorized party to read. Another word for this is a <span style="font-weight:bold;">cipher</span>.</dd><br />
+				<dd>A reversible transformation of data designed to render it difficult for an unauthorized party to read. A <span style="font-weight:bold;">cipher</span> is an algorithm that performs encryption and decryption.</dd><br />
 				<dt>Symmetric Encryption</dt>
-				<dd>An encryption system in which a single key works for both encryption and decryption.</dd><br />
+				<dd>An encryption system in which the same key works for both encryption and decryption. Symmetric encryption tends to be very fast and uses much smaller keys.</dd><br />
 				<dt>Asymmetric Encryption</dt>
-				<dd>An encryption system in which one key is used for encryption and a seperate key is used for decryption and there is some mathematical relationship between the two keys that allows them to reverse each other.</dd><br />
+				<dd>An encryption system in which one key is used for encryption and a seperate key is used for decryption and there is some mathematical relationship between the two keys that allows them to reverse each other. Asymmetric encryption tends to be slow and uses much larger keys.</dd><br />
 				<dt>Advanced Encryption Standard (AES)</dt>
-				<dd>A symmetric encryption system defined by (1) 128, 192, or 256 bit keys (16, 24, 32 bytes), (2) a 128-bit (16 byte) block size, (3) 10-, 12-, and 14-round variants (depending on key size), and (4) a 128-bit (16 byte) randomized <span style="font-style:italic;">initialization vector</span>. AES, when properly implemented, remains unbroken.<br />
-					<span style="font-weight:bold">Round</span> means number of times the algorithm performs transformations on the data. For example, AES-128 has 10 rounds of encryption. This means the transformation is repeated ten (10) times.
+				<dd>A fast symmetric encryption system that can encrypt arbitrary lengths of data in blocks of 128 bits (16 bytes). AES has three main variants, each of which take a key of different length:<br />
+					<ul>
+						<li>AES-128: Uses a 128-bit (16 byte) key, performs 10 rounds of encryption</li>
+						<li>AES-192: Uses a 192-bit (24 byte) key, performs 12 rounds of encryption</li>
+						<li>AES-256: Uses a 256-bit (32 byte) key, performs 14 rounds of encryption</li>
+						<span style="font-size:85%;"><span style="font-weight:bold">Rounds</span> means number of times the algorithm repeats transformations on the data.</span>
+						</ul>
+					AES is one of the most secure encryption systems in use today. AES-256 is the most secure variant of the algorithm.
+					
 				</dd><br />
 				<dt>RSA</dt>
-				<dd>An asymmetric encryption system defined by two keys: one that is sent in the clear (public key) consisting of a public exponent and public modulus, and one that is kept secret (private key) consisting of a private exponent and private modulus. The public key is used to encrypt messages, the private is used to decrypt. The two are modular inverses of each other, such that:<br />
+				<dd>
+					RSA is a form of public key cryptography. In this construction, both parties need a public key and a private key. Typically the public key is used to encrypt outbound messages and the private key is used to decrypt inbound messages. In a public key system anyone can encrypt messages for a specific host since the public key is sent in the clear (hence the term &quot;public&quot;). However, only the intended recipient can decrypt those messages as the private key is not shared. This is possible because the public and private keys are inverses of each other such that:<br />
 					<span class="code">
-						encrypted = message <sup>public exponent</sup> % public modulus<br />
-						message = encrypted <sup>private exponent</sup> % private modulus
+						<span style="font-weight:bold;">// RSA encryption and decryption</span><br />
+						encrypted = message ^ public_exponent % public modulus<br />
+						message = encrypted ^ private_exponent % private modulus
 					</span><br />
-					Common key lengths are between 1024 and 2048 bits (128 bytes and 256 bytes), though 1024-bit RSA has been broken for some time. It is recommended to use a length on the higher end of the range, but do keep in mind that computation will take longer.</dd>
+					The cryptographic strength of RSA comes from the difficulty of factoring huge prime numbers. In recent times better hardware and faster algorithms have made solving this problem easier. 1024-bit RSA has been broken for some time and most cryptographers suspect 2048-bit RSA only has a few years of viability left.<br />
+					Asymmetric encryption is very slow. Using even RSA-1024 on the TI-84+ CE will take several seconds. For this reason, you usually do not use RSA for sustained encrypted communication. Use RSA to share a symmetric key, and then use AES for future messages.</dd>
 				</dd><br />
 				<dt>Elliptic Curve Diffie-Hellman (ECDH)</dt>
-				<dd>Diffie-Hellman is a key negotiation protocol used to allow two parties to agree on a shared secret to use for symmetric encryption. Both parties first generate a private key and then use that key with a generator, G, to generate a public key. The key generation can be described using the following formulae:<br />
+				<dd>Diffie-Hellman is a key negotiation protocol. It is another form of public key cryptography in which two parties agree on a shared secret to use for symmetric encryption by exchanging a public key that is the product of a private key and some scalar. Standard Diffie-Hellman uses the same general schema as RSA involving primes (p) and a primitive root modulo p (G). The properties of these keys are such that the following is true:<br />
 					<span class="code">
-						// Public Key Generation<br />
-						Alice:	alice private key * G = alice public key<br />
-						Bob:	bob private key * G = bob public key
+						<span style="font-weight:bold;">// The Diffie-Hellman algorithm</span><br />
+						G ^ Pa % p = Ua&emsp;&emsp;&emsp;&emsp;// P = private, U = public, a = alice<br />
+						G ^ Pb % p = Ub&emsp;&emsp;&emsp;&emsp;// P = private, U = public, b = bob<br />
+						// Alice and Bob exchange public keys (Ua &lt;==&gt; Ub)<br />
+						Ub ^ Pa % p = secret<br />
+						Ua ^ Pb % p = secret<br />
+						// Note that both parties end up with a common shared secret.
 						</span><br />
-					In the case of elliptic curve Diffie-Hellman G is a base point on the elliptic curve and the public key is the result of multiplying that point by the private key. The properties of this algorithm are such that, for both parties, multiplying your private key by the other party&apos;s public key yields the same shared secret.<br />
-					<span class="code">
-						// Secret Computation<br />
-						Alice:	alice private key * bob public key = secret<br />
-						Bob:	bob private key * alice public key = secret<br />
-						Symmetric Encryption Key = KDF(secret)<br />
-						// KDF = some key derivation function
-						</span><br />
-					The ECDH algorithm provided by this library uses the SECT233k1 elliptic curve. It has a degree of 233 bits and a base order of 232 bits (29 bytes) which is also the maximum length of the private key. It provides an effective security level rivaling that of RSA and standard Diffie-Hellman using a 2048-bit key. Why is the elliptic curve variant so much more secure? Firstly, the basis of elliptic curve cryptography (how curves are structured algebraically over finite fields) lends itself to the creation of keys that are more mathemtically-complicated to crack than the prime factorization methods of cracking non-elliptic curve keys. Also the keyspace over such a finite field is typically larger than the keyspace of primes of the same bit width.
+					 For the same reasons as with RSA this requires extremely large values for p and G and it also suffers from the same weaknesses that render it increasingly insecure as hardware and algorithms get better at factoring the values. Enter elliptic curve cryptography. In the case of elliptic curve Diffie-Hellman, G is a base point of maximal order on the elliptic curve and the public key is the result of multiplying that point by the private key over a finite field. The revised algorithm can be expressed like so:<br />
+					 <span class="code">
+						 <span style="font-weight:bold;">// The Elliptic Curve Diffie-Hellman algorithm</span><br />
+						 Pa * G = Ua&emsp;&emsp;&emsp;&emsp;// P = private, U = public, a = alice<br />
+						 Pb * G = Ub&emsp;&emsp;&emsp;&emsp;// P = private, U = public, b = bob<br />
+						 // Alice and Bob exchange public keys (Ua &lt;==&gt; Ub)<br />
+						 Ub * Pa = secret<br />
+						 Ua * Pb = secret<br />
+						 // Note that both parties end up with a common shared secret.
+					 </span><br />
+					 The behavior of an elliptic curve over a finite field lends itself to the creation of keys that are more complicated to crack and it so follows that the necessary key lengths are much smaller. The curve implemented by this library, SECT233k1, has a degree of 233 which also defines the maximum length of the private key. Just 233 bits for elliptic curve Diffie-Hellman. Versus several thousand for standard Diffie-Hellman and RSA. Quite the difference.
 					</dd>
 			</dl>
 			<div class="major-header">Macros</div>
-			<div class="function-doc">#define AES_CTR_NONCELEN(len)   ((0x0f & len)&lt;&lt;4)</div>
-			<p>Defines a macro for passing a nonce (salt) length to aes_init's flags parameter.</p>
-			<div class="function-doc">#define AES_CTR_COUNTERLEN(len) ((0x0f & len)&lt;&lt;8)</div>
-			<p>Defines a macro for passing a counter length to aes_init's flags parameter.</p>
-			<div class="function-doc">#define AES_BLOCKSIZE	16</div>
+			<div class="function-doc">#define CRYPTX_AES128_KEYLEN&emsp;&emsp;16</div>
+			<p>Defines the byte length of an AES-128 key.</p>
+			<div class="function-doc">#define CRYPTX_AES192_KEYLEN&emsp;&emsp;24</div>
+			<p>Defines the byte length of an AES-192 key.</p>
+			<div class="function-doc">#define CRYPTX_AES256_KEYLEN&emsp;&emsp;24</div>
+			<p>Defines the byte length of an AES-256 key.</p>
+			<div class="function-doc">#define CRYPTX_AES_BLOCK_SIZE&emsp;&emsp;16</div>
 			<p>Defines the block size of the AES cipher.</p>
-			<div class="function-doc">#define AES_IVSIZE AES_BLOCKSIZE</div>
+			<div class="function-doc">#define CRYPTX_AES_IV_SIZE&emsp;&emsp;CRYPTX_AES_BLOCK_SIZE</div>
 			<p>Defines the length of the AES initialization vector.</p>
-			<div class="function-doc">#define aes_outsize(len) \<br />
-				((((len)%AES_BLOCKSIZE)==0) ? (len) + AES_BLOCKSIZE : (((len)>>4) + 1)<<4)</div>
+			<div class="function-doc">CRYPTX_AES_CIPHERTEXT_LEN(plaintext_len) \<br />
+				&emsp;&emsp;((((plaintext_len)%CRYPTX_AES_BLOCK_SIZE)==0) ? \<br />
+				&emsp;&emsp;&emsp;&emsp;(len) + CRYPTX_AES_BLOCK_SIZE : (((len)&gt;&gt;4) + 1)&lt;&lt;4)</div>
 			<p>Defines a macro to return the necessary length for a padded AES plaintext.</p>
-			<div class="function-doc">#define aes_extoutsize(len) \<br />(aes_outsize((len)) + AES_IVSIZE)</div>
-			<p>Defines a macro to return the necessary length for a padded AES plaintext plus a single block for the IV.</p>
-			<div class="function-doc">#define ECDH_PRIVKEY_SIZE   32</div>
-			<p>Defines the length of the ECDH private key.</p>
-			<div class="function-doc">#define ECDH_PUBKEY_SIZE   32</div>
-			<p>Defines the length of the ECDH public key.</p>
+			<div class="function-doc">#define CRYTPX_AES_CBC_FLAGS(padding_mode) \<br />
+				&emsp;&emsp;((padding_mode)&lt;&lt;2) | AES_MODE_CBC</div>
+			<p>Defines a macro to enable AES CBC cipher mode and pass relevant configuration options.<br />See cryptx_aes_padding_modes.</p>
+			<div class="function-doc">#define CRYPTX_AES_CTR_FLAGS(nonce_len, counter_len)	\<br />
+				&emsp;&emsp;((0x0f &amp; (counter_len))&lt;&lt;8) | ((0x0f &amp; (nonce_len))&lt;&lt;4) | AES_MODE_CTR</div>
+			<p>Defines a macro to enable AES CTR cipher mode and pass relevant configuration options.<br />Pass 0 for nonce_len and counter_len to set default options.</p>
+			<div class="function-doc">CRYPTX_RSA_MODULUS_MAX&emsp;&emsp;256</div>
+			<p>Defines the maximum byte length of an RSA public modulus supported by this library.</p>
+			<div class="function-doc">#define CRYPTX_ECDH_PRIVKEY_SIZE&emsp;&emsp;30</div>
+			<p>Defines the  byte length of an ECDH private key supported by this library.</p>
+			<div class="function-doc">#define CRYPTX_ECDH_PUBKEY_SIZE&emsp;&emsp;(CRYPTX_ECDH_PRIVKEY_SIZE&lt;&lt;1)</div>
+			<p>Defines the  byte length of an ECDH public key supported by this library.</p>
 			<div class="major-header">Enumerations</div>
-			<div class="function-doc">enum aes_cipher_modes { AES_MODE_CBC, AES_MODE_CTR };</div>
+			<div class="function-doc">typedef enum cryptx_csrng_sampling_modes {<br />
+				&emsp;&emsp;SAMPLING_THOROUGH	= 0,<br />
+				&emsp;&emsp;SAMPLING_FAST		= 1<br />
+				} cryptx_csrng_sampling_mode;</div>
+			<p>Defines sampling modes for cryptx_csrand_init().<br />
+			SAMPLING_THOROUGH: 1024 tests per bit<br />
+			SAMPLING_FAST: 512 tests per bit</p>
+			<div class="function-doc">enum cryptx_aes_cipher_modes {<br />
+				&emsp;&emsp;AES_MODE_CBC,<br />
+				&emsp;&emsp;AES_MODE_CTR<br />};</div>
 			<p>Defines supported AES cipher modes.</p>
-			<div class="function-doc">enum aes_padding_schemes { PAD_PKCS7, PAD_DEFAULT = PAD_PKCS7, PAD_ISO2 = 4 };</div>
+			<div class="function-doc">enum cryptx_aes_padding_schemes {<br />
+				&emsp;&emsp;PAD_PKCS7,<br />
+				&emsp;&emsp;PAD_DEFAULT = PAD_PKCS7,<br />
+				&emsp;&emsp;PAD_ISO2<br />;};</div>
 			<p>Defines supported padding schemes for AES CBC mode</p>
-			<div class="function-doc">typedef enum { AES_OK, AES_INVALID_ARG, AES_INVALID_MSG, AES_INVALID_CIPHERMODE, AES_INVALID_PADDINGMODE, AES_INVALID_CIPHERTEXT, AES_INVALID_OPERATION } aes_error_t;</div>
+			<div class="function-doc">typedef enum {<br />
+				&emsp;&emsp;AES_OK,<br />
+				&emsp;&emsp;AES_INVALID_ARG,<br />
+				&emsp;&emsp;AES_INVALID_MSG,<br />
+				&emsp;&emsp;AES_INVALID_CIPHERMODE,<br />
+				&emsp;&emsp;AES_INVALID_PADDINGMODE,<br />
+				&emsp;&emsp;AES_INVALID_CIPHERTEXT,<br />
+				&emsp;&emsp;AES_INVALID_OPERATION<br />} aes_error_t;</div>
 			<p>Defines possible responses codes from calls to the AES API.</p>
-			<div class="function-doc">typedef enum { RSA_OK, RSA_INVALID_ARG,  RSA_INVALID_MSG, RSA_INVALID_MODULUS, RSA_ENCODING_ERROR } rsa_error_t;</div>
+			<div class="function-doc">typedef enum {<br />
+				&emsp;&emsp;RSA_OK,<br />
+				&emsp;&emsp;RSA_INVALID_ARG,<br />
+				&emsp;&emsp;RSA_INVALID_MSG,<br />
+				&emsp;&emsp;RSA_INVALID_MODULUS,<br />
+				&emsp;&emsp;RSA_ENCODING_ERROR<br />} rsa_error_t;</div>
 			<p>Defines possible response codes from calls to the RSA API
 			</p>
-			<div class="function-doc">typedef enum { ECDH_OK, ECDH_INVALID_ARG,  ECDH_PRIVKEY_INVALID, ECDH_RPUBKEY_INVALID } ecdh_error_t;</div>
+			<div class="function-doc">typedef enum {<br />
+				&emsp;&emsp;ECDH_OK,<br />
+				&emsp;&emsp;ECDH_INVALID_ARG,<br />
+				&emsp;&emsp;ECDH_PRIVKEY_INVALID,<br />
+				&emsp;&emsp;ECDH_RPUBKEY_INVALID<br />} ecdh_error_t;</div>
 			<p>Defines possible response codes from calls to the ECDH API
 			</p>
 			<div class="major-header">Structs</div>
-			<div class="function-doc">typedef struct aes_ctx;</div>
+			<div class="function-doc">typedef struct cryptx_aes_ctx {...};</div>
 			<p>Defines state data for an AES context.</p>
-			<div class="function-doc">typedef struct ecdh_ctx;</div>
+			<div class="function-doc">typedef struct cryptx_ecdh_ctx {...};</div>
 			<p>Defines state data for an ECDH context.</p>
 			<div class="major-header">Functions</div>
-			<div class="function-doc">bool csrand_init(bool sampling_mode);</div>
-			<p>Initializes the secure RNG.<br /><br />
-				<span class="param">sampling_mode</span>: A flag specifying the sampling mode. See below.<br />
-				<span class="return">output</span>: True if success, False if failed
+			<div class="function-doc">bool&emsp;cryptx_csrand_init(cryptx_csrng_sampling_mode mode);</div>
+			<p>Initializes the (HW)RNG.<br />
+				<span class="param">mode</span>: A flag specifying the sampling mode. See cryptx_csrng_sampling_modes.<br />
+				<span class="return">output</span>: true on success, false on failure.
 				<span class="more-info">
 					SAMPLING_THOROUGH ensures a more entropic source, but takes longer (~4s).<br />
 					SAMPLING_FAST takes less time (~2s) but may not select the most entropic bit.
 				</span>
 			</p>
-			<div class="function-doc">uint32_t csrand_get(void);</div>
-			<p>Returns a securely random 32-bit (4 byte) integer.<br /><br />
+			<div class="function-doc">uint32_t&emsp;cryptx_csrand_get(void);</div>
+			<p>Returns a securely random 32-bit (4 byte) integer.<br />
 			<span class="return">output</span>: A 32-bit random integer
 			</p>
-			<div class="function-doc">bool csrand_fill(void* buffer, size_t size);</div>
-			<p>Fills a buffer with securely random bytes.<br /><br />
-				<span class="param">buffer</span>: Pointer to a buffer to fill with random bytes<br />
-				<span class="param">size</span>: Length of the buffer<br />
-				<span class="return">output</span>: True if success, False if failed
+			<div class="function-doc">bool&emsp;cryptx_csrand_fill(void* buffer, size_t size);</div>
+			<p>Fills a buffer with securely random bytes.<br />
+				<span class="param">buffer</span>: Pointer to a buffer to fill with random bytes.<br />
+				<span class="param">size</span>: Length of the buffer.<br />
+				<span class="return">output</span>: true on success, false on failure.
 			</p>
-			<div class="function-doc">aes_error_t aes_init(aes_ctx* ctx, const void* key, size_t keylen, const void* iv, uint24_t flags);</div>
-			<p>Initializes a stateful and one-directional AES context.<br /><br />
-			<span class="param">ctx</span>: Pointer to an AES context<br />
+			<div class="function-doc">aes_error_t&emsp;cryptx_aes_init(<br />
+				&emsp;&emsp;&emsp;struct cryptx_aes_ctx* context,<br />
+				&emsp;&emsp;&emsp;const void* key, size_t keylen,<br />
+				&emsp;&emsp;&emsp;const void* iv, uint24_t flags);</div>
+			<p>Initializes a stateful and one-directional AES context.<br />
+			<span class="param">context</span>: Pointer to an AES context.<br />
 			<span class="param">key</span>: Pointer to the key to use with the AES context<br />
 			<span class="param">keylen</span>: Length of the key, in bytes<br />
 			<span class="param">iv</span>: Pointer to a 16-byte initialization vector (salt)<br />
 			<span class="param">flags</span>: A series of cipher options bitwise-ORd together.<br />
-			<span class="return">output</span>: An aes_error_t indicating the status of the AES operation<br />
-				<span class="more-info"><span style="font-weight:bold;">Cipher Options Flags</span><br />
-					Cipher Mode: AES_MODE_CTR, AES_MODE_CBC<br />
-					For AES CBC mode: PAD_DEFAULT, PAD_PKCS7, PAD_ISO2<br />
-					For AES CTR mode: AES_CTR_NONCELEN(len), AES_CTR_COUNTERLEN(len)
-					</span>
-
+			&emsp;See CRYPTX_AES_CBC_FLAGS() and CRYPTX_AES_CTR_FLAGS()<br />
+			<span class="return">output</span>: An aes_error_t indicating the status of the AES operation.
 			</p>
-			<div class="function-doc">aes_error_t aes_encrypt(const aes_ctx* ctx, const void* plainrtext, size_t len, void* ciphertext);</div>
-			<p>Encrypts a stream of data and updates the AES context such that (1) it will return AES_INVALID_OPERATION if used with decryption, and (2) you can pass the next stream of data to aes_encrypt() using the same context.<br /><br />
-			<span class="param">ctx</span>: Pointer to AES context<br />
-			<span class="param">plaintext</span>: Pointer to stream of data to encrypt<br />
-			<span class="param">len</span>: Length of data to encrypt<br />
-			<span class="param">ciphertext</span>: Pointer to buffer to write encrypted data to<br />
-			<span class="return">output</span>: An aes_error_t indicating the status of the AES operation
+			<div class="function-doc">aes_error_t&emsp;cryptx_aes_encrypt(<br />
+				&emsp;&emsp;&emsp;const struct cryptx_aes_ctx* context,<br />
+				&emsp;&emsp;&emsp;const void* plaintext, size_t len,<br />
+				&emsp;&emsp;&emsp;void* ciphertext);</div>
+			<p>Encrypts a stream of data and updates the AES context such that (1) it will return AES_INVALID_OPERATION if used with decryption, and (2) you can pass the next stream of data to aes_encrypt() using the same context.<br />
+			<span class="param">context</span>: Pointer to an initialized AES context.<br />
+			<span class="param">plaintext</span>: Pointer to stream of data to encrypt.<br />
+			<span class="param">len</span>: Length of data to encrypt.<br />
+			<span class="param">ciphertext</span>: Pointer to buffer to write encrypted data to.<br />
+			<span class="return">output</span>: An aes_error_t indicating the status of the AES operation.
 			</p>
-			<div class="function-doc">aes_error_t aes_decrypt(const aes_ctx* ctx, const void* ciphertext, size_t len, void* plaintext);</div>
-			<p>Decrypts a stream of data and updates the AES context such that (1) it will return AES_INVALID_OPERATION if used with encryption, and (2) you can pass the next stream of data to aes_decrypt() using the same context.<br /><br />
-			<span class="param">ctx</span>: Pointer to AES context<br />
-			<span class="param">plaintext</span>: Pointer to stream of data to decrypt<br />
-			<span class="param">len</span>: Length of data to decrypt<br />
-			<span class="param">ciphertext</span>: Pointer to buffer to write decrypted data to<br />
-			<span class="return">output</span>: An aes_error_t indicating the status of the AES operation
+			<div class="function-doc">aes_error_t&emsp;aes_decrypt(<br />
+				&emsp;&emsp;&emsp;const struct cryptx_aes_ctx* context,<br />
+				&emsp;&emsp;&emsp;const void* ciphertext, size_t len,<br />
+				&emsp;&emsp;&emsp;void* plaintext);</div>
+			<p>Decrypts a stream of data and updates the AES context such that (1) it will return AES_INVALID_OPERATION if used with encryption, and (2) you can pass the next stream of data to aes_decrypt() using the same context.<br />
+			<span class="param">context</span>: Pointer to an initalized AES context.<br />
+			<span class="param">plaintext</span>: Pointer to stream of data to decrypt.<br />
+			<span class="param">len</span>: Length of data to decrypt.<br />
+			<span class="param">ciphertext</span>: Pointer to buffer to write decrypted data to.<br />
+			<span class="return">output</span>: An aes_error_t indicating the status of the AES operation.
 			</p>
-			<div class="function-doc">rsa_error_t rsa_encrypt(const void* msg, size_t msglen, void* ciphertext, const void* pubkey, size_t keylen, uint8_t oaep_hash_alg);</div>
-			<p>Encrypts a message using the RSA algorithm, applying the <span style="font-style:italic;">Optimal Asymmetic Encryption Padding</span> scheme (OAEPv2.2) prior to encryption.<br /><br />
-			<span class="param">msg</span>: Pointer to message to encrypt<br />
-			<span class="param">msglen</span>: Length of message to encrypt<br />
-			<span class="param">ciphertext</span>: Pointer to buffer to write encrypted message to<br />
-			<span class="param">pubkey</span>: Pointer to public modulus to encrypt with<br />
-			<span class="param">keylen</span>: Length, in bytes, of the public modulus<br />
+			<div class="function-doc">rsa_error_t&emsp;rsa_encrypt(<br />
+				&emsp;&emsp;&emsp;const void* msg, size_t msglen,<br />
+				&emsp;&emsp;&emsp;const void* pubkey, size_t keylen,<br />
+				&emsp;&emsp;&emsp;void* ciphertext, uint8_t oaep_hash_alg);</div>
+			<p>Encrypts a message using the RSA algorithm, applying the <span style="font-style:italic;">Optimal Asymmetic Encryption Padding</span> scheme (OAEPv2.2) prior to encryption.<br />
+			<span class="param">msg</span>: Pointer to message to encrypt.<br />
+			<span class="param">msglen</span>: Length of message to encrypt.<br />
+			<span class="param">pubkey</span>: Pointer to public modulus to encrypt with.<br />
+			<span class="param">keylen</span>: Length, in bytes, of the public modulus.<br />
+			<span class="param">ciphertext</span>: Pointer to buffer to write encrypted message to.<br />
+			<span class="param">oaep_hash_algs</span>: The numeric ID of the hashing algorithm to use within OAEP encoding.<br />&emsp;See cryptx_hash_algorithms.<br />
 			<span class="return">output</span>: An rsa_error_t indicating the status of the RSA operation
 			</p>
-			<div class="function-doc">ecdh_error_t ecdh_keygen(ecdh_ctx* ctx, bool (*randfill)(void* buffer, size_t size));</div>
-			<p>Generates an ECDH public key given an ECDH context. If <span style="font-weight:bold">randfill</span> is provided, the private key is filled with random bytes prior to public key generation.<br /><br />
-			<span class="param">ctx</span>: Pointer to an ECDH context<br />
-			<span class="param">randfill</span>: Pointer to a function used to fill a buffer with random bytes.<br />&emsp;&emsp;<span style="font-weight:bold">csrand_fill</span> is recommended for this.<br />
-			<span class="return">output</span>: An ecdh_error_t indicating the status of the ECDH operation<br />
-			&emsp;&emsp;The context is updated with the public key, accessible at ctx.pubkey.<br />
-			&emsp;&emsp;The private key is also accessible at ctx.privkey.
+			<div class="function-doc">ecdh_error_t&emsp;ecdh_keygen(struct cryptx_ecdh_ctx* context);</div>
+			<p>Fills the private key with random bytes and generates a public key given base point G and the randomized private key.<br />
+			<span class="param">context</span>: Pointer to an ECDH context.<br />
+			<span class="return">output</span>: An ecdh_error_t indicating the status of the ECDH operation.<br />
 			<span class="more-info">
-				If you pass NULL for <span style="font-weight:bold;">randfill</span>, it will be assumed that you have generated and random-filled the private key yourself. Do not do this if you do not know what you are doing. If you choose to generate your own private key, the length must be between half the base order and the base order, in bits (116 - 232). This is 15-29 bytes. Using a smaller key results in a lower effective security level.<br />
-				Do not edit the context manually after calling this function, you will corrupt the state.<br />
-				Only access these structure members for reading out the public key.
+				The context is updated with the public key, accessible at <span style="font-weight:bold;">context.pubkey</span>.<br />
+				The private key is also accessible at <span style="font-weight:bold;">context.privkey</span>.<br />
+				Do not edit the context manually after calling this function, you will corrupt the state. Only access these structure members directly to read out the public key for sending to the remote host.
 			</span>
 			</p>
-			<div class="function-doc">ecdh_error_t ecdh_secret(ecdh_ctx* ctx, const uint8_t* rpubkey, uint8_t* secret);</div>
+			<div class="function-doc">ecdh_error_t&emsp;ecdh_secret(<br />
+				&emsp;&emsp;&emsp;const struct cryptx_ecdh_ctx* context,<br />
+				&emsp;&emsp;&emsp;const uint8_t* rpubkey, uint8_t* secret);</div>
 			<p>Generates a shared secret given an ECDH context and a remote public key.<br />
-			Uses the cofactor variant of ECDH. SECT233k1 has a cofactor of 4.<br /><br />
-			<span class="param">ctx</span>: Pointer to an ECDH context<br />
-			<span class="param">rpubkey</span>: Pointer to a remote public key<br />
-			<span class="param">secret</span>: Pointer to buffer to write the secret to<br />
-			<span class="return">output</span>: An ecdh_error_t indicating the status of the ECDH operation<br />
+			Uses the cofactor variant of ECDH. SECT233k1 has a cofactor of 4.<br />
+			<span class="param">context</span>: Pointer to an initialized ECDH context.<br />
+			<span class="param">rpubkey</span>: Pointer to a remote public key.<br />
+			<span class="param">secret</span>: Pointer to buffer to write the secret to.<br />
+			<span class="return">output</span>: An ecdh_error_t indicating the status of the ECDH operation.<br />
 			<span class="more-info">
 				Do not edit the context manually, you will corrupt the state.<br />
 				Do not use the generated secret directly for symmetric encryption. Pass it to a KDF or cryptographic hash to generate a digest and use that as your encryption key.

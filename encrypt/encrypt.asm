@@ -5213,103 +5213,96 @@ oaep_decode:
 rsa_encrypt:
 	save_interrupts
 
-	ld	hl, -6
+	ld	hl, -9
 	call	ti._frameset
-	ld	hl, (ix + 12)
-	ld	iyl, 0
-	ld	de, 1
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jq	nz, .lbl_1
-	jq	.lbl_12
-.lbl_1:
 	ld	hl, (ix + 6)
+	xor	a, a
+	ld	bc, 1
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jq	nz, .lbl_2
-	jq	.lbl_12
-.lbl_2:
-	ld	hl, (ix + 15)
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jq	z, .lbl_12
-	ld	hl, (ix + 18)
-	ld	de, 3
-	ld	bc, -128
-	add	hl, bc
-	ld	bc, 129
-	or	a, a
-	sbc	hl, bc
-	jq	c, .lbl_4
-	jq	.lbl_12
-.lbl_4:
-	ld	bc, (ix + 18)
-	dec	bc
-	ld	hl, (ix + 15)
-	add	hl, bc
-	ld	a, (hl)
-	and	a, 1
-	ld	l, 1
-	xor	a, l
-	bit	0, a
-	jq	nz, .lbl_12
-	ld	de, 2
-.lbl_6:
-	ld	bc, 0
-	ld	c, iyl
-	ld	hl, (ix + 15)
-	add	hl, bc
-	ld	a, (hl)
-	or	a, a
-	jq	nz, .lbl_8
-	inc	iyl
+	jp	z, .lbl_12
 	ld	hl, (ix + 12)
 	add	hl, bc
-	ld	(hl), 0
-	jq	.lbl_6
-.lbl_8:
-	ld	iy, (ix + 9)
-	lea	hl, iy + 0
-	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jq	nz, .lbl_9
-	jq	.lbl_12
-.lbl_9:
-	push	bc
-	pop	iy
-	ld	bc, 66
-	add	hl, bc
-	lea	bc, iy + 0
-	push	hl
-	pop	iy
+	jp	z, .lbl_12
 	ld	hl, (ix + 18)
-	ld	(ix + -6), bc
+	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	ld	(ix + -3), hl
-	lea	bc, iy + 0
-	or	a, a
-	sbc	hl, bc
-	jq	c, .lbl_12
-	ld	hl, (ix + 12)
-	ld	de, (ix + -6)
+	jp	z, .lbl_12
+	ld	hl, (ix + 15)
+	ld	de, -257
+	ld	bc, 3
 	add	hl, de
-	ld	a, (ix + 21)
-	ld	e, a
-	push	de
+	ld	de, -129
+	or	a, a
+	sbc	hl, de
+	jp	c, .lbl_12
+	ld	iy, (ix + 12)
+	ld	de, (ix + 15)
+	add	iy, de
+	ld	l, a
+	ld	a, (iy - 1)
+	and	a, 1
+	bit	0, a
+	ld	a, l
+	jp	z, .lbl_12
+	ld	bc, 2
+	ld	iy, (ix + 12)
+	lea	hl, iy
+.lbl_6:
 	ld	de, 0
+	ld	e, a
+	add	hl, de
+	ld	iyl, a
+	ld	a, (hl)
+	or	a, a
+	jr	nz, .lbl_8
+	inc	iyl
+	ld	hl, (ix + 18)
+	add	hl, de
+	ld	(hl), 0
+	ld	a, iyl
+	ld	hl, (ix + 12)
+	jr	.lbl_6
+.lbl_8:
 	push	de
-	ld	de, (ix + -3)
+	pop	iy
+	ld	de, (ix + 9)
+	ex	de, hl
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	z, .lbl_12
+	ld	de, 66
+	add	hl, de
+	ld	(ix - 3), hl
+	ld	hl, (ix + 15)
+	lea	de, iy
+	ld	(ix - 6), de
+	or	a, a
+	sbc	hl, de
+	ld	(ix - 9), hl
+	ld	de, (ix - 3)
+	or	a, a
+	sbc	hl, de
+	ld	iy, (ix + 6)
+	jr	c, .lbl_12
+	ld	hl, (ix + 18)
+	ld	bc, (ix - 6)
+	add	hl, bc
+	ld	c, (ix + 21)
+	push	bc
+	ld	bc, 0
+	push	bc
+	ld	de, (ix - 9)
 	push	de
 	push	hl
 	ld	hl, (ix + 9)
 	push	hl
-	ld	hl, (ix + 6)
-	push	hl
+	push	iy
 	call	oaep_encode
 	pop	de
 	pop	de
@@ -5320,26 +5313,25 @@ rsa_encrypt:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	ld	de, 4
-	jq	z, .lbl_12
+	ld	bc, 4
+	jr	z, .lbl_12
+	ld	hl, (ix + 12)
+	push	hl
+	ld	hl, 65537
+	push	hl
 	ld	hl, (ix + 18)
-	ld	bc, 255
-	call	ti._iand
-	ld	de, (ix + 15)
-	push	de
-	ld	de, 65537
-	push	de
-	ld	de, (ix + 12)
-	push	de
+	push	hl
+	ld	hl, (ix + 15)
 	push	hl
 	call	_powmod
 	pop	hl
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	de, 0
+	ld	bc, 0
 .lbl_12:
-	ex	de, hl
+	push	bc
+	pop	hl
 	restore_interrupts_noret rsa_encrypt
 	jp stack_clear
  

@@ -28,10 +28,15 @@
  */
 
 // Internal structures for AES cipher modes
-struct _cryptx_aes_cbc { uint8_t padding_mode; };
-struct _cryptx_aes_ctr {
+struct cryptx_aes_cbc_state { uint8_t padding_mode; };
+struct cryptx_aes_ctr_state {
 	uint8_t counter_pos_start; uint8_t counter_len;
 	uint8_t last_block_stop; uint8_t last_block[16]; };
+
+typedef union {
+	struct cryptx_aes_cbc_state ctr;                      /**< metadata for counter mode */
+	struct cryptx_aes_ctr_state cbc;                      /**< metadata for cbc mode */
+} cryptx_aes_private_h;
 
 
 //******************************************************************************************
@@ -109,10 +114,7 @@ struct cryptx_aes_ctx {
 	uint32_t round_keys[60];                /**< round keys */
 	uint8_t iv[16];                         /**< IV state for next block */
 	uint8_t ciphermode;                     /**< selected operational mode of the cipher */
-	union {
-		struct _cryptx_aes_cbc ctr;                      /**< metadata for counter mode */
-		struct _cryptx_aes_ctr cbc;                      /**< metadata for cbc mode */
-	} _internal;
+	cryptx_aes_private_h metadata;			/**< opague, internal context metadata */
 	uint8_t op_assoc;                       /**< state-flag indicating if context is for encryption or decryption*/
 };
 
@@ -154,7 +156,7 @@ enum cryptx_aes_padding_schemes {
 
 /** Defines a macro to return the byte length of an AES ciphertext given a plaintext length.*/
 #define CRYPTX_AES_CIPHERTEXT_LEN(plaintext_len) \
-	((((plaintext_len)%AES_BLOCKSIZE)==0) ? (len) + AES_BLOCKSIZE : (((len)>>4) + 1)<<4)
+	((((plaintext_len)%CRYPTX_AES_BLOCK_SIZE)==0) ? (len) + CRYPTX_AES_BLOCK_SIZE : (((len)>>4) + 1)<<4)
 
 /** Defines a macro to enable AES CBC cipher mode and pass relevant configuration options.*/
 #define CRYTPX_AES_CBC_FLAGS(padding_mode) \
@@ -185,7 +187,8 @@ typedef enum {
  * @param[in] key	Pointer to an 128, 192, or 256 bit key to load into the AES context.
  * @param[in] keylen	The size, in bytes, of the @b key to load.
  * @param[in] iv	Pointer to  Initialization vector, a buffer equal to the block size filled with random bytes.
- * @param[in] flags	A series of flags to configure the AES context with. Use the provided @b AES_CTR_FLAGS or @b AES_CBC_FLAGS to pass flags.
+ * @param[in] flags	A series of flags to configure the AES context with.
+ * 				Use the provided @b CRYPTX_AES_CTR_FLAGS or @b CRYPTX_AES_CBC_FLAGS to pass flags.
  * @returns An @b aes_error_t indicating the status of the AES operation.
  * @note Contexts are not bidirectional due to being stateful. If you need to process both encryption and decryption,
  * initialize seperate contexts for encryption and decryption. Both contexts will use the same key, but different initialization vectors.
@@ -277,20 +280,16 @@ typedef enum {
 	RSA_ENCODING_ERROR              /**< RSA encryption failed, OAEP encoding error */
 } rsa_error_t;
 
+/** Defines the maximum byte length of an RSA public modulus supported by this library. */
+#define CRYPTX_RSA_MODULUS_MAX		256
 
-/******************
- * @def RSA_MODULUS_MAX
- * Defines the largest possible byte length for a modulus
- * supported by this library.
- */
-#define RSA_MODULUS_MAX		256
 /*****************************************************
  * @brief Encrypts a message using the given RSA public key.
  * @param[in] msg	Pointer to a message to encrypt using RSA.
  * @param[in] msglen	The byte length of the @b msg.
- * @param[out] ciphertext 	Pointer a buffer to write the ciphertext to.
  * @param[in] pubkey	Pointer to a public key to use for encryption.
  * @param[in] keylen	The length of the public key (modulus) to encrypt with.
+ * @param[out] ciphertext 	Pointer a buffer to write the ciphertext to.
  * @param[in] oaep_hash_alg	The numeric ID of the hashing algorithm to use within OAEP encoding.
  *      See @b cryptx_hash_algorithms.
  * @returns  An @b rsa_error_t indicating the status of the RSA operation.
@@ -301,9 +300,9 @@ typedef enum {
 rsa_error_t cryptx_rsa_encrypt(
 					const void* msg,
 					size_t msglen,
-					void* ciphertext,
 					const void* pubkey,
 					size_t keylen,
+					void* ciphertext,
 					uint8_t oaep_hash_alg);
 
 
@@ -330,22 +329,11 @@ rsa_error_t cryptx_rsa_encrypt(
 	the other party's public key with their own private key to produce the same secret.
  */
 
-/**************************************************
- * @def ECDH\_PRIVKEY\_SIZE
- * Defines the byte length of the ECDH private key.
- * @note This is defined as 32 for compatibility with other libraries.
- * However, all points worked with do not exceed 233 bits due to the
- * particulars of finite field arithmetic. The private key will be trimmed
- * to not exceed 233 bits.
- */
-#define ECDH_PRIVKEY_SIZE		30
+/** Defines the byte length of an ECDH private key supported by this library. */
+#define CRYPTX_ECDH_PRIVKEY_SIZE	30
 
-/*********************************************
- * @def ECDH\_PUBKEY\_SIZE
- * Defines the byte length of the ECDH public key.
- * @note This is twice the length of the private key.
- */
-#define ECDH_PUBKEY_SIZE		(ECDH_PRIVKEY_SIZE<<1)
+/** Defines the byte length of an ECDH public key supported by this library.  */
+#define CRYPTX_ECDH_PUBKEY_SIZE		(CRYPTX_ECDH_PRIVKEY_SIZE<<1)
 
 struct cryptx_ecdh_ctx {
 	uint8_t privkey[ECDH_PRIVKEY_SIZE];
