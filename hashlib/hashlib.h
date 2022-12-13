@@ -20,209 +20,197 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-/**********************************************
- * @def fastRam_Safe
- * Pointer to a region of fast RAM that is generally safe to use
- * as long as you don't call Libload.
+//******************************************************************************************
+/*
+ 
  */
-#define fastRam_Safe		((void*)0xE30A04)
- 
- /*********************************************
-  * @def fastRam_Unsafe
-  *	Pointer to the start of the region of fast RAM, including the safe region above as well as
-  *	a region used by the library's csrng.
-  */
-#define fastRam_Unsafe		((void*)0xE30800)
- 
- 
-//***********************************************************************************************
-/*	Cryptographic Hashes
- 
-	A cryptographic hash is a cryptographic `primitve` (def: a low-level algorithm used
-	to build protocols) that is used for data integrity verification. It is similar to a
-	checksum, but unlike checksums, which can be easily fooled, cryptographic hashes
-	are a lot harder to fool due to how they work. The general use of a hash is as follows:
-	the party sending a message hashes it and includes that hash as part of the message.
-	The recipient hashes the message (except the hash) themselves and then compares that hash
-	to the one included in the message. If the hashes match, the message is complete and unaltered.
-	If the hashes do not match, the message is incomplete or has been tampered with and should be
-	discarded (and possibly a new copy of the message requested from origin). */
-
-/**********************************************
- * @struct \_cryptx\_sha256\_ctx
- * Defines hash-state data for an instance of SHA-256.
- * This structure is internal. You should never need to use this.
- */
-struct cryptx_hash_sha256 {
+struct cryptx_priv_hash_sha256_state {
 	uint8_t data[64];		/**< holds sha-256 block for transformation */
 	uint8_t datalen;		/**< holds the current length of data in data[64] */
 	uint8_t bitlen[8];		/**< holds the current length of transformed data */
 	uint32_t state[8];		/**< holds hash state for transformed data */
 };
-
 typedef union {
-	struct cryptx_hash_sha256;
-} cryptx_hash_internal_h;
+	struct cryptx_priv_hash_sha256_state sha256;
+} cryptx_hash_private_h;
 
-/**************************************
- * @struct hash\_ctx
- * Defines universal hash-state data, including pointer to algorithm-specific handling methods and
- * a union of computational states for various hashes.
+// Private Struct Definitions for HMAC State Contexts
+struct cryptx_priv_hmac_sha256_state {
+	uint8_t ipad[64];       /**< holds the key xored with a magic value to be hashed with the inner digest */
+	uint8_t opad[64];       /**< holds the key xored with a magic value to be hashed with the outer digest */
+	uint8_t data[64];		/**< holds sha-256 block for transformation */
+	uint8_t datalen;		/**< holds the current length of data in data[64] */
+	uint8_t bitlen[8];		/**< holds the current length of transformed data */
+	uint32_t state[8];		/**< holds hash state for transformed data */
+};
+typedef union {
+	struct cryptx_priv_hmac_sha256_state sha256;
+} cryptx_hmac_private_h;
+
+
+//******************************************************************************************
+/*	Cryptographic Hashes
+ 
+	A cryptographic hash is a cryptographic `primitve` (def: a low-level algorithm used
+	to build protocols) that is used for data integrity verification. It is similar to a
+	checksum, but unlike checksums, which can be easily fooled, cryptographic hashes
+	are a lot harder to fool due to the nature of their construction. The general use of
+	a hash is as follows:
+	(1) The party sending a message hashes it and includes that hash as part of the message.
+	(2) The recipient hashes the message (except the hash) themselves and then compares that hash
+		with the one included in the message.
+	(3) If the hashes match, the message is complete and unaltered. If the hashes do not match,
+		the message is incomplete or has been tampered with and should be discarded
+		(and possibly a new copy of the message requested from origin). */
+
+
+/*******************************************
+ * @struct cryptx\_hash\_ctx
+ * Defines a context for storing hash-state data.
  */
 struct cryptx_hash_ctx {
 	bool (*init)(void* ctx);
 	void (*update)(void* ctx, const void* data, size_t len);
 	void (*final)(void* ctx, void* output);
-	cryptx_hash_internal_h meta;
+	uint8_t digest_len;
+	cryptx_hash_private_h metadata;
 };
  
  /*******************************
-  * @enum hash_algorithms
+  * @enum cryptx\_hash\_algorithms
   * Idenitifiers for selecting hash types.
   */
 enum cryptx_hash_algorithms {
     SHA256,             /**< algorithm type identifier for SHA-256 */
 };
 
-/*********************************
- * @def SHA256_DIGEST_LEN
- * Binary length of the SHA-256 hash output.
+/***********************************
+ * @def CRYPTX\_SHA256\_DIGEST\_LEN
+ * Byte length of SHA-256 digest.
  */
 #define CRYPTX_SHA256_DIGEST_LEN   32
 
 /**************************************************************
- *	@brief Hash initializer.
- *	Initializes the given context with the starting state for the given hash algorithm and
- *  populates pointers to the methods for update and final for the given hash..
- *	@param ctx Pointer to a hash context (hash_ctx).
- *  @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.
- *  @return Boolean. True if hash initialization succeeded. False if hash ID invalid.
+ *	@brief Initializes a hash-state context for a specific hash algorithm.
+ *	@param[in] context	Pointer to a hash-state context.
+ *  @param[in] hash_alg	The numeric ID of the hashing algorithm to use. See @b cryptx_hash_algorithms.
+ *  @return @b true if hash initialization succeeded, @b false if failed.
+ *  @note Uses 516 bytes of fastMem starting at 0xE30800.
  */
 bool cryptx_hash_init(struct cryptx_hash_ctx* context, uint8_t hash_alg);
 
 /*********************************************************
- *	@brief Updates the hash context for the given data.
- *	@param ctx Pointer to a hash context.
- *	@param data Pointer to data to hash.
- *	@param len Number of bytes at @b data to hash.
- *  @note You can use @b ctx.update() as an alternative to this function.
- *      If doing so, you must pass @b &ctx.Hash instead of @b &ctx.
- *	@warning You must have an initialized hash context or a crash will ensue.
+ *	@brief Updates the hash-state for a given block of data.
+ *	@param[in] context	Pointer to a hash-state context.
+ *	@param[in] data		Pointer to a block of data to hash..
+ *	@param[in] len		Size of the @b data to hash.
+ *	@note Uses 516 bytes of fastMem starting at 0xE30800.
+ *	@warning Calling this on a context that has not been initialized may have
+ *	unpredictable results.
  */
 void cryptx_hash_update(struct cryptx_hash_ctx* context, const void* data, size_t len);
 
 /*****************************************************
- *	@brief Finalize context and render digest for hash
- *	@param ctx Pointer to a hash context.
- *	@param digest Pointer to a buffer to write the hash to.
+ *	@brief Output digest for current hash-state (preserves state).
+ *	@param[in] context	Pointer to a hash-state context.
+ *	@param[out]	digest	Pointer to a buffer to write digest to.
  *	@note @b digest must be at large enough to hold the hash digest.
- *  @note You can use @b ctx.final() as an alternative to this function.
- *      If doing so, you must pass @b &ctx.Hash instead of @b &ctx.
- *  @warning You must have an initialized hash context or a crash will ensue.
+ *	You can retrieve the necessary size by accessing the @b digest_len
+ *	member of an initialized @b cryptx_hash_ctx.
+ *	@note Uses 516 bytes of fastMem starting at 0xE30800.
+ *  @warning Calling this on a context that has not been initialized may have
+ *	unpredictable results.
  */
 void cryptx_hash_final(struct cryptx_hash_ctx* context, void* digest);
 
-/*************************************************
- *	@brief Arbitrary Length Hashing Function
- *
- *	Computes an arbitrary length hash from the given data using the given hashing algorithm.
- *
- *	@param data Pointer to data to hash.
- *	@param datalen Number of bytes at @b data to hash.
- *	@param outbuf Pointer to buffer to write hash output to.
- *	@param outlen Number of bytes to write to @b outbuf.
- *  @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.
+/*********************************************************
+ *	@brief Computes a digest of arbitrary length for a given block of data.
+ *	@param[in]	data	Pointer to data to hash.
+ *	@param[in]	datalen	Size of @b data to hash.
+ *	@param[out] outbuf	Pointer to buffer to write digest to.
+ *	@param[in]	outlen 	Number of bytes to write to @b outbuf.
+ *  @param[in]	hash_alg	The numeric ID of the hashing algorithm to use. See @b cryptx_hash_algorithms.
  *	@note @b outbuf must be at least @b outlen bytes large.
+ *	@note Uses 516 bytes of fastMem starting at 0xE30800.
  */
-bool cryptx_hash_mgf1(const void* data, size_t datalen, void* outbuf, size_t outlen, uint8_t hash_alg);
+bool cryptx_hash_mgf1(
+			const void* data,
+			size_t datalen,
+			void* outbuf,
+			size_t outlen,
+			uint8_t hash_alg);
 
 
-/*
-Hash-Based Message Authentication Code (HMAC)
+//******************************************************************************************
+/*	Hash-Based Message Authentication Code (HMAC)
 
-HMAC generates a more secure hash by using a key known only to authorized
-parties as part of the hash initialization. Thus, while normal hashes can be
-verified by anyone, only the parties with the key can validate using a HMAC hash.
-*/
+	An HMAC is a keyed hash. The hash-state of an HMAC context is transformed using a
+	key during initialization. The state is then transformed again during digest
+	computation. This results in a hash that can only be validated by another HMAC
+	implementation using the correct key. */
 
-/*******************************************
- * @typedef sha256hmac_ctx
- * Defines hash-state data for an instance of SHA-256.
- */
-struct _cryptx_sha256hmac {
-    uint8_t ipad[64];       /**< holds the key xored with a magic value to be hashed with the inner digest */
-    uint8_t opad[64];       /**< holds the key xored with a magic value to be hashed with the outer digest */
-    uint8_t data[64];		/**< holds sha-256 block for transformation */
-	uint8_t datalen;		/**< holds the current length of data in data[64] */
-	uint8_t bitlen[8];		/**< holds the current length of transformed data */
-	uint32_t state[8];		/**< holds hash state for transformed data */
-};
 
 /*************************************
- * @typedef hmac_ctx
- * Defines hash-state data for an HMAC instance.
+ * @struct cryptx\_hmac\_ctx
+ * Defines a context for storing HMAC-state data.
  */
 struct cryptx_hmac_ctx {
     bool (*init)(void* ctx, const void* key, size_t keylen);
     void (*update)(void* ctx, const void* data, size_t len);
     void (*final)(void* ctx, void* output);
-    union {
-        struct _cryptx_sha256hmac sha256hmac;
-    } _internal;
+	uint8_t digest_len;
+	cryptx_hmac_private_h metadata;
 };
 
 /*************************************************************
- *	@brief Context Initializer for HMAC
- *
- *	Initializes the given context with the starting state for the given HMAC algorithm.
- *
- *	@param ctx Pointer to a hmac context.
- *	@param key Pointer to an authentication key used to initialize the base hmac context.
- *	@param keylen Length of @b key, in bytes.
- *  @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.
- *  @return Boolean. True if hash initialization succeeded. False if hash ID invalid.
+ *	@brief Initializes an HMAC-state context for a specific hash algorithm.
+ *	@param[in] context	Pointer to an HMAC-state context.
+ *	@param[in] key		Pointer to a key used to initialize the HMAC state.
+ *	@param[in] keylen	Length of the @b key.
+ *  @param[in] hash_alg	The numeric ID of the hashing algorithm to use. See @b cryptx_hash_algorithms.
+ *  @return @b true if initialized succeeded, @b false if failed.
+ *  @note Uses 516 bytes of fastMem starting at 0xE30800.
  */
 bool cryptx_hmac_init(struct cryptx_hmac_ctx* context, const void* key, size_t keylen, uint8_t hash_alg);
 
-/*********************************************
- *	@brief Updates the hmac context for the given data.
- *	@param ctx Pointer to an HMAC context.
- *	@param data Pointer to data to hash.
- *	@param len Number of bytes at @b data to hash.
- *  @note You may use @b ctx.update() as an alternative to this function.
- *      If doing so, you must pass @b &ctx.Hmac instead of @b &ctx.
- *	@warning You must have an initialized hash context or a crash will ensue.
+/*********************************************************
+ *	@brief Updates the hash-state for a given block of data.
+ *	@param[in] context	Pointer to an HMAC-state context.
+ *	@param[in] data		Pointer to a block of data to hash..
+ *	@param[in] len		Size of the @b data to hash.
+ *	@note Uses 516 bytes of fastMem starting at 0xE30800.
+ *	@warning Calling this on a context that has not been initialized may have
+ *	unpredictable results.
  */
 void cryptx_hmac_update(struct cryptx_hmac_ctx* context, const void* data, size_t len);
 
-/*************************************************
- *	@brief Finalize Context and Render Digest for HMAC
- *	@param ctx Pointer to an HMAC context.
- *	@param digest Pointer to a buffer to write the hash to.
- *	@note @b digest must be large enough to hold the hash digest.
- *  @note You may use @b ctx.final() as an alternative to this function.
- *      If doing so, you must pass @b &ctx.Hmac instead of @b &ctx.
- *  @warning You must have an initialized hash context or a crash will ensue.
+/*****************************************************
+ *	@brief Output digest for current HMAC-state (preserves state).
+ *	@param[in] context	Pointer to an HMAC-state context.
+ *	@param[out]	digest	Pointer to a buffer to write digest to.
+ *	@note @b digest must be at large enough to hold the hash digest.
+ *	You can retrieve the necessary size by accessing the @b digest_len
+ *	member of an initialized @b cryptx_hmac_ctx.
+ *	@note Uses 516 bytes of fastMem starting at 0xE30800.
+ *  @warning Calling this on a context that has not been initialized may have
+ *	unpredictable results.
  */
 void cryptx_hmac_final(struct cryptx_hmac_ctx* context, void* output);
 
-/*********************************************
- * @brief Password-Based Key Derivation Function
- *
- * Computes a key derived from a password, a 16-byte salt, and a given number of rounds.
- *
- * @param password Pointer to a string containing the password to derive a key from.
- * @param passlen The length of the password (in bytes).
- * @param key The buffer to write the key to. Must be at least @b keylen bytes large.
- * @param keylen The length of the key to generate (in bytes).
- * @param salt A psuedo-random string to use when computing the key.
- * @param saltlen The length of the salt to use (in bytes).
- * @param rounds The number of times to iterate the hash function per block of @b keylen.
- * @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.
- * @note Standards recommend a salt of at least 128 bits (16 bytes).
+/****************************************************
+ * @brief Derives a key from a password, salt, and round count.
+ * @param[in] password 	Pointer to a string containing the password.
+ * @param[in] passlen	Byte length of the password.
+ * @param[out] key		Pointer to buffer to write key to.
+ * @param[in] keylen	Length of @b key to generate.
+ * @param[in] salt	 A psuedo-random string to use in each round of key derivation.
+ * @param[in] saltlen	Byte length of the salt.
+ * @param[in] rounds 	The number of times to iterate the HMAC function per block of @b keylen.
+ * @param[in] hash_alg 	The numeric ID of the hashing algorithm to use. See @b cryptx_hash_algorithms.
+ * @note NIST recommends a salt of at least 128 bits (16 bytes).
  * @note @b rounds is used to increase the cost (computational time) of generating a key. What makes password-
  * hashing algorithms secure is the time needed to generate a rainbow table attack against it. More rounds means
- * a more secure key, but more time spent generating it. Current cryptography standards recommend in excess of 1000
+ * a more secure key, but more time spent generating it. Current cryptography standards recommend thousands of
  * rounds but that may not be feasible on the CE.
  */
 bool cryptx_hmac_pbkdf2(
@@ -236,26 +224,29 @@ bool cryptx_hmac_pbkdf2(
     uint8_t hash_alg);
     
 
-// Miscellaneous Functions
+//******************************************************************************************
+/*	Digest Functions
+ 
+	These functions perform tasks related to the digests output by the hash and HMAC
+	API above. */
 
 /*********************************************
- * @brief Convert a digest to a valid hex string.
- * @param digest Pointer to a buffer or digest to convert.
- * @param len Number of bytes at @b digest to convert.
- * @param hexstr A buffer to write the output hex string to. Must be at least 2 * len + 1 bytes large.
+ * @brief Convert a digest to its hexstring representation.
+ * @param[in] digest	Pointer to a buffer or digest.
+ * @param[in] len		Byte length of @b digest.
+ * @param[out] hexstr	Buffer to write the output hex string to.
+ * @note @b hexstr must be at least twice @b len +1 bytes large.
  */
-bool cryptx_digest_tostring(const void* digest, size_t len, char* hexstr);
+bool cryptx_digest_tostring(const void* digest, size_t len, uint8_t* hexstr);
 
 
 /*********************************************
- * @brief Secure buffer comparison
- *
- * Evaluates the equality of two buffers using a method that offers resistance to timing attacks.
- *
- * @param digest1 The first buffer to compare.
- * @param digest2 The second buffer to compare.
- * @param len The number of bytes to compare.
- * @return True if the buffers were equal. False if not equal.
+ * @brief Compare two digests or buffers.
+ * @param[in] digest1	Pointer to first buffer to compare.
+ * @param[in] digest2	Pointer to second buffer to compare.
+ * @param[in] len		Number of bytes to compare.
+ * @return @b true if the buffers are equal, @b false if not equal.
+ * @note This is a constant-time implementation.
  */
 bool cryptx_digest_compare(const void* digest1, const void* digest2, size_t len);
 

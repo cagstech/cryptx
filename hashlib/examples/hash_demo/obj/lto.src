@@ -84,17 +84,17 @@ BB0_6:
 	section	.text,"ax",@progbits
 	public	_main
 _main:
-	ld	hl, -229
+	ld	hl, -230
 	call	__frameset
 	ld	hl, _str
-	lea	de, ix - 120
-	ld	bc, -220
+	lea	de, ix - 121
+	ld	bc, -221
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), de
 	push	hl
 	call	_strlen
-	ld	bc, -226
+	ld	bc, -227
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), hl
@@ -102,76 +102,76 @@ _main:
 	or	a, a
 	sbc	hl, hl
 	push	hl
-	ld	bc, -220
+	ld	bc, -221
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	_hash_init
+	call	_cryptx_hash_init
 	pop	hl
 	pop	hl
 	bit	0, a
 	jp	z, BB1_2
-	ld	bc, -217
+	ld	bc, -218
 	lea	iy, ix
 	add	iy, bc
 	lea	hl, iy + 65
 	push	ix
-	ld	bc, -229
+	ld	bc, -230
 	add	ix, bc
 	ld	(ix), hl
 	pop	ix
 	lea	hl, iy
-	ld	bc, -223
+	ld	bc, -224
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), hl
-	ld	bc, -226
+	ld	bc, -227
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
 	ld	hl, _str
 	push	hl
-	ld	bc, -220
+	ld	bc, -221
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	_hash_update
+	call	_cryptx_hash_update
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -229
+	ld	bc, -230
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -220
+	ld	bc, -221
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	_hash_final
+	call	_cryptx_hash_final
 	pop	hl
 	pop	hl
-	ld	bc, -223
+	ld	bc, -224
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
 	ld	hl, 32
 	push	hl
-	ld	bc, -229
+	ld	bc, -230
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	_digest_tostring
+	call	_cryptx_digest_tostring
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -223
+	ld	bc, -224
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -218,13 +218,13 @@ _.str.2:
 	db	"%02X ", 0
 
 	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"
+	extern	_cryptx_digest_tostring
 	extern	__Unwind_SjLj_Register
 	extern	__Unwind_SjLj_Unregister
 	extern	__frameset
-	extern	_hash_init
+	extern	_cryptx_hash_final
 	extern	_strcpy
 	extern	_sprintf
-	extern	_hash_final
-	extern	_hash_update
+	extern	_cryptx_hash_update
+	extern	_cryptx_hash_init
 	extern	_strlen
-	extern	_digest_tostring

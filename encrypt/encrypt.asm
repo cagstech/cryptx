@@ -374,19 +374,19 @@ csrand_get:
 	push hl
 	ld hl, _sprng_hash_ctx
 	push hl
-	call hashlib_hash_init
+	call cryptx_hash_init
 	pop bc, hl
 	ld hl, 119
 	push hl
 	ld hl, _sprng_entropy_pool
 	push hl
 	push bc
-	call hashlib_hash_update
+	call cryptx_hash_update
 	pop bc, hl, hl
 	ld hl, _sprng_sha_digest
 	push hl
 	push bc
-	call hashlib_hash_final
+	call cryptx_hash_final
 	pop bc, hl
 	
 ; xor hash cyclically into _rand
@@ -4615,7 +4615,7 @@ oaep_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hashlib_hash_init
+	call	cryptx_hash_init
 	pop	hl
 	pop	hl
 	ld	l, 1
@@ -4648,7 +4648,7 @@ oaep_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hashlib_hash_update
+	call	cryptx_hash_update
 	pop	hl
 	pop	hl
 	pop	hl
@@ -4670,7 +4670,7 @@ oaep_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hashlib_hash_final
+	call	cryptx_hash_final
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 12)
@@ -4745,7 +4745,7 @@ oaep_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hashlib_mgf1
+	call	cryptx_hash_mgf1
 	ld	de, -385
 	lea	hl, ix + 0
 	add	hl, de
@@ -4798,7 +4798,7 @@ oaep_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hashlib_mgf1
+	call	cryptx_hash_mgf1
 	ld	de, (ix + 15)
 	pop	bc
 	pop	bc
@@ -4980,7 +4980,7 @@ oaep_decode:
 	pop	ix
 	push	de
 	push	hl
-	call	hashlib_mgf1
+	call	cryptx_hash_mgf1
 	pop	hl
 	pop	hl
 	pop	hl
@@ -5100,7 +5100,7 @@ oaep_decode:
 	ld	bc, (ix + -3)
 	push	bc
 	push	hl
-	call	hashlib_mgf1
+	call	cryptx_hash_mgf1
 	ld	bc, -702
 	lea	hl, ix + 0
 	add	hl, bc
@@ -5145,7 +5145,7 @@ oaep_decode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hashlib_hash_init
+	call	cryptx_hash_init
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 15)
@@ -5164,7 +5164,7 @@ oaep_decode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hashlib_hash_update
+	call	cryptx_hash_update
 	pop	hl
 	pop	hl
 	pop	hl
@@ -5179,7 +5179,7 @@ oaep_decode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hashlib_hash_final
+	call	cryptx_hash_final
 	pop	hl
 	pop	hl
 	ld	bc, -705
@@ -5194,7 +5194,7 @@ oaep_decode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hashlib_digest_compare
+	call	cryptx_digest_compare
 	pop	hl
 	pop	hl
 	pop	hl
@@ -5452,7 +5452,7 @@ pss_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hashlib_hash_init
+	call	cryptx_hash_init
 	pop	hl
 	pop	hl
 	ld	l, 1
@@ -5485,7 +5485,7 @@ pss_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hashlib_hash_update
+	call	cryptx_hash_update
 	pop	hl
 	pop	hl
 	pop	hl
@@ -5499,7 +5499,7 @@ pss_encode:
 	add	iy, bc
 	ld	hl, (iy + 0)
 	push	hl
-	call	hashlib_hash_final
+	call	cryptx_hash_final
 	ld	de, (ix + 18)
 	pop	hl
 	pop	hl
@@ -5607,7 +5607,7 @@ pss_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hashlib_hash_init
+	call	cryptx_hash_init
 	pop	hl
 	pop	hl
 	ld	bc, -582
@@ -5625,7 +5625,7 @@ pss_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hashlib_hash_update
+	call	cryptx_hash_update
 	pop	hl
 	pop	hl
 	pop	hl
@@ -5639,7 +5639,7 @@ pss_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hashlib_hash_final
+	call	cryptx_hash_final
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 12)
@@ -5691,7 +5691,7 @@ pss_encode:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	hashlib_mgf1
+	call	cryptx_hash_mgf1
 	ld	de, -594
 	lea	hl, ix + 0
 	add	hl, de

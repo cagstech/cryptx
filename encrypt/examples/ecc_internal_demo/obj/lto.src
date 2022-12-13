@@ -1,0 +1,753 @@
+	section	.text,"ax",@progbits
+	assume	adl = 1
+	section	.text,"ax",@progbits
+	public	_hexdump
+_hexdump:
+	ld	hl, -4
+	call	__frameset
+	ld	hl, (ix + 12)
+	ld	bc, -327680
+	ld	de, _.str.1
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	nz, BB0_2
+	push	de
+	push	bc
+	call	_sprintf
+	jr	BB0_3
+BB0_2:
+	ld	de, _.str
+	push	hl
+	push	de
+	push	bc
+	call	_sprintf
+	pop	hl
+BB0_3:
+	pop	hl
+	pop	hl
+	ld	iy, (ix + 6)
+	ld	de, (ix + 9)
+	ld	bc, -327680
+	or	a, a
+	sbc	hl, hl
+	ld	(ix - 3), hl
+	ex	de, hl
+BB0_4:
+	ld	de, (ix - 3)
+	ld	a, e
+	inc	a
+	or	a, a
+	sbc	hl, de
+	jr	z, BB0_6
+	lea	hl, iy
+	ld	de, (ix - 3)
+	add	hl, de
+	ld	de, 0
+	ld	e, (hl)
+	push	de
+	ld	hl, _.str.2
+	push	hl
+	push	bc
+	ld	(ix - 4), a
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	a, (ix - 4)
+	and	a, 15
+	or	a, a
+	ld	hl, _.str.1
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	z, _sprintf
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 3)
+	inc	hl
+	ld	(ix - 3), hl
+	ld	bc, -327680
+	ld	iy, (ix + 6)
+	ld	hl, (ix + 9)
+	jr	BB0_4
+BB0_6:
+	ld	hl, _.str.1
+	push	hl
+	push	bc
+	call	_sprintf
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_main
+_main:
+	ld	hl, -269
+	call	__frameset
+	ld	de, -250
+	lea	iy, ix
+	add	iy, de
+	lea	hl, ix - 38
+	lea	bc, ix - 70
+	push	ix
+	ld	de, -268
+	add	ix, de
+	ld	(ix), bc
+	pop	ix
+	lea	bc, ix - 100
+	push	ix
+	ld	de, -259
+	add	ix, de
+	ld	(ix), bc
+	pop	ix
+	lea	de, iy + 90
+	push	ix
+	ld	bc, -253
+	add	ix, bc
+	ld	(ix), de
+	pop	ix
+	lea	de, iy + 30
+	push	ix
+	ld	bc, -262
+	add	ix, bc
+	ld	(ix), de
+	pop	ix
+	lea	de, iy
+	ld	bc, -256
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), de
+	push	hl
+	pop	de
+	push	hl
+	pop	iy
+	ld	hl, ___const.main.baseX
+	ld	bc, 32
+	ldir
+	ld	bc, -268
+	lea	hl, ix
+	add	hl, bc
+	ld	de, (hl)
+	ld	hl, ___const.main.baseY
+	ld	bc, 32
+	ldir
+	ld	bc, -259
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	inc	hl
+	ld	(ix - 99), 0
+	push	hl
+	pop	de
+	inc	de
+	ld	bc, 28
+	ldir
+	or	a, a
+	sbc	hl, hl
+	push	hl
+	ld	hl, 32
+	push	hl
+	push	iy
+	ld	bc, -253
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_gf2_bigint_frombytes
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -253
+	lea	hl, ix
+	add	hl, bc
+	ld	iy, (hl)
+	lea	de, iy + 30
+	ld	bc, -265
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), de
+	or	a, a
+	sbc	hl, hl
+	push	hl
+	ld	hl, 32
+	push	hl
+	ld	bc, -268
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	push	de
+	call	_gf2_bigint_frombytes
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -262
+	lea	hl, ix
+	add	hl, bc
+	ld	de, (hl)
+	ld	bc, -253
+	lea	iy, ix
+	add	iy, bc
+	ld	hl, (iy)
+	ld	bc, 60
+	ldir
+	ld	hl, -917456
+	push	de
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	ld	l, e
+	ld	h, d
+	pop	de
+	ld.sis	bc, -2
+	call	__sand
+	ld	iy, -917456
+	ld	(iy), l
+	ld	(iy + 1), h
+	or	a, a
+	sbc	hl, hl
+	ld	(-917504), hl
+	xor	a, a
+	ld	(-917501), a
+	ld	l, (iy)
+	ld	h, (iy + 1)
+	ld.sis	bc, 519
+	call	__sor
+	ld	(iy), l
+	ld	(iy + 1), h
+	ld	hl, _.str.3
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	ld	hl, -917504
+	push	hl
+	call	_atomic_load_increasing_32
+	ld	bc, -268
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	push	ix
+	dec	bc
+	add	ix, bc
+	ld	(ix), e
+	pop	ix
+	pop	hl
+	ld	bc, -265
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -253
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -256
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_gf2_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, -917504
+	push	hl
+	call	_atomic_load_increasing_32
+	pop	bc
+	ld	(ix - 3), de
+	ld	de, -268
+	lea	iy, ix
+	add	iy, de
+	ld	bc, (iy)
+	push	ix
+	dec	de
+	add	ix, de
+	ld	a, (ix)
+	pop	ix
+	ld	de, (ix - 3)
+	call	__lsub
+	ld	bc, 1000
+	xor	a, a
+	call	__lmulu
+	push	hl
+	pop	bc
+	ld	a, e
+	ld	l, 15
+	call	__lshru
+	ld	l, a
+	push	hl
+	push	bc
+	ld	hl, _.str.4
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, -917504
+	push	hl
+	call	_atomic_load_increasing_32
+	ld	bc, -268
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	push	ix
+	dec	bc
+	add	ix, bc
+	ld	(ix), e
+	pop	ix
+	pop	hl
+	ld	bc, -265
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -253
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -256
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_gf2_bigint_mul
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, -917504
+	push	hl
+	call	_atomic_load_increasing_32
+	pop	bc
+	ld	(ix - 3), de
+	ld	de, -268
+	lea	iy, ix
+	add	iy, de
+	ld	bc, (iy)
+	push	ix
+	dec	de
+	add	ix, de
+	ld	a, (ix)
+	pop	ix
+	ld	de, (ix - 3)
+	call	__lsub
+	ld	bc, 1000
+	xor	a, a
+	call	__lmulu
+	push	hl
+	pop	bc
+	ld	a, e
+	ld	l, 15
+	call	__lshru
+	ld	l, a
+	push	hl
+	push	bc
+	ld	hl, _.str.5
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, -917504
+	push	hl
+	call	_atomic_load_increasing_32
+	ld	bc, -265
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	push	ix
+	ld	bc, -268
+	add	ix, bc
+	ld	(ix), e
+	pop	ix
+	pop	hl
+	ld	(ix - 100), 3
+	ld	bc, -259
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -256
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_gf2_bigint_square
+	pop	hl
+	pop	hl
+	ld	hl, -917504
+	push	hl
+	call	_atomic_load_increasing_32
+	pop	bc
+	ld	(ix - 3), de
+	ld	de, -265
+	lea	iy, ix
+	add	iy, de
+	ld	bc, (iy)
+	push	ix
+	ld	de, -268
+	add	ix, de
+	ld	a, (ix)
+	pop	ix
+	ld	de, (ix - 3)
+	call	__lsub
+	ld	bc, 1000
+	xor	a, a
+	call	__lmulu
+	push	hl
+	pop	bc
+	ld	a, e
+	ld	l, 15
+	call	__lshru
+	ld	l, a
+	push	hl
+	push	bc
+	ld	hl, _.str.6
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, _.str.7
+	push	hl
+	ld	hl, 30
+	push	hl
+	ld	bc, -259
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, _.str.7
+	push	hl
+	ld	hl, 30
+	push	hl
+	ld	bc, -256
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, -917504
+	push	hl
+	call	_atomic_load_increasing_32
+	ld	bc, -259
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	push	ix
+	ld	bc, -265
+	add	ix, bc
+	ld	(ix), e
+	pop	ix
+	pop	hl
+	ld	bc, -253
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -256
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_gf2_bigint_invert
+	pop	hl
+	pop	hl
+	ld	hl, -917504
+	push	hl
+	call	_atomic_load_increasing_32
+	pop	bc
+	ld	(ix - 3), de
+	ld	de, -259
+	lea	iy, ix
+	add	iy, de
+	ld	bc, (iy)
+	push	ix
+	ld	de, -265
+	add	ix, de
+	ld	a, (ix)
+	pop	ix
+	ld	de, (ix - 3)
+	call	__lsub
+	ld	bc, 1000
+	xor	a, a
+	call	__lmulu
+	push	hl
+	pop	bc
+	ld	a, e
+	ld	l, 15
+	call	__lshru
+	ld	l, a
+	push	hl
+	push	bc
+	ld	hl, _.str.8
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, _.str.9
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	ld	hl, -917504
+	push	hl
+	call	_atomic_load_increasing_32
+	ld	bc, -256
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	push	ix
+	ld	bc, -259
+	add	ix, bc
+	ld	(ix), e
+	pop	ix
+	pop	hl
+	ld	bc, -253
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_ecc_point_double
+	pop	hl
+	ld	hl, -917504
+	push	hl
+	call	_atomic_load_increasing_32
+	pop	bc
+	ld	(ix - 3), de
+	ld	de, -256
+	lea	iy, ix
+	add	iy, de
+	ld	bc, (iy)
+	push	ix
+	ld	de, -259
+	add	ix, de
+	ld	a, (ix)
+	pop	ix
+	ld	de, (ix - 3)
+	call	__lsub
+	ld	bc, 1000
+	xor	a, a
+	call	__lmulu
+	push	hl
+	pop	bc
+	ld	a, e
+	ld	l, 15
+	call	__lshru
+	ld	l, a
+	push	hl
+	push	bc
+	ld	hl, _.str.10
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, _.str.11
+	push	hl
+	ld	hl, 60
+	push	hl
+	ld	bc, -253
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, -917504
+	push	hl
+	call	_atomic_load_increasing_32
+	ld	bc, -256
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	push	ix
+	ld	bc, -259
+	add	ix, bc
+	ld	(ix), e
+	pop	ix
+	pop	hl
+	ld	bc, -262
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -253
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_ecc_point_add
+	pop	hl
+	pop	hl
+	ld	hl, -917504
+	push	hl
+	call	_atomic_load_increasing_32
+	pop	bc
+	ld	(ix - 3), de
+	ld	de, -256
+	lea	iy, ix
+	add	iy, de
+	ld	bc, (iy)
+	push	ix
+	ld	de, -259
+	add	ix, de
+	ld	a, (ix)
+	pop	ix
+	ld	de, (ix - 3)
+	call	__lsub
+	ld	bc, 1000
+	xor	a, a
+	call	__lmulu
+	push	hl
+	pop	bc
+	ld	a, e
+	ld	l, 15
+	call	__lshru
+	ld	l, a
+	push	hl
+	push	bc
+	ld	hl, _.str.12
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	or	a, a
+	sbc	hl, hl
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.rodata,"a",@progbits
+	private	_.str
+_.str:
+	db	10, "%s", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.1
+_.str.1:
+	db	10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.2
+_.str.2:
+	db	"%02X ", 0
+
+	section	.rodata,"a",@progbits
+	private	___const.main.baseX
+___const.main.baseX:
+	db	0, 0, "r2∫Ö:~s", 26, "Ò)Ú/Ùïc§¬kı", 10, "LùnÔ≠a&"
+
+	section	.rodata,"a",@progbits
+	private	___const.main.baseY
+___const.main.baseY:
+	db	0, 0, "€S}ÏË∑˜UZgƒ'®ÕõÒäÎõV‡¡V˙Ê£"
+
+	section	.rodata,"a",@progbits
+	private	_.str.3
+_.str.3:
+	db	10, 10, "----------------------------------", 10, "BIGINT Math Timing Checks", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.4
+_.str.4:
+	db	"BIGINT addition completed in %lu ms", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.5
+_.str.5:
+	db	"BIGINT multiplication completed in %lu ms", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.6
+_.str.6:
+	db	"BIGINT squaring completed in %lu ms", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.7
+_.str.7:
+	db	"___3 ^ 2___", 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.8
+_.str.8:
+	db	"BIGINT inversion completed in %lu ms", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.9
+_.str.9:
+	db	10, 10, "----------------------------------", 10, "ECC Point Math Timing Checks", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.10
+_.str.10:
+	db	"ECC point double completed in %lu ms", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.11
+_.str.11:
+	db	"___p1 doubled___", 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.12
+_.str.12:
+	db	"ECC point addition completed in %lu ms", 10, 0
+
+	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"
+	extern	_gf2_bigint_invert
+	extern	__frameset
+	extern	__Unwind_SjLj_Register
+	extern	_gf2_bigint_add
+	extern	_sprintf
+	extern	__Unwind_SjLj_Unregister
+	extern	__lmulu
+	extern	__lsub
+	extern	_ecc_point_add
+	extern	_atomic_load_increasing_32
+	extern	__sor
+	extern	__sand
+	extern	_gf2_bigint_square
+	extern	__lshru
+	extern	_ecc_point_double
+	extern	_gf2_bigint_mul
+	extern	_gf2_bigint_frombytes

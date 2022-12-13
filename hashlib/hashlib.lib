@@ -1,12 +1,12 @@
 	library	HASHLIB, 11
 
-	export	hashlib_hash_init
-	export	hashlib_hash_update
-	export	hashlib_hash_final
-	export	hashlib_mgf1
-	export	hashlib_hmac_init
-	export	hashlib_hmac_update
-	export	hashlib_hmac_final
-	export	hashlib_hmac_pbkdf2
-	export	hashlib_digest_compare
-	export	hashlib_digest_tostring
+	export	cryptx_hash_init
+	export	cryptx_hash_update
+	export	cryptx_hash_final
+	export	cryptx_hash_mgf1
+	export	cryptx_hmac_init
+	export	cryptx_hmac_update
+	export	cryptx_hmac_final
+	export	cryptx_hmac_pbkdf2
+	export	cryptx_digest_compare
+	export	cryptx_digest_tostring

@@ -84,23 +84,23 @@ BB0_6:
 	section	.text,"ax",@progbits
 	public	_main
 _main:
-	ld	hl, -289
+	ld	hl, -290
 	call	__frameset
-	ld	bc, -280
+	ld	bc, -281
 	lea	iy, ix
 	add	iy, bc
-	ld	bc, -289
+	ld	bc, -290
 	lea	hl, ix
 	add	hl, bc
 	ld	(hl), iy
 	lea	hl, iy + 32
-	ld	bc, -283
+	ld	bc, -284
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), hl
 	ld	hl, (_hmac_keystr)
 	push	ix
-	ld	bc, -286
+	ld	bc, -287
 	add	ix, bc
 	ld	(ix), hl
 	pop	ix
@@ -110,35 +110,35 @@ _main:
 	ld	de, 0
 	push	de
 	push	hl
-	ld	bc, -286
+	ld	bc, -287
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -283
+	ld	bc, -284
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	_hmac_init
+	call	_cryptx_hmac_init
 	pop	hl
 	pop	hl
 	pop	hl
 	pop	hl
 	bit	0, a
 	jp	z, BB1_2
-	ld	bc, -289
+	ld	bc, -290
 	lea	hl, ix
 	add	hl, bc
 	ld	iy, (hl)
 	lea	hl, iy
-	ld	bc, -286
+	ld	bc, -287
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), hl
 	ld	hl, (_str)
 	push	ix
-	ld	bc, -289
+	ld	bc, -290
 	add	ix, bc
 	ld	(ix), hl
 	pop	ix
@@ -146,38 +146,38 @@ _main:
 	call	_strlen
 	pop	de
 	push	hl
-	ld	bc, -289
+	ld	bc, -290
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -283
+	ld	bc, -284
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	_hmac_update
+	call	_cryptx_hmac_update
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -286
+	ld	bc, -287
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -283
+	ld	bc, -284
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	_hmac_final
+	call	_cryptx_hmac_final
 	pop	hl
 	pop	hl
 	ld	hl, _.str.5
 	push	hl
 	ld	hl, 32
 	push	hl
-	ld	bc, -286
+	ld	bc, -287
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -238,11 +238,11 @@ _.str.5:
 	db	"-SHA-256 HMAC Output-", 0
 
 	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"
+	extern	_cryptx_hmac_final
 	extern	__frameset
 	extern	__Unwind_SjLj_Unregister
-	extern	__Unwind_SjLj_Register
-	extern	_hmac_final
 	extern	_sprintf
-	extern	_hmac_update
-	extern	_hmac_init
+	extern	__Unwind_SjLj_Register
+	extern	_cryptx_hmac_init
+	extern	_cryptx_hmac_update
 	extern	_strlen
