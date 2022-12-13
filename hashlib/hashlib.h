@@ -138,7 +138,7 @@ void cryptx_hash_final(struct cryptx_hash_ctx* context, void* digest);
  *	@note @b outbuf must be at least @b outlen bytes large.
  *	@note Uses 516 bytes of fastMem starting at 0xE30800.
  */
-bool cryptx_hash_mgf1(
+void cryptx_hash_mgf1(
 			const void* data,
 			size_t datalen,
 			void* outbuf,
@@ -206,11 +206,11 @@ void cryptx_hmac_final(struct cryptx_hmac_ctx* context, void* output);
  * @brief Derives a key from a password, salt, and round count.
  * @param[in] password 	Pointer to a string containing the password.
  * @param[in] passlen	Byte length of the password.
- * @param[out] key		Pointer to buffer to write key to.
- * @param[in] keylen	Length of @b key to generate.
  * @param[in] salt	 A psuedo-random string to use in each round of key derivation.
  * @param[in] saltlen	Byte length of the salt.
  * @param[in] rounds 	The number of times to iterate the HMAC function per block of @b keylen.
+ * @param[out] key		Pointer to buffer to write key to.
+ * @param[in] keylen	Length of @b key to generate.
  * @param[in] hash_alg 	The numeric ID of the hashing algorithm to use. See @b cryptx_hash_algorithms.
  * @note NIST recommends a salt of at least 128 bits (16 bytes).
  * @note @b rounds is used to increase the cost (computational time) of generating a key. What makes password-
@@ -218,7 +218,7 @@ void cryptx_hmac_final(struct cryptx_hmac_ctx* context, void* output);
  * a more secure key, but more time spent generating it. Current cryptography standards recommend thousands of
  * rounds but that may not be feasible on the CE.
  */
-bool cryptx_hmac_pbkdf2(
+void cryptx_hmac_pbkdf2(
     const char* password,
     size_t passlen,
     void* key,
