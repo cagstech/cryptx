@@ -7,13 +7,12 @@
 	export	cryptx_aes_encrypt
 	export	cryptx_aes_decrypt
 	export	cryptx_rsa_encrypt
-	export	cryptx_ecdh_keygen
+	export	cryptx_ecdh_init
 	export	cryptx_ecdh_secret
 	export	cryptx_internal_aes_ecb_encrypt
 	export	cryptx_internal_aes_ecb_decrypt
 	export	cryptx_internal_rsa_oaep_encode
 	export	cryptx_internal_rsa_oaep_decode
-	export	cryptx_internal_rsa_pss_encode
 	export	cryptx_internal_powmod
 	export	cryptx_internal_gf2_frombytes
 	export	cryptx_internal_gf2_tobytes

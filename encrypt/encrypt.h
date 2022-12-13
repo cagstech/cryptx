@@ -19,7 +19,22 @@
 #define encrypt_h
 #include <hashlib.h>
 
-//***********************************************************************************************
+//******************************************************************************************
+/*	INTERNAL OBJECT DEFINITIONS
+ 
+ This section defines INTERNAL OBJECTS used by the library in functions not
+ exposed to the users. These are here so that metadata portions of the context
+ structures defined later are correct.
+ */
+
+// Internal structures for AES cipher modes
+struct _cryptx_aes_cbc { uint8_t padding_mode; };
+struct _cryptx_aes_ctr {
+	uint8_t counter_pos_start; uint8_t counter_len;
+	uint8_t last_block_stop; uint8_t last_block[16]; };
+
+
+//******************************************************************************************
 /*	Cryptographically-Secure Random Number Generator (CSRNG)
  
 	This library provides an entropy-based hardware (HW)RNG. The entropy is sourced
@@ -37,37 +52,40 @@
  * @enum cryptx\_srng\_sampling\_mode
  * Defines sampling modes for @b cryptx\_csrand\_init
  */
-enum cryptx_csrng_sampling_mode {
+typedef enum cryptx_csrng_sampling_modes {
 	SAMPLING_THOROUGH	= 0,
 	SAMPLING_FAST		= 1
-};
+} cryptx_csrng_sampling_mode;
 
 /*******************************************************************************
- * @brief Initializes the secure psuedo-random generator
- * @param sampling_mode Sampling mode to use for finding an entropic bit. See @b sampling_mode.
- * @return [bool] True if init succeeded, False otherwise
+ * @brief Initializes the (HW)RNG.
+ * @param[in] sampling_mode	Sampling mode to use for finding an entropic bit. See @b cryptx_csrng_sampling_mode.
+ * @returns @b true on success, @b false on failure.
  * @note Sampling mode controls the speed (and accuracy) of the source-selection algorithm.
  * Setting SAMPLING\_THOROUGH retrieves 1024 samples per bit polled and takes ~4 seconds to run.
  * Setting SAMPLING\_FAST retrieves 512 samples per bit polled and takes ~2 seconds to run.
  * @note Using the faster sampling mode may result in a less-entropic source byte being selected due to less
  * samples being collected. It is recommended to use THOROUGH.
  */
-bool cryptx_csrand_init(bool sampling_mode);
+bool cryptx_csrand_init(cryptx_csrng_sampling_mode mode);
 
 /***********************************************
  * @brief Returns a securely psuedo-random 32-bit integer
- * @return [uint32_t] A 32-bit random number.
+ * @returns A securely psuedo-random 32-bit integer.
  */
 uint32_t cryptx_csrand_get(void);
 
 /**************************************************
  * @brief Fills a buffer with securely pseduo-random bytes
- * @param buffer Pointer to a buffer to fill with random bytes
- * @param size Size of the buffer to fill
+ * @param[in] buffer	Pointer to a buffer to fill with random bytes.
+ * @param[in] size		Size of the buffer to fill.
+ * @returns @b true on success, @b false on failure.
+ * @returns @b buffer filled to size.
  */
 bool cryptx_csrand_fill(void* buffer, size_t size);
 
-//***********************************************************************************************
+
+//******************************************************************************************
 /*	Advanced Encryption Standard (AES)
  
 	AES is form of symmetric encryption. It is a fast algorithm that can encrypt
@@ -81,15 +99,10 @@ bool cryptx_csrand_fill(void* buffer, size_t size);
 	AES is one of the most secure encryption systems in use today.
 	AES-256 is the most secure variant of the algorithm. */
 
-// Internal Structures. End users do not need these.
-struct _cryptx_aes_cbc { uint8_t padding_mode; };
-struct _cryptx_aes_ctr {
-	uint8_t counter_pos_start; uint8_t counter_len;
-	uint8_t last_block_stop; uint8_t last_block[16]; };
 
-/*******************************
+/***********************************************
  * @struct cryptx\_aes\_ctx
- * Stores AES cipher configuration data.
+ * Defines a stateful context for use with one side of an AES session.
  */
 struct cryptx_aes_ctx {
 	uint24_t keysize;                       /**< the size of the key, in bits */
@@ -103,10 +116,9 @@ struct cryptx_aes_ctx {
 	uint8_t op_assoc;                       /**< state-flag indicating if context is for encryption or decryption*/
 };
 
-
 /*************************
- * @enum aes_cipher_modes
- * Supported AES cipher modes
+ * @enum aes\_cipher\_modes
+ * Defines supported AES cipher modes.
  */
 enum cryptx_aes_cipher_modes {
 	AES_MODE_CBC,       /**< selects CBC mode */
@@ -114,8 +126,8 @@ enum cryptx_aes_cipher_modes {
 };
 
 /****************************
- * @enum aes_padding_schemes
- * Supported AES padding schemes
+ * @enum aes\_padding\_schemes
+ * Defines supported AES padding schemes.
  */
 enum cryptx_aes_padding_schemes {
 	PAD_PKCS7,                  /**< PKCS#7 padding | DEFAULT */
@@ -125,47 +137,37 @@ enum cryptx_aes_padding_schemes {
 	PAD_ISO2					/**< ISO-9797 M2 padding */
 };
 
-
+/** Defines the byte length of an AES-128 key. */
 #define CRYPTX_AES128_KEYLEN	16
+
+/** Defines the byte length of an AES-192 key. */
 #define CRYPTX_AES192_KEYLEN	24
+
+/** Defines the byte length of an AES-256 key. */
 #define CRYPTX_AES256_KEYLEN	32
 
-/**********************************
- * @def AES\_BLOCKSIZE
- * Defines the block size of the AES cipher.
- */
+/** Defines the block size of the AES block, in bytes. */
 #define CRYPTX_AES_BLOCK_SIZE		16
 
-/*****************************************
- * @def AES_IVSIZE
- * Defines the length of the AES initialization vector (IV)
- */
+/** Defines the length of the AES initialization vector, in bytes. */
 #define CRYPTX_AES_IV_SIZE		CRYPTX_AES_BLOCK_SIZE
 
-/**********************************************************
- * @define AES\_CIPHERTEXT\_LEN(plaintext\_len)
- * Defines a macro to return the size of an AES ciphertext given a plaintext length..
- */
+/** Defines a macro to return the byte length of an AES ciphertext given a plaintext length.*/
 #define CRYPTX_AES_CIPHERTEXT_LEN(plaintext_len) \
 	((((plaintext_len)%AES_BLOCKSIZE)==0) ? (len) + AES_BLOCKSIZE : (((len)>>4) + 1)<<4)
 
-/*************************************************************
- * @define AES\_CBC\_FLAGS
- * Defines a macro for enabling CBC cipher mode and setting relevant configuration.
- */
+/** Defines a macro to enable AES CBC cipher mode and pass relevant configuration options.*/
 #define CRYTPX_AES_CBC_FLAGS(padding_mode) \
 	((padding_mode)<<2) | AES_MODE_CBC
 
-/*************************************************************
- * @define AES\_CTR\_FLAGS
- * Defines a macro for enabling CTR cipher mode and setting relevant configuration.
- */
+/** Defines a macro to enable AES CTR cipher mode and pass relevant configuration options.*/
 #define CRYPTX_AES_CTR_FLAGS(nonce_len, counter_len)	\
 	((0x0f & (counter_len))<<8) | ((0x0f & (nonce_len))<<4) | AES_MODE_CTR
 
-/*******************
- * @enum aes_error_t
- * AES error codes
+/*******************************************
+ * @typedef aes\_error\_t
+ * Defines response codes that can be returned from calls
+ * to the AES API.
  */
 typedef enum {
 	AES_OK,                             /**< AES operation completed successfully */
@@ -179,18 +181,19 @@ typedef enum {
 
 /********************************************************************
  * @brief Initializes a stateful AES cipher context to be used for encryption or decryption.
- * @param ctx Pointer to an AES cipher context to initialize..
- * @param key Pointer to an 128, 192, or 256 bit key to load into the AES context.
- * @param keylen The size, in bytes, of the key to load.
- * @param iv Initialization vector, a buffer equal to the block size that is pseudo-random.
- * @param flags A series of flags to configure the AES context with. Use the provided @b AES_CTR_FLAGS or @b AES_CBC_FLAGS macro for this.
- * @note Do not edit a context manually. You may corrupt the cipher state.
- * @note Contexts are not bidirectional due to being stateful. If you need to process both encryption and decryption, initialize seperate contexts for encryption and decryption. Both contexts will use the same key, but different initialization vectors.
+ * @param[in] context	Pointer to an AES cipher context to initialize.
+ * @param[in] key	Pointer to an 128, 192, or 256 bit key to load into the AES context.
+ * @param[in] keylen	The size, in bytes, of the @b key to load.
+ * @param[in] iv	Pointer to  Initialization vector, a buffer equal to the block size filled with random bytes.
+ * @param[in] flags	A series of flags to configure the AES context with. Use the provided @b AES_CTR_FLAGS or @b AES_CBC_FLAGS to pass flags.
+ * @returns An @b aes_error_t indicating the status of the AES operation.
+ * @note Contexts are not bidirectional due to being stateful. If you need to process both encryption and decryption,
+ * initialize seperate contexts for encryption and decryption. Both contexts will use the same key, but different initialization vectors.
  * @warning It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.
- * @warning Do not manually edit the @b ctx.mode field of the context structure. This will break the cipher configuration. If you want to change cipher modes, do so by calling @b aes_init again.
- * @warning AES-CBC and CTR modes ensure confidentiality but do not guard against tampering. AES-OCB/GCM are a bit computationallty-intensive for this platform, but HASHLIB provides hash and hmac functions in their stead. HMAC is generally more secure for this purpose.
- * If you want a truly secure scheme, always append an HMAC to your message and use an application secret or unique key generated using a CSRNG to key the HMAC at both endpoints.
- * @return AES_OK if success, non-zero if failed. See aes_error_t.
+ * @warning Do not manually edit the @b ctx.mode field of the context structure.
+ * This will break the cipher configuration. If you want to change cipher modes, do so by calling @b aes_init again.
+ * @warning AES-CBC and CTR modes ensure confidentiality but do not provide message integrity verification.
+ * If you need a truly secure construction, append a keyed hash (HMAC) to the encrypted message..
  */
 aes_error_t cryptx_aes_init(
 				struct cryptx_aes_ctx* context,
@@ -199,21 +202,21 @@ aes_error_t cryptx_aes_init(
 				const void* iv,
 				uint24_t flags);
 
-/*****************************************************
- * @brief General-Purpose AES Encryption
- * @param ctx Pointer to an AES cipher context.
- * @param plaintext Pointer to data to encrypt.
- * @param len Length of data at @b plaintext to encrypt. This can be the output of hashlib_AESCiphertextSize().
- * @param ciphertext Pointer to buffer to write encrypted data to.
+/****************************************************************
+ * @brief Performs a stateful AES encryption of an arbitrary length of data.
+ * @param[in] context	Pointer to an AES cipher context.
+ * @param[in] plaintext	Pointer to data to encrypt.
+ * @param[in] len		Length of data at @b plaintext to encrypt.
+ * @param[out] ciphertext	Pointer to buffer to write encrypted data to.
+ * @returns An @b aes_error_t indicating the status of the AES operation.
  * @note @b ciphertext should large enough to hold the encrypted message.
- *          For CBC mode, this is the smallest multiple of the blocksize that will hold the plaintext,
- *              plus 1 block if the blocksize divides the plaintext evenly.
+ *          For CBC mode, this is the smallest multiple of the blocksize that will hold the plaintext.
+ *          See the @b CRYPTX_AES_CIPHERTEXT_LEN macro.
  *          For CTR mode, this is the same size as the plaintext.
  * @note @b plaintext and @b ciphertext are aliasable.
  * @note Encrypt is streamable, such that encrypt(msg1) + encrypt(msg2) is functionally identical to encrypt(msg1+msg2)
  * with the exception of intervening padding in CBC mode.
- * @note Once a  context is used for encryption, a stateful flag is set preventing the same context from being used for decryption.
- * @returns AES_OK if success, non-zero if failed. See aes_error_t.
+ * @note Once a  context is used for encryption, it cannot be used for decryption.
  */
 aes_error_t cryptx_aes_encrypt(
 					const struct cryptx_aes_ctx* context,
@@ -221,17 +224,17 @@ aes_error_t cryptx_aes_encrypt(
 					size_t len,
 					void* ciphertext);
 
-/******************************************************
- * @brief General-Purpose AES Decryption
- * @param ctx Pointer to AES cipher context.
- * @param ciphertext Pointer to data to decrypt.
- * @param len Length of data at @b ciphertext to decrypt.
- * @param plaintext Pointer to buffer to write decryped data to.
+/*************************************************************
+ * @brief Performs a stateful AES encryption of an arbitrary length of data.
+ * @param[in] context		Pointer to AES cipher context.
+ * @param[in] ciphertext	Pointer to data to decrypt.
+ * @param[in] len		Length of data at @b ciphertext to decrypt.
+ * @param[out] plaintext	Pointer to buffer to write decryped data to.
+ * @returns An @b aes_error_t indicating the status of the AES operation.
  * @note @b plaintext and @b ciphertext are aliasable.
  * @note Decrypt is streamable, such that decrypt(msg1) + decrypt(msg2) is functionally identical to decrypt(msg1+msg2)
  * with the exception of intervening padding in CBC mode.
- * @note Once a context is used for decryption, a stateful flag is set preventing the same context from being used for encryption.
- * @returns AES_OK if success, non-zero if failed. See aes_error_t.
+ * @note Once a context is used for decryption, it cannot be used for encryption.
  */
 aes_error_t cryptx_aes_decrypt(
 					const struct cryptx_aes_ctx* context,
@@ -240,30 +243,31 @@ aes_error_t cryptx_aes_decrypt(
 					void* plaintext);
 
 
-/*
- RSA Public Key Encryption
+//******************************************************************************************
+/*	RSA Public Key Encryption
  
- Public key encryption is a form of asymmetric encryption.
- This means that a key only works in one direction, and both parties need a public key
- and a private key. The private key is used to decrypt a message and the public key is
- used to encrypt.
- In RSA, the public and private keys are modular inverses of each other, such that:
- encrypted = message ** public exponent % public key, and
- message = encrypted ** private exponent % private modulus
- ** means power, % means modulus
+	RSA is a form of public key encryption. In this construction, both parties need
+	a public key and a private key. Typically the public key is used to encrypt messages
+	bound for a specific host and the private key is used to decrypt those messages.
+	In a public key system anyone can encrypt messages for a specific user since the public
+	key is sent in the clear (hence the term 'public'). However, only the specific host can
+	decrypt those messages as the private key is not shared.
  
- 65537 (and a few other Fermat primes) are commonly used as public exponents.
- The public key (modulus) is sent in the clear and is known to to everyone.
- The cryptographic strength of RSA comes from the difficulty of factoring the modulus.
- Asymmetric encryption is generally VERY slow. Using even RSA-1024 on the TI-84+ CE will
- take several seconds. For this reason, you usually do not use RSA for sustained encrypted
- communication. Use RSA to share a symmetric key, and then use AES for future messages.
+	The cryptographic strength of RSA comes from the difficulty of prime factorization
+	of huge numbers. However, in recent times, hardware has gotten good at solving this
+	problem. 1024 bit RSA has recently been broken and a minimum of 2048 bits is recommended
+	at present.
+ 
+	Asymmetric encryption is VERY slow. Using even RSA-1024 on the TI-84+ CE will
+	take several seconds. For this reason, you usually do not use RSA for sustained encrypted
+	communication. Use RSA to share a symmetric key, and then use AES for future messages.
  
  */
 
-/******************
- * @enum rsa_error_t
- * RSA error codes
+/******************************************
+ * @typedef rsa\_error\_t
+ * Defines response codes that can be returned from calls
+ * to the RSA API.
  */
 typedef enum {
 	RSA_OK,                         /**< RSA encryption completed successfully */
@@ -281,23 +285,18 @@ typedef enum {
  */
 #define RSA_MODULUS_MAX		256
 /*****************************************************
- * @brief RSA Encryption
- *
- * Performs an in-place RSA encryption of a message
- * over a public modulus \b pubkey and a public exponent, 65537
- * OAEP encoding of the input message is performed automatically.
- *
- * @param msg Pointer to a message to encrypt using RSA.
- * @param msglen The length of the message @b msg.
- * @param ciphertext Pointer a buffer to write the ciphertext to.
- * @param pubkey Pointer to a public key to use for encryption.
- * @param keylen The length of the public key (modulus) to encrypt with.
- * @param oaep_hash_alg The numeric ID of the hashing algorithm to use within OAEP encoding.
- *      See @b hash_algorithms.
+ * @brief Encrypts a message using the given RSA public key.
+ * @param[in] msg	Pointer to a message to encrypt using RSA.
+ * @param[in] msglen	The byte length of the @b msg.
+ * @param[out] ciphertext 	Pointer a buffer to write the ciphertext to.
+ * @param[in] pubkey	Pointer to a public key to use for encryption.
+ * @param[in] keylen	The length of the public key (modulus) to encrypt with.
+ * @param[in] oaep_hash_alg	The numeric ID of the hashing algorithm to use within OAEP encoding.
+ *      See @b cryptx_hash_algorithms.
+ * @returns  An @b rsa_error_t indicating the status of the RSA operation.
  * @note The size of @b ciphertext and @b keylen must be equal.
  * @note The @b msg will be encoded using OAEP before encryption.
  * @note msg and pubkey are both treated as byte arrays.
- * @return rsa_error_t
  */
 rsa_error_t cryptx_rsa_encrypt(
 					const void* msg,
@@ -308,43 +307,27 @@ rsa_error_t cryptx_rsa_encrypt(
 					uint8_t oaep_hash_alg);
 
 
-/*
- Elliptic Curve Diffie-Hellman (ECDH)
+//******************************************************************************************
+/*	Elliptic Curve Diffie-Hellman (ECDH)
  
- Elliptic Curve Diffie-Hellman is a variant on the Diffie-Hellman secret exchange protocol
- that uses elliptic curve point multiplication instead of standard modular exponentiation.
- In this variant of Diffie-Hellman you provide a private key initialized with securely random
- bytes (or pass a random-fill function to the keygen function) and that private key acts as a
- scalar for point multiplication. A base point (G) defined by the curve specification is multiplied
- by the scalar, yielding another point on the curve, (x, y) that is the public key. This public key
- can be sent in the clear to another party. Both the private key, (x, y), and G are very large integers
- in the order of the degree of the selected curve. This means that the curve defines the bitwise security
- level of the encryption. The key generation can be represented in formula like so:
+	Elliptic curve Diffie-Hellman is a form of elliptic curve cryptography.
+	It is a variant of the standard Diffie-Hellman key negotiation protocol that
+	uses elliptic curve point arithmetic over a finite field as an alternative to
+	multiplication modulo some large prime number. Due to the ease in which large
+	primes can be factored today, standard Diffie-Hellman requires large keys, often
+	in excess of 2048 bits, just like with RSA.
  
- Alice:	aP * G = aU			<== aP = alice private key, G = base point on curve, aU = alice public key
- Bob:	bP * G = bU			<== bP = bob private key, G = base point on curve, bU = bob public key
+	Elliptic curve Diffie-Hellman is a very different animal. Due to the mathematical complexity
+	of the structure of a curve over a finite field, encryption based on them is significantly
+	harder to crack. This also means that much smaller key sizes are required. For example, the
+	SECT233k1 standard uses a curve of degree 233, which also defines the maximum bit length
+	of the private key. Just 233 bits for ECDH. Versus >2048 for standard DH.
  
- To compute a shared secret, both parties take their own private key and use it as a scalar to
- perform point multiplication on the other party's public key. Before doing so, each endpoint should
- validate the public key by confirming that it is (1) non-zero, and (2) a point on the curve.
- Performing the point multiplication should yield the same secret for both parties.
- Once the secret is computed, it should be passed to a KDF or a cryptographic hash to generate a
- key for symmetric encryption. The secret derivation can be represented in formula like so:
- 
- Alice:
-	aP * bU = S,		<== aP = alice private key, bU = bob public key, S = shared secret
-	K = KDF(S)		 	<== K = symmetric encryption key, KDF = some key derivation function
- Bob:
-	bP * aU = S,		<== bP = bob private key, bU = alice public key, S = shared secret
-	K = KDF(S)			<== K = symmetric encryption key, KDF = some key derivation function
- 
- As with RSA, ECDH is not intended to be used for sustained encrypted communication. It is another method
- of exchanging a secret. Once the secret is negotiated (either via RSA or ECDH), use that secret to set up
- an AES session and use AES for sustained encryption. It is much faster.
- 
- This ECDH implementation uses the NIST K-233 (sect233k1) curve, a binary polynomial with degree 233.
- It uses a key size of up to 233 bits (though this implementation encourages the use of 29 bytes (232 bits).
- This spec provides roughly the same security level as a 2048 bit RSA key.
+	Elliptic curve Diffie-Hellman works by allowing two users to generate a private key at random
+	and initialize a base point (G) on the same standard-defined curve. That point is multiplied
+	by the private key to produce a public key. Both parties then exchange public keys. The
+	nature of the algebraic relationship between these keys is such that both parties can multiply
+	the other party's public key with their own private key to produce the same secret.
  */
 
 /**************************************************
@@ -381,31 +364,27 @@ typedef enum _ecdh_error {
 } ecdh_error_t;
 
 /************************************************************************
- * @brief ECDH Generate Public Key.
- * If @b randfill is provided, generates a random private key
- * 29 bytes long (largest byte length less than 233 bits). Otherwise
- * assumes that the key was generated by the user.
- * Then generates the public key given the private key and generator G.
- * @param ctx Pointer to an ECDH context containing reserved public and private key buffers.
- * @param randfill Pointer to a function that can fill a buffer with random bytes.
- * @note If @b randfill is @b NULL it is assumed that you have initialized the key with
- * random bytes yourself. If you do not know what you are doing @b DO_NOT_DO_THIS.
- * Just pass @b csrand_fill to the @b randfill parameter.
- * @note Output public key is a point on the curve expressed as two 32-byte coordinates
- * encoded in little endian byte order and padded with zeros if needed. You may have to
+ * @brief Initializes an ECDH context.
+ * @param[in] context	Pointer to an ECDH context containing reserved public and private key buffers.
+ * @note Output public key is a point on the curve expressed as two 30-byte coordinates
+ * encoded in little endian byte order and padded with zeros (if needed). You may have to
  * deserialize the key and then serialize it into a different format to use it with
  * some encryption libraries.
+ * @note This function automatically generates a random private key using @b csrand_fill prior to
+ * the generation of the public key. For ease of use, this cannot be disabled. To access the private
+ * key you will need to reference @b context.privkey. To access the public key you will need to
+ * reference @b context.pubkey.
  */
-ecdh_error_t cryptx_ecdh_keygen(struct cryptx_ecdh_ctx* context, bool (*randfill)(void *buffer, size_t size));
+ecdh_error_t cryptx_ecdh_init(struct cryptx_ecdh_ctx* context);
 
-/*************************************************
- * @brief ECDH Compute Shared Secret
+/***************************************************************
+ * @brief Computes a secret given an ECDH context and some remote public key.
  * Given local private key and remote public key, generate a secret.
- * @param ctx Pointer to context containing local private key.
- * @param rpubkey Pointer to remote public key.
- * @param secret Pointer to buffer to write shared secret to.
+ * @param[in] ctx	Pointer to context containing local private key.
+ * @param[in] rpubkey	Pointer to remote public key.
+ * @param[out] secret	Pointer to buffer to write shared secret to.
  * @note @b secret must be at least @b ECDH_PUBKEY_SIZE bytes.
- * @note Output secret is a point on the curve expressed as two 32-byte coordinates
+ * @note Output secret is a point on the curve expressed as two 30-byte coordinates
  * encoded in little endian byte order and padded with zeros if needed. You may have to
  * deserialize the secret and then serialize it into a different format for compatibility with
  * other encryption libraries.
@@ -416,9 +395,21 @@ ecdh_error_t cryptx_ecdh_keygen(struct cryptx_ecdh_ctx* context, bool (*randfill
 ecdh_error_t cryptx_ecdh_secret(const struct cryptx_ecdh_ctx *context, const uint8_t *rpubkey, uint8_t *secret);
 
 
-/*
- #### INTERNAL FUNCTIONS ####
- For advanced users only!!!
+//******************************************************************************************
+/*	ADVANCED MODE
+
+	### PROCEED WITH CAUTION ###
+	Enable advanced mode by including: #define CRYPTX_ENABLE_INTERNAL in your
+	C source file BEFORE including this header.
+	
+	Advanced mode exposes some primatives that can be used by those who know what
+	they are doing to construct protocols different than those provided by the main
+	library API. They are not there to be used as is. Some of the underlying primatives
+	are insecure on their own, such as AES ECB mode.
+ 
+	Also bear in mind that there is no guarantee that these functions provide all of
+	the side-channel defenses that the main library API provides, namely disabling interrupts
+	while data transformation is underway and stack frame purging when it is complete.
  */
 
 #ifdef CRYPTX_ENABLE_INTERNAL
@@ -432,7 +423,7 @@ ecdh_error_t cryptx_ecdh_secret(const struct cryptx_ecdh_ctx *context, const uin
  * @warning ECB mode encryption is insecure (see many-time pad vulnerability).
  *     Use ECB-mode block encryptors as a constructor for custom cipher modes only.
  */
-void cryptx_internal_aes_ecb_encrypt(const void *block_in, void *block_out, aes_ctx *ks);
+void cryptx_internal_aes_ecb_encrypt(const void *block_in, void *block_out, struct cryptx_aes_ctx* ks);
 
 /*****************************************************
  * @brief AES single-block ECB mode decryption function
@@ -443,7 +434,7 @@ void cryptx_internal_aes_ecb_encrypt(const void *block_in, void *block_out, aes_
  * @warning ECB mode encryption is insecure (see many-time pad vulnerability).
  *     Use ECB-mode block encryptors as a constructor for custom cipher modes only.
  */
-void cryptx_internal_aes_ecb_decrypt(const void *block_in, void *block_out, aes_ctx *ks);
+void cryptx_internal_aes_ecb_decrypt(const void *block_in, void *block_out, struct cryptx_aes_ctx* ks);
 
 /*************************************************************
  * @brief Optimal Asymmetric Encryption Padding (OAEP) encoder for RSA
@@ -479,26 +470,6 @@ bool cryptx_internal_rsa_oaep_decode(
 			size_t len,
 			void *plaintext,
 			const uint8_t *auth,
-			uint8_t hash_alg);
-
-/*****************************************************
- * @brief Probabilistic Sisgnature Scheme (PSS) encoder for RSA
- * @param plaintext Pointer to the plaintext message to encode.
- * @param len Lengfh of the message to encode.
- * @param encoded Pointer to buffer to write encoded message to.
- * @param modulus_len Length of the RSA modulus to encode for.
- * @param salt A nonce that can be passed to the encryption scheme. Pass NULL to generate internally.
- * @param hash_alg The numeric ID of the hashing algorithm to use. See @b hash_algorithms.
- * @return Boolean | True if encoding succeeded, False if encoding failed.
- * @note Generally, to encode a message, pass NULL as salt.
- *      To verify a message, pass a pointer to the salt field in the message you are looking to verify.
- */
-bool cryptx_internal_rsa_pss_encode(
-			const void *plaintext,
-			size_t len,
-			void *encoded,
-			size_t modulus_len,
-			void *salt,
 			uint8_t hash_alg);
 
 /***********************************************************

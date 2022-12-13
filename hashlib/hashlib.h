@@ -89,10 +89,7 @@ enum cryptx_hash_algorithms {
     SHA256,             /**< algorithm type identifier for SHA-256 */
 };
 
-/***********************************
- * @def CRYPTX\_SHA256\_DIGEST\_LEN
- * Byte length of SHA-256 digest.
- */
+/** Defines the length of the SHA-256 digest, in bytes. */
 #define CRYPTX_SHA256_DIGEST_LEN   32
 
 /**************************************************************
