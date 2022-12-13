@@ -88,15 +88,20 @@ _main:
 	call	__frameset
 	ld	hl, ___const.main.str
 	ld	bc, 36
+	ld	iy, 1
 	lea	de, ix - 42
 	ld	(ix - 3), bc
+	push	ix
 	ld	bc, -557
-	lea	iy, ix
-	add	iy, bc
-	ld	(iy), de
+	add	ix, bc
+	ld	(ix), de
+	pop	ix
 	ld	bc, (ix - 3)
 	ldir
-	call	_csrand_init
+	push	iy
+	call	_cryptx_csrand_init
+	pop	hl
+	ld	hl, 1
 	bit	0, a
 	jp	z, BB1_4
 	ld	bc, -299
@@ -137,7 +142,7 @@ _main:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	_csrand_fill
+	call	_cryptx_csrand_fill
 	pop	hl
 	pop	hl
 	ld	bc, -566
@@ -187,15 +192,15 @@ _main:
 	pop	de
 	ld	de, 0
 	push	de
-	ld	de, 256
-	push	de
-	ld	bc, -560
+	ld	bc, -563
 	lea	iy, ix
 	add	iy, bc
 	ld	de, (iy)
 	push	de
+	ld	de, 256
+	push	de
 	push	ix
-	ld	bc, -563
+	ld	bc, -560
 	add	ix, bc
 	ld	de, (ix)
 	pop	ix
@@ -206,7 +211,7 @@ _main:
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	_rsa_encrypt
+	call	_cryptx_rsa_encrypt
 	ld	bc, -557
 	lea	iy, ix
 	add	iy, bc
@@ -250,10 +255,7 @@ _main:
 BB1_3:
 	or	a, a
 	sbc	hl, hl
-	jr	BB1_5
 BB1_4:
-	ld	hl, 1
-BB1_5:
 	ld	sp, ix
 	pop	ix
 	ret
@@ -310,11 +312,11 @@ _.str.8:
 	db	"---RSA Encrypted---", 0
 
 	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"
-	extern	_csrand_fill
-	extern	_csrand_init
+	extern	_cryptx_csrand_fill
 	extern	__frameset
-	extern	__Unwind_SjLj_Register
+	extern	_cryptx_csrand_init
 	extern	_sprintf
-	extern	_rsa_encrypt
+	extern	__Unwind_SjLj_Register
 	extern	__Unwind_SjLj_Unregister
+	extern	_cryptx_rsa_encrypt
 	extern	_strlen

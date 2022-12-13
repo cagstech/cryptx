@@ -7,9 +7,9 @@ Section          Base   Top    High   Length
 .init.reruncheck D1AA15 D1AA15             0h
 .init            D1AA15 D1AA35            20h
 .fini            D1AA35 D1AA69            34h
-.text            D1AA69 D1C79F          1D36h
-.data            D1C79F D1C79F             0h
-.rodata          D1C79F D1C8DC           13Dh
+.text            D1AA69 D1C7A8          1D3Fh
+.data            D1C7A8 D1C7A8             0h
+.rodata          D1C7A8 D1C8E5           13Dh
 .init_array      000000 000000             0h
 .ctors           000000 000000             0h
 .dtors           000000 000000             0h
@@ -68,12 +68,12 @@ __ultof                   = 000280
 _os_DisableHomeTextBuffer = D1ADD8
 _os_EnableHomeTextBuffer  = D1ADEA
 _npf_vpprintf             = D1ADFC
-JTI0_0                    = D1C79F
-JTI0_1                    = D1C7BD
-JTI0_2                    = D1C802
-JTI0_3                    = D1C823
-JTI0_4                    = D1C83B
-JTI0_5                    = D1C853
+JTI0_0                    = D1C7A8
+JTI0_1                    = D1C7C6
+JTI0_2                    = D1C80B
+JTI0_3                    = D1C82C
+JTI0_4                    = D1C844
+JTI0_5                    = D1C85C
 _npf_utoa_rev             = D1C4C0
 __printf_c                = D1C588
 __vsnprintf_c             = D1C5A7
@@ -84,19 +84,19 @@ __vsprintf_c              = D1C65E
 __vprintf_c               = D1C67C
 _npf_putc_std             = D1C69C
 __sprintf_c               = D1C6AC
-_.str                     = D1C86B
-_.str.1                   = D1C86F
-_.str.2                   = D1C873
+_.str                     = D1C874
+_.str.1                   = D1C878
+_.str.2                   = D1C87C
 __ishl                    = 000174
 __ishru                   = 000184
 _outchar                  = D1C6D5
 _sprintf                  = D1C6AC
 _vprintf                  = D1C67C
 _vsnprintf                = D1C5A7
-.missingappvar            = D1C877
-.libloadname              = D1C87C
+.missingappvar            = D1C880
+.libloadname              = D1C885
 .libloadnamelen           = 000007
-.webaddress               = D1C884
+.webaddress               = D1C88D
 __start                   = D1AA15
 ___exithl                 = D1AA35
 skip._exit                = D1AA35
@@ -105,11 +105,11 @@ skip._abort               = D1AA35
 _exit.sp                  = D1AA36
 _exit.flash_wait_states   = D1AA40
 _main                     = D1C6EB
-_.str                     = D1C899
-_.str.1                   = D1C8A9
-_.str.2                   = D1C8BB
-_.str.3                   = D1C8D6
+_.str                     = D1C8A2
+_.str.1                   = D1C8B2
+_.str.2                   = D1C8C4
+_.str.3                   = D1C8DF
 lib.LibLoad               = D1A9F5
-_#csrand_init             = D1AA09
-_#csrand_get              = D1AA0D
-_#csrand_fill             = D1AA11
+_#cryptx_csrand_init      = D1AA09
+_#cryptx_csrand_get       = D1AA0D
+_#cryptx_csrand_fill      = D1AA11

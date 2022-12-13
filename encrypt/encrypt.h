@@ -155,11 +155,11 @@ enum cryptx_aes_padding_schemes {
 #define CRYPTX_AES_IV_SIZE		CRYPTX_AES_BLOCK_SIZE
 
 /** Defines a macro to return the byte length of an AES ciphertext given a plaintext length.*/
-#define CRYPTX_AES_CIPHERTEXT_LEN(plaintext_len) \
-	((((plaintext_len)%CRYPTX_AES_BLOCK_SIZE)==0) ? (len) + CRYPTX_AES_BLOCK_SIZE : (((len)>>4) + 1)<<4)
+#define CRYPTX_AES_CIPHERTEXT_LEN(len) \
+	((((len)%CRYPTX_AES_BLOCK_SIZE)==0) ? (len) + CRYPTX_AES_BLOCK_SIZE : (((len)>>4) + 1)<<4)
 
 /** Defines a macro to enable AES CBC cipher mode and pass relevant configuration options.*/
-#define CRYTPX_AES_CBC_FLAGS(padding_mode) \
+#define CRYPTX_AES_CBC_FLAGS(padding_mode) \
 	((padding_mode)<<2) | AES_MODE_CBC
 
 /** Defines a macro to enable AES CTR cipher mode and pass relevant configuration options.*/
@@ -296,6 +296,7 @@ typedef enum {
  * @note The size of @b ciphertext and @b keylen must be equal.
  * @note The @b msg will be encoded using OAEP before encryption.
  * @note msg and pubkey are both treated as byte arrays.
+ * @note The public exponent is hardcoded to @b 65537.
  */
 rsa_error_t cryptx_rsa_encrypt(
 					const void* msg,
@@ -336,8 +337,8 @@ rsa_error_t cryptx_rsa_encrypt(
 #define CRYPTX_ECDH_PUBKEY_SIZE		(CRYPTX_ECDH_PRIVKEY_SIZE<<1)
 
 struct cryptx_ecdh_ctx {
-	uint8_t privkey[ECDH_PRIVKEY_SIZE];
-	uint8_t pubkey[ECDH_PUBKEY_SIZE];
+	uint8_t privkey[CRYPTX_ECDH_PRIVKEY_SIZE];
+	uint8_t pubkey[CRYPTX_ECDH_PUBKEY_SIZE];
 };
 
 /**************************

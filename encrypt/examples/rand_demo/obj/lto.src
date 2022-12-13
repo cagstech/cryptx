@@ -7,10 +7,11 @@ _main:
 	call	__frameset
 	ld	hl, 1
 	push	hl
-	call	_csrand_init
+	call	_cryptx_csrand_init
 	pop	hl
+	ld	hl, 1
 	bit	0, a
-	jp	z, BB0_4
+	jp	z, BB0_5
 	ld	de, -327680
 	ld	hl, _.str
 	lea	bc, ix - 16
@@ -20,7 +21,7 @@ _main:
 	call	_sprintf
 	pop	hl
 	pop	hl
-	call	_csrand_get
+	call	_cryptx_csrand_get
 	push	de
 	push	hl
 	ld	hl, _.str.1
@@ -36,26 +37,28 @@ _main:
 	push	hl
 	ld	hl, (ix - 19)
 	push	hl
-	call	_csrand_fill
+	call	_cryptx_csrand_fill
 	pop	hl
 	pop	hl
 	ld	de, -327680
 	ld	hl, _.str.2
 	ld	bc, 27
 	ldir
-	ld	de, 16
+	ld	bc, 16
 	or	a, a
 	sbc	hl, hl
 	push	hl
-	pop	bc
+	pop	iy
+	lea	de, iy
 BB0_2:
-	push	bc
+	push	de
 	pop	hl
 	or	a, a
-	sbc	hl, de
-	jr	z, BB0_5
+	sbc	hl, bc
+	jr	z, BB0_4
 	ld	hl, (ix - 19)
-	add	hl, bc
+	ld	(ix - 22), de
+	add	hl, de
 	ld	de, 0
 	ld	e, (hl)
 	push	de
@@ -63,27 +66,25 @@ BB0_2:
 	push	hl
 	ld	hl, -327680
 	push	hl
-	ld	(ix - 22), bc
 	call	_sprintf
-	ld	bc, (ix - 22)
-	ld	de, 16
+	ld	bc, 16
+	ld	de, 0
+	push	de
+	pop	iy
 	pop	hl
 	pop	hl
 	pop	hl
-	inc	bc
+	ld	de, (ix - 22)
+	inc	de
 	jr	BB0_2
 BB0_4:
-	ld	hl, 1
-	jr	BB0_6
-BB0_5:
 	ld	hl, -327680
-	ld.sis	de, 10
-	ld	(hl), e
+	ld.sis	bc, 10
+	ld	(hl), c
 	inc	hl
-	ld	(hl), d
-	or	a, a
-	sbc	hl, hl
-BB0_6:
+	ld	(hl), b
+	lea	hl, iy
+BB0_5:
 	ld	sp, ix
 	pop	ix
 	ret
@@ -110,10 +111,10 @@ _.str.3:
 	db	"%02X ", 0
 
 	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"
-	extern	_csrand_fill
+	extern	_cryptx_csrand_fill
 	extern	__Unwind_SjLj_Register
-	extern	_csrand_init
 	extern	__frameset
+	extern	_cryptx_csrand_init
 	extern	__Unwind_SjLj_Unregister
 	extern	_sprintf
-	extern	_csrand_get
+	extern	_cryptx_csrand_get
