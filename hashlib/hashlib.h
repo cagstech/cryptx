@@ -21,9 +21,14 @@
 #include <stddef.h>
 
 //******************************************************************************************
-/*
+/*	INTERNAL OBJECT DEFINITIONS
  
+	This section defines INTERNAL OBJECTS used by the library in functions not
+	exposed to the users. These are here so that metadata portions of the context
+	structures defined later are correct.
  */
+
+// Private Struct Definitions for Hash State Contexts
 struct cryptx_priv_hash_sha256_state {
 	uint8_t data[64];		/**< holds sha-256 block for transformation */
 	uint8_t datalen;		/**< holds the current length of data in data[64] */
