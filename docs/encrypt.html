@@ -115,7 +115,7 @@
 				&emsp;&emsp;((((plaintext_len)%CRYPTX_AES_BLOCK_SIZE)==0) ? \<br />
 				&emsp;&emsp;&emsp;&emsp;(len) + CRYPTX_AES_BLOCK_SIZE : (((len)&gt;&gt;4) + 1)&lt;&lt;4)</div>
 			<p>Defines a macro to return the necessary length for a padded AES plaintext.</p>
-			<div class="function-doc">#define CRYTPX_AES_CBC_FLAGS(padding_mode) \<br />
+			<div class="function-doc">#define CRYPTX_AES_CBC_FLAGS(padding_mode) \<br />
 				&emsp;&emsp;((padding_mode)&lt;&lt;2) | AES_MODE_CBC</div>
 			<p>Defines a macro to enable AES CBC cipher mode and pass relevant configuration options.<br />See cryptx_aes_padding_modes.</p>
 			<div class="function-doc">#define CRYPTX_AES_CTR_FLAGS(nonce_len, counter_len)	\<br />
@@ -217,7 +217,7 @@
 			<span class="param">ciphertext</span>: Pointer to buffer to write encrypted data to.<br />
 			<span class="return">output</span>: An aes_error_t indicating the status of the AES operation.
 			</p>
-			<div class="function-doc">aes_error_t&emsp;aes_decrypt(<br />
+			<div class="function-doc">aes_error_t&emsp;cryptx_aes_decrypt(<br />
 				&emsp;&emsp;&emsp;const struct cryptx_aes_ctx* context,<br />
 				&emsp;&emsp;&emsp;const void* ciphertext, size_t len,<br />
 				&emsp;&emsp;&emsp;void* plaintext);</div>
@@ -228,7 +228,7 @@
 			<span class="param">ciphertext</span>: Pointer to buffer to write decrypted data to.<br />
 			<span class="return">output</span>: An aes_error_t indicating the status of the AES operation.
 			</p>
-			<div class="function-doc">rsa_error_t&emsp;rsa_encrypt(<br />
+			<div class="function-doc">rsa_error_t&emsp;cryptx_rsa_encrypt(<br />
 				&emsp;&emsp;&emsp;const void* msg, size_t msglen,<br />
 				&emsp;&emsp;&emsp;const void* pubkey, size_t keylen,<br />
 				&emsp;&emsp;&emsp;void* ciphertext, uint8_t oaep_hash_alg);</div>
@@ -241,7 +241,7 @@
 			<span class="param">oaep_hash_algs</span>: The numeric ID of the hashing algorithm to use within OAEP encoding.<br />&emsp;See cryptx_hash_algorithms.<br />
 			<span class="return">output</span>: An rsa_error_t indicating the status of the RSA operation
 			</p>
-			<div class="function-doc">ecdh_error_t&emsp;ecdh_keygen(struct cryptx_ecdh_ctx* context);</div>
+			<div class="function-doc">ecdh_error_t&emsp;cryptx_ecdh_init(struct cryptx_ecdh_ctx* context);</div>
 			<p>Fills the private key with random bytes and generates a public key given base point G and the randomized private key.<br />
 			<span class="param">context</span>: Pointer to an ECDH context.<br />
 			<span class="return">output</span>: An ecdh_error_t indicating the status of the ECDH operation.<br />
@@ -251,7 +251,7 @@
 				Do not edit the context manually after calling this function, you will corrupt the state. Only access these structure members directly to read out the public key for sending to the remote host.
 			</span>
 			</p>
-			<div class="function-doc">ecdh_error_t&emsp;ecdh_secret(<br />
+			<div class="function-doc">ecdh_error_t&emsp;cryptx_ecdh_secret(<br />
 				&emsp;&emsp;&emsp;const struct cryptx_ecdh_ctx* context,<br />
 				&emsp;&emsp;&emsp;const uint8_t* rpubkey, uint8_t* secret);</div>
 			<p>Generates a shared secret given an ECDH context and a remote public key.<br />

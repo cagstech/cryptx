@@ -2,14 +2,14 @@ Section          Base   Top    High   Length
 ---------------- ------ ------ ------ -------
 .icon            D1A882 D1A99D           11Bh
 .init.libs       D1A99D D1A9F5            58h
-.libs            D1A9F5 D1AA19            24h
-.init.clock      D1AA19 D1AA19             0h
-.init.reruncheck D1AA19 D1AA19             0h
-.init            D1AA19 D1AA39            20h
-.fini            D1AA39 D1AA6D            34h
-.text            D1AA6D D1ADA8           33Bh
-.data            D1ADA8 D1ADA8             0h
-.rodata          D1ADA8 D1AF7C           1D4h
+.libs            D1A9F5 D1AA15            20h
+.init.clock      D1AA15 D1AA15             0h
+.init.reruncheck D1AA15 D1AA15             0h
+.init            D1AA15 D1AA35            20h
+.fini            D1AA35 D1AA69            34h
+.text            D1AA69 D1AD96           32Dh
+.data            D1AD96 D1AD96             0h
+.rodata          D1AD96 D1AF6A           1D4h
 .init_array      000000 000000             0h
 .ctors           000000 000000             0h
 .dtors           000000 000000             0h
@@ -29,39 +29,38 @@ ___ctors_count            = 000000
 ___dtors_count            = 000000
 ___fini_array_count       = 000000
 __stack                   = D1A87E
-__frameset                = D1AA6D
-_os_DisableHomeTextBuffer = D1AA7B
-_os_EnableHomeTextBuffer  = D1AA8D
+__frameset                = D1AA69
+_os_DisableHomeTextBuffer = D1AA77
+_os_EnableHomeTextBuffer  = D1AA89
 _sprintf                  = 0000BC
-.missingappvar            = D1ADA8
-.libloadname              = D1ADAD
+.missingappvar            = D1AD96
+.libloadname              = D1AD9B
 .libloadnamelen           = 000007
-.webaddress               = D1ADB5
-__start                   = D1AA19
-___exithl                 = D1AA39
-skip._exit                = D1AA39
-skip.__Exit               = D1AA39
-skip._abort               = D1AA39
-_exit.sp                  = D1AA3A
-_exit.flash_wait_states   = D1AA44
-_hexdump                  = D1AA9F
-_main                     = D1AB3E
-_.str                     = D1ADCA
-_.str.1                   = D1ADCF
-_.str.2                   = D1ADD1
-_.str.3                   = D1ADD7
-_.str.4                   = D1AE20
-_.str.5                   = D1AE49
-_.str.6                   = D1AE61
-_.str.7                   = D1AE78
-_.str.8                   = D1AEA1
-_.str.9                   = D1AEB9
-_.str.10                  = D1AED0
-_.str.11                  = D1AEF7
-_.str.12                  = D1AF26
-_.str.13                  = D1AF4D
+.webaddress               = D1ADA3
+__start                   = D1AA15
+___exithl                 = D1AA35
+skip._exit                = D1AA35
+skip.__Exit               = D1AA35
+skip._abort               = D1AA35
+_exit.sp                  = D1AA36
+_exit.flash_wait_states   = D1AA40
+_hexdump                  = D1AA9B
+_main                     = D1AB3A
+_.str                     = D1ADB8
+_.str.1                   = D1ADBD
+_.str.2                   = D1ADBF
+_.str.3                   = D1ADC5
+_.str.4                   = D1AE0E
+_.str.5                   = D1AE37
+_.str.6                   = D1AE4F
+_.str.7                   = D1AE66
+_.str.8                   = D1AE8F
+_.str.9                   = D1AEA7
+_.str.10                  = D1AEBE
+_.str.11                  = D1AEE5
+_.str.12                  = D1AF14
+_.str.13                  = D1AF3B
 lib.LibLoad               = D1A9F5
-_#csrand_init             = D1AA09
-_#csrand_fill             = D1AA0D
-_#ecdh_keygen             = D1AA11
-_#ecdh_secret             = D1AA15
+_#cryptx_csrand_init      = D1AA09
+_#cryptx_ecdh_init        = D1AA0D
+_#cryptx_ecdh_secret      = D1AA11

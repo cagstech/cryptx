@@ -88,8 +88,9 @@ _main:
 	call	__frameset
 	ld	hl, 1
 	push	hl
-	call	_csrand_init
+	call	_cryptx_csrand_init
 	pop	hl
+	ld	hl, 1
 	bit	0, a
 	jp	z, BB1_10
 	ld	de, -306
@@ -115,19 +116,16 @@ _main:
 	call	_sprintf
 	pop	hl
 	pop	hl
-	ld	hl, _csrand_fill
-	push	hl
 	ld	bc, -309
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	_ecdh_keygen
+	call	_cryptx_ecdh_init
 	ld	bc, -315
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), hl
-	pop	de
 	pop	de
 	push	hl
 	ld	hl, _.str.4
@@ -178,19 +176,16 @@ BB1_3:
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), hl
-	ld	hl, _csrand_fill
-	push	hl
 	ld	bc, -312
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	call	_ecdh_keygen
+	call	_cryptx_ecdh_init
 	ld	bc, -318
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), hl
-	pop	de
 	pop	de
 	push	hl
 	ld	hl, _.str.7
@@ -256,7 +251,7 @@ BB1_5:
 	add	iy, bc
 	ld	hl, (iy)
 	push	hl
-	call	_ecdh_secret
+	call	_cryptx_ecdh_secret
 	ld	bc, -321
 	lea	iy, ix
 	add	iy, bc
@@ -310,7 +305,7 @@ BB1_7:
 	add	iy, bc
 	ld	hl, (iy)
 	push	hl
-	call	_ecdh_secret
+	call	_cryptx_ecdh_secret
 	ld	bc, -309
 	lea	iy, ix
 	add	iy, bc
@@ -351,10 +346,7 @@ BB1_7:
 BB1_9:
 	or	a, a
 	sbc	hl, hl
-	jr	BB1_11
 BB1_10:
-	ld	hl, 1
-BB1_11:
 	ld	sp, ix
 	pop	ix
 	ret
@@ -431,11 +423,10 @@ _.str.13:
 	db	"---Secret 2 = Privkey2 * Pubkey1 * Cofactor---", 0
 
 	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"
-	extern	_csrand_fill
-	extern	_csrand_init
 	extern	__frameset
+	extern	_cryptx_csrand_init
 	extern	__Unwind_SjLj_Register
-	extern	_ecdh_keygen
+	extern	_cryptx_ecdh_secret
 	extern	_sprintf
 	extern	__Unwind_SjLj_Unregister
-	extern	_ecdh_secret
+	extern	_cryptx_ecdh_init
