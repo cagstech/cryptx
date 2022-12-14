@@ -112,6 +112,7 @@
 					<li><span style="font-weight:bold;">AES CBC mode</span>: Timing analysis leaks number of blocks encrypted, but not precise data length.</li>
 					<li><span style="font-weight:bold;">AES CTR mode</span>: Timing analysis leaks precise data length.</li>
 					<li><span style="font-weight:bold;">RSA</span>: Timing analysis leaks size of the public exponent and modulus but not the value of the exponent or modulus.</li>
+					<li><span style="font-weight:bold;">ECDH</span>: Written in assembly, underlying arithmetic constant-time in all places possible.</li>
 				</ul>
 				<p>As the library is under constant review with the aim of enhancing security, over time its resistance to timing analysis may improve and more data will be published here.</p>
 				<div class="minor-header">Buffer Leak Protection</div>
