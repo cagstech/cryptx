@@ -2,16 +2,23 @@
 include '../../include/library.inc'
 
 ;------------------------------------------
-library ENCODEX, 1
+library ENCODEX, 2
 
 ;------------------------------------------
 
 ;v1 functions
-    export asn1_decode
-    export base64_encode
-    export base64_decode
-    export encode_bpp
-    export decode_bpp
+    export cryptx_asn1_decode
+    export cryptx_base64_encode
+    export cryptx_base64_decode
+    export cryptx_bpp_encode
+    export cryptx_bpp_decode
+ 
+cryptx_asn1_decode		= asn1_decode
+cryptx_base64_encode	= base64_encode
+cryptx_base64_decode	= base64_decode
+cryptx_bpp_encode		= encode_bpp
+cryptx_bpp_decode		= decode_bpp
+
 
 _rmemcpy:
 ; optimized by calc84maniac
