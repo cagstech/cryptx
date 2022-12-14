@@ -8,7 +8,7 @@
 		<div id="sidebar">
 			<div id="title"><a href="index.html">
 				CryptX
-				<span style="font-size:50%;">10.0</span>
+				<span style="font-size:50%;">11</span>
 			</a></div><br />
 			<div class="major-header">INTRODUCTION</div>
 				<div class="navitem"><a href="index.html">What is CryptX?</a></div>
@@ -24,11 +24,12 @@
 			
 		</div>
 		<div id="content"><div>
-			<p>Before you do anything with the libraries, you must download the project. You can do this by downloading the <a target="_blank"  href="https://github.com/acagliano/cryptx/releases/latest">latest release</a> from the project repository. Alternatively, you can clone the repository by running the following command in Terminal or Command Prompt:<br /><span class="code">git clone https://github.com/acagliano/cryptx.git</span>.</p>
+			<p>Before you do anything with the libraries, you must download the project. If you are an end user you can just download the executables from the latest release artifacts found <a target="_blank"  href="https://github.com/acagliano/cryptx/releases/latest">here</a>. Alternatively, you can clone the repository by running the following command in Terminal or Command Prompt:<br /><span class="code">git clone https://github.com/acagliano/cryptx.git</span> and then build the binaries yourself by running `make` from within the `cryptx` folder.</p>
 			<div class="major-header">Sending to your Calculator</div>
-			<p>The binaries within <span style="font-weight:bold">CryptX</span> are distributed as a single package or as individually libraries. For the former, you will want to seek out the <span style="font-family:monospace;">CryptX.8xg</span> file in the downloaded package. If you want individual libraries, look into the <span style="font-family:monospace;">HASHLIB, ENCRYPT, and ENCODEX</span> directories for a <span style="font-family:monospace;">.8xv</span> file sharing the same name as the library. Once you have located the binaries you want to install, you will want to connect your calculator to your computer using a USB-A to mini-B cable and use your preferred connectivity software to transfer the binaries to your device.</p>
+			<p>Once you have located the binaries you want to install (see above), you will want to connect your calculator to your computer using a USB-A to mini-B cable and use your preferred connectivity software to transfer the binaries to your device. It is recommended to transfer the libraries to Archive if you are given the option to do so.</p>
 			<div class="major-header">Installing to the Toolchain (for developers)</div>
-			<p>If you are a developer who wants to use CryptX in one of your own projects, it gets a bit more complicated. In order to build as a dynamic library (which is how CryptX is designed) you will need the <span style="font-family:monospace;">.lib and .h</span> files for each library moved into the appropriate directories within the toolchain.
+			<p>If you are a developer who wants to use CryptX in one of your own projects, it gets a bit more complicated. In order to build as a dynamic library (which is how CryptX is designed) you will need to clone the repository that has the header and lib files:<br />(<span class="code">git clone https://github.com/acagliano/cryptx.git</span>).<br />
+				Once you do this you will need to find the <span style="font-family:monospace;">.lib and .h</span> files for each library within the library&apos;s directory (hashlib, encrypt, encodex) and move them into the appropriate directories within the toolchain.
 				<table style="width:60%;">
 					<col width="30%" />
 					<col width="70%" />
