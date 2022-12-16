@@ -12,7 +12,7 @@
 		<div id="sidebar">
 			<div id="title"><a href="index.html">
 				CryptX
-				<span style="font-size:50%;">10.0</span>
+				<span style="font-size:50%;">11</span>
 			</a></div><br />
 			<div class="major-header">INTRODUCTION</div>
 				<div class="navitem"><a href="index.html">What is CryptX?</a></div>
@@ -45,11 +45,13 @@
 				<dd>Optimized _rmemcpy function, a function that operates similarly to the C standard library function memcpy, but that reverses endianness while copying.</dd>
 			</dl>
 			<div class="major-header">Algorithm Sourcing</div>
-			<p>It is a general rule in the field of information security that you &quot;do not roll your own cryptography&quot;. Doing so without an adequate knowledge of what you are doing can result in mistakes that render your implementations insecure.</p>
-			<p>Sorry to inform, but I broke this rule. Well, sort of. One of the biggest caveats in working on this project was that it&apos;s not like I can just look up implementations of encryption for a freaking calculator. They don&apos;t exist. It is even difficult to find implementations that be ported to this platform because target architecture matters. Not only does code often use incompatible bit-widths for data types, but sometimes code uses various system calls or hardware acceleration calls (and are designed around that) meaning that those implementations are no good. After a long time of searching, I finally came across a repository that was portable.</p>
-			<p><a target="_blank" href="https://github.com/B-Con/crypto-algorithms/">https://github.com/B-Con/crypto-algorithms/</a></p>
-			<p>This library&apos;s SHA256 and AES implementation is sourced from this repository. AES remains mostly as is, but SHA256 was subsequently converted into pure assembly by Adam Beckingham following the specs of the algorithm from that repo. Device-specific protections, such as those explained in the <a href="cryptanalysis.html">Cryptanalysis</a> were embedded in the output assembly afterwards.</p>
-			<p>HMAC and OAEP were implemented by hand in C by Anthony Cagliano using RFC-4868 and RFC-8017 as references, respectively. HMAC is currently in the processes of being converted to assembly and having its security profile evaluated.</p>
+			<dl>
+				<dt><a target="_blank" href="https://github.com/B-Con/crypto-algorithms/">https://github.com/B-Con/crypto-algorithms/</a></dt><br />
+				<dd>This library&apos;s SHA256 and AES implementation are sourced from this repository. AES remains mostly as is, but SHA256 was subsequently converted into pure assembly by Adam Beckingham following the specs of the algorithm from that repo. Device-specific protections, such as those explained in the <a href="cryptanalysis.html">Cryptanalysis</a> were embedded in the output assembly afterwards.</dd><br />
+				<dt><a target="_blank" href="https://github.com/kokke/tiny-ECDH-c">https://github.com/kokke/tiny-ECDH-c</a></dt><br />
+				<dd>The code in this repository was my initial reference for the development of Elliptic Curve Diffie-Hellman. However, the underlying arithmetic of this implementation was written in pure assembly (or a hybrid of pure assembly and compiled C). At some point during development the code style and mathematics of this implementation deviated substantially from the cited one. Nonetheless, credit where it is due.</dd>
+			</dl>
+			<p>Yes, I am aware of the general rule of cryptography: Do not roll your own crypto! That&apos;s easy to say on most platforms where many different libraries exist to do it for you. I did not have that benefit on the TI-84+ CE. I had to make do with porting what algorithms I could and building the rest from the ground up. This was done with the benefit of expertise from those who know the intricacies of the device and many people in the TI development community contributed to making this library as secure as possible. Is it perfect? Probably not. But we did the best we can, and the library remains available for review by the community for increased performance and better security.</p>
 			<hr />
 			<iframe src="scripts/rtd-msg.html" style="width:100%; height:50px; border:none;"></iframe>
 			<br />
