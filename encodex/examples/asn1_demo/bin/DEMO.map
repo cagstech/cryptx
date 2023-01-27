@@ -7,9 +7,9 @@ Section          Base   Top    High   Length
 .init.reruncheck D1AA0D D1AA0D             0h
 .init            D1AA0D D1AA2D            20h
 .fini            D1AA2D D1AA61            34h
-.text            D1AA61 D1ACB6           255h
-.data            D1ACB6 D1AD58            A2h
-.rodata          D1AD58 D1AE09            B1h
+.text            D1AA61 D1ACCB           26Ah
+.data            D1ACCB D1AD6D            A2h
+.rodata          D1AD6D D1AE22            B5h
 .init_array      000000 000000             0h
 .ctors           000000 000000             0h
 .dtors           000000 000000             0h
@@ -33,10 +33,10 @@ __frameset                = D1AA61
 _os_DisableHomeTextBuffer = D1AA6F
 _os_EnableHomeTextBuffer  = D1AA81
 _sprintf                  = 0000BC
-.missingappvar            = D1AD58
-.libloadname              = D1AD5D
+.missingappvar            = D1AD6D
+.libloadname              = D1AD72
 .libloadnamelen           = 000007
-.webaddress               = D1AD65
+.webaddress               = D1AD7A
 __start                   = D1AA0D
 ___exithl                 = D1AA2D
 skip._exit                = D1AA2D
@@ -45,9 +45,10 @@ skip._abort               = D1AA2D
 _exit.sp                  = D1AA2E
 _exit.flash_wait_states   = D1AA38
 _main                     = D1AA93
-_asn1_demo                = D1ACB6
-_.str                     = D1AD7A
-_.str.1                   = D1ADBB
-_.str.2                   = D1ADE1
+_asn1_demo                = D1ACCB
+_.str                     = D1AD8F
+_.str.1                   = D1ADD0
+_.str.2                   = D1ADF6
+_.str.3                   = D1AE1E
 lib.LibLoad               = D1A9F5
-_#asn1_decode             = D1AA09
+_#cryptx_asn1_decode      = D1AA09

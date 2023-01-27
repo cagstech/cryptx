@@ -169,9 +169,9 @@
 			<p>Defines possible response codes from calls to the ECDH API
 			</p>
 			<div class="major-header">Structs</div>
-			<div class="function-doc">typedef struct cryptx_aes_ctx {...};</div>
+			<div class="function-doc">struct cryptx_aes_ctx {...};</div>
 			<p>Defines state data for an AES context.</p>
-			<div class="function-doc">typedef struct cryptx_ecdh_ctx {...};</div>
+			<div class="function-doc">struct cryptx_ecdh_ctx {...};</div>
 			<p>Defines state data for an ECDH context.</p>
 			<div class="major-header">Functions</div>
 			<div class="function-doc">bool&emsp;cryptx_csrand_init(cryptx_csrng_sampling_mode mode);</div>
@@ -207,7 +207,7 @@
 			<span class="return">output</span>: An aes_error_t indicating the status of the AES operation.
 			</p>
 			<div class="function-doc">aes_error_t&emsp;cryptx_aes_encrypt(<br />
-				&emsp;&emsp;&emsp;const struct cryptx_aes_ctx* context,<br />
+				&emsp;&emsp;&emsp;struct cryptx_aes_ctx* context,<br />
 				&emsp;&emsp;&emsp;const void* plaintext, size_t len,<br />
 				&emsp;&emsp;&emsp;void* ciphertext);</div>
 			<p>Encrypts a stream of data and updates the AES context such that (1) it will return AES_INVALID_OPERATION if used with decryption, and (2) you can pass the next stream of data to aes_encrypt() using the same context.<br />
@@ -218,7 +218,7 @@
 			<span class="return">output</span>: An aes_error_t indicating the status of the AES operation.
 			</p>
 			<div class="function-doc">aes_error_t&emsp;cryptx_aes_decrypt(<br />
-				&emsp;&emsp;&emsp;const struct cryptx_aes_ctx* context,<br />
+				&emsp;&emsp;&emsp;struct cryptx_aes_ctx* context,<br />
 				&emsp;&emsp;&emsp;const void* ciphertext, size_t len,<br />
 				&emsp;&emsp;&emsp;void* plaintext);</div>
 			<p>Decrypts a stream of data and updates the AES context such that (1) it will return AES_INVALID_OPERATION if used with encryption, and (2) you can pass the next stream of data to aes_decrypt() using the same context.<br />
@@ -252,7 +252,7 @@
 			</span>
 			</p>
 			<div class="function-doc">ecdh_error_t&emsp;cryptx_ecdh_secret(<br />
-				&emsp;&emsp;&emsp;const struct cryptx_ecdh_ctx* context,<br />
+				&emsp;&emsp;&emsp;struct cryptx_ecdh_ctx* context,<br />
 				&emsp;&emsp;&emsp;const uint8_t* rpubkey, uint8_t* secret);</div>
 			<p>Generates a shared secret given an ECDH context and a remote public key.<br />
 			Uses the cofactor variant of ECDH. SECT233k1 has a cofactor of 4.<br />

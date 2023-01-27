@@ -68,7 +68,7 @@ _main:
 	push	hl
 	ld	hl, _asn1_demo
 	push	hl
-	call	_asn1_decode
+	call	_cryptx_asn1_decode
 	pop	de
 	pop	de
 	pop	de
@@ -147,6 +147,16 @@ BB0_1:
 	lea	iy, iy + 9
 	jr	BB0_1
 BB0_3:
+	ld	hl, (ix - 90)
+	push	hl
+	ld	hl, _.str.3
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
 	ld	hl, (ix - 72)
 	ld	de, (ix - 75)
 	ld	bc, 10
@@ -160,7 +170,7 @@ BB0_3:
 	ld	de, (ix - 3)
 	push	de
 	push	hl
-	call	_asn1_decode
+	call	_cryptx_asn1_decode
 	pop	de
 	pop	de
 	pop	de
@@ -249,7 +259,7 @@ BB0_6:
 	section	.data,"aw",@progbits
 	public	_asn1_demo
 _asn1_demo:
-	db	"0Ÿ0", 13, "	*†H†÷", 13, "", 0, "", 0, "0‰", 0, "Ør	şWÏP¶OmÇõ€åKC˜'XƒU¼š«`ğJØc:gG†CO@YÅ”A“gø©WV¼", 13, "Éÿ¹]2/áç5À[-‰U4¦my‰[µ²Ò""Â", 0, "‰¨£%mÃ¿ÍÔ™×ŒÉ©^ÇÑã", 0, "qĞŠöÌNâ÷*Šqj<ÚšS", 0, ""
+	db	"0Ÿ0", 13, "	*†H†÷", 13, "", 0, "", 0, "0‰", 0, "À< ¾°dbü.Á§ÇÎˆ…‡jA“E%#%8tÎOñFõ;”²mü FdÆ²3w/¹‰3jÎ„ŠZÿˆ81æİĞ®†ıõÙ%O‚“¤Ì2""g¢h¹Ö®ä²î€“±J+€''ı™¶â—*QÊs6ARÜ¨èiD	", 0, ""
 
 	section	.rodata,"a",@progbits
 	private	_.str
@@ -266,9 +276,14 @@ _.str.1:
 _.str.2:
 	db	"Obj %u, Tag Id: %u, Size: %u, Addr: %u", 10, 0
 
+	section	.rodata,"a",@progbits
+	private	_.str.3
+_.str.3:
+	db	"%s", 10, 0
+
 	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"
 	extern	__Unwind_SjLj_Register
-	extern	__Unwind_SjLj_Unregister
 	extern	__frameset
+	extern	__Unwind_SjLj_Unregister
 	extern	_sprintf
-	extern	_asn1_decode
+	extern	_cryptx_asn1_decode
