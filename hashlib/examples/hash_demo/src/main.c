@@ -12,6 +12,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
+#include <tice.h>
 #include <hashlib.h>
 
 #define CEMU_CONSOLE ((char*)0xFB0000)
@@ -36,14 +37,18 @@ int main(void)
     size_t str_len = strlen(str);
     struct cryptx_hash_ctx ctx;
     uint8_t sha256_digest[CRYPTX_SHA256_DIGEST_LEN];
-	uint8_t sha256_hex[(CRYPTX_SHA256_DIGEST_LEN<<1)+1];
+	uint8_t sha256_hex[(CRYPTX_SHA256_DIGEST_LEN<<1)+1] = {0};
     
     if(!cryptx_hash_init(&ctx, SHA256)) return 1;
     cryptx_hash_update(&ctx, str, str_len);
     cryptx_hash_final(&ctx, sha256_digest);
    
     cryptx_digest_tostring(sha256_digest, sizeof sha256_digest, sha256_hex);
-    strcpy(CEMU_CONSOLE, sha256_hex);
-    strcpy(CEMU_CONSOLE, "\n");
+	os_ClrHome();
+	os_SetCursorPos(0,0);
+	printf("HASHLIB SHA-256 DEMO\nSHA-256: %s\n", sha256_hex);
+	while(1);
+    //strcpy(CEMU_CONSOLE, sha256_hex);
+    //strcpy(CEMU_CONSOLE, "\n");
     return 0;
 }

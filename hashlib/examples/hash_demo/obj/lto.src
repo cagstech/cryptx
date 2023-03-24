@@ -86,23 +86,50 @@ BB0_6:
 _main:
 	ld	hl, -230
 	call	__frameset
+	ld	bc, -218
+	lea	iy, ix
+	add	iy, bc
+	ld	bc, -227
+	lea	hl, ix
+	add	hl, bc
+	ld	(hl), iy
 	ld	hl, _str
 	lea	de, ix - 121
+	push	ix
+	ld	bc, -224
+	add	ix, bc
+	ld	(ix), de
+	pop	ix
+	lea	de, iy
 	ld	bc, -221
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), de
 	push	hl
 	call	_strlen
-	ld	bc, -227
+	ld	bc, -230
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), hl
 	pop	hl
+	ld	bc, -227
+	lea	hl, ix
+	add	hl, bc
+	ld	iy, (hl)
+	ld	(iy), 0
+	ld	bc, -221
+	lea	iy, ix
+	add	iy, bc
+	ld	hl, (iy)
+	push	hl
+	pop	de
+	inc	de
+	ld	bc, 64
+	ldir
 	or	a, a
 	sbc	hl, hl
 	push	hl
-	ld	bc, -221
+	ld	bc, -224
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -111,29 +138,23 @@ _main:
 	pop	hl
 	pop	hl
 	bit	0, a
-	jp	z, BB1_2
-	ld	bc, -218
-	lea	iy, ix
-	add	iy, bc
+	jp	z, BB1_3
+	ld	bc, -227
+	lea	hl, ix
+	add	hl, bc
+	ld	iy, (hl)
 	lea	hl, iy + 65
-	push	ix
-	ld	bc, -230
-	add	ix, bc
-	ld	(ix), hl
-	pop	ix
-	lea	hl, iy
-	ld	bc, -224
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), hl
-	ld	bc, -227
+	ld	bc, -230
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
 	ld	hl, _str
 	push	hl
-	ld	bc, -221
+	ld	bc, -224
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -142,12 +163,12 @@ _main:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -230
+	ld	bc, -227
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -221
+	ld	bc, -224
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -155,14 +176,14 @@ _main:
 	call	_cryptx_hash_final
 	pop	hl
 	pop	hl
-	ld	bc, -224
+	ld	bc, -221
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
 	ld	hl, 32
 	push	hl
-	ld	bc, -230
+	ld	bc, -227
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -171,27 +192,31 @@ _main:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -224
+	ld	iy, -3145600
+	call	_os_ClrLCD
+	call	_os_HomeUp
+	call	_os_DrawStatusBar
+	or	a, a
+	sbc	hl, hl
+	push	hl
+	push	hl
+	call	_os_SetCursorPos
+	pop	hl
+	pop	hl
+	ld	bc, -221
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	hl, -327680
+	ld	hl, _.str.3
 	push	hl
-	call	_strcpy
+	call	_printf
 	pop	hl
 	pop	hl
-	ld	hl, -327680
-	ld.sis	de, 10
-	ld	(hl), e
-	inc	hl
-	ld	(hl), d
-	or	a, a
-	sbc	hl, hl
-	jr	BB1_3
 BB1_2:
-	ld	hl, 1
+	jr	BB1_2
 BB1_3:
+	ld	hl, 1
 	ld	sp, ix
 	pop	ix
 	ret
@@ -217,14 +242,23 @@ _.str.1:
 _.str.2:
 	db	"%02X ", 0
 
+	section	.rodata,"a",@progbits
+	private	_.str.3
+_.str.3:
+	db	"HASHLIB SHA-256 DEMO", 10, "SHA-256: %s", 10, 0
+
 	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"
 	extern	_cryptx_digest_tostring
 	extern	__Unwind_SjLj_Register
-	extern	__Unwind_SjLj_Unregister
 	extern	__frameset
 	extern	_cryptx_hash_final
-	extern	_strcpy
 	extern	_sprintf
+	extern	__Unwind_SjLj_Unregister
+	extern	_printf
 	extern	_cryptx_hash_update
+	extern	_os_ClrLCD
 	extern	_cryptx_hash_init
+	extern	_os_DrawStatusBar
+	extern	_os_HomeUp
 	extern	_strlen
+	extern	_os_SetCursorPos

@@ -111,7 +111,8 @@
 			<div class="function-doc">void&emsp;cryptx_hmac_pbkdf2(<br />
 				&emsp;&emsp;&emsp;const void* password, size_t passlen,<br />
 				&emsp;&emsp;&emsp;const void* salt, size_t saltlen,<br />
-				&emsp;&emsp;&emsp;void* key, size_t keylen, uint8_t hash_alg);</div>
+				&emsp;&emsp;&emsp;void* key, size_t keylen,<br />
+				&emsp;&emsp;&emsp;size_t rounds, uint8_t hash_alg);</div>
 			<p>Generates a key of arbitrary length from a password and a salt using an hmac algorithm.<br />
 			<span class="param">password</span>: Pointer to password to generate key from<br />
 			<span class="param">passlen</span>: Length of password<br />
@@ -119,6 +120,7 @@
 			<span class="param">saltlen</span>: Length of the salt<br />
 			<span class="param">key</span>: Pointer to buffer to write key to<br />
 			<span class="param">keylen</span>: Length of key to generate<br />
+			<span class="param">rounds</span>: Number of times to iterate hash_alg<br />
 			<span class="param">hash_alg</span>: Identifier for the hash algorithm to use (see hash_algorithms)<br />
 			<span class="return">output</span>: True if success, False if failed
 			</p>
