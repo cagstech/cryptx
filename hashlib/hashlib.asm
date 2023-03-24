@@ -1603,7 +1603,7 @@ hmac_sha256_reset:
 hmac_pbkdf2:
 	save_interrupts
 
- 	ld	hl, -655
+	ld	hl, -655
 	call	ti._frameset
 	ld	bc, -381
 	lea	iy, ix
@@ -1622,7 +1622,7 @@ hmac_pbkdf2:
 	inc	de
 	ld	bc, 242
 	ldir
-	ld	hl, (ix + 24)
+	ld	hl, (ix + 21)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
@@ -1631,11 +1631,6 @@ hmac_pbkdf2:
 	lea	hl, ix
 	add	hl, bc
 	ld	(hl), iy
-	ld	hl, (ix + 18)
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jp	z, .lbl_17
 	ld	de, (ix + 9)
 	push	de
 	pop	hl
@@ -1650,7 +1645,12 @@ hmac_pbkdf2:
 	or	a, a
 	sbc	hl, bc
 	jp	z, .lbl_17
-	ld	hl, (ix + 21)
+	ld	hl, (ix + 18)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	z, .lbl_17
+	ld	hl, (ix + 24)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
@@ -1730,7 +1730,7 @@ hmac_pbkdf2:
 	add	ix, de
 	ld	(ix), l
 	pop	ix
-	ld	de, (ix + 24)
+	ld	de, (ix + 21)
 	ld	iy, 0
 .lbl_7:
 	lea	hl, iy
@@ -1855,10 +1855,10 @@ hmac_pbkdf2:
 	ld	iy, 1
 .lbl_9:
 	ld	bc, (ix + 18)
-	ld	de, (ix + 21)
 	lea	hl, iy
+	ld	de, (ix + 24)
 	or	a, a
-	sbc	hl, bc
+	sbc	hl, de
 	jp	z, .lbl_14
 	ld	bc, -655
 	lea	hl, ix
@@ -1944,32 +1944,33 @@ hmac_pbkdf2:
 	inc	iy
 	jp	.lbl_9
 .lbl_14:
-	ld	bc, -652
-	lea	hl, ix
-	add	hl, bc
-	ld	iy, (hl)
-	lea	hl, iy
-	ld	(ix - 3), de
-	push	ix
-	ld	de, -627
-	add	ix, de
-	ld	bc, (ix)
-	pop	ix
-	or	a, a
-	sbc	hl, bc
-	ld	de, (ix - 3)
-	jr	c, .lbl_16
-	push	bc
-	pop	iy
-.lbl_16:
-	ld	(ix - 3), de
-	ld	de, -643
+	ld	de, -652
 	lea	hl, ix
 	add	hl, de
-	ld	bc, (hl)
-	ld	de, (ix - 3)
-	ex	de, hl
+	ld	iy, (hl)
+	lea	hl, iy
+	ld	(ix - 3), bc
+	push	ix
+	ld	bc, -627
+	add	ix, bc
+	ld	de, (ix)
+	pop	ix
+	or	a, a
+	sbc	hl, de
+	ld	bc, (ix - 3)
+	jr	c, .lbl_16
+	push	de
+	pop	iy
+.lbl_16:
+	ld	(ix - 3), bc
+	ld	bc, -643
+	lea	hl, ix
 	add	hl, bc
+	ld	de, (hl)
+	ld	bc, (ix - 3)
+	push	bc
+	pop	hl
+	add	hl, de
 	push	iy
 	ld	bc, -639
 	lea	iy, ix
@@ -2023,7 +2024,7 @@ hmac_pbkdf2:
 	ld	(ix), e
 	pop	ix
 	inc	a
-	ld	de, (ix + 24)
+	ld	de, (ix + 21)
 	ld	bc, (ix - 3)
 	jp	.lbl_7
 .lbl_17:
