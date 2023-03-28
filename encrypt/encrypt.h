@@ -32,10 +32,15 @@ struct cryptx_aes_cbc_state { uint8_t padding_mode; };
 struct cryptx_aes_ctr_state {
 	uint8_t counter_pos_start; uint8_t counter_len;
 	uint8_t last_block_stop; uint8_t last_block[16]; };
+struct cryptx_aes_gcm_state {
+	uint8_t ghash_key[16];
+	uint8_t auth_tag[16];
+	size_t assoc_len; };
 
 typedef union {
-	struct cryptx_aes_cbc_state ctr;                      /**< metadata for counter mode */
-	struct cryptx_aes_ctr_state cbc;                      /**< metadata for cbc mode */
+	struct cryptx_aes_gcm_state gcm;					/**< metadata for GCM mode */
+	struct cryptx_aes_cbc_state ctr;                    /**< metadata for counter mode */
+	struct cryptx_aes_ctr_state cbc;                    /**< metadata for cbc mode */
 } cryptx_aes_private_h;
 
 
@@ -114,8 +119,8 @@ struct cryptx_aes_ctx {
 	uint32_t round_keys[60];                /**< round keys */
 	uint8_t iv[16];                         /**< IV state for next block */
 	uint8_t ciphermode;                     /**< selected operational mode of the cipher */
-	cryptx_aes_private_h metadata;			/**< opague, internal context metadata */
 	uint8_t op_assoc;                       /**< state-flag indicating if context is for encryption or decryption*/
+	cryptx_aes_private_h metadata;			/**< opague, internal context metadata */
 };
 
 /*************************
@@ -124,7 +129,8 @@ struct cryptx_aes_ctx {
  */
 enum cryptx_aes_cipher_modes {
 	AES_MODE_CBC,       /**< selects CBC mode */
-	AES_MODE_CTR        /**< selects CTR mode */
+	AES_MODE_CTR,       /**< selects CTR mode */
+	AES_MODE_GCM
 };
 
 /****************************
@@ -166,6 +172,8 @@ enum cryptx_aes_padding_schemes {
 #define CRYPTX_AES_CTR_FLAGS(nonce_len, counter_len)	\
 	((0x0f & (counter_len))<<8) | ((0x0f & (nonce_len))<<4) | AES_MODE_CTR
 
+#define CRYPTX_AES_GCM_FLAGS	AES_MODE_GCM
+
 /*******************************************
  * @typedef aes\_error\_t
  * Defines response codes that can be returned from calls
@@ -203,6 +211,7 @@ aes_error_t cryptx_aes_init(
 				const void* key,
 				size_t keylen,
 				const void* iv,
+				size_t iv_len,
 				uint24_t flags);
 
 /****************************************************************
@@ -244,6 +253,14 @@ aes_error_t cryptx_aes_decrypt(
 					const void* ciphertext,
 					size_t len,
 					void* plaintext);
+
+
+aes_error_t cryptx_aes_update_assoc(
+					const struct cryptx_aes_ctx* context,
+					void* aad, size_t aad_len);
+
+
+aes_error_t cryptx_aes_render_digest(const struct cryptx_aes_ctx* context, uint8_t *digest);
 
 
 //******************************************************************************************
