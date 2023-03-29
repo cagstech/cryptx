@@ -35,7 +35,9 @@ struct cryptx_aes_ctr_state {
 struct cryptx_aes_gcm_state {
 	uint8_t ghash_key[16];
 	uint8_t auth_tag[16];
-	size_t assoc_len; };
+	size_t assoc_len;
+	uint8_t last_block_stop; uint8_t last_block[16];
+};
 
 typedef union {
 	struct cryptx_aes_gcm_state gcm;					/**< metadata for GCM mode */
@@ -399,6 +401,8 @@ ecdh_error_t cryptx_ecdh_init(struct cryptx_ecdh_ctx* context);
  * that output as your symmetric key.
  */
 ecdh_error_t cryptx_ecdh_secret(const struct cryptx_ecdh_ctx *context, const uint8_t *rpubkey, uint8_t *secret);
+
+void aes_gf2_mul(uint8_t *out, uint8_t *op1, uint8_t *op2);
 
 
 //******************************************************************************************

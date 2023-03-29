@@ -25,3 +25,4 @@
 	export	cryptx_internal_ecc_point_add
 	export	cryptx_internal_ecc_point_double
 	export	cryptx_internal_ecc_point_mul_scalar
+	export	aes_gf2_mul
