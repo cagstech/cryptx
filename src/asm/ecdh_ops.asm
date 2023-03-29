@@ -4,6 +4,7 @@ public _bigint_add_internal
 public _bigint_sub
 public _bigint_mul
 public _bigint_invert
+public _bigint_square
 public _bigint_iszero
 public _bigint_setzero
 public _bigint_isequal
@@ -446,6 +447,75 @@ _get_degree:
 	add a, a
 	add a, a
 	add a, b
+	ret
+
+
+bigint_square:
+; Destination needs space for 61 bytes during computation
+; (But at the end, only the first 30 bytes contain valid data)
+;Input:
+;	DE: Start of source
+;	IY: Start of destination
+;Output:
+;	A destroyed
+;	B=C=0
+;	DE: Start of destination + 10
+;	HL: Start of destination + 9
+;	IY: Start of destination + 31
+ 	ld hl, -61
+ 	call ti._frameset
+ 	lea iy, ix - 61			; using a temp buffer for dest
+ 	ld hl, (ix + 9)			; iy = src
+	ld c,30
+.byteLoop:
+	ld a, (de)
+	inc de
+	ld b, 8
+	.bitLoop:
+		add hl, hl
+		rla
+		adc hl, hl
+		djnz .bitLoop
+	ld (iy), hl
+	lea iy, iy + 2
+	dec c
+	jr nz, .byteLoop
+	
+	ld b, 29
+	.reduceLoop:
+		dec iy
+		ld hl, (iy - 2)
+		ld a, h
+		rra
+		ld a, l
+		rra
+		xor a, (iy - 31)
+		ld (iy - 31), a
+		add hl, hl
+		lea de, iy - 21
+		ld a, (de)
+		xor a, h
+		ld (de), a
+		djnz .reduceLoop
+	
+	ld a, l
+	rrca
+	and a, 1
+	ld (iy - 2), a
+	rlca
+	xor a, l
+	lea hl, iy - 22
+	xor a, (hl)
+	ld (hl), a
+	
+	; copy tmp buffer to dest
+	ld de, (ix + 6)
+	lea hl, ix - 61
+	ld bc, 30
+	ldir
+	
+	ld sp, ix
+	pop ix
 	ret
 
 

@@ -42,6 +42,8 @@ output x as shared secret field
 #include <string.h>
 #include <stdio.h>
 
+void cryptx_csrand_fill(void* buffer, size_t len);
+
 #include "ecdh.h"
 #define CEMU_CONSOLE ((char*)0xFB0000)
 
@@ -83,8 +85,8 @@ void point_double(struct Point *p){
 		bigint_invert(l, p->x);
 		bigint_mul(l, l, p->y);
 		bigint_add(l, l, p->x);
-		bigint_mul(p->y, p->x, p->x);
-		bigint_mul(p->x, l, l);
+		bigint_square(p->y, p->x);
+		bigint_square(p->x, l);
 
 		//bigint_inc(l);	if coeff_a != 0
 
@@ -127,7 +129,7 @@ void point_add(struct Point *p, struct Point *q){
 				bigint_mul(t1, t1, t3);		// t1 = slope
 				
 				// slope^2
-				bigint_mul(t3, t1, t1);
+				bigint_square(t3, t1);
 				// + Xp + Xq
 				bigint_add(t3, t3, t2);	// free up t2
 				// + slope
@@ -212,7 +214,7 @@ void hexdump(uint8_t *addr, size_t len, uint8_t *label){
 ### Elliptic Curve Diffie-Hellman Main Functions ###
  */
 #define BASE_ORDER_BYTES	29
-ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, uint32_t (*randfill)(void *buffer, size_t size)){
+ecdh_error_t ecdh_init(ecdh_ctx *ctx){
 	if(ctx==NULL)
 		return ECDH_INVALID_ARG;
 	
@@ -222,12 +224,7 @@ ecdh_error_t ecdh_keygen(ecdh_ctx *ctx, uint32_t (*randfill)(void *buffer, size_
 	// if you use this api wrong, its your own fault
 	// it will be well documented
 	
-	if(randfill != NULL)
-		randfill(ctx->privkey, BASE_ORDER_BYTES);
-	
-	// zero all bits > base order
-	for(int i = BASE_ORDER_BYTES; i < (sizeof ctx->privkey); i++)
-		ctx->privkey[i] = 0;
+	cryptx_csrand_fill(ctx->privkey, BASE_ORDER_BYTES);
 	
 	// copy G from curve parameters to pkey
 	// convert to a Point

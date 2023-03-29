@@ -53,6 +53,7 @@ void bigint_add_internal(BIGINT op1, BIGINT op2);
 void bigint_sub(BIGINT res, BIGINT op1, BIGINT op2);
 void bigint_mul(BIGINT res, BIGINT op1, BIGINT op2);
 void bigint_invert(BIGINT res, BIGINT op);
+void bigint_square(BIGINT res, BIGINT op);
 uint8_t ec_poly_get_degree(void* polynomial);
 
 #endif
