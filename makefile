@@ -31,6 +31,18 @@ $(TOOLS): check
 	
 $(LIBS): fasmg
 	sed -i '' 's/BB.*_/\.lbl_/g' $(call SRCDIR,$@/$@.asm)
+	sed -i '' 's/__frameset/ti._frameset/g' $(call SRCDIR,$@/$@.asm)
+	sed -i '' 's/__ishl/ti._ishl/g' $(call SRCDIR,$@/$@.asm)
+	sed -i '' 's/__lshl/ti._lshl/g' $(call SRCDIR,$@/$@.asm)
+	sed -i '' 's/__bshl/ti._bshl/g' $(call SRCDIR,$@/$@.asm)
+	sed -i '' 's/__ladd/ti._ladd/g' $(call SRCDIR,$@/$@.asm)
+	sed -i '' 's/__iremu/ti._iremu/g' $(call SRCDIR,$@/$@.asm)
+	sed -i '' 's/__lshru/ti._lshru/g' $(call SRCDIR,$@/$@.asm)
+	sed -i '' 's/__lor/ti._lor/g' $(call SRCDIR,$@/$@.asm)
+	sed -i '' 's/__idivu/ti._idivu/g' $(call SRCDIR,$@/$@.asm)
+	sed -i '' 's/__lxor/ti._lxor/g' $(call SRCDIR,$@/$@.asm)
+	sed -i '' 's/__bshru/ti._bshru/g' $(call SRCDIR,$@/$@.asm)
+	sed -i '' 's/__ishru/ti._ishru/g' $(call SRCDIR,$@/$@.asm)
 	$(Q)$(FASMG) $(call SRCDIR,$@/$@.asm)
 	
 
