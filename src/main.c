@@ -61,9 +61,14 @@ typedef struct _aes_ctr {
 } aes_ctr_t;
 
 typedef struct _aes_gcm {
+	uint8_t last_block_stop;
+	uint8_t last_block[16];
 	uint8_t ghash_key[16];
+	uint8_t aad_cache[16];
+	uint8_t aad_cache_len;
+	size_t aad_len;
 	uint8_t auth_tag[16];
-	size_t assoc_len;
+	uint8_t auth_digest[16];
 } aes_gcm_t;
 
 typedef struct _aes_keyschedule_ctx {
@@ -78,19 +83,6 @@ typedef struct _aes_keyschedule_ctx {
 		aes_cbc_t cbc;
 	} mode;
 } aes_ctx;
-
-void AES_PUT_BE64(uint8_t *a, uint64_t val)
-{
-	a[7] = val >> 56;
-	a[6] = val >> 48;
-	a[5] = val >> 40;
-	a[4] = val >> 32;
-	a[3] = val >> 24;
-	a[2] = val >> 16;
-	a[1] = val >> 8;
-	a[0] = val & 0xff;
-}
-
 
 // Entropy Pool
 #define CEMU_CONSOLE (char*)0xFB0000
@@ -575,81 +567,8 @@ enum _aes_padding_schemes {
  */
 #define FLAGS_GET_LSB2 3
 #define FLAGS_GET_LSB4 15
+#define MIN(x, y) ((x) < (y)) ? (x) : (y)
 
-
-// flag definition  [unused][ 0000 counter len ][ 0000 counter start pos ][ 00 padding mode][ 00 cipher mode ]
-
-// Performs the action of generating the keys that will be used in every round of
-// encryption. "key" is the user-supplied input key, "w" is the output key schedule,
-// "keysize" is the length in bits of "key", must be 128, 192, or 256.
-aes_error_t hashlib_AESLoadKey(aes_ctx* ctx, const BYTE key[], size_t keysize, uint8_t* iv, size_t iv_len, uint24_t cipher_flags)
-{
-	int Nb=4,Nr,Nk,idx;
-	WORD temp,Rcon[]={0x01000000,0x02000000,0x04000000,0x08000000,0x10000000,0x20000000,
-		0x40000000,0x80000000,0x1b000000,0x36000000,0x6c000000,0xd8000000,
-		0xab000000,0x4d000000,0x9a000000};
-	uint8_t mode = (cipher_flags & 3);
-	if(mode>AES_GCM) return AES_INVALID_CIPHERMODE;
-	memset(ctx, 0, sizeof(aes_ctx));
-	ctx->cipher_mode = mode;
-	keysize<<=3;
-	switch (keysize) {
-		case 128: Nr = 10; Nk = 4; break;
-		case 192: Nr = 12; Nk = 6; break;
-		case 256: Nr = 14; Nk = 8; break;
-		default: return AES_INVALID_ARG;
-	}
-	
-	memcpy(ctx->iv, iv, iv_len);
-	memset(&ctx->iv[iv_len], 0, 16-iv_len);
-	ctx->keysize = keysize;
-	for (idx=0; idx < Nk; ++idx) {
-		ctx->round_keys[idx] = ((uint32_t)(key[4 * idx]) << 24) | ((uint32_t)(key[4 * idx + 1]) << 16) |
-		((uint32_t)(key[4 * idx + 2]) << 8) | ((uint32_t)(key[4 * idx + 3]));
-	}
-	
-	for (idx = Nk; idx < Nb * (Nr+1); ++idx) {
-		temp = ctx->round_keys[idx - 1];
-		if ((idx % Nk) == 0)
-			temp = aes_SubWord(KE_ROTWORD(temp)) ^ Rcon[(idx-1)/Nk];
-		else if (Nk > 6 && (idx % Nk) == 4)
-			temp = aes_SubWord(temp);
-		ctx->round_keys[idx] = ctx->round_keys[idx-Nk] ^ temp;
-	}
-	
-	if(mode == AES_CBC) ctx->mode.cbc.padding_mode = ((uint8_t)(cipher_flags>>2) & FLAGS_GET_LSB2);
-	if(mode == AES_CTR) {
-		uint8_t ctr_pos = ((uint8_t)(cipher_flags>>4) & FLAGS_GET_LSB4);
-		uint8_t ctr_len = ((uint8_t)(cipher_flags>>8) & FLAGS_GET_LSB4);
-		if((!ctr_len) && (!ctr_pos)) {ctr_pos = 8; ctr_len = 8;}
-		else if(ctr_len && (!ctr_pos)) ctr_pos = AES_BLOCK_SIZE - ctr_len;
-		else if(ctr_pos && (!ctr_len)) ctr_len = AES_BLOCK_SIZE - ctr_pos;
-		if(ctr_len + ctr_pos > 16) return AES_INVALID_ARG;
-		ctx->mode.ctr.counter_pos_start = ctr_pos;
-		ctx->mode.ctr.counter_len = ctr_len;
-	}
-	if(mode == AES_GCM){
-		
-		// generate ghash key
-		uint8_t tmp[16] = {0};
-		aes_encrypt_block(tmp, ctx->mode.gcm.ghash_key, ctx);
-		
-		// sort out IV wonkiness in GCM mode
-		if(iv_len == 12)
-			ctx->iv[15] = 1;
-		else {
-			memset(ctx->iv, 0, 16);
-			xor_buf(iv, ctx->iv, 16);
-			aes_gf2_mul(ctx->iv, ctx->iv, ctx->mode.gcm.ghash_key);
-			memset(tmp, 0, 16);
-			AES_PUT_BE64(&tmp[8], (uint64_t)iv_len<<3);
-			xor_buf(tmp, ctx->iv, 16);
-			aes_gf2_mul(ctx->iv, ctx->iv, ctx->mode.gcm.ghash_key);
-		}
-	}
-	
-	return AES_OK;
-}
 
 /////////////////
 // ADD ROUND KEY
@@ -1181,14 +1100,170 @@ enum _aes_op_assoc {
 	AES_OP_ENCRYPT,
 	AES_OP_DECRYPT
 };
-#define MIN(x, y) ((x) < (y)) ? (x) : (y)
+
+#define ghash_start(buf)	memset((buf), 0, 16)
+
+void ghash(aes_ctx *ctx, uint8_t *out_buf, const uint8_t *data, size_t len)
+{
+	uint8_t tbuf[AES_BLOCK_SIZE];
+	size_t data_offset = 0;
+	
+	// the cache allows for incomplete blocks to be queued
+	// the next call to update will concat the queue and new aad
+	if(ctx->mode.gcm.aad_cache_len){
+		size_t cache_len = ctx->mode.gcm.aad_cache_len;
+		data_offset = MIN(len, AES_BLOCK_SIZE - cache_len);
+		if(data_offset + cache_len < AES_BLOCK_SIZE){
+			// if new aad is not enough to fill a block, update queue and stop w/o processing
+			memcpy(&ctx->mode.gcm.aad_cache[cache_len], data, data_offset);
+			ctx->mode.gcm.aad_cache_len += data_offset;
+			return;
+		}
+		else {
+			// if new aad is enough to fill a block, concat queue and rest of block from aad
+			// then update hash
+			memcpy(tbuf, ctx->mode.gcm.aad_cache, cache_len);
+			memcpy(&tbuf[cache_len], data, data_offset);
+			xor_buf(tbuf, out_buf, AES_BLOCK_SIZE);
+			aes_gf2_mul(out_buf, out_buf, ctx->mode.gcm.ghash_key);
+			ctx->mode.gcm.aad_cache_len = 0;
+		}
+	}
+	
+	// now process any remaining aad data
+	for(uint24_t idx = data_offset; idx < len; idx += AES_BLOCK_SIZE){
+		size_t bytes_copy = MIN(AES_BLOCK_SIZE, len - idx);
+		if(bytes_copy < AES_BLOCK_SIZE){
+			// if aad_len < block size, write bytes to queue.
+			// no return here because this condition should just exit out next loop
+			memcpy(ctx->mode.gcm.aad_cache, &data[idx], bytes_copy);
+			ctx->mode.gcm.aad_cache_len = bytes_copy;
+		}
+		else {
+			// if aad_len >= block size, update hash for block
+			memcpy(tbuf, &data[idx], AES_BLOCK_SIZE);
+			xor_buf(tbuf, out_buf, AES_BLOCK_SIZE);
+			aes_gf2_mul(out_buf, out_buf, ctx->mode.gcm.ghash_key);
+		}
+	}
+}
+
+void aes_gcm_prepare_iv(aes_ctx *ctx, const uint8_t *iv, size_t iv_len)
+{
+	uint8_t tbuf[AES_BLOCK_SIZE];
+	// memset(ctx->iv, 0, AES_BLOCK_SIZE);
+	// ^^ this should already be zero'd from aes_init
+	
+	if (iv_len == 12) {
+		/* Prepare block J_0 = IV || 0^31 || 1 [len(IV) = 96] */
+		// memcpy(ctx->iv, iv, iv_len);
+		// ^^ this should already be done by aes_init
+		ctx->iv[AES_BLOCK_SIZE - 1] = 0x01;
+	} else {
+		/*
+		 * s = 128 * ceil(len(IV)/128) - len(IV)
+		 * J_0 = GHASH_H(IV || 0^(s+64) || [len(IV)]_64)
+		 */
+		// hash the IV. Pad to block size
+		memset(tbuf, 0, AES_BLOCK_SIZE);
+		memcpy(tbuf, iv, iv_len);
+		ghash(ctx, ctx->iv, tbuf, sizeof(tbuf));
+		
+		memset(tbuf, 0, AES_BLOCK_SIZE>>1);
+		bytelen_to_bitlen(iv_len, &tbuf[8]);		// outputs in BE
+		
+		ghash(ctx, ctx->iv, tbuf, sizeof(tbuf));
+	}
+}
+
+// flag definition  [unused][ 0000 counter len ][ 0000 counter start pos ][ 00 padding mode][ 00 cipher mode ]
+
+// Performs the action of generating the keys that will be used in every round of
+// encryption. "key" is the user-supplied input key, "w" is the output key schedule,
+// "keysize" is the length in bits of "key", must be 128, 192, or 256.
+aes_error_t hashlib_AESLoadKey(aes_ctx* ctx, const BYTE key[], size_t keysize, uint8_t* iv, size_t iv_len, uint24_t cipher_flags)
+{
+	int Nb=4,Nr,Nk,idx;
+	WORD temp,Rcon[]={0x01000000,0x02000000,0x04000000,0x08000000,0x10000000,0x20000000,
+		0x40000000,0x80000000,0x1b000000,0x36000000,0x6c000000,0xd8000000,
+		0xab000000,0x4d000000,0x9a000000};
+	uint8_t mode = (cipher_flags & 3);
+	if(mode>AES_GCM) return AES_INVALID_CIPHERMODE;
+	if(iv_len>AES_BLOCK_SIZE) return AES_INVALID_ARG;
+	memset(ctx, 0, sizeof(aes_ctx));
+	ctx->cipher_mode = mode;
+	keysize<<=3;
+	switch (keysize) {
+		case 128: Nr = 10; Nk = 4; break;
+		case 192: Nr = 12; Nk = 6; break;
+		case 256: Nr = 14; Nk = 8; break;
+		default: return AES_INVALID_ARG;
+	}
+	
+	memcpy(ctx->iv, iv, iv_len);
+	memset(&ctx->iv[iv_len], 0, 16-iv_len);
+	ctx->keysize = keysize;
+	for (idx=0; idx < Nk; ++idx) {
+		ctx->round_keys[idx] = ((uint32_t)(key[4 * idx]) << 24) | ((uint32_t)(key[4 * idx + 1]) << 16) |
+		((uint32_t)(key[4 * idx + 2]) << 8) | ((uint32_t)(key[4 * idx + 3]));
+	}
+	
+	for (idx = Nk; idx < Nb * (Nr+1); ++idx) {
+		temp = ctx->round_keys[idx - 1];
+		if ((idx % Nk) == 0)
+			temp = aes_SubWord(KE_ROTWORD(temp)) ^ Rcon[(idx-1)/Nk];
+		else if (Nk > 6 && (idx % Nk) == 4)
+			temp = aes_SubWord(temp);
+		ctx->round_keys[idx] = ctx->round_keys[idx-Nk] ^ temp;
+	}
+	
+	if(mode == AES_CBC) ctx->mode.cbc.padding_mode = ((uint8_t)(cipher_flags>>2) & FLAGS_GET_LSB2);
+	if(mode == AES_CTR) {
+		uint8_t ctr_pos = ((uint8_t)(cipher_flags>>4) & FLAGS_GET_LSB4);
+		uint8_t ctr_len = ((uint8_t)(cipher_flags>>8) & FLAGS_GET_LSB4);
+		if((!ctr_len) && (!ctr_pos)) {ctr_pos = 8; ctr_len = 8;}
+		else if(ctr_len && (!ctr_pos)) ctr_pos = AES_BLOCK_SIZE - ctr_len;
+		else if(ctr_pos && (!ctr_len)) ctr_len = AES_BLOCK_SIZE - ctr_pos;
+		if(ctr_len + ctr_pos > 16) return AES_INVALID_ARG;
+		ctx->mode.ctr.counter_pos_start = ctr_pos;
+		ctx->mode.ctr.counter_len = ctr_len;
+	}
+	if(mode == AES_GCM){
+		
+		// generate ghash key
+		uint8_t tmp[16] = {0};
+		aes_encrypt_block(tmp, ctx->mode.gcm.ghash_key, ctx);
+		
+		// sort out IV wonkiness in GCM mode
+		aes_gcm_prepare_iv(ctx, iv, iv_len);
+		memset(ctx->mode.gcm.auth_tag, 0, AES_BLOCK_SIZE);
+	}
+	
+	return AES_OK;
+}
+
+aes_error_t cryptx_aes_update_aad(aes_ctx* ctx, uint8_t *aad, size_t aad_len){
+	if(ctx->cipher_mode != AES_GCM) return AES_INVALID_OPERATION;
+	
+	// update the tag for full blocks of aad in input, cache any partial blocks
+	ghash(ctx, ctx->mode.gcm.auth_tag, aad, aad_len);
+	ctx->mode.gcm.aad_len += aad_len;
+	return AES_OK;
+}
+
+aes_error_t cryptx_aes_digest(aes_ctx* ctx, uint8_t* digest){
+	if( (ctx == NULL) || (digest == NULL)) return AES_INVALID_ARG;
+	if(ctx->cipher_mode != AES_GCM) return AES_INVALID_CIPHERMODE;
+	memcpy(digest, ctx->mode.gcm.auth_digest, AES_BLOCK_SIZE);
+	return AES_OK;
+}
+
 
 aes_error_t cryptx_aes_encrypt_and_digest(
 										  aes_ctx *ctx,
 										  uint8_t *plaintxt, size_t plaintxt_len,
 										  uint8_t *aad, size_t aad_len,
-										  uint8_t *ciphertxt, uint8_t *digest,
-										  ...
+										  uint8_t *ciphertxt, uint8_t *digest
 										  ){
 	
 	if(
@@ -1201,22 +1276,11 @@ aes_error_t cryptx_aes_encrypt_and_digest(
 	if(ctx->cipher_mode != AES_GCM) return AES_INVALID_CIPHERMODE;
 	aes_error_t internal_resp;
 	
-	uint8_t *tag = ctx->mode.gcm.auth_tag;
-	uint8_t tmp[AES_BLOCK_SIZE];
-	size_t bytes_to_copy;
+	cryptx_aes_update_aad(ctx, aad, aad_len);
+	internal_resp = hashlib_AESEncrypt(ctx, plaintxt, plaintxt_len, ciphertxt);
+	memcpy(digest, ctx->mode.gcm.auth_digest, AES_BLOCK_SIZE);
 	
-	if((aad!=NULL)&&(aad_len!=0)){
-		for(int idx = 0; idx < aad_len; idx+=AES_BLOCK_SIZE){
-			bytes_to_copy = MIN(AES_BLOCK_SIZE, aad_len - idx);
-			memcpy(tmp, &aad[idx], bytes_to_copy);
-			memset(&tmp[bytes_to_copy], 0, AES_BLOCK_SIZE-bytes_to_copy);
-			xor_buf(tmp, tag, AES_BLOCK_SIZE);
-			aes_gf2_mul(tag, tag, ctx->mode.gcm.ghash_key);
-		}
-	}
-	ctx->mode.gcm.assoc_len += aad_len;
-	hashlib_AESEncrypt(ctx, plaintxt, plaintxt_len, ciphertxt);
-	memcpy(digest, tag, AES_BLOCK_SIZE);
+	return internal_resp;
 }
 
 
@@ -1286,50 +1350,65 @@ aes_error_t hashlib_AESEncrypt(aes_ctx* ctx, const BYTE in[], size_t in_len, BYT
 		}
 		case AES_GCM:
 		{
-			uint8_t tmp_block[AES_BLOCK_SIZE];
-			uint8_t c0[AES_BLOCK_SIZE];
-			size_t bytes_to_copy;
-			uint8_t *tag = ctx->mode.gcm.auth_tag;
-			
-			// save C0 block state
-			memcpy(c0, iv, AES_BLOCK_SIZE);
 #define AES_GCM_NONCE_LEN 12
 #define AES_GCM_CTR_LEN 4
+			uint8_t tbuf[AES_BLOCK_SIZE];
+			uint8_t c0[AES_BLOCK_SIZE];
+			uint8_t *tag = ctx->mode.gcm.auth_tag;
+			size_t bytes_to_copy = ctx->mode.gcm.last_block_stop;
+			size_t bytes_offset = 0;
 			
-			// increment counter
-			increment_iv(iv, AES_GCM_NONCE_LEN, AES_GCM_CTR_LEN);
+			// save a copy of CTR0
+			memcpy(c0, iv, AES_BLOCK_SIZE);
 			
-			// encrypt and authenticate
-			for(idx = 0; idx <= blocks; idx++){
-				bytes_to_copy = MIN(AES_BLOCK_SIZE, in_len - (idx * AES_BLOCK_SIZE));
+			// pad rest of aad cache with 0's
+			memset(tbuf, 0, AES_BLOCK_SIZE);
+			ghash(ctx, tag, tbuf, AES_BLOCK_SIZE - ctx->mode.gcm.aad_cache_len);
+			
+			// xor last bytes of encryption buf w/ new plaintext for new ciphertext
+			if(bytes_to_copy%AES_BLOCK_SIZE){
+				bytes_offset = AES_BLOCK_SIZE - bytes_to_copy;
+				memcpy(out, in, bytes_offset);
+				xor_buf(&ctx->mode.gcm.last_block[bytes_to_copy], out, bytes_offset);
+				blocks = ((in_len - bytes_offset) / AES_BLOCK_SIZE);
 				
-				// GCM is zero-padded
-				memcpy(&out[idx*AES_BLOCK_SIZE], &in[idx*AES_BLOCK_SIZE], bytes_to_copy);
-				memset(&out[idx*AES_BLOCK_SIZE+bytes_to_copy], 0, AES_BLOCK_SIZE-bytes_to_copy);
-				
-				// encrypt block
-				aes_encrypt_block(iv, buf, ctx);
-				xor_buf(buf, &out[idx*AES_BLOCK_SIZE], AES_BLOCK_SIZE);
-				
-				// increment iv
-				increment_iv(iv, AES_GCM_NONCE_LEN, AES_GCM_CTR_LEN);
-				
-				// now update tag
-				xor_buf(&out[idx*AES_BLOCK_SIZE], tag, AES_BLOCK_SIZE);
-				aes_gf2_mul(tag, tag, ctx->mode.gcm.ghash_key);
 			}
 			
-			// compute bit-len of assoc and encrypted
-			AES_PUT_BE64(tmp_block, ctx->mode.gcm.assoc_len<<3);
-			AES_PUT_BE64(&tmp_block[8], in_len<<3);
+			// start at CTR1
+			increment_iv(iv, AES_GCM_NONCE_LEN, AES_GCM_CTR_LEN);
 			
-			// xor bitlen into auth_tag & gf2_mul
-			xor_buf(tmp_block, tag, AES_BLOCK_SIZE);
-			aes_gf2_mul(tag, tag, ctx->mode.gcm.ghash_key);
+			// encrypt remaining plaintext
+			for(idx = 0; idx <= blocks; idx++){
+				bytes_to_copy = MIN(AES_BLOCK_SIZE, in_len - (idx * AES_BLOCK_SIZE));
+				//bytes_to_pad = AES_BLOCK_SIZE-bytes_to_copy;
+				memcpy(&out[idx*AES_BLOCK_SIZE+bytes_offset], &in[idx*AES_BLOCK_SIZE+bytes_offset], bytes_to_copy);
+				// memset(&buf[bytes_to_copy], 0, bytes_to_pad);        // if bytes_to_copy is less than blocksize, do nothing, since msg is truncated anyway
+				aes_encrypt_block(iv, tbuf, ctx);
+				xor_buf(tbuf, &out[idx*AES_BLOCK_SIZE+bytes_offset], bytes_to_copy);
+				increment_iv(iv, AES_GCM_NONCE_LEN, AES_GCM_CTR_LEN);        // increment iv for continued use
+				if(idx==blocks){
+					memcpy(ctx->mode.gcm.last_block, buf, AES_BLOCK_SIZE);
+					ctx->mode.gcm.last_block_stop = bytes_to_copy;
+				}
+			}
 			
-			// encrypt auth tag
+			// authenticate the ciphertext
+			ghash(ctx, tag, out, in_len);
+			
+			// pad rest of ciphertext cache with 0s
+			memset(tbuf, 0, AES_BLOCK_SIZE);
+			ghash(ctx, tag, tbuf, AES_BLOCK_SIZE - ctx->mode.gcm.aad_cache_len);
+			// at this point, tag should be GHASH(0-padded aad || 0-padded ciphertext)
+			
+			// final tag computed as GHASH( 0-padded aad || 0-padded ciphertext || u64-be-aad-len || u64-be-ciphertext-len)
+			bytelen_to_bitlen(ctx->mode.gcm.aad_len, tbuf);
+			bytelen_to_bitlen(in_len, &tbuf[8]);
+			ghash(ctx, tag, tbuf, AES_BLOCK_SIZE);
+			
+			// encrypt auth tag with CTR0
 			aes_encrypt_block(c0, c0, ctx);
-			xor_buf(c0, tag, AES_BLOCK_SIZE);
+			memcpy(ctx->mode.gcm.auth_digest, tag, AES_BLOCK_SIZE);
+			xor_buf(c0, ctx->mode.gcm.auth_digest, AES_BLOCK_SIZE);
 			
 			break;
 			
