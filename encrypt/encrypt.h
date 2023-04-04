@@ -199,7 +199,7 @@ typedef enum {
  * @param[in] keylen	The size, in bytes, of the @b key to load.
  * @param[in] iv	Pointer to  Initialization vector, a buffer equal to the block size filled with random bytes.
  * @param[in] flags	A series of flags to configure the AES context with.
- * 				Use the provided @b CRYPTX_AES_CTR_FLAGS or @b CRYPTX_AES_CBC_FLAGS to pass flags.
+ * 				Use the provided @b CRYPTX_AES_CTR_FLAGS, @b CRYPTX_AES_CBC_FLAGS, or @b CRYPTX_AES_GCM_FLAGS to pass flags.
  * @returns An @b aes_error_t indicating the status of the AES operation.
  * @note Contexts are not bidirectional due to being stateful. If you need to process both encryption and decryption,
  * initialize seperate contexts for encryption and decryption. Both contexts will use the same key, but different initialization vectors.
