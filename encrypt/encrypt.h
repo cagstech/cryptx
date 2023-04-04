@@ -227,7 +227,7 @@ aes_error_t cryptx_aes_init(
  * @note @b ciphertext should large enough to hold the encrypted message.
  *          For CBC mode, this is the smallest multiple of the blocksize that will hold the plaintext.
  *          See the @b CRYPTX_AES_CIPHERTEXT_LEN macro.
- *          For CTR mode, this is the same size as the plaintext.
+ *          For CTR and GCM modes, this is the same size as the plaintext.
  * @note @b plaintext and @b ciphertext are aliasable.
  * @note Encrypt is streamable, such that encrypt(msg1) + encrypt(msg2) is functionally identical to encrypt(msg1+msg2)
  * with the exception of intervening padding in CBC mode.
