@@ -33,10 +33,11 @@ struct cryptx_aes_ctr_state {
 	uint8_t counter_pos_start; uint8_t counter_len;
 	uint8_t last_block_stop; uint8_t last_block[16]; };
 struct cryptx_aes_gcm_state {
-	uint8_t ghash_key[16];
-	uint8_t auth_tag[16];
-	size_t assoc_len;
 	uint8_t last_block_stop; uint8_t last_block[16];
+	uint8_t ghash_key[16];
+	uint8_t aad_cache[16]; uint8_t auth_tag[16]; uint8_t auth_j0[16];
+	uint8_t aad_cache_len; size_t aad_len; size_t ct_len;
+	uint8_t gcm_op;
 };
 
 typedef union {
@@ -130,9 +131,9 @@ struct cryptx_aes_ctx {
  * Defines supported AES cipher modes.
  */
 enum cryptx_aes_cipher_modes {
-	AES_MODE_CBC,       /**< selects CBC mode */
-	AES_MODE_CTR,       /**< selects CTR mode */
-	AES_MODE_GCM
+	AES_MODE_CBC,       /**< selects Cyclic Block Chain (CBC) mode */
+	AES_MODE_CTR,       /**< selects Counter (CTR) mode */
+	AES_MODE_GCM		/**< selects Galois Counter (GCM) mode */
 };
 
 /****************************
@@ -256,13 +257,36 @@ aes_error_t cryptx_aes_decrypt(
 					size_t len,
 					void* plaintext);
 
-
-aes_error_t cryptx_aes_update_assoc(
+/**************************************************************
+ * @brief Updates the cipher context for given AAD (Additional Authenticated Data).
+ * AAD is data that is only authenticated, not encrypted.
+ * @param[in] context	Pointer to an AES context.
+ * @param[in] aad		Pointer to additional authenticated data segment.
+ * @param[in] aad_len	Length of additional data segment.
+ * @returns An @b aes_error_t indicating the status of the AES operation.
+ * @note This function is only compatible with AES-GCM cipher mode. Attempting to
+ * use this function for any other cipher mode will return @b AES_INVALID_CIPHERMODE.
+ * @note This function can only be called between the call to @b cryptx_aes_init and the first call
+ * to @b cryptx_aes_encrypt or @b cryptx_aes_decrypt. Once encryption or decryption starts, you can
+ * no longer update AAD.
+ */
+aes_error_t cryptx_aes_update_aad(
 					const struct cryptx_aes_ctx* context,
 					void* aad, size_t aad_len);
 
 
-aes_error_t cryptx_aes_render_digest(const struct cryptx_aes_ctx* context, uint8_t *digest);
+/*************************************************************************
+ * @brief Returns the current authentication tag for data parsed so far.
+ * @param[in] context	Pointer to an AES context
+ * @param[out] digest	Pointer to a buffer to output digest to. Must be at least 16 bytes large.
+ * @returns An @b aes_error_t indicating the status of the AES operation.
+ * @note This function is only compatible with AES-GCM cipher mode. Attempting to call it for any
+ * other cipher mode will return @b AES_INVALID_CIPHERMODE.
+ * @note Calling this function terminates your use of the current AES context. This is because
+ * reuse of the IV buffer can leak the hkey used for authentication. The next stream may use the same
+ * encryption key but should have a unique IV.
+ */
+aes_error_t cryptx_aes_digest(const struct cryptx_aes_ctx* context, uint8_t *digest);
 
 
 //******************************************************************************************
@@ -402,7 +426,9 @@ ecdh_error_t cryptx_ecdh_init(struct cryptx_ecdh_ctx* context);
  */
 ecdh_error_t cryptx_ecdh_secret(const struct cryptx_ecdh_ctx *context, const uint8_t *rpubkey, uint8_t *secret);
 
-void aes_gf2_mul(uint8_t *out, uint8_t *op1, uint8_t *op2);
+void bytelen_to_bitlen(size_t len, uint8_t *bitlen);
+void memrev(uint8_t *data, size_t len);
+void gf128_mul(uint8_t *op1, uint8_t *op2, uint8_t *out);
 
 
 //******************************************************************************************

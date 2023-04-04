@@ -6,8 +6,8 @@
 	export	cryptx_aes_init
 	export	cryptx_aes_encrypt
 	export	cryptx_aes_decrypt
-	export	cryptx_aes_update_assoc
-	export	cryptx_aes_render_digest
+	export	cryptx_aes_update_aad
+	export	cryptx_aes_digest
 	export	cryptx_rsa_encrypt
 	export	cryptx_ecdh_init
 	export	cryptx_ecdh_secret
@@ -25,4 +25,6 @@
 	export	cryptx_internal_ecc_point_add
 	export	cryptx_internal_ecc_point_double
 	export	cryptx_internal_ecc_point_mul_scalar
-	export	aes_gf2_mul
+	export	bytelen_to_bitlen
+	export	memrev
+	export	gf128_mul

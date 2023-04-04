@@ -68,18 +68,18 @@ int main(void)
     
     // initialize the AES key schedule and set cipher mode
     #ifdef CBC_MODE
-    cryptx_aes_init(&ctx_out, key, KEYSIZE, iv, CRYPTX_AES_CBC_FLAGS(0));
-	cryptx_aes_init(&ctx_in, key, KEYSIZE, iv, CRYPTX_AES_CBC_FLAGS(0));
+    cryptx_aes_init(&ctx_out, key, KEYSIZE, iv, 16, CRYPTX_AES_CBC_FLAGS(0));
+	cryptx_aes_init(&ctx_in, key, KEYSIZE, iv, 16, CRYPTX_AES_CBC_FLAGS(0));
 	size_t ctlen1 = CRYPTX_AES_CIPHERTEXT_LEN(strlen(str1));
 	size_t ctlen2 = CRYPTX_AES_CIPHERTEXT_LEN(strlen(str2));
     #endif
     #ifdef CTR_MODE
-    cryptx_aes_init(&ctx_out, key, KEYSIZE, iv, CRYPTX_AES_CTR_FLAGS(8,8));
-	cryptx_aes_init(&ctx_in, key, KEYSIZE, iv, CRYPTX_AES_CTR_FLAGS(8,8));
+    cryptx_aes_init(&ctx_out, key, KEYSIZE, iv, 16, CRYPTX_AES_CTR_FLAGS(8,8));
+	cryptx_aes_init(&ctx_in, key, KEYSIZE, iv, 16, CRYPTX_AES_CTR_FLAGS(8,8));
 	size_t ctlen1 = strlen(str1);
 	size_t ctlen2 = strlen(str2);
     #endif
-    sprintf(CEMU_CONSOLE, "init complete\n");
+    sprintf(CEMU_CONSOLE, "init complete, exit code %u\n", error);
     
     // encrypt message 1+2 and output return code and decrypted data for testing
     error = cryptx_aes_encrypt(&ctx_out, str1, strlen(str1), buf1);

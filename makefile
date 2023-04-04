@@ -29,7 +29,7 @@ $(TOOLS): check
 	
 $(LIBS): fasmg
 	sed -i '' 's/BB.*_/\.lbl_/g' $(call SRCDIR,$@/$@.asm)
-	sed -i '' 's/__frameset/ti._frameset/g' $(call SRCDIR,$@/$@.asm)
+	#sed -i '' 's/__frameset/ti._frameset/g' $(call SRCDIR,$@/$@.asm)
 	sed -i '' 's/__ishl/ti._ishl/g' $(call SRCDIR,$@/$@.asm)
 	sed -i '' 's/__lshl/ti._lshl/g' $(call SRCDIR,$@/$@.asm)
 	sed -i '' 's/__bshl/ti._bshl/g' $(call SRCDIR,$@/$@.asm)
