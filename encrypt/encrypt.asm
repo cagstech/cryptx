@@ -3,7 +3,7 @@ include '../../include/library.inc'
 include '../../include/include_library.inc'
 
 ;------------------------------------------
-library ENCRYPT, 2
+library ENCRYPT, 3
 include_library '../hashlib/hashlib.asm'
 
 ;------------------------------------------
