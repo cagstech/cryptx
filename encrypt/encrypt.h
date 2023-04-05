@@ -198,6 +198,7 @@ typedef enum {
  * @param[in] key	Pointer to an 128, 192, or 256 bit key to load into the AES context.
  * @param[in] keylen	The size, in bytes, of the @b key to load.
  * @param[in] iv	Pointer to  Initialization vector, a buffer equal to the block size filled with random bytes.
+ * @param[in] ivlen	Length of the initalization vector. Capped at 16 bytes. Certain cipher modes have different recommendations.
  * @param[in] flags	A series of flags to configure the AES context with.
  * 				Use the provided @b CRYPTX_AES_CTR_FLAGS, @b CRYPTX_AES_CBC_FLAGS, or @b CRYPTX_AES_GCM_FLAGS to pass flags.
  * @returns An @b aes_error_t indicating the status of the AES operation.
@@ -207,14 +208,14 @@ typedef enum {
  * @warning Do not manually edit the @b ctx.mode field of the context structure.
  * This will break the cipher configuration. If you want to change cipher modes, do so by calling @b aes_init again.
  * @warning AES-CBC and CTR modes ensure confidentiality but do not provide message integrity verification.
- * If you need a truly secure construction, append a keyed hash (HMAC) to the encrypted message..
+ * If you need a truly secure construction, use GCM mode or append a keyed hash (HMAC) to the encrypted message..
  */
 aes_error_t cryptx_aes_init(
 				struct cryptx_aes_ctx* context,
 				const void* key,
 				size_t keylen,
 				const void* iv,
-				size_t iv_len,
+				size_t ivlen,
 				uint24_t flags);
 
 /****************************************************************
