@@ -8,6 +8,7 @@
 	export	cryptx_aes_decrypt
 	export	cryptx_aes_update_aad
 	export	cryptx_aes_digest
+	export	cryptx_aes_verify
 	export	cryptx_rsa_encrypt
 	export	cryptx_ecdh_init
 	export	cryptx_ecdh_secret

@@ -7,7 +7,7 @@ _hexdump:
 	call	__frameset
 	ld	hl, (ix + 12)
 	ld	bc, -327680
-	ld	de, _.str.3
+	ld	de, _.str.2
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
@@ -17,7 +17,7 @@ _hexdump:
 	call	_sprintf
 	jr	BB0_3
 BB0_2:
-	ld	de, _.str.2
+	ld	de, _.str.1
 	push	hl
 	push	de
 	push	bc
@@ -46,7 +46,7 @@ BB0_4:
 	ld	de, 0
 	ld	e, (hl)
 	push	de
-	ld	hl, _.str.4
+	ld	hl, _.str.3
 	push	hl
 	push	bc
 	ld	(ix - 4), a
@@ -57,7 +57,7 @@ BB0_4:
 	ld	a, (ix - 4)
 	and	a, 15
 	or	a, a
-	ld	hl, _.str.3
+	ld	hl, _.str.2
 	push	hl
 	ld	hl, -327680
 	push	hl
@@ -72,7 +72,7 @@ BB0_4:
 	ld	hl, (ix + 9)
 	jr	BB0_4
 BB0_6:
-	ld	hl, _.str.3
+	ld	hl, _.str.2
 	push	hl
 	push	bc
 	call	_sprintf
@@ -82,17 +82,125 @@ BB0_6:
 	section	.text,"ax",@progbits
 
 	section	.text,"ax",@progbits
-	public	_main
-_main:
-	ld	hl, -1279
+	public	_demo_aes_cbc
+_demo_aes_cbc:
+	ld	hl, -221
 	call	__frameset
-	ld	de, -327680
-	ld	hl, _.str.5
+	ld	bc, -206
+	lea	iy, ix
+	add	iy, bc
+	lea	hl, ix - 106
+	push	ix
+	ld	bc, -209
+	add	ix, bc
+	ld	(ix), hl
+	pop	ix
+	ld	bc, -218
+	lea	hl, ix
+	add	hl, bc
+	ld	(hl), iy
+	lea	hl, iy
+	ld	bc, -212
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	ld	hl, (_msg)
 	push	hl
-	push	de
+	call	_strlen
+	push	hl
+	pop	iy
+	pop	hl
+	ld	a, iyl
+	and	a, 15
+	ld	de, 16
+	add	iy, de
+	lea	hl, iy
+	ld	bc, -16
+	call	__iand
+	or	a, a
+	jr	z, BB1_2
+	push	hl
+	pop	iy
+BB1_2:
+	ld	bc, -215
+	lea	hl, ix
+	add	hl, bc
+	ld	(hl), iy
+	ld	hl, _.str.4
+	push	hl
+	ld	hl, -327680
+	push	hl
 	call	_sprintf
 	pop	hl
 	pop	hl
+	or	a, a
+	sbc	hl, hl
+	push	hl
+	ld	hl, 16
+	push	hl
+	ld	hl, _iv
+	push	hl
+	ld	hl, 32
+	push	hl
+	ld	hl, _key
+	push	hl
+	ld	hl, _ctx
+	push	hl
+	call	_cryptx_aes_init
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	ld	(_error), hl
+	push	hl
+	ld	hl, _.str.5
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	(ix - 106), 0
+	ld	bc, -209
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	pop	de
+	inc	de
+	ld	bc, 99
+	ldir
+	ld	hl, (_msg)
+	ld	bc, -221
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	push	hl
+	call	_strlen
+	pop	de
+	ld	bc, -209
+	lea	iy, ix
+	add	iy, bc
+	ld	de, (iy)
+	push	de
+	push	hl
+	ld	bc, -221
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, _ctx
+	push	hl
+	call	_cryptx_aes_encrypt
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	ld	(_error), hl
+	push	hl
 	ld	hl, _.str.6
 	push	hl
 	ld	hl, -327680
@@ -100,78 +208,15 @@ _main:
 	call	_sprintf
 	pop	hl
 	pop	hl
-	ld	hl, 1
-	push	hl
-	call	_cryptx_csrand_init
 	pop	hl
-	ld	hl, 1
-	bit	0, a
-	jp	z, BB1_2
-	ld	de, -1258
-	lea	iy, ix
-	add	iy, de
-	ld	bc, 32
-	ld	(ix - 3), bc
-	ld	bc, -352
-	lea	hl, ix
-	add	hl, bc
-	push	hl
-	pop	de
-	push	ix
-	ld	bc, -1270
-	add	ix, bc
-	ld	(ix), de
-	pop	ix
-	push	ix
-	ld	bc, -698
-	add	ix, bc
-	lea	de, ix
-	pop	ix
-	push	ix
-	ld	bc, -1267
-	add	ix, bc
-	ld	(ix), de
-	pop	ix
-	push	ix
-	ld	bc, -954
-	add	ix, bc
-	lea	de, ix
-	pop	ix
-	push	ix
-	ld	bc, -1264
-	add	ix, bc
-	ld	(ix), de
-	pop	ix
-	lea	de, iy + 48
-	push	ix
-	ld	bc, -1261
-	add	ix, bc
-	ld	(ix), de
-	pop	ix
-	lea	de, iy + 16
-	push	ix
-	ld	bc, -1276
-	add	ix, bc
-	ld	(ix), de
-	pop	ix
-	lea	iy, iy
-	push	ix
-	ld	bc, -1273
-	add	ix, bc
-	ld	(ix), iy
-	pop	ix
-	ld	hl, ___const.main.key
-	ld	bc, (ix - 3)
-	ldir
-	lea	de, iy
-	ld	hl, ___const.main.iv
-	ld	bc, 16
-	ldir
 	ld	hl, _.str.7
 	push	hl
-	ld	hl, 32
+	ld	bc, -215
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
 	push	hl
-	ld	bc, -1276
+	ld	bc, -209
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -180,11 +225,214 @@ _main:
 	pop	hl
 	pop	hl
 	pop	hl
+	or	a, a
+	sbc	hl, hl
+	push	hl
+	ld	hl, 16
+	push	hl
+	ld	hl, _iv
+	push	hl
+	ld	hl, 32
+	push	hl
+	ld	hl, _key
+	push	hl
+	ld	hl, _ctx
+	push	hl
+	call	_cryptx_aes_init
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	ld	(_error), hl
+	push	hl
+	ld	hl, _.str.5
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -218
+	lea	hl, ix
+	add	hl, bc
+	ld	iy, (hl)
+	ld	(iy), 0
+	ld	bc, -212
+	lea	iy, ix
+	add	iy, bc
+	ld	iy, (iy)
+	lea	de, iy
+	inc	de
+	lea	hl, iy
+	ld	bc, 99
+	ldir
+	push	iy
+	ld	bc, -215
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -209
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, _ctx
+	push	hl
+	call	_cryptx_aes_decrypt
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	ld	(_error), hl
+	push	hl
 	ld	hl, _.str.8
 	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -212
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, _.str.9
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_demo_aes_ctr
+_demo_aes_ctr:
+	ld	hl, -221
+	call	__frameset
+	ld	bc, -206
+	lea	iy, ix
+	add	iy, bc
+	ld	bc, -218
+	lea	hl, ix
+	add	hl, bc
+	ld	(hl), iy
+	lea	hl, ix - 106
+	push	ix
+	ld	bc, -209
+	add	ix, bc
+	ld	(ix), hl
+	pop	ix
+	lea	hl, iy
+	ld	bc, -215
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	ld	hl, (_msg)
+	push	hl
+	call	_strlen
+	ld	bc, -212
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	pop	hl
+	ld	hl, _.str.10
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	ld	hl, 2177
+	push	hl
 	ld	hl, 16
 	push	hl
-	ld	bc, -1273
+	ld	hl, _iv
+	push	hl
+	ld	hl, 32
+	push	hl
+	ld	hl, _key
+	push	hl
+	ld	hl, _ctx
+	push	hl
+	call	_cryptx_aes_init
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	ld	(_error), hl
+	push	hl
+	ld	hl, _.str.11
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	(ix - 106), 0
+	ld	bc, -209
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	pop	de
+	inc	de
+	ld	bc, 99
+	ldir
+	ld	hl, (_msg)
+	ld	bc, -221
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	push	hl
+	call	_strlen
+	pop	de
+	ld	bc, -209
+	lea	iy, ix
+	add	iy, bc
+	ld	de, (iy)
+	push	de
+	push	hl
+	ld	bc, -221
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, _ctx
+	push	hl
+	call	_cryptx_aes_encrypt
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	ld	(_error), hl
+	push	hl
+	ld	hl, _.str.12
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, _.str.7
+	push	hl
+	ld	bc, -212
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -209
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -197,74 +445,397 @@ _main:
 	push	hl
 	ld	hl, 16
 	push	hl
-	ld	bc, -1273
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, _iv
 	push	hl
 	ld	hl, 32
 	push	hl
-	ld	bc, -1276
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, _key
 	push	hl
-	ld	bc, -1270
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, _ctx
 	push	hl
 	call	_cryptx_aes_init
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	ld	(_error), hl
+	push	hl
+	ld	hl, _.str.11
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
 	pop	hl
 	pop	hl
 	pop	hl
+	ld	bc, -218
+	lea	hl, ix
+	add	hl, bc
+	ld	iy, (hl)
+	ld	(iy), 0
+	ld	bc, -215
+	lea	iy, ix
+	add	iy, bc
+	ld	iy, (iy)
+	lea	de, iy
+	inc	de
+	lea	hl, iy
+	ld	bc, 99
+	ldir
+	push	iy
+	ld	bc, -212
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -209
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, _ctx
+	push	hl
+	call	_cryptx_aes_decrypt
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	ld	(_error), hl
+	push	hl
+	ld	hl, _.str.13
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, 2177
+	ld	bc, -215
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, _.str.9
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_demo_aes_gcm
+_demo_aes_gcm:
+	ld	hl, -253
+	call	__frameset
+	ld	bc, -238
+	lea	iy, ix
+	add	iy, bc
+	lea	hl, ix - 106
+	push	ix
+	ld	bc, -241
+	add	ix, bc
+	ld	(ix), hl
+	pop	ix
+	ld	bc, -250
+	lea	hl, ix
+	add	hl, bc
+	ld	(hl), iy
+	lea	hl, iy + 16
+	ld	bc, -244
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	ld	hl, (_msg)
+	push	hl
+	call	_strlen
+	ld	bc, -247
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	pop	hl
+	ld	hl, _.str.15
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	ld	hl, 2
+	push	hl
+	ld	hl, 13
+	push	hl
+	ld	hl, _iv
+	push	hl
+	ld	hl, 32
+	push	hl
+	ld	hl, _key
+	push	hl
+	ld	hl, _ctx
+	push	hl
+	call	_cryptx_aes_init
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	ld	(_error), hl
+	push	hl
+	ld	hl, _.str.16
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 18
+	push	hl
+	ld	hl, _.str.14
+	push	hl
+	ld	hl, _ctx
+	push	hl
+	call	_cryptx_aes_update_aad
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	(ix - 106), 0
+	ld	bc, -241
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	pop	de
+	inc	de
+	ld	bc, 99
+	ldir
+	ld	hl, (_msg)
+	ld	bc, -253
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
+	push	hl
+	call	_strlen
+	pop	de
+	ld	bc, -241
+	lea	iy, ix
+	add	iy, bc
+	ld	de, (iy)
+	push	de
+	push	hl
+	ld	bc, -253
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, _ctx
+	push	hl
+	call	_cryptx_aes_encrypt
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	ld	(_error), hl
+	push	hl
+	ld	hl, _.str.17
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, _.str.7
+	push	hl
+	ld	bc, -247
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -241
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -244
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, _ctx
+	push	hl
+	call	_cryptx_aes_digest
+	pop	de
+	pop	de
+	ld	(_error), hl
+	push	hl
+	ld	hl, _.str.18
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, _.str.19
 	push	hl
 	ld	hl, 16
 	push	hl
-	ld	bc, -1273
+	ld	bc, -244
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 2
+	push	hl
+	ld	hl, 13
+	push	hl
+	ld	hl, _iv
 	push	hl
 	ld	hl, 32
 	push	hl
-	ld	bc, -1276
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, _key
 	push	hl
-	ld	bc, -1267
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, _ctx
 	push	hl
 	call	_cryptx_aes_init
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (_str1)
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	ld	(_error), hl
 	push	hl
-	call	_strlen
-	ld	bc, -1276
+	ld	hl, _.str.16
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -244
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -247
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -241
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, 18
+	push	hl
+	ld	hl, _.str.14
+	push	hl
+	ld	hl, _ctx
+	push	hl
+	call	_cryptx_aes_verify
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	bit	0, a
+	jp	z, BB3_2
+	ld	hl, _.str.21
+	ld	bc, -250
 	lea	iy, ix
 	add	iy, bc
-	ld	(iy), hl
-	pop	hl
-	ld	hl, (_str2)
-	push	hl
-	call	_strlen
-	ld	bc, -1273
+	ld	iy, (iy)
+	lea	de, iy + 32
+	push	ix
+	ld	bc, -253
+	add	ix, bc
+	ld	(ix), de
+	pop	ix
+	lea	de, iy
+	ld	bc, -244
 	lea	iy, ix
 	add	iy, bc
-	ld	(iy), hl
+	ld	(iy), de
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
 	pop	hl
+	pop	hl
+	ld	hl, 18
+	push	hl
+	ld	hl, _.str.14
+	push	hl
+	ld	hl, _ctx
+	push	hl
+	call	_cryptx_aes_update_aad
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -250
+	lea	hl, ix
+	add	hl, bc
+	ld	iy, (hl)
+	ld	(iy + 32), 0
+	ld	bc, -253
+	lea	iy, ix
+	add	iy, bc
+	ld	iy, (iy)
+	lea	de, iy
+	inc	de
+	ld	bc, 99
+	lea	hl, iy
+	ldir
+	push	iy
+	ld	bc, -247
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -241
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, _ctx
+	push	hl
+	call	_cryptx_aes_decrypt
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	ld	(_error), hl
+	push	hl
+	ld	hl, _.str.22
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -253
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
 	push	hl
 	ld	hl, _.str.9
 	push	hl
@@ -274,37 +845,19 @@ _main:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, (_str1)
-	ld	bc, -1279
-	lea	iy, ix
-	add	iy, bc
-	ld	(iy), hl
-	push	hl
-	call	_strlen
-	pop	de
-	ld	bc, -1264
-	lea	iy, ix
-	add	iy, bc
-	ld	de, (iy)
-	push	de
-	push	hl
-	ld	bc, -1279
+	ld	bc, -244
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	bc, -1270
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, _ctx
 	push	hl
-	call	_cryptx_aes_encrypt
+	call	_cryptx_aes_digest
 	pop	de
 	pop	de
-	pop	de
-	pop	de
+	ld	(_error), hl
 	push	hl
-	ld	hl, _.str.10
+	ld	hl, _.str.18
 	push	hl
 	ld	hl, -327680
 	push	hl
@@ -312,161 +865,82 @@ _main:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, (_str2)
-	ld	bc, -1279
-	lea	iy, ix
-	add	iy, bc
-	ld	(iy), hl
+	ld	hl, _.str.19
 	push	hl
-	call	_strlen
-	pop	de
-	ld	bc, -1261
-	lea	iy, ix
-	add	iy, bc
-	ld	de, (iy)
-	push	de
+	ld	hl, 16
 	push	hl
-	ld	bc, -1279
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -1270
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_cryptx_aes_encrypt
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	push	hl
-	ld	hl, _.str.11
-	push	hl
-	ld	hl, -327680
-	push	hl
-	call	_sprintf
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, _.str.12
-	push	hl
-	ld	hl, 33
-	push	hl
-	ld	bc, -1264
+	ld	bc, -244
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
 	call	_hexdump
 	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, _.str.13
-	push	hl
-	ld	hl, 25
-	push	hl
-	ld	bc, -1261
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_hexdump
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	bc, -1264
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -1276
-	lea	iy, ix
-	add	iy, bc
-	ld	de, (iy)
-	push	de
-	push	hl
-	ld	bc, -1267
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_cryptx_aes_decrypt
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	push	hl
-	ld	hl, _.str.10
+	jr	BB3_3
+BB3_2:
+	ld	hl, _.str.20
 	push	hl
 	ld	hl, -327680
 	push	hl
 	call	_sprintf
+BB3_3:
 	pop	hl
 	pop	hl
-	pop	hl
-	ld	bc, -1261
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -1273
-	lea	iy, ix
-	add	iy, bc
-	ld	de, (iy)
-	push	de
-	push	hl
-	ld	bc, -1267
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	call	_cryptx_aes_decrypt
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	push	hl
-	ld	hl, _.str.11
-	push	hl
-	ld	hl, -327680
-	push	hl
-	call	_sprintf
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	bc, -1264
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	hl, _.str.14
-	push	hl
-	ld	hl, -327680
-	push	hl
-	call	_sprintf
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	bc, -1261
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	hl, _.str.15
-	push	hl
-	ld	hl, -327680
-	push	hl
-	call	_sprintf
-	pop	hl
-	pop	hl
-	pop	hl
-	or	a, a
-	sbc	hl, hl
-BB1_2:
 	ld	sp, ix
 	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_main
+_main:
+	ld	de, -327680
+	ld	hl, _.str.23
+	push	hl
+	push	de
+	call	_sprintf
+	pop	hl
+	pop	hl
+	ld	hl, 1
+	push	hl
+	call	_cryptx_csrand_init
+	pop	hl
+	ld	hl, 1
+	bit	0, a
+	jr	z, BB4_2
+	ld	hl, _.str.24
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	_sprintf
+	pop	hl
+	pop	hl
+	ld	hl, _.str.25
+	push	hl
+	ld	hl, 32
+	push	hl
+	ld	hl, _key
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, _.str.26
+	push	hl
+	ld	hl, 16
+	push	hl
+	ld	hl, _iv
+	push	hl
+	call	_hexdump
+	pop	hl
+	pop	hl
+	pop	hl
+	call	_demo_aes_cbc
+	call	_demo_aes_ctr
+	call	_demo_aes_gcm
+	or	a, a
+	sbc	hl, hl
+BB4_2:
 	ret
 	section	.text,"ax",@progbits
 
@@ -476,107 +950,171 @@ _.str:
 	db	"The lazy fox jumped over the dog!", 0
 
 	section	.data,"aw",@progbits
-	public	_str1
-_str1:
+	public	_msg
+_msg:
 	dl	_.str
+
+	section	.data,"aw",@progbits
+	public	_key
+_key:
+	db	"Óâ√çSz÷ûw‡‡LLp€·""y·êØôIéfs"
+
+	section	.data,"aw",@progbits
+	public	_iv
+_iv:
+	db	"y¶ﬁﬂ¢|Óéıc§ä"
 
 	section	.rodata,"a",@progbits
 	private	_.str.1
 _.str.1:
-	db	"The lazier fox fell down!", 0
-
-	section	.data,"aw",@progbits
-	public	_str2
-_str2:
-	dl	_.str.1
+	db	10, "%s", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.2
 _.str.2:
-	db	10, "%s", 10, 0
+	db	10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.3
 _.str.3:
-	db	10, 0
+	db	"\x%02X", 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.4
 _.str.4:
-	db	"\x%02X", 0
+	db	10, "-----------------------------------", 10, "Cyclic Block Chain (CBC) mode", 10, 10, 0
+
+	section	.bss,"aw",@nobits
+	public	_ctx
+_ctx:
+	rb	350
+
+	section	.bss,"aw",@nobits
+	public	_error
+_error:
+	rb	3
 
 	section	.rodata,"a",@progbits
 	private	_.str.5
 _.str.5:
-	db	10, "---------------------------", 10, "HASHLIB AES Decrypt Demo and Test", 10, 0
+	db	"cbc init complete, exit code %u", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.6
 _.str.6:
-	db	10, "----- CTR Mode -----", 10, 0
-
-	section	.rodata,"a",@progbits
-	private	___const.main.key
-___const.main.key:
-	db	"Óâ√çSz÷ûw‡‡LLp€·""y·êØôIéfs"
-
-	section	.rodata,"a",@progbits
-	private	___const.main.iv
-___const.main.iv:
-	db	"y¶ﬁﬂ¢|Óéıc§ä"
+	db	"cbc encryption done, exit code %u", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.7
 _.str.7:
-	db	"-- AES secret --", 0
+	db	"-- encrypted msg --", 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.8
 _.str.8:
-	db	"-- initialization vector --", 0
+	db	"cbc decryption done, exit code %u", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.9
 _.str.9:
-	db	"init complete, exit code %u", 10, 0
+	db	"%s", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.10
 _.str.10:
-	db	"message segment 1 done, exit code %u", 10, 0
+	db	10, "-----------------------------------", 10, "Counter (CTR) mode", 10, 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.11
 _.str.11:
-	db	"message segment 2 done, exit code %u", 10, 0
+	db	"ctr init complete, exit code %u", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.12
 _.str.12:
-	db	"-- Encrypted Message 1 --", 0
+	db	"ctr encryption done, exit code %u", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.13
 _.str.13:
-	db	"-- Encrypted Message 2 --", 0
+	db	"ctr decryption done, exit code %u", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.14
 _.str.14:
-	db	"msg1: %s", 10, 0
+	db	"Some random header", 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.15
 _.str.15:
-	db	"msg2: %s", 10, 0
+	db	10, "-----------------------------------", 10, "Galois Counter (GCM) mode", 10, 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.16
+_.str.16:
+	db	"gcm init complete, exit code %u", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.17
+_.str.17:
+	db	"gcm encryption done, exit code %u", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.18
+_.str.18:
+	db	"gcm digest return done, exit code %u", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.19
+_.str.19:
+	db	"-- digest of aad + ciphertext --", 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.20
+_.str.20:
+	db	"auth tag invalid. not decrypting.", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.21
+_.str.21:
+	db	"auth tag valid. proceeding.", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.22
+_.str.22:
+	db	"gcm decryption done, exit code %u", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.23
+_.str.23:
+	db	10, "------------------------------", 10, "CryptX AES Demo", 10, "------------------------------", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.24
+_.str.24:
+	db	10, "-----------------------------------", 10, "Secrets for Testing", 10, 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.25
+_.str.25:
+	db	"-- aes key --", 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.26
+_.str.26:
+	db	"-- initialization vector --", 0
 
 	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 6d9aa7a16db70f3d02ae304b08d4a03011281fef)"
-	extern	__frameset
-	extern	_cryptx_csrand_init
 	extern	__Unwind_SjLj_Register
+	extern	_cryptx_aes_update_aad
+	extern	__frameset
 	extern	_sprintf
 	extern	_cryptx_aes_encrypt
+	extern	_strlen
+	extern	_cryptx_csrand_init
+	extern	__iand
 	extern	__Unwind_SjLj_Unregister
+	extern	_cryptx_aes_verify
 	extern	_cryptx_aes_decrypt
 	extern	_cryptx_aes_init
-	extern	_strlen
+	extern	_cryptx_aes_digest

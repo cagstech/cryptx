@@ -18,6 +18,7 @@ include_library '../hashlib/hashlib.asm'
     export cryptx_aes_decrypt
     export cryptx_aes_update_aad
     export cryptx_aes_digest
+    export cryptx_aes_verify
     export cryptx_rsa_encrypt
     export cryptx_ecdh_init
     export cryptx_ecdh_secret
@@ -4686,6 +4687,99 @@ cryptx_aes_digest:
 	pop	ix
 	ret
 
+cryptx_aes_verify:
+	ld	hl, -381
+	call	ti._frameset
+	ld	de, -372
+	lea	iy, ix
+	add	iy, de
+	ld	de, -381
+	lea	hl, ix
+	add	hl, de
+	ld	(hl), iy
+	ld	bc, 350
+	lea	hl, iy + 16
+	lea	de, iy
+	ld	(ix - 3), bc
+	ld	bc, -378
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), de
+	push	hl
+	pop	iy
+	ld	bc, -375
+	lea	hl, ix
+	add	hl, bc
+	ld	(hl), iy
+	lea	de, iy
+	ld	hl, (ix + 6)
+	ld	bc, (ix - 3)
+	ldir
+	ld	hl, (ix + 12)
+	push	hl
+	ld	hl, (ix + 9)
+	push	hl
+	push	iy
+	call	cryptx_aes_update_aad
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 0
+	push	hl
+	ld	hl, (ix + 18)
+	push	hl
+	ld	hl, (ix + 15)
+	push	hl
+	ld	bc, -375
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	aes_decrypt
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, -378
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -375
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	cryptx_aes_digest
+	pop	hl
+	pop	hl
+	ld	bc, -381
+	lea	hl, ix
+	add	hl, bc
+	ld	iy, (hl)
+	ld	(iy + 16), 0
+	ld	bc, -375
+	lea	iy, ix
+	add	iy, bc
+	ld	hl, (iy)
+	push	hl
+	pop	de
+	inc	de
+	ld	bc, 349
+	ldir
+	ld	hl, 16
+	push	hl
+	ld	bc, -378
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, (ix + 21)
+	push	hl
+	call	cryptx_digest_compare
+	ld	sp, ix
+	pop	ix
+	ret
 
 aes_encrypt:
 	save_interrupts
@@ -5284,59 +5378,68 @@ aes_decrypt:
 
 	ld	hl, -56
 	call	ti._frameset
-	ld	de, (ix + 6)
-	ld	hl, (ix + 12)
+	ld	iy, (ix + 6)
+	ld	de, (ix + 12)
+	ld	hl, 1
+	ld	(ix - 35), hl
 	ld	bc, 243
-	push	de
-	pop	iy
-	add	iy, bc
-	ld	c, 4
-	call	ti._ishru
-	push	hl
-	pop	bc
-	ex	de, hl
-	ld	de, 260
-	add	hl, de
-	ld	a, (hl)
-	cp	a, d
-	jr	nz, .lbl_2
-	ld	de, 6
-	jr	.lbl_5
-.lbl_2:
-	ld	(ix - 35), bc
-	ld	(ix - 38), iy
-	ld	iy, (ix + 9)
-	ld	de, 1
-	ld	(hl), 2
 	lea	hl, iy
 	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jr	z, .lbl_5
+	ld	(ix - 44), hl
+	ld	c, 4
+	ex	de, hl
+	call	ti._ishru
+	lea	bc, iy
+	ld	(ix - 38), hl
 	ld	hl, (ix + 15)
 	ld	(ix - 41), hl
+	ld	hl, (ix + 15)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	z, .lbl_5
-	ld	de, 5
-	ld	bc, (ix + 12)
+	ld	de, 259
+	jr	nz, .lbl_2
+	push	bc
+	pop	hl
+	add	hl, de
+	ld	a, (hl)
+	cp	a, 2
+	jp	nz, .lbl_31
+.lbl_2:
+	push	de
+	pop	iy
+	push	bc
+	pop	hl
+	ld	de, 6
+	ld	bc, 260
+	add	hl, bc
+	ld	a, (hl)
+	cp	a, b
+	jr	nz, .lbl_4
+.lbl_3:
+	ld	(ix - 35), de
+	jp	.lbl_31
+.lbl_4:
+	ld	bc, (ix + 9)
+	ld	(hl), 2
 	push	bc
 	pop	hl
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	nz, .lbl_6
-.lbl_5:
-	ex	de, hl
-	restore_interrupts_noret aes_decrypt
-	jq stack_clear
-.lbl_6:
-	lea	hl, ix - 16
-	ld	(ix - 44), hl
-	ld	hl, (ix + 6)
-	ld	bc, 259
+	jp	z, .lbl_31
+	ld	de, 5
+	ld	hl, (ix + 12)
 	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	(ix - 35), de
+	jp	z, .lbl_31
+	lea	hl, ix - 16
+	ld	(ix - 47), hl
+	ld	hl, (ix + 6)
+	lea	de, iy
+	add	hl, de
 	ld	l, (hl)
 	ld	a, l
 	or	a, a
@@ -5345,28 +5448,30 @@ aes_decrypt:
 	ld	a, l
 	and	a, 15
 	or	a, a
-	jr	nz, .lbl_5
-	lea	bc, iy
+	jp	nz, .lbl_31
 	lea	hl, ix - 32
-	ld	(ix - 47), hl
-	ld	de, 0
-	ld	iy, (ix - 35)
+	ld	(ix - 50), hl
+	push	bc
+	pop	iy
+	ld	bc, (ix - 38)
+	ld	de, (ix - 47)
 .lbl_9:
-	lea	hl, iy
+	push	bc
+	pop	hl
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	z, .lbl_5
-	ld	de, (ix - 44)
-	ld	(ix - 50), bc
-	ld	hl, (ix - 50)
+	jp	z, .lbl_13
+	ld	de, (ix - 47)
+	lea	hl, iy
+	ld	(ix - 38), bc
 	ld	bc, 16
 	ldir
 	ld	hl, (ix + 6)
 	push	hl
-	ld	hl, (ix - 47)
+	ld	hl, (ix - 50)
 	push	hl
-	ld	hl, (ix - 44)
+	ld	hl, (ix - 47)
 	push	hl
 	ld	(ix - 35), iy
 	call	aes_ecb_unsafe_decrypt
@@ -5375,51 +5480,51 @@ aes_decrypt:
 	pop	hl
 	ld	hl, 16
 	push	hl
-	ld	hl, (ix - 47)
+	ld	hl, (ix - 50)
 	push	hl
-	ld	hl, (ix - 38)
+	ld	hl, (ix - 44)
 	push	hl
 	call	_xor_buf
 	pop	hl
 	pop	hl
 	pop	hl
 	ld	de, (ix - 41)
-	ld	hl, (ix - 47)
+	ld	hl, (ix - 50)
 	ld	iy, 16
 	lea	bc, iy
 	ldir
-	ld	de, (ix - 38)
-	ld	hl, (ix - 44)
+	ld	de, (ix - 44)
+	ld	hl, (ix - 47)
 	lea	bc, iy
 	ldir
-	ld	de, 0
-	ld	hl, (ix - 35)
-	dec	hl
-	ld	iy, (ix - 50)
+	ld	de, (ix - 47)
+	ld	bc, (ix - 38)
+	dec	bc
+	ld	iy, (ix - 35)
 	lea	iy, iy + 16
-	lea	bc, iy
+	ld	(ix - 35), iy
 	ld	iy, (ix - 41)
 	lea	iy, iy + 16
 	ld	(ix - 41), iy
-	push	hl
-	pop	iy
+	ld	iy, (ix - 35)
 	jr	.lbl_9
 .lbl_11:
 	ld	a, l
 	cp	a, 1
-	jr	nz, .lbl_13
+	jr	nz, .lbl_14
 	ld	hl, (ix + 6)
+	push	hl
+	pop	iy
 	ld	de, 260
 	add	hl, de
 	ld	(ix - 35), hl
 	ld	(hl), d
 	ld	de, (ix + 15)
 	push	de
-	ld	hl, (ix + 12)
-	push	hl
+	ld	de, (ix + 12)
+	push	de
+	push	bc
 	push	iy
-	ld	hl, (ix + 6)
-	push	hl
 	call	aes_encrypt
 	pop	hl
 	pop	hl
@@ -5428,43 +5533,51 @@ aes_decrypt:
 	ld	hl, (ix - 35)
 	ld	(hl), 2
 	ld	de, 0
-	jp	.lbl_5
+	jp	.lbl_3
 .lbl_13:
+	or	a, a
+	sbc	hl, hl
+	jp	.lbl_30
+.lbl_14:
 	ld	a, l
 	cp	a, 2
-	jp	nz, .lbl_27
+	jp	nz, .lbl_29
 	ld	de, 261
-	ld	hl, (ix + 6)
-	push	hl
-	pop	iy
-	add	iy, de
-	ld	(ix - 41), iy
+	ld	bc, (ix + 6)
+	push	bc
+	pop	hl
+	add	hl, de
+	ld	(ix - 41), hl
 	ld	de, 310
-	push	hl
+	push	bc
 	pop	iy
 	add	iy, de
-	ld	bc, 349
-	add	hl, bc
+	ld	de, 349
+	push	bc
+	pop	hl
+	add	hl, de
 	ld	a, (hl)
 	cp	a, 2
 	ld	de, 6
-	jp	nc, .lbl_5
-	ld	(ix - 47), iy
+	ld	(ix - 35), de
+	jp	nc, .lbl_31
+	ld	(ix - 35), iy
+	ld	(ix - 53), hl
 	ld	hl, (ix - 41)
 	ld	l, (hl)
 	ld	(ix - 50), l
 	or	a, a
 	ld	iy, (ix + 6)
-	jr	nz, .lbl_18
+	jr	nz, .lbl_19
 	ld	de, 342
 	lea	hl, iy
 	add	hl, de
 	ld	l, (hl)
 	ld	a, l
 	or	a, a
-	jr	z, .lbl_18
+	jr	z, .lbl_19
 	ld	(ix - 16), 0
-	ld	bc, (ix - 44)
+	ld	bc, (ix - 47)
 	push	bc
 	pop	de
 	inc	de
@@ -5479,27 +5592,23 @@ aes_decrypt:
 	or	a, a
 	sbc	hl, de
 	push	hl
-	ld	hl, (ix - 44)
-	push	hl
 	ld	hl, (ix - 47)
+	push	hl
+	ld	hl, (ix - 35)
 	push	hl
 	push	iy
 	call	_ghash
-	ld	bc, 349
 	ld	iy, (ix + 6)
 	pop	hl
 	pop	hl
 	pop	hl
 	pop	hl
-.lbl_18:
-	lea	hl, iy
-	add	hl, bc
-	ld	(hl), 1
+.lbl_19:
 	ld	hl, (ix + 12)
 	push	hl
 	ld	hl, (ix + 9)
 	push	hl
-	ld	hl, (ix - 47)
+	ld	hl, (ix - 35)
 	push	hl
 	push	iy
 	call	_ghash
@@ -5514,18 +5623,27 @@ aes_decrypt:
 	ld	de, (ix + 12)
 	add	hl, de
 	ld	(iy), hl
-	ld	c, (ix - 50)
-	ld	a, c
+	ld	iy, (ix + 15)
+	lea	hl, iy
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	de, 0
+	jp	z, .lbl_3
+	ld	hl, (ix - 53)
+	ld	(hl), 1
+	ld	l, (ix - 50)
+	ld	a, l
 	and	a, 15
 	or	a, a
-	ld	de, 0
 	ld	(ix - 41), de
-	ld	hl, (ix - 35)
-	jr	z, .lbl_20
+	ld	bc, (ix - 38)
+	jr	z, .lbl_22
+	ld	a, l
 	or	a, a
 	sbc	hl, hl
 	ex	de, hl
-	ld	e, c
+	ld	e, a
 	ld	(ix - 35), de
 	ld	hl, 16
 	sbc	hl, de
@@ -5533,8 +5651,7 @@ aes_decrypt:
 	push	hl
 	ld	hl, (ix + 9)
 	push	hl
-	ld	hl, (ix + 15)
-	push	hl
+	push	iy
 	call	ti._memcpy
 	pop	hl
 	pop	hl
@@ -5550,50 +5667,52 @@ aes_decrypt:
 	push	de
 	push	hl
 	call	_xor_buf
-	ld	de, 0
+	ld	iy, (ix + 15)
 	pop	hl
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 12)
-	ld	bc, (ix - 41)
+	ld	de, (ix - 41)
 	or	a, a
-	sbc	hl, bc
+	sbc	hl, de
 	ld	c, 4
 	call	ti._ishru
-.lbl_20:
-	ld	iy, (ix + 6)
-	ld	bc, 262
-	add	iy, bc
-	ld	(ix - 56), iy
-	inc	hl
-	ld	bc, (ix + 9)
+	push	hl
+	pop	bc
+.lbl_22:
+	ld	hl, (ix + 6)
+	ld	de, 262
+	add	hl, de
+	ld	(ix - 56), hl
+	inc	bc
+	ld	hl, (ix + 9)
+	ld	de, (ix - 41)
+	add	hl, de
+	ld	(ix - 35), hl
+	add	iy, de
+	ld	de, 0
+	ld	hl, (ix + 12)
+	ld	(ix - 50), hl
+.lbl_23:
 	push	bc
-	pop	iy
-	ld	bc, (ix - 41)
-	add	iy, bc
-	ld	(ix - 50), iy
-	ld	iy, (ix + 15)
-	add	iy, bc
-	ld	bc, (ix + 12)
-	ld	(ix - 47), bc
-.lbl_21:
+	pop	hl
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	z, .lbl_5
-	ld	(ix - 35), hl
-	ld	bc, (ix - 47)
+	jp	z, .lbl_3
+	ld	(ix - 38), bc
+	ld	bc, (ix - 50)
 	push	bc
 	pop	hl
 	ld	de, 16
 	or	a, a
 	sbc	hl, de
-	jr	c, .lbl_24
+	jr	c, .lbl_26
 	ld	bc, 16
-.lbl_24:
+.lbl_26:
 	ld	(ix - 53), bc
 	push	bc
-	ld	hl, (ix - 50)
+	ld	hl, (ix - 35)
 	push	hl
 	push	iy
 	ld	(ix - 41), iy
@@ -5603,9 +5722,9 @@ aes_decrypt:
 	pop	hl
 	ld	hl, (ix + 6)
 	push	hl
-	ld	hl, (ix - 44)
+	ld	hl, (ix - 47)
 	push	hl
-	ld	hl, (ix - 38)
+	ld	hl, (ix - 44)
 	push	hl
 	call	aes_ecb_unsafe_encrypt
 	pop	hl
@@ -5615,7 +5734,7 @@ aes_decrypt:
 	push	hl
 	ld	hl, (ix - 41)
 	push	hl
-	ld	hl, (ix - 44)
+	ld	hl, (ix - 47)
 	push	hl
 	call	_xor_buf
 	pop	hl
@@ -5625,50 +5744,52 @@ aes_decrypt:
 	push	hl
 	ld	hl, 12
 	push	hl
-	ld	hl, (ix - 38)
+	ld	hl, (ix - 44)
 	push	hl
 	call	_increment_iv
+	ld	iy, (ix + 6)
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, (ix - 35)
+	ld	bc, (ix - 38)
 	push	bc
 	pop	hl
 	ld	de, 1
 	or	a, a
 	sbc	hl, de
-	jr	nz, .lbl_26
+	jr	nz, .lbl_28
 	ld	de, (ix - 56)
-	ld	hl, (ix - 44)
-	push	bc
-	pop	iy
+	ld	hl, (ix - 47)
 	ld	bc, 16
 	ldir
-	lea	bc, iy
+	ld	bc, (ix - 38)
 	ld	hl, (ix - 53)
 	ld	a, l
-	ld	hl, (ix + 6)
+	lea	hl, iy
 	ld	de, 261
 	add	hl, de
 	ld	(hl), a
-.lbl_26:
+.lbl_28:
 	dec	bc
 	ld	de, -16
-	ld	hl, (ix - 47)
+	ld	hl, (ix - 50)
 	add	hl, de
-	ld	(ix - 47), hl
-	ld	iy, (ix - 50)
+	ld	(ix - 50), hl
+	ld	iy, (ix - 35)
 	lea	iy, iy + 16
-	ld	(ix - 50), iy
+	ld	(ix - 35), iy
 	ld	iy, (ix - 41)
 	lea	iy, iy + 16
 	ld	de, 0
-	push	bc
-	pop	hl
-	jp	.lbl_21
-.lbl_27:
-	ld	de, 3
-	jp	.lbl_5
+	jp	.lbl_23
+.lbl_29:
+	ld	hl, 3
+.lbl_30:
+	ld	(ix - 35), hl
+.lbl_31:
+	ld	hl, (ix - 35)
+	restore_interrupts_noret aes_decrypt
+	jq stack_clear
 	
     
  

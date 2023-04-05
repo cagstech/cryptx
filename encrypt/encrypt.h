@@ -288,6 +288,26 @@ aes_error_t cryptx_aes_update_aad(
  */
 aes_error_t cryptx_aes_digest(const struct cryptx_aes_ctx* context, uint8_t *digest);
 
+/******************************************************************
+ * @brief Parses the specified AAD and ciphertext and then compares the output auth tag
+ * to an expected auth tag.
+ * @param[in] context	Pointer to an AES context.
+ * @param[in] aad		Pointer to associated data to authenticate.
+ * @param[in] aad_len	Length of associated data to authenticate.
+ * @param[in] ciphertext	Pointer to ciphertext to authenticate.
+ * @param[in] ciphertext_len	Length of ciphertext to authenticate.
+ * @param[in] tag		Pointer to expected auth tag to validate against.
+ * @returns TRUE if authentication  tag matches expected, FALSE otherwise.
+ * @note operates on a dummy copy of @b *context to avoid nuking the active copy
+ * @note If this function returns FALSE, do not decrypt the message.
+ */
+
+bool cryptx_aes_verify(
+				const struct cryptx_aes_ctx* context,
+				const void* aad, size_t aad_len,
+				const void* ciphertext, size_t ciphertext_len,
+				uint8_t *tag);
+
 
 //******************************************************************************************
 /*	RSA Public Key Encryption
