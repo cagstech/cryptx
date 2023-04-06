@@ -272,8 +272,8 @@ aes_error_t cryptx_aes_decrypt(
  * no longer update AAD.
  */
 aes_error_t cryptx_aes_update_aad(
-					const struct cryptx_aes_ctx* context,
-					void* aad, size_t aad_len);
+					struct cryptx_aes_ctx* context,
+					const void* aad, size_t aad_len);
 
 
 /*************************************************************************
@@ -287,7 +287,7 @@ aes_error_t cryptx_aes_update_aad(
  * reuse of the IV buffer can leak the hkey used for authentication. The next stream may use the same
  * encryption key but should have a unique IV.
  */
-aes_error_t cryptx_aes_digest(const struct cryptx_aes_ctx* context, uint8_t *digest);
+aes_error_t cryptx_aes_digest(struct cryptx_aes_ctx* context, uint8_t *digest);
 
 /******************************************************************
  * @brief Parses the specified AAD and ciphertext and then compares the output auth tag
