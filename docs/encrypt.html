@@ -338,7 +338,7 @@
 			The second is method is to use the AES-GCM cipher mode. This is an authenticating cipher mode that uses AES-CTR mode for encryption and also maintains a hash field as you pass unencrypted data or ciphertext data to it. AES-GCM is generally secure as long as you follow these constraints:</p>
 			<ul>
 				<li>Initialization vector/nonce blocks for encryption are securely pseudo-random.</li>
-				<li>Do not reuse the same initialization vector for another message stream. Once you render a digest for a data stream, you should generate a new initialization vector. If you reuse the initialization vector, the hash key leaks. This then reveals the un&quot;salted&quot; output of the encryption of a block of zero bytes. This reveals the encryption key. As long as you handle the initialization vector properly you may continue to use the same key as long as you have not reached the AES algorithm&apos;s throughput limit, which is approximately 2<sup>64</sup> blocks of data.</li>
+				<li>Do not reuse the same initialization vector for another message stream. Once you render a digest for a data stream, you should generate a new initialization vector. If you reuse the initialization vector, the hash key leaks. This reveals the output of an encryption of a block of zero bytes, which consequently reveals the encryption key. As long as you handle the initialization vector properly you may continue to use the same key as long as you have not reached the AES algorithm&apos;s throughput limit, which is approximately 2<sup>64</sup> blocks of data.</li>
 			</ul>
 			
 			<span style="font-weight:bold;">Example of authenticated encryption, CryptX. by Anthony Cagliano</span>
