@@ -7,7 +7,7 @@ body {display:flex; flex-direction:row; font-family: Lato,proxima-nova,Helvetica
 
 .major-header {color:#55a5d9; padding:1% 0; margin-top:4%; padding-left:5%;}
 .minor-header {color:#2243b4; margin-top:1%; font-weight:bold;}
-.lib-ref {text-decoration:underline; color:#2243b4; cursor:pointer; cursor:hand;}
+.lib-ref {color:#2243b4; cursor:pointer; cursor:hand;}
 .citation {font-style:italic; font-size:90%;}
 .section {margin-left:2%; padding-left:2%;}
 .side-ruled {border-left:1px solid #2243b4; font-size:14px;}
@@ -30,6 +30,7 @@ dt {font-weight:bold;}
 .param {color: #55a5d9; font-weight:bold;}
 .return {color:blue; font-weight:bold;}
 .more-info {background:rgba(210,180,140,.3); padding:5px; display:block; margin-top:5px; font-size:90%;}
+.alert {border-left:5px solid darkred; padding:1% 0; padding-left:5%; background:rgba(114,47,55,.15)}
 
 @media print {
 	@page { size:portrait; margin:.25in;}

@@ -447,10 +447,6 @@ ecdh_error_t cryptx_ecdh_init(struct cryptx_ecdh_ctx* context);
  */
 ecdh_error_t cryptx_ecdh_secret(const struct cryptx_ecdh_ctx *context, const uint8_t *rpubkey, uint8_t *secret);
 
-void bytelen_to_bitlen(size_t len, uint8_t *bitlen);
-void memrev(uint8_t *data, size_t len);
-void gf128_mul(uint8_t *op1, uint8_t *op2, uint8_t *out);
-
 
 //******************************************************************************************
 /*	ADVANCED MODE

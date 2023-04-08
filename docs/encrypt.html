@@ -13,7 +13,7 @@
 		<div id="sidebar">
 			<div id="title"><a href="index.html">
 				CryptX
-				<span style="font-size:50%;">11</span>
+				<span style="font-size:50%;">12</span>
 			</a></div><br />
 			<div class="major-header">INTRODUCTION</div>
 				<div class="navitem"><a href="index.html">What is CryptX?</a></div>
@@ -45,20 +45,39 @@
 					<p>The <span class="emphasis">rand</span> implemenation provided by the CE C toolchain provides statistical randomness but not unpredictability and is therefore not suitable for use as a cryptographic RNG. If you require randomness for cryptographic purposes, please use this generator instead.</p>
 					<pre class="code"><code class="language-c">
 						// initialize the RNG
-						if(!<span class="lib-ref">cryptx_csrand_init(SAMPLING_THOROUGH)</span>) return;
+						if(!cryptx_csrand_init(SAMPLING_THOROUGH)) return;
 						// you can use SAMPLING_FAST for less entropy but faster completion
+						// remember to catch a return value of False from this function and respond properly
 						
 						// generate a uint32_t
-						uint32_t rvar = <span class="lib-ref">cryptx_csrand_get()</span>;
+						uint32_t rvar = cryptx_csrand_get();
 						
 						// fill a buffer
 						uint8_t tbuf[16];
-						<span class="lib-ref">cryptx_csrand_fill(tbuf, sizeof(tbuf)</span>);</code></pre>
+						cryptx_csrand_fill(tbuf, sizeof(tbuf));</code></pre>
+					<dl>
+						
+						<dt class="lib-ref">bool cryptx_csrand_init(cryptx_csrng_sampling_mode mode);</dt>
+						<dd>Initializes the secure random number generator.<br />
+							<span class="param">mode</span>: SAMPLING_THOROUGH | SAMPLING_FAST.<br />
+							<span class="param">returns</span>: [bool] True if SRNG init succeeded. False if failed.
+						</dd><br />
+						<dt class="lib-ref">uint32_t cryptx_csrand_get(void);</dt>
+						<dd>Generates a secure 32-bit random integer.<br />
+							<span class="param">returns</span>: [uint32_t] A securely-random 32-bit integer.
+						</dd><br />
+						<dt class="lib-ref">bool cryptx_csrand_fill(void *buffer, size_t size);</dt>
+						<dd>Fills a buffer with securely random bytes.<br />
+							<span class="param">buffer</span>: Pointer to buffer to fill.<br />
+							<span class="param">size</span>: Length of buffer.<br />
+							<span class="param">returns</span>: [bool] True if operation succeeded. False if failed.
+						</dd>
+					</dl>
 				</div>
 				<br />
 				<div class="minor-header">Advanced Encryption Standard (AES)</div>
 				<div class="section side-ruled">
-					<p>AES is currently regarded as the gold standard for symmetric encryption. It is the primary encryption mode in a secure session, after a (usually slower) key negotiation has succeeded. See RSA and ECDH for key negotiation. If you need the best possible security with this library, use AES-GCM cipher mode OR use one of the other two cipher modes with an HMAC appended to the message.</p>
+					<p>AES is currently regarded as the gold standard for symmetric encryption. It is the primary encryption algorithm used in a secure session, after a (usually slower) key negotiation has succeeded. See RSA and ECDH for key negotiation. If you need the best possible security with this library, use AES-GCM cipher mode OR use one of the other two cipher modes with an HMAC appended to the message.</p>
 					
 					<p>
 					<span style="font-weight:bold;">Supported Cipher Modes:</span><br />
@@ -137,18 +156,88 @@
 						// now decrypt plaintext. Note that in-place decryption is valid.
 						err = <span class="lib-ref">cryptx_aes_decrypt(&context, &packet[HEADER_LEN], PLAINTEXT_LEN, &packet[HEADER_LEN])</span>;</code></pre>
 					
+					<dl>
+						
+						<dt class="lib-ref">aes_error_t cryptx_aes_init(<br />
+							&emsp;&emsp;&emsp;&emsp;struct cryptx_aes_ctx *context,<br />
+							&emsp;&emsp;&emsp;&emsp;const void *key, size_t keylen,<br />
+							&emsp;&emsp;&emsp;&emsp;const void *iv, size_t ivlen,<br />
+							&emsp;&emsp;&emsp;&emsp;uint24_t flags);</dt>
+						<dd>Initializes an AES context for encryption or decryption.<br />
+							<span class="param">context</span>: Pointer to AES context.<br />
+							<span class="param">key</span>: Pointer to AES key.<br />
+							<span class="param">keylen</span>: Length of the key, in bytes.<br />
+							<span class="param">iv</span>: Pointer to initialization vector.<br />
+							<span class="param">ivlen</span>: Length of the initialization vector, in bytes.<br />
+							<span class="param">flags</span>: A series of cipher configuration options, bitwise ORd together. See header for details.<br />
+							<span class="param">returns</span>: [aes_error_t] Status of cipher initialization.
+						</dd><br />
+						<dt class="lib-ref">aes_error_t cryptx_aes_encrypt(<br />
+							&emsp;&emsp;&emsp;&emsp;struct cryptx_aes_ctx *context,<br />
+							&emsp;&emsp;&emsp;&emsp;void *plaintext, size_t len,<br />
+							&emsp;&emsp;&emsp;&emsp;void *ciphertext);</dt>
+						<dd>Encrypts a message using the AES state.<br />
+							<span class="param">context</span>: Pointer to AES context.<br />
+							<span class="param">plaintext</span>: Pointer to data to encrypt.<br />
+							<span class="param">len</span>: Length of the plaintext, in bytes.<br />
+							<span class="param">ciphertext</span>: Buffer to write encrypted data to. In-place encryption supported.<br />
+							<span class="param">returns</span>: [aes_error_t] Status of encrypt operation.
+						</dd><br />
+						<dt class="lib-ref">aes_error_t cryptx_aes_decrypt(<br />
+							&emsp;&emsp;&emsp;&emsp;struct cryptx_aes_ctx *context,<br />
+							&emsp;&emsp;&emsp;&emsp;void *ciphertext, size_t len,<br />
+							&emsp;&emsp;&emsp;&emsp;void *plaintext);</dt>
+						<dd>Decrypts a message using the AES state.<br />
+							<span class="param">context</span>: Pointer to AES context.<br />
+							<span class="param">ciphertext</span>: Pointer to data to decrypt.<br />
+							<span class="param">len</span>: Length of the ciphertext, in bytes.<br />
+							<span class="param">plaintext</span>: Buffer to write decrypted data to. In-place decryption supported.<br />
+							<span class="param">returns</span>: [aes_error_t] Status of decrypt operation.
+						</dd><br />
+						<dt class="lib-ref">aes_error_t cryptx_aes_update_aad(<br />
+							&emsp;&emsp;&emsp;&emsp;struct cryptx_aes_ctx *context,<br />
+							&emsp;&emsp;&emsp;&emsp;const void *aad, size_t aad_len);</dt>
+						<dd>GCM mode only. Updates the digest state for additional authenticated data.<br />
+							<span class="param">context</span>: Pointer to AES context.<br />
+							<span class="param">aad</span>: Pointer to additional authenticated data.<br />
+							<span class="param">aad_len</span>: Length of the AAD, in bytes.<br />
+							<span class="param">returns</span>: [aes_error_t] Status of AAD update operation.
+						</dd><br />
+						<dt class="lib-ref">aes_error_t cryptx_aes_digest(struct cryptx_aes_ctx *context, uint8_t *digest);</dt>
+						<dd>GCM mode only. Returns the authentication tag for the current context state.<br />
+							<span class="param">context</span>: Pointer to AES context.<br />
+							<span class="param">digest</span>: Pointer to buffer to write authentication tag.<br />
+							<span class="param">returns</span>: [aes_error_t] Status of digest output operation.
+						</dd><br />
+						<dt class="lib-ref">bool cryptx_aes_verify(<br />
+							&emsp;&emsp;&emsp;&emsp;const struct cryptx_aes_ctx *context,<br />
+							&emsp;&emsp;&emsp;&emsp;const void *aad, size_t aad_len,<br />
+							&emsp;&emsp;&emsp;&emsp;const void *ciphertext, size_t ciphertext_len,<br />
+							&emsp;&emsp;&emsp;&emsp;uint8_t *tag);</dt>
+						<dd>GCM mode only. Returns the authentication tag for the current context state.<br />
+							<span class="param">context</span>: Pointer to AES context.<br />
+							<span class="param">aad</span>: Pointer to additional authenticated data.<br />
+							<span class="param">aad_len</span>: Length of the AAD, in bytes.<br />
+							<span class="param">ciphertext</span>: Pointer to ciphertext data.<br />
+							<span class="param">len</span>: Length of the ciphertext, in bytes.<br />
+							<span class="param">tag</span>: Pointer to expected tag included with encrypted message.<br />
+							<span class="param">returns</span>: [bool] True if expected tag matches locally-computed tag. False if mis-match.
+						</dd><br />
+					</dl>
+					<div class="alert">
+						In GCM cipher mode, it is crucial that each message stream have a unique initialization vector. Failure to ensure this may result in a leak of the hash key used for authentication which will then compromise the encryption key.
+					</div>
+					
 				</div>
 				
 				<br />
 				<a name="rsa"></a>
 				<div class="minor-header">Rivest-Shamir-Adleman (RSA)</div>
 				<div class="section side-ruled">
-					<p>RSA is form of public key encryption. RSA is one of the algorithms (usually) used to share a secret for a symmetric encryption system like AES. It is slow and in recent years has been getting easier to defeat. NIST recommends a minimum key length of 2048 bits (higher is preferred but not feasible on the target hardware) which provides 112 bits of security (<span class="citation"><a target="_blank" href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-57pt1r5.pdf">citation</a> - see Section 5.6.1.1, Table 2</span>).</p>
+					<p>RSA is form of public key encryption. It is one of the algorithms (usually) used to share a secret for a symmetric encryption system like AES. It is slow and in recent years has been getting easier to defeat for smaller key lengths. NIST recommends a minimum key length of 2048 bits (higher is preferred but not feasible on the target hardware) which provides 112 bits of security (<span class="citation"><a target="_blank" href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-57pt1r5.pdf">citation</a> - see Section 5.6.1.1, Table 2</span>). The RSA implementation here automatically pre-encodes the message with Optimal Asymmetric Encryption Padding (OAEP) v2.2 prior to encryption.</p>
 					<pre class="code"><code class="language-c">
-						/*
-						The RSA implementation here is encrypt-only. The overhead for private keygen
-						is far too expensive on this platform.
-						*/
+						// The RSA implementation here is encrypt-only. The overhead for keygen
+						// is too expensive on this platform.
 						// We assume that a remote host has generated a public/private RSA keypair
 						// and shared the public with with you, and we have written that key to
 						// the buffer `rsa_key`.
@@ -167,6 +256,21 @@
 						if(err) return;
 						
 						network_send(ciphertext, sizeof(ciphertext));</code></pre>
+					<dl>
+						<dt class="lib-ref">rsa_error_t cryptx_rsa_encrypt(<br />
+						&emsp;&emsp;&emsp;&emsp;const void* msg, size_t msglen,<br />
+						&emsp;&emsp;&emsp;&emsp;const void* pubkey, size_t keylen,<br />
+						&emsp;&emsp;&emsp;&emsp;void* ciphertext, uint8_t oaep_hash_alg);</dt>
+						<dd>Encodes a message using OAEPv2.2 and then performs RSA encryption.<br />
+						<span class="param">msg</span>: Pointer to plaintext to encrypt/encode.<br />
+						<span class="param">msglen</span>: Length of the message, in bytes.<br />
+						<span class="param">pubkey</span>: Pointer to the RSA public modulus (public exponent hardcoded to 65537).<br />
+						<span class="param">keylen</span>: Length of the RSA public modulus, in bytes.<br />
+						<span class="param">ciphertext</span>: Pointer to buffer to write encrypted message. In-place encryption NOT supported.<br />
+						<span class="param">oaep_hash_algorithm</span>: The hash algorithm to use for OAEP encoding.<br />
+						<span class="param">returns</span>: [rsa_error_t] Status of encode/encrypt operation.
+					</dd>
+						</dl>
 				</div>
 				<br />
 				<a name="ecdh"></a>
@@ -195,20 +299,48 @@
 						// note that `secret` should not be used as is. Pass it through a
 						// cryptographic hash or a KDF, and use the output of that as
 						// your symmetric key.</code></pre>
+					
+					<dl>
+						<dt class="lib-ref">ecdh_error_t cryptx_ecdh_init(const struct cryptx_ecdh_ctx *context);</dt>
+						<dd>Generates a random 233-bit scalar and computes elliptic curve public key.<br />
+							Uses NIST-defined SECT233k1 elliptic curve, cofactor variant.<br />
+							<span class="param">context</span>: Pointer to ECDH context.<br />
+							<span class="param">returns</span>: [ecdh_error_t] Status of ECDH initialization.
+						</dd><br />
+						<dt class="lib-ref">ecdh_error_t cryptx_ecdh_secret(<br />
+							&emsp;&emsp;&emsp;&emsp;const struct cryptx_ecdh_ctx *context,<br />
+							&emsp;&emsp;&emsp;&emsp;const uint8_t *rpubkey, uint8_t *secret);</dt>
+						<dd>Computes the product of the remote public key and your private key over the elliptic curve.<br />
+							Uses NIST-defined SECT233k1 elliptic curve, cofactor variant.<br />
+							<span class="param">context</span>: Pointer to ECDH context containing private key.<br />
+							<span class="param">rpubkey</span>: Pointer to other party&apos;s public key.<br />
+							<span class="param">secret</span>: Buffer to write output secret.<br />
+							<span class="param">returns</span>: [ecdh_error_t] Status of ECDH initialization.
+						</dd>
+					</dl>
+					<div class="alert">
+						It is recommended that you do not use the output of cryptx_ecdh_secret() directly as your symmetric encryption secret. Instead, pass the output to a cryptographic hash such as SHA256 or to a key derivation function (KDF) such as the one provided in the HASHLIB library. Use the output of that as your encryption secret instead.
+					</div>
 				</div>
 			</div>
 				
 			
 			<div class="major-header">Addendum: Authenticated Encryption</div>
-			<p>Authenticated encryption is an encryption scheme that produces a ciphertext that is not only obfuscated but also has its integrity and authenticity verifiable. This can be accomplished in a few ways, the most common of which are: (1) appending a signature, hash, or keyed hash to a message, and (2) implementing a cipher mode that integrates authentication.</p>
-			<p>#2 above is not implemented in CryptX. Most of the authenticating cipher modes are computationally-intensive without hardware acceleration and may not be feasible for use on the TI-84+ CE. While consid- eration is being given to potentially adding a cipher mode such as OCB or GCM if a sufficiently-optimized implementation for this platform can be found (or devised), it is possible to construct a ciphertext guarded against tampering by using method #1, which this library does provide for.</p>
-			<p>It is recommended that whenever you are sending data you need to be truly secure with this library, you always embed a keyed hash into the message that the recipient can validate. This functionality is provided by the HMAC implementation shown earlier in this document. Proper application of HMAC for ciphertext integrity requires the following considerations:</p>
+			<p>As great as encryption is, it is not the end of the problem. <span style="color:darkred; font-weight:bold;">Encryption alone only prevents someone reading the data; It does not protect against modification or forgery</span>. That task is performed by cryptographic hashes, HMACs, and authenticating cipher modes. The combination of a secure encryption algorithm with a secure authentication algorithm creates a construct known as <span style="font-weight:bold">authenticated encryption</span>. Almost all practical applications of data security today require authenticated encryption, so just get into the habit of doing it even if you think your application doesn&apos;t require it. CryptX provides two main methods of authenticated encryption.</p>
+			<p>The first method is use a standard encryption-only cipher mode such as AES-CBC or AES-CTR and then to generate a cryptographic hash or HMAC for authentication. The hash or HMAC will then be embedded into the output message, usually at the end, to allow the recipient to validate the message. If you are using this method, there are a few constraints you must follow:</p>
 			<ul>
 				<li>Initialization vector/nonce blocks for encryption are securely pseudo-random.</li>
 				<li>Encryption and HMAC keys are also securely pseudo-random and are long enough to be considered secure. Minimum key sizes recommended are 16 bytes.</li>
 				<li>You are not using your encryption key as your HMAC key or vice versa. There are attack vectors that result from using the same key for encryption and authentication.</li>
-				<li>Append a keyed hash (HMAC) of the initialization vector/nonce, encrypted message, and any other associated data such as packet headers to the outgoing message. On the receiving side, validate the HMAC before decryption and reject any message that does not authenticate. The HMAC key can be an application secret known to both parties or a generated nonce shared alongside the AES encryption key using RSA or another public key encryption method.</li>
+				<li>Hash the entire message, even unencrypted portions.</li>
+				<li>Generally hash the encrypted message, not the plaintext.</li>
 			</ul>
+			The second is method is to use the AES-GCM cipher mode. This is an authenticating cipher mode that uses AES-CTR mode for encryption and also maintains a hash field as you pass unencrypted data or ciphertext data to it. AES-GCM is generally secure as long as you follow these constraints:</p>
+			<ul>
+				<li>Initialization vector/nonce blocks for encryption are securely pseudo-random.</li>
+				<li>Do not reuse the same initialization vector for another message stream. Once you render a digest for a data stream, you should generate a new initialization vector. If you reuse the initialization vector, the hash key leaks. This then reveals the un&quot;salted&quot; output of the encryption of a block of zero bytes. This reveals the encryption key. As long as you handle the initialization vector properly you may continue to use the same key as long as you have not reached the AES algorithm&apos;s throughput limit, which is approximately 2<sup>64</sup> blocks of data.</li>
+			</ul>
+			
 			<span style="font-weight:bold;">Example of authenticated encryption, CryptX. by Anthony Cagliano</span>
 			<pre class="code"><code class="language-c">
 #include &lt;hashlib.h&gt;

@@ -343,6 +343,7 @@ _aes_gf2_mul_little:
 	
 _gf128_mul = _aes_gf2_mul_little
 	
+	
 ;------------------------------------------
 ; csrand_init(uint24_t sample_ct);
 ;------------------------------------------
