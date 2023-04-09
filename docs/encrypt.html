@@ -7,6 +7,10 @@
 			<script src="scripts/highlight/highlight.min.js"></script>
 		<style>
 			.code {display:inline-block; padding:5px;}
+			tr {margin:0 5%; padding:0;}
+			.lib-ref tr>td:nth-of-type(2) {
+				color:black; font-weight:normal;
+			}
 		</style>
 	</head>
 	<body>
@@ -38,7 +42,7 @@
 				<li>Zeroko (information on sourcing randomness)</li>
 			</ul>
 			<div class="major-header">API Documentation</div>
-			<p>I will be doing the documentation here a bit differently. Rather than a catalog of functions with text-walls of information that would make even Chuck Norris hide under a table, I will present at the start of each module a short flavor text about the implementation and then some commented-code illustrating its usage. To locate library modules, look for functions or macros prefixed with <span style="font-family:monospace; background:silver;">cryptx_</span> or <span style="font-family:monospace; background:silver;">CRYPTX_</span> and cross reference them with the header files for more information.</p>
+			<p>I will be doing the documentation here a bit differently. Rather than a catalog of functions with text-walls of information that would make even Chuck Norris hide under a table, I will present at the start of each module a short flavor text about the implementation and then some commented-code illustrating its usage. After that, a brief overview of response codes and functions for that module will be provided.</p>
 			<div class="alert">
 				This red tooltip style indicates security-critical information. It indicates implementation details that, if ignored, may result in your application leaking information. If you have any questions or do not understand something please do not ignore the tooltip; contact me for clarification.
 			</div><br />
@@ -160,6 +164,21 @@
 						err = <span class="lib-ref">cryptx_aes_decrypt(&context, &packet[HEADER_LEN], PLAINTEXT_LEN, &packet[HEADER_LEN])</span>;</code></pre>
 					
 					<dl>
+						<dt class="lib-ref">AES API Overview<hr />
+							&emsp;Response Codes
+							<table width="100%" style="margin-left:5%; font-size:12px;">
+								<col width="40%" />
+								<col width="60%" />
+								<tr><td>AES_OK</td><td>No error occurred</td></tr>
+								<tr><td>AES_INVALID_ARG</td><td>One or more arguments invalid</td></tr>
+								<tr><td>AES_INVALID_MSG</td><td>Plaintext invalid</td></tr>
+								<tr><td>AES_INVALID_CIPHERMODE</td><td>Cipher mode out of range</td></tr>
+								<tr><td>AES_INVALID_PADDINGMODE</td><td>Padding mode out of range</td></tr>
+								<tr><td>AES_INVALID_CIPHERTEXT</td><td>Ciphertext invalid, bad length<br />GCM tag mismatch.</td></tr>
+								<tr><td>AES_INVALID_OPERATION</td><td>Encrypt called on decrypt context, v.v.<br />GCM context used after digest render.</td></tr>
+							</table>
+						</dt>
+						<dd></dd><br />
 						
 						<dt class="lib-ref">aes_error_t cryptx_aes_init(<br />
 							&emsp;&emsp;&emsp;&emsp;struct cryptx_aes_ctx *context,<br />
@@ -265,6 +284,21 @@
 						
 						network_send(ciphertext, sizeof(ciphertext));</code></pre>
 					<dl>
+						
+						<dt class="lib-ref">RSA API Overview<hr />
+							&emsp;Response Codes
+							<table width="100%" style="margin-left:5%; font-size:12px;">
+								<col width="40%" />
+								<col width="60%" />
+								<tr><td>RSA_OK</td><td>No error occurred</td></tr>
+								<tr><td>RSA_INVALID_ARG</td><td>One or more arguments invalid</td></tr>
+								<tr><td>RSA_INVALID_MSG</td><td>Plaintext invalid</td></tr>
+								<tr><td>RSA_INVALID_MODULUS</td><td>Key invalid; usually not odd</td></tr>
+								<tr><td>RSA_ENCODING_ERROR</td><td>OAEP encoder error; usually message length issues.</td></tr>
+							</table>
+						</dt>
+						<dd></dd><br />
+						
 						<dt class="lib-ref">rsa_error_t cryptx_rsa_encrypt(<br />
 						&emsp;&emsp;&emsp;&emsp;const void* msg, size_t msglen,<br />
 						&emsp;&emsp;&emsp;&emsp;const void* pubkey, size_t keylen,<br />
@@ -309,6 +343,21 @@
 						// your symmetric key.</code></pre>
 					
 					<dl>
+						
+						<dt class="lib-ref">ECDH API Overview<hr />
+							&emsp;Response Codes
+							<table width="100%" style="margin-left:5%; font-size:12px;">
+								<col width="40%" />
+								<col width="60%" />
+								<tr><td>ECDH_OK</td><td>No error occurred</td></tr>
+								<tr><td>ECDH_INVALID_ARG</td><td>One or more arguments invalid</td></tr>
+								<tr><td>ECDH_PRIVKEY_INVALID</td><td>Legacy, no longer returned</td></tr>
+								<tr><td>ECDH_RPUBKEY_INVALID</td><td>Remote public key == point at infinity or not on curve</td></tr>
+							</table>
+						</dt>
+						<dd></dd><br />
+						
+						
 						<dt class="lib-ref">ecdh_error_t cryptx_ecdh_init(const struct cryptx_ecdh_ctx *context);</dt>
 						<dd>Generates a random 233-bit scalar and computes elliptic curve public key.<br />
 							Uses NIST-defined SECT233k1 elliptic curve, cofactor variant.<br />
@@ -332,7 +381,7 @@
 				</div>
 			</div>
 				
-			
+			<a name="ae"></a>
 			<div class="major-header">Addendum: Authenticated Encryption</div>
 			<p>As great as encryption is, it is not the end of the problem. <span style="color:darkred; font-weight:bold;">Encryption alone only prevents someone reading the data, it does not protect against modification or forgery</span>. That task is performed by cryptographic hashes, HMACs, and authenticating cipher modes. The combination of a secure encryption algorithm with a secure authentication algorithm creates a construct known as <span style="font-weight:bold">authenticated encryption</span>. Almost all practical applications of data security today require authenticated encryption, so just get into the habit of doing it even if you think your application doesn&apos;t require it. CryptX provides two main methods of authenticated encryption.</p>
 			<p>The first method is use a standard encryption-only cipher mode such as AES-CBC or AES-CTR and then to generate a cryptographic hash or HMAC for authentication. The hash or HMAC will then be embedded into the output message, usually at the end, to allow the recipient to validate the message. If you are using this method, there are a few constraints you must follow:</p>
