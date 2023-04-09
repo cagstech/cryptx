@@ -30,7 +30,7 @@ dt {font-weight:bold;}
 .param {color: #55a5d9; font-weight:bold;}
 .return {color:blue; font-weight:bold;}
 .more-info {background:rgba(210,180,140,.3); padding:5px; display:block; margin-top:5px; font-size:90%;}
-.alert {border-left:5px solid darkred; padding:1% 0; padding-left:5%; background:rgba(114,47,55,.15)}
+.alert {border-left:5px solid darkred; padding:1%; padding-left:5%; background:rgba(114,47,55,.15); margin:2% 0;}
 
 @media print {
 	@page { size:portrait; margin:.25in;}

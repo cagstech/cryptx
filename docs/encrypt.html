@@ -39,6 +39,9 @@
 			</ul>
 			<div class="major-header">API Documentation</div>
 			<p>I will be doing the documentation here a bit differently. Rather than a catalog of functions with text-walls of information that would make even Chuck Norris hide under a table, I will present at the start of each module a short flavor text about the implementation and then some commented-code illustrating its usage. To locate library modules, look for functions or macros prefixed with <span style="font-family:monospace; background:silver;">cryptx_</span> or <span style="font-family:monospace; background:silver;">CRYPTX_</span> and cross reference them with the header files for more information.</p>
+			<div class="alert">
+				This red tooltip style indicates security-critical information. It indicates implementation details that, if ignored, may result in your application leaking information. If you have any questions or do not understand something please do not ignore the tooltip; contact me for clarification.
+			</div><br />
 			<div class="section">
 				<div class="minor-header">Cryptographically-Secure Random Number Generator (CS-RNG)</div>
 				<div class="section side-ruled">
@@ -225,7 +228,12 @@
 						</dd><br />
 					</dl>
 					<div class="alert">
-						In GCM cipher mode, it is crucial that each message stream have a unique initialization vector. Failure to ensure this may result in a leak of the hash key used for authentication which will then compromise the encryption key.
+						<span style="font-weight:bold; text-decoration:underline;">Key Cycling Requirements</span><br />
+						It is recommended that you cycle your encryption key after you have encrypted between 2<sup>32</sup> and 2<sup>64</sup> blocks of data (depending on cipher mode). You will never realistically reach this.
+					</div>
+					<div class="alert">
+						<span style="font-weight:bold; text-decoration:underline;">IV Uniqueness Requirement for AES-GCM</span><br />
+						In GCM cipher mode, it is crucial that each message stream have a unique initialization vector. Failure to ensure this may cause the cipher to leak information.
 					</div>
 					
 				</div>
@@ -234,7 +242,7 @@
 				<a name="rsa"></a>
 				<div class="minor-header">Rivest-Shamir-Adleman (RSA)</div>
 				<div class="section side-ruled">
-					<p>RSA is form of public key encryption. It is one of the algorithms (usually) used to share a secret for a symmetric encryption system like AES. It is slow and in recent years has been getting easier to defeat for smaller key lengths. NIST recommends a minimum key length of 2048 bits (higher is preferred but not feasible on the target hardware) which provides 112 bits of security (<span class="citation"><a target="_blank" href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-57pt1r5.pdf">citation</a> - see Section 5.6.1.1, Table 2</span>). The RSA implementation here automatically pre-encodes the message with Optimal Asymmetric Encryption Padding (OAEP) v2.2 prior to encryption.</p>
+					<p>RSA is form of public key encryption. It is one of the algorithms (usually) used to share a secret for a symmetric encryption system like AES. It is slow and in recent years has been getting easier to defeat for smaller key lengths. NIST recommends a minimum key length of 2048 bits (higher is preferred but not feasible on the target hardware) which provides 112 bits of security (<span class="citation"><a target="_blank" href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-57pt1r5.pdf">citation</a> - see Section 5.6.1.1, Table 2</span>). The RSA implementation here automatically pre-encodes the message with Optimal Asymmetric Encryption Padding (OAEP) v2.2 prior to encryption. This implementation is also encryption-only, as generating a private key would prove to be a very time-consuming operation on the TI-84+ CE.</p>
 					<pre class="code"><code class="language-c">
 						// The RSA implementation here is encrypt-only. The overhead for keygen
 						// is too expensive on this platform.
@@ -276,7 +284,7 @@
 				<a name="ecdh"></a>
 				<div class="minor-header">Elliptic Curve Diffie-Hellman (ECDH)</div>
 				<div class="section side-ruled">
-					<p>ECDH is form of public key negotiation. It is another algorithm (usually) used to share a secret for a symmetric encryption system like AES. Due to the greater complexity of key generation and the behavior of an elliptic curve over a finite field, elliptic curve keys tend to be more secure. The NIST-defined curve implemented in this library, SECT233k1, has an effective security level approximately equal to that of 2048-bit RSA (<span class="citation"><a target="_blank" href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-57pt1r5.pdf">citation</a> - see Section 5.6.1.1, Table 2</span>).</p>
+					<p>ECDH is form of public key negotiation. It is another algorithm (usually) used to share a secret for a symmetric encryption system like AES. Due to the mathematical complexity and behavior of elliptic curves over a finite field, cryptographic algorithms based on them tend to be more secure than their non-EC counterparts. The NIST-defined curve implemented in this library, SECT233k1, has an effective security level approximately equal to that of 2048-bit RSA (<span class="citation"><a target="_blank" href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-57pt1r5.pdf">citation</a> - see Section 5.6.1.1, Table 2</span>).</p>
 					<pre class="code"><code class="language-c">
 						// declare ECDH context consisting of public and private key
 						<span class="lib-ref">struct cryptx_ecdh_context</span> context;
@@ -326,9 +334,10 @@
 				
 			
 			<div class="major-header">Addendum: Authenticated Encryption</div>
-			<p>As great as encryption is, it is not the end of the problem. <span style="color:darkred; font-weight:bold;">Encryption alone only prevents someone reading the data; It does not protect against modification or forgery</span>. That task is performed by cryptographic hashes, HMACs, and authenticating cipher modes. The combination of a secure encryption algorithm with a secure authentication algorithm creates a construct known as <span style="font-weight:bold">authenticated encryption</span>. Almost all practical applications of data security today require authenticated encryption, so just get into the habit of doing it even if you think your application doesn&apos;t require it. CryptX provides two main methods of authenticated encryption.</p>
+			<p>As great as encryption is, it is not the end of the problem. <span style="color:darkred; font-weight:bold;">Encryption alone only prevents someone reading the data, it does not protect against modification or forgery</span>. That task is performed by cryptographic hashes, HMACs, and authenticating cipher modes. The combination of a secure encryption algorithm with a secure authentication algorithm creates a construct known as <span style="font-weight:bold">authenticated encryption</span>. Almost all practical applications of data security today require authenticated encryption, so just get into the habit of doing it even if you think your application doesn&apos;t require it. CryptX provides two main methods of authenticated encryption.</p>
 			<p>The first method is use a standard encryption-only cipher mode such as AES-CBC or AES-CTR and then to generate a cryptographic hash or HMAC for authentication. The hash or HMAC will then be embedded into the output message, usually at the end, to allow the recipient to validate the message. If you are using this method, there are a few constraints you must follow:</p>
-			<ul>
+			<ul class="alert">
+				<span style="font-weight:bold; text-decoration:underline;">Standard Cipher Mode + HMAC</span>
 				<li>Initialization vector/nonce blocks for encryption are securely pseudo-random.</li>
 				<li>Encryption and HMAC keys are also securely pseudo-random and are long enough to be considered secure. Minimum key sizes recommended are 16 bytes.</li>
 				<li>You are not using your encryption key as your HMAC key or vice versa. There are attack vectors that result from using the same key for encryption and authentication.</li>
@@ -336,9 +345,10 @@
 				<li>Generally hash the encrypted message, not the plaintext.</li>
 			</ul>
 			The second is method is to use the AES-GCM cipher mode. This is an authenticating cipher mode that uses AES-CTR mode for encryption and also maintains a hash field as you pass unencrypted data or ciphertext data to it. AES-GCM is generally secure as long as you follow these constraints:</p>
-			<ul>
+			<ul class="alert">
+				<span style="font-weight:bold; text-decoration:underline;">AES Galois Counter Mode</span>
 				<li>Initialization vector/nonce blocks for encryption are securely pseudo-random.</li>
-				<li>Do not reuse the same initialization vector for another message stream. Once you render a digest for a data stream, you should generate a new initialization vector. If you reuse the initialization vector, the hash key leaks. This reveals the output of an encryption of a block of zero bytes, which consequently reveals the encryption key. As long as you handle the initialization vector properly you may continue to use the same key as long as you have not reached the AES algorithm&apos;s throughput limit, which is approximately 2<sup>64</sup> blocks of data.</li>
+				<li>Do not reuse the same initialization vector for another message stream. Once you render a digest for a data stream, you should generate a new initialization vector. Failure to do so can result in the cipher leaking information about the key used for encryption.</li>
 			</ul>
 			
 			<span style="font-weight:bold;">Example of authenticated encryption, CryptX. by Anthony Cagliano</span>
