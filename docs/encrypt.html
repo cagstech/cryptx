@@ -405,8 +405,8 @@ by Anthony Cagliano
 				#include &lt;hashlib.h&gt;
 				#include &lt;encrypt.h&gt;
 				
-				cryptx_aes_ctx ctx;
-				cryptx_hmac_ctx hmac;
+				struct cryptx_aes_ctx ctx;
+				struct cryptx_hmac_ctx hmac;
 				char *msg = "The daring fox jumped over the moon.";
 				char *aad = "A header";
 				
@@ -447,7 +447,7 @@ by Anthony Cagliano
 				#include &lt;hashlib.h&gt;
 				#include &lt;encrypt.h&gt;
 				
-				cryptx_aes_ctx ctx;
+				struct cryptx_aes_ctx ctx;
 				uint8_t tag[CRYPTX_AES_BLOCK_SIZE];
 				char *msg = "The daring fox jumped over the moon.";
 				char *aad = "A header";

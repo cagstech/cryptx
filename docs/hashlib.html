@@ -3,6 +3,8 @@
 	<head>
 		<title>CryptX Documentation</title>
 		<link type="text/css" rel="stylesheet" href="style.css" />
+		<link rel="stylesheet" href="scripts/highlight/styles/default.min.css">
+			<script src="scripts/highlight/highlight.min.js"></script>
 		<style>
 		</style>
 	</head>
@@ -10,7 +12,7 @@
 		<div id="sidebar">
 			<div id="title"><a href="index.html">
 				CryptX
-				<span style="font-size:50%;">11</span>
+				<span style="font-size:50%;">12</span>
 			</a></div><br />
 			<div class="major-header">INTRODUCTION</div>
 				<div class="navitem"><a href="index.html">What is CryptX?</a></div>
@@ -32,115 +34,157 @@
 				<li>Anthony Cagliano</li>
 				<li>Adam Beckingham</li>
 			</ul>
-			<div class="major-header">Definitions</div>
-			<dl>
-				<dt>Hash</dt>
-				<dd>A <span style="font-weight:bold;">hash</span> is a non-invertible cryptographic algorithm that converts an arbitrarily long stream of data into a digest of fixed size. Cryptographic hashes are generally used to ensure that the content of a data stream has not changed between two points in time or transmission. This is possible because even the smallest change to the data causes a drastic change in the resulting hash.</dd><br />
-				<dt>HMAC</dt>
-				<dd>An <span style="font-weight:bold;">HMAC</span> is a keyed hash. It works in exactly the same way as a normal hash, except the initial hash state is transformed using a key before the data is hashed and again before the digest is returned. HMAC is used for endpoint validation. This works because if you do not know the key, you cannot generate an HMAC that the other party can validate, nor can you validate information coming from the other party.</dd><br />
-				<dt>Key-Derivation Function (KDF)</dt>
-				<dd>A <span style="font-weight:bold;">KDF</span> is an algorithm that generates a secure key from some manner of input. The implementation provided by this library is BPKDF2 (Password-Based Key-Derivation Function v2). It takes a password, a salt (random bytes), a cost (number of times to repeat the selected HMAC algorithm), and an output length and outputs a secure key of given size.</dd>
-			</dl>
-			<div class="major-header">Macros</div>
-			<div class="function-doc">#define CRYPTX_SHA256_DIGEST_LEN 32</div>
-			<p>Defines the output digest length of the SHA256 algorithm.</p>
-			<div class="major-header">Enumerations</div>
-			<div class="function-doc">enum cryptx_hash_algorithms { SHA256 };</div>
-			<p>Defines the supported hash algorithms.</p>
-			<div class="major-header">Structs</div>
-			<div class="function-doc">struct cryptx_hash_ctx {...};</div>
-			<p>Defines the hash state context for use with the hashing API.</p>
-			<div class="function-doc">struct cryptx_hmac_ctx {...};</div>
-			<p>Defines the hmac state context for use with the hmac API.</p>
-			<div class="major-header">Functions</div>
-			<div class="function-doc">bool&emsp;cryptx_hash_init(struct cryptx_hash_ctx* context, uint8_t hash_alg);</div>
-			<p>Initializes the hash state for use with a data stream.<br />
-				<span class="param">context</span>: Pointer to a hash state context to initalize.<br />
-				<span class="param">hash_alg</span>: Identifier for the hash algorithm to use (see cryptx_hash_algorithms).<br />
-				<span class="return">returns</span>: true on success, false on failure.
-				<span class="more-info">
-					Once the context is initialized, the digest length of the active hash algorithm can be accessed at <span style="font-weight:bold;">context.digest_len</span>.
-				</span>
-			</p>
-			<div class="function-doc">void&emsp;cryptx_hash_update(struct cryptx_hash_ctx* context, const void* data, size_t len);</div>
-			<p>Updates the hash state for the given data.<br />
-			<span class="param">context</span>: Pointer to a hash state context to update.<br />
-			<span class="param">data</span>: Pointer to data to hash.<br />
-			<span class="param">len</span>: Length of data to hash.<br />
-			</p>
-			<div class="function-doc">void&emsp;cryptx_hash_final(struct cryptx_hash_ctx* context, void* digest);</div>
-			<p>Returns a digest from the current hash state.<br />
-			<span class="param">context</span>: Pointer to a hash state context.<br />
-			<span class="param">digest</span>: Pointer to buffer to output digest to.<br />
-			</p>
-			<div class="function-doc">void&emsp;cryptx_hash_mgf1(<br />
-				&emsp;&emsp;&emsp;const void* data, size_t datalen,<br />
-				&emsp;&emsp;&emsp;void* outbuf, size_t outlen, uint8_t hash_alg);</div>
-			<p>Returns an arbitrary-length digest by iterating the hash of the data and a counter.<br />
-			<span class="param">data</span>: Pointer to data to hash.<br />
-			<span class="param">datalen</span>: Length of data to hash.<br />
-			<span class="param">outbuf</span>: Pointer to buffer to write digest to.<br />
-			<span class="param">outlen</span>: Length of digest to generate.<br />
-			<span class="param">hash_alg</span>: Identifier for the hash algorithm to use (see cryptx_hash_algorithms).<br />
-			<span class="return">returns</span>: true on success, false on failure.
-			</p>
-			<div class="function-doc">bool&emsp;cryptx_hmac_init(<br />
-				&emsp;&emsp;&emsp;struct cryptx_hmac_ctx* context,<br />
-				&emsp;&emsp;&emsp;const void* key, size_t keylen, uint8_t hash_alg);</div>
-			<p>Initializes the hmac state for use with a data stream.<br />
-			<span class="param">context</span>: Pointer to a hmac state context to initalize.<br />
-			<span class="param">key</span>: Pointer to a key to intialize with.<br />
-			<span class="param">keylen</span>: Length of the key.<br />
-			<span class="param">hash_alg</span>: Identifier for the hash algorithm to use (see cryptx_hash_algorithms).<br />
-			<span class="return">returns</span>: true on success, false on failure.
-			<span class="more-info">
-				Once the context is initialized, the digest length of the active hash algorithm can be accessed at <span style="font-weight:bold;">context.digest_len</span>.
-			</span>
-			</p>
-			<div class="function-doc">void&emsp;cryptx_hmac_update(struct cryptx_hmac_ctx* context, const void* data, size_t len);</div>
-			<p>Updates the hmac state for the given data.<br />
-			<span class="param">context</span>: Pointer to a hmac state context to update.<br />
-			<span class="param">data</span>: Pointer to data to hash.<br />
-			<span class="param">len</span>: Length of data to hash.<br />
-			</p>
-			<div class="function-doc">void&emsp;cryptx_hmac_final(struct cryptx_hmac_ctx* ctx, void* digest);</div>
-			<p>Returns a digest from the current hmac state.<br />
-			<span class="param">context</span>: Pointer to a hmac state context.<br />
-			<span class="param">digest</span>: Pointer to buffer to output digest to.<br />
-			</p>
-			<div class="function-doc">void&emsp;cryptx_hmac_pbkdf2(<br />
-				&emsp;&emsp;&emsp;const void* password, size_t passlen,<br />
-				&emsp;&emsp;&emsp;const void* salt, size_t saltlen,<br />
-				&emsp;&emsp;&emsp;void* key, size_t keylen,<br />
-				&emsp;&emsp;&emsp;size_t rounds, uint8_t hash_alg);</div>
-			<p>Generates a key of arbitrary length from a password and a salt using an hmac algorithm.<br />
-			<span class="param">password</span>: Pointer to password to generate key from<br />
-			<span class="param">passlen</span>: Length of password<br />
-			<span class="param">salt</span>: Pointer to a salt to include in the keygen<br />
-			<span class="param">saltlen</span>: Length of the salt<br />
-			<span class="param">key</span>: Pointer to buffer to write key to<br />
-			<span class="param">keylen</span>: Length of key to generate<br />
-			<span class="param">rounds</span>: Number of times to iterate hash_alg<br />
-			<span class="param">hash_alg</span>: Identifier for the hash algorithm to use (see hash_algorithms)<br />
-			<span class="return">output</span>: True if success, False if failed
-			</p>
-			<div class="function-doc">bool&emsp;cryptx_digest_tostring(const void* digest, size_t len, char* hexstr);</div>
-			<p>Converts a raw digest to a hexadecimal string.<br />
-			<span class="param">digest</span>: Pointer to digest to convert<br />
-			<span class="param">len</span>: Length of the digest<br />
-			<span class="param">hexstr</span>: Buffer to write hex string to<br />
-			<span class="return">returns</span>: true on success, false on failure.
-			</p>
-			<div class="function-doc">bool&emsp;cryptx_digest_compare(const void* digest1, const void* digest2, size_t len);</div>
-			<p>Checks two buffers for bytewise equality using a method that defeats timing analysis.<br />
-			<span class="param">digest1</span>: Pointer to the first digest<br />
-			<span class="param">digest2</span>: Pointer to the second digest<br />
-			<span class="param">len</span>: Number of bytes to compare<br />
-			<span class="return">returns</span>: true on success, false on failure.
-			</p>
-			<hr />
-			<iframe src="scripts/rtd-msg.html" style="width:100%; height:50px; border:none;"></iframe>
-			<br />
+			<div class="major-header">API Documentation</div>
+			<p>This page will detail usage guidelines and requirements for the encryption API provided by the HASHLIB library within CryptX. If you plan to use it within your application, please take care to familiarize yourself with the API invocation, constraints, and best practices.</p>
+			<div class="alert">
+				This red tooltip style indicates security-critical information. It provides implementation details that, if ignored, may result in your application leaking information. If you have any questions or do not understand something please contact me for clarification. Do not ignore the tooltip.
+			</div>
+			<div class="more-info">
+				This yellow tooltip style indicates a best practice. While these are not directly implementation-breaking, they are recommended for enhancing the security of your application.
+			</div><br />
+			<div class="section">
+				<div class="minor-header">Cryptographic Hashing</div>
+				
+					<div class="section side-ruled">
+						<p>Hashes are cryptographic primitives that compress an input stream of arbitrary length into a digest of fixed size. These hashes are designed such that each input message maps to a single output hash with a negligibly low chance of collision. Hashes are generally used to verify that data has not changed, either through packet loss or through malicious tampering.</p>
+						<pre class="code"><code class="language-c">
+							#include &lt;string.h&gt;
+							#include &lt;hashlib.h&gt;
+							
+							char *msg = "The lazy fox jumped over the dog.";
+							struct cryptx_hash_ctx hctx;
+							
+							cryptx_hash_init(&hctx, SHA256);
+							uint8_t digest[hctx.digest_len];
+							
+							cryptx_hash_update(&hctx, msg, strlen(msg));
+							cryptx_hash_final(&hctx, digest);</code></pre>
+						
+						<dl>
+							
+							<dt class="lib-ref">bool cryptx_hash_init(struct cryptx_hash_ctx* context, uint8_t hash_alg);</dt>
+							<dd>Initializes a hash context.<br />
+								<span class="param">context</span>: Pointer to hash context.<br />
+								<span class="param">hash_alg</span>: Hash algorithm to use.<br />
+								<span class="param">returns</span>: [bool] True if init succeeded. False if failed.
+							</dd><br />
+							<dt class="lib-ref">void cryptx_hash_update(struct cryptx_hash_ctx* context, const void* data, size_t len);</dt>
+							<dd>Updates the hash state for the given data.<br />
+								<span class="param">context</span>: Pointer to hash context.<br />
+								<span class="param">data</span>: Pointer to data to hash.<br />
+								<span class="param">len</span>: Length of data to hash, in bytes.
+							</dd><br />
+							<dt class="lib-ref">void cryptx_hash_final(struct cryptx_hash_ctx* context, void* digest);</dt>
+							<dd>Returns a digest from the current hash state.<br />
+								<span class="param">context</span>: Pointer to hash context.<br />
+								<span class="param">digest</span>: Buffer to write digest to. Should be at least <span style="font-family:monospace;">context.digest_len</span> bytes large.<br />
+							</dd><br />
+							<dt class="lib-ref">void cryptx_hash_mgf1(<br />
+								&emsp;&emsp;&emsp;&emsp;const void* data, size_t datalen,<br />
+								&emsp;&emsp;&emsp;&emsp;void* outbuf, size_t outlen,<br />
+								&emsp;&emsp;&emsp;&emsp;uint8_t hash_alg);</dt>
+							<dd>Returns an arbitrary length digest from a data stream using the MGF1 algorithm.<br />
+								<span class="param">data</span>: Pointer to data to hash.<br />
+								<span class="param">datalen</span>: Length of the data, in bytes.<br />
+								<span class="param">outbuf</span>: Pointer to buffer to write digest to.<br />
+								<span class="param">outlen</span>: Length of the digest to generate.<br />
+								<span class="param">hash_alg</span>: Hash algorithm to use.<br />
+							</dd>
+						</dl>
+						</div><br />
+						<div class="minor-header">Hash-Based Message Authentication Code (HMAC)</div>
+						
+						<div class="section side-ruled">
+							<p>An HMAC is a cryptographic hash with its initial state transformed using a secret key. This means that only authorized parties (ie, parties with the correct key) can generate and validate digests generated with an HMAC algorithm. The API for HMAC is almost identical to that for a hash.</p>
+							<pre class="code"><code class="language-c">
+								#include &lt;string.h&gt;
+								#include &lt;hashlib.h&gt;
+								
+								char *msg = "The lazy fox jumped over the dog.";
+								struct cryptx_hmac_ctx hctx;
+								
+								// Assumptions:
+								// __ `hmac_key` is a securely-random string authorized parties share
+								
+								cryptx_hmac_init(&hctx, hmac_key, sizeof hmac_key, SHA256);
+								uint8_t digest[hctx.digest_len];
+								
+								cryptx_hmac_update(&hctx, msg, strlen(msg));
+								cryptx_hmac_final(&hctx, digest);</code></pre>
+							
+							<dl>
+								
+								<dt class="lib-ref">bool cryptx_hmac_init(<br />
+									&emsp;&emsp;&emsp;&emsp;struct cryptx_hmac_ctx* context,<br />
+									&emsp;&emsp;&emsp;&emsp;const void* key, size_t keylen,<br />
+									&emsp;&emsp;&emsp;&emsp;uint8_t hash_alg);</dt>
+								<dd>Initializes an hmac context.<br />
+									<span class="param">context</span>: Pointer to hmac context.<br />
+									<span class="param">hash_alg</span>: Hash algorithm to use.<br />
+									<span class="param">returns</span>: [bool] True if init succeeded. False if failed.
+								</dd><br />
+								<dt class="lib-ref">void cryptx_hmac_update(struct cryptx_hmac_ctx* context, const void* data, size_t len);</dt>
+								<dd>Updates the hmac state for the given data.<br />
+									<span class="param">context</span>: Pointer to hash context.<br />
+									<span class="param">data</span>: Pointer to data to hash.<br />
+									<span class="param">len</span>: Length of data to hash, in bytes.
+								</dd><br />
+								<dt class="lib-ref">void cryptx_hmac_final(struct cryptx_hmac_ctx* context, void* digest);</dt>
+								<dd>Returns a digest from the current hmac state.<br />
+									<span class="param">context</span>: Pointer to hmac context.<br />
+									<span class="param">digest</span>: Buffer to write digest to. Should be at least <span style="font-family:monospace;">context.digest_len</span> bytes large.<br />
+								</dd><br />
+								<dt class="lib-ref">void cryptx_hmac_pbkdf2(<br />
+									&emsp;&emsp;&emsp;&emsp;const char* password, size_t passlen,<br />
+									&emsp;&emsp;&emsp;&emsp;void* key, size_t keylen,<br />
+									&emsp;&emsp;&emsp;&emsp;const void* salt, size_t saltlen,<br />
+									&emsp;&emsp;&emsp;&emsp;size_t rounds, uint8_t hash_alg);</dt>
+								<dd>Generates a secure key from a given password and salt.<br />
+									<span class="param">password</span>: Pointer to passphrase or secret to derive key from.<br />
+									<span class="param">passlen</span>: Length of the passphrase.<br />
+									<span class="param">key</span>: Pointer to buffer to output key to.<br />
+									<span class="param">keylen</span>: Length of the key to generate.<br />
+									<span class="param">salt</span>: Pointer to buffer filled with random bytes.<br />
+									<span class="param">saltlen</span>: Length of the salt.<br />
+									<span class="param">rounds</span>: Number of times to iterate the underlying HMAC algorithm.<br />
+									<span class="param">hash_alg</span>: HMAC algorithm to use.<br />
+								</dd>
+							</dl>
+							<div class="alert">
+								<span style="font-weight:bold; text-decoration:underline;">Salt Length Recommendation</span><br />
+								NIST recommends that salts generated for use with PBKDF2 be at least 16 bytes (128 bits) large. (<span class="citation"><a target="_blank" href="https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-132.pdf">citation</a> - see Section 5.1</span>)
+							</div>
+							<div class="alert">
+								<span style="font-weight:bold; text-decoration:underline;">Round/Cost Recommendation</span><br />
+								NIST recommends that PBKDF2 generally be run with a cost of at least 1000 rounds, with much higher round counts required for especially critical keys/powerful systems. (<span class="citation"><a target="_blank" href="https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-132.pdf">citation</a> - see Section 5.2</span>)<br />
+								Despite this, the CE hardware may be too slow to enforce the round recommendations. To that end CryptX users are advised to set their cost to the best possible balance between performance needed and security needed.
+							</div>
+						</div><br />
+						<div class="minor-header">Digest Manipulation</div>
+							<div class="section side-ruled">
+								<p>These functions allow for conversion and comparison of digest values.</p>
+								<dl>
+									<dt class="lib-ref">bool cryptx_digest_tostring(const void* digest, size_t len, uint8_t* hexstr);</dt>
+									<dd>Converts a binary digest to its hex string representation.<br />
+										<span class="param">digest</span>: Pointer to digest.<br />
+										<span class="param">len</span>: Length of the digest.<br />
+										<span class="param">hexstr</span>: Pointer to buffer to write hex string to. Size must be at least (2*len)+1.<br />
+									</dd><br />
+									<dt class="lib-ref">bool cryptx_digest_compare(const void* digest1, const void* digest2, size_t len);</dt>
+									<dd>Performs a timing-safe comparison between two buffers.<br />
+										<span class="param">digest1</span>: Pointer to first digest.<br />
+										<span class="param">digest2</span>: Pointer to second digest.<br />
+										<span class="param">len</span>: Number of bytes at digest1 and digest2 to compare.<br />
+										<span class="param">returns</span>: [bool] True if buffers match, False is they do not match.
+									</dd>
+								</dl>
+							</div>
+						</div><br /><br />
+				
+				<hr />
+				<iframe src="scripts/rtd-msg.html" style="width:100%; height:50px; border:none;"></iframe>
+				<br />
 		</div></div>
 	</body>
+	<script>hljs.highlightAll();</script>
 </html>
