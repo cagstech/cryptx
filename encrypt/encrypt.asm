@@ -37,9 +37,6 @@ include_library '../hashlib/hashlib.asm'
     export cryptx_internal_ecc_point_add
     export cryptx_internal_ecc_point_double
     export cryptx_internal_ecc_point_mul_scalar
-    export bytelen_to_bitlen
-    export memrev
-    export gf128_mul
    
    
 cryptx_csrand_init		= csrand_init
@@ -66,10 +63,6 @@ cryptx_internal_gf2_invert			= _bigint_invert
 cryptx_internal_ecc_point_add		= _point_add
 cryptx_internal_ecc_point_double	= _point_double
 cryptx_internal_ecc_point_mul_scalar	= _point_mul_scalar
-
-bytelen_to_bitlen = _bytelen_to_bitlen
-memrev = _memrev
-gf128_mul = _gf128_mul
 
     
     
@@ -4970,15 +4963,15 @@ aes_encrypt:
 	and	a, 15
 	or	a, a
 	ld	de, 0
-	ld	(ix - 22), de
+	ld	(ix - 28), de
 	jr	z, .lbl_22
 	ld	de, 0
 	ld	e, l
-	ld	(ix - 28), de
+	ld	(ix - 22), de
 	ld	hl, 16
 	or	a, a
 	sbc	hl, de
-	ld	(ix - 22), hl
+	ld	(ix - 28), hl
 	push	hl
 	ld	hl, (ix + 9)
 	push	hl
@@ -4989,11 +4982,11 @@ aes_encrypt:
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 6)
-	ld	de, (ix - 28)
+	ld	de, (ix - 22)
 	add	hl, de
 	ld	de, 264
 	add	hl, de
-	ld	de, (ix - 22)
+	ld	de, (ix - 28)
 	push	de
 	ld	de, (ix + 15)
 	push	de
@@ -5004,7 +4997,7 @@ aes_encrypt:
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 12)
-	ld	de, (ix - 22)
+	ld	de, (ix - 28)
 	or	a, a
 	sbc	hl, de
 	ld	c, 4
@@ -5016,14 +5009,16 @@ aes_encrypt:
 	add	iy, de
 	ld	(ix - 40), iy
 	inc	bc
-	ld	iy, (ix + 9)
-	ld	de, (ix - 22)
-	add	iy, de
 	ld	hl, (ix + 15)
+	ld	de, (ix - 28)
 	add	hl, de
-	ld	de, 0
 	ld	(ix - 22), hl
+	ld	iy, (ix + 9)
+	add	iy, de
 	ld	hl, (ix + 12)
+	or	a, a
+	sbc	hl, de
+	ld	de, 0
 	ld	(ix - 34), hl
 .lbl_23:
 	push	bc
@@ -5033,17 +5028,17 @@ aes_encrypt:
 	sbc	hl, bc
 	jp	z, .lbl_6
 	ld	(ix - 31), bc
-	ld	bc, (ix - 34)
-	push	bc
+	ld	de, (ix - 34)
+	push	de
 	pop	hl
-	ld	de, 16
-	or	a, a
-	sbc	hl, de
-	jr	c, .lbl_26
 	ld	bc, 16
+	or	a, a
+	sbc	hl, bc
+	jr	c, .lbl_26
+	ld	de, 16
 .lbl_26:
-	ld	(ix - 37), bc
-	push	bc
+	ld	(ix - 37), de
+	push	de
 	push	iy
 	ld	hl, (ix - 22)
 	push	hl
@@ -5114,19 +5109,16 @@ aes_encrypt:
 	ld	(hl), a
 .lbl_28:
 	dec	bc
+	ld	iy, (ix - 22)
+	lea	iy, iy + 16
+	ld	(ix - 22), iy
+	ld	iy, (ix - 28)
+	lea	iy, iy + 16
 	ld	de, -16
 	ld	hl, (ix - 34)
 	add	hl, de
 	ld	(ix - 34), hl
-	ld	iy, (ix - 28)
-	lea	iy, iy + 16
-	lea	hl, iy
-	ld	iy, (ix - 22)
-	lea	iy, iy + 16
-	ld	(ix - 22), iy
 	ld	de, 0
-	push	hl
-	pop	iy
 	jp	.lbl_23
 .lbl_29:
 	ld	a, l
@@ -5200,18 +5192,17 @@ aes_encrypt:
 	ld	a, e
 	and	a, 15
 	or	a, a
-	push	bc
-	pop	hl
+	ld	(ix - 28), bc
 	jr	z, .lbl_36
 	or	a, a
 	sbc	hl, hl
 	push	hl
 	pop	bc
 	ld	c, e
-	ld	(ix - 28), bc
+	ld	(ix - 22), bc
 	ld	hl, 16
 	sbc	hl, bc
-	ld	(ix - 22), hl
+	ld	(ix - 28), hl
 	push	hl
 	ld	hl, (ix + 9)
 	push	hl
@@ -5222,11 +5213,11 @@ aes_encrypt:
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 6)
-	ld	de, (ix - 28)
+	ld	de, (ix - 22)
 	add	hl, de
 	ld	de, 262
 	add	hl, de
-	ld	de, (ix - 22)
+	ld	de, (ix - 28)
 	push	de
 	ld	de, (ix + 15)
 	push	de
@@ -5237,40 +5228,48 @@ aes_encrypt:
 	pop	hl
 	pop	hl
 	ld	hl, (ix + 12)
-	ld	de, (ix - 22)
+	ld	de, (ix - 28)
 	or	a, a
 	sbc	hl, de
 	ld	c, 4
 	call	ti._ishru
 	ld	(ix - 31), hl
-	ld	hl, (ix - 22)
 .lbl_36:
-	ld	(ix - 22), hl
 	lea	hl, iy
 	ld	de, 262
 	add	hl, de
 	ld	(ix - 43), hl
-	ld	hl, (ix - 31)
-	inc	hl
-	ld	de, (ix + 12)
-	ld	(ix - 28), de
+	ld	de, (ix - 31)
+	inc	de
+	ld	hl, (ix + 12)
+	ld	bc, (ix - 28)
+	or	a, a
+	sbc	hl, bc
+	ld	(ix - 22), hl
+	ld	(ix - 28), bc
 .lbl_37:
+	push	de
+	pop	hl
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
 	jp	z, .lbl_44
-	ld	(ix - 31), hl
-	ld	bc, (ix - 28)
-	push	bc
+	ld	(ix - 31), de
+	ld	de, (ix - 22)
+	push	de
 	pop	hl
-	ld	de, 16
-	or	a, a
-	sbc	hl, de
-	jr	c, .lbl_40
 	ld	bc, 16
+	or	a, a
+	sbc	hl, bc
+	push	de
+	pop	bc
+	jr	c, .lbl_40
+	ld	hl, 16
+	push	hl
+	pop	bc
 .lbl_40:
 	ld	(ix - 34), bc
-	ld	de, (ix - 22)
+	ld	de, (ix - 28)
 	ld	hl, (ix + 15)
 	push	hl
 	pop	iy
@@ -5336,28 +5335,29 @@ aes_encrypt:
 	ld	(hl), a
 .lbl_42:
 	dec	bc
-	ld	de, -16
+	ld	de, 16
 	ld	hl, (ix - 28)
 	add	hl, de
 	ld	(ix - 28), hl
-	ld	de, 16
+	ld	de, -16
 	ld	hl, (ix - 22)
 	add	hl, de
 	ld	(ix - 22), hl
 	push	bc
-	pop	hl
-	ld	de, (ix + 12)
+	pop	de
 	jp	.lbl_37
 .lbl_43:
 	ld	de, 3
 	jp	.lbl_6
 .lbl_44:
-	push	de
+	ld	hl, (ix + 12)
+	push	hl
 	ld	hl, (ix + 15)
 	push	hl
 	ld	hl, (ix - 37)
 	push	hl
-	push	iy
+	ld	hl, (ix + 6)
+	push	hl
 	call	_ghash
 	pop	hl
 	pop	hl
@@ -5686,13 +5686,15 @@ aes_decrypt:
 	add	hl, de
 	ld	(ix - 56), hl
 	inc	bc
-	ld	hl, (ix + 9)
 	ld	de, (ix - 41)
+	add	iy, de
+	ld	hl, (ix + 9)
 	add	hl, de
 	ld	(ix - 35), hl
-	add	iy, de
-	ld	de, 0
 	ld	hl, (ix + 12)
+	or	a, a
+	sbc	hl, de
+	ld	de, 0
 	ld	(ix - 50), hl
 .lbl_23:
 	push	bc
@@ -5702,17 +5704,17 @@ aes_decrypt:
 	sbc	hl, bc
 	jp	z, .lbl_3
 	ld	(ix - 38), bc
-	ld	bc, (ix - 50)
-	push	bc
+	ld	de, (ix - 50)
+	push	de
 	pop	hl
-	ld	de, 16
-	or	a, a
-	sbc	hl, de
-	jr	c, .lbl_26
 	ld	bc, 16
+	or	a, a
+	sbc	hl, bc
+	jr	c, .lbl_26
+	ld	de, 16
 .lbl_26:
-	ld	(ix - 53), bc
-	push	bc
+	ld	(ix - 53), de
+	push	de
 	ld	hl, (ix - 35)
 	push	hl
 	push	iy
@@ -5772,15 +5774,18 @@ aes_decrypt:
 	ld	(hl), a
 .lbl_28:
 	dec	bc
+	ld	iy, (ix - 41)
+	lea	iy, iy + 16
+	lea	hl, iy
+	ld	iy, (ix - 35)
+	lea	iy, iy + 16
+	ld	(ix - 35), iy
+	push	hl
+	pop	iy
 	ld	de, -16
 	ld	hl, (ix - 50)
 	add	hl, de
 	ld	(ix - 50), hl
-	ld	iy, (ix - 35)
-	lea	iy, iy + 16
-	ld	(ix - 35), iy
-	ld	iy, (ix - 41)
-	lea	iy, iy + 16
 	ld	de, 0
 	jp	.lbl_23
 .lbl_29:

@@ -42,9 +42,12 @@
 				<li>Zeroko (information on sourcing randomness)</li>
 			</ul>
 			<div class="major-header">API Documentation</div>
-			<p>I will be doing the documentation here a bit differently. Rather than a catalog of functions with text-walls of information that would make even Chuck Norris hide under a table, I will present at the start of each module a short flavor text about the implementation and then some commented-code illustrating its usage. After that, a brief overview of response codes and functions for that module will be provided.</p>
+			<p>This page will detail usage guidelines and requirements for the encryption API provided by the ENCRYPT library within CryptX. If you plan to use it within your application, please take care to familiarize yourself with the API invocation, constraints, and best practices.</p>
 			<div class="alert">
-				This red tooltip style indicates security-critical information. It indicates implementation details that, if ignored, may result in your application leaking information. If you have any questions or do not understand something please do not ignore the tooltip; contact me for clarification.
+				This red tooltip style indicates security-critical information. It provides implementation details that, if ignored, may result in your application leaking information. If you have any questions or do not understand something please contact me for clarification. Do not ignore the tooltip.
+			</div>
+			<div class="more-info">
+				This yellow tooltip style indicates a best practice. While these are not directly implementation-breaking, they are recommended for enhancing the security of your application.
 			</div><br />
 			<div class="section">
 				<div class="minor-header">Cryptographically-Secure Random Number Generator (CS-RNG)</div>
@@ -174,7 +177,7 @@
 								<tr><td>AES_INVALID_MSG</td><td>Plaintext invalid</td></tr>
 								<tr><td>AES_INVALID_CIPHERMODE</td><td>Cipher mode out of range</td></tr>
 								<tr><td>AES_INVALID_PADDINGMODE</td><td>Padding mode out of range</td></tr>
-								<tr><td>AES_INVALID_CIPHERTEXT</td><td>Ciphertext invalid, bad length<br />GCM tag mismatch.</td></tr>
+								<tr><td>AES_INVALID_CIPHERTEXT</td><td>Ciphertext invalid, bad length</td></tr>
 								<tr><td>AES_INVALID_OPERATION</td><td>Encrypt called on decrypt context, v.v.<br />GCM context used after digest render.</td></tr>
 							</table>
 						</dt>
@@ -384,73 +387,92 @@
 			<a name="ae"></a>
 			<div class="major-header">Addendum: Authenticated Encryption</div>
 			<p>As great as encryption is, it is not the end of the problem. <span style="color:darkred; font-weight:bold;">Encryption alone only prevents someone reading the data, it does not protect against modification or forgery</span>. That task is performed by cryptographic hashes, HMACs, and authenticating cipher modes. The combination of a secure encryption algorithm with a secure authentication algorithm creates a construct known as <span style="font-weight:bold">authenticated encryption</span>. Almost all practical applications of data security today require authenticated encryption, so just get into the habit of doing it even if you think your application doesn&apos;t require it. CryptX provides two main methods of authenticated encryption.</p>
+			<span style="font-weight:bold; text-decoration:underline;">Standard Cipher Mode + HMAC</span>
 			<p>The first method is use a standard encryption-only cipher mode such as AES-CBC or AES-CTR and then to generate a cryptographic hash or HMAC for authentication. The hash or HMAC will then be embedded into the output message, usually at the end, to allow the recipient to validate the message. If you are using this method, there are a few constraints you must follow:</p>
 			<ul class="alert">
-				<span style="font-weight:bold; text-decoration:underline;">Standard Cipher Mode + HMAC</span>
 				<li>Initialization vector/nonce blocks for encryption are securely pseudo-random.</li>
 				<li>Encryption and HMAC keys are also securely pseudo-random and are long enough to be considered secure. Minimum key sizes recommended are 16 bytes.</li>
 				<li>You are not using your encryption key as your HMAC key or vice versa. There are attack vectors that result from using the same key for encryption and authentication.</li>
 				<li>Hash the entire message, even unencrypted portions.</li>
 				<li>Generally hash the encrypted message, not the plaintext.</li>
 			</ul>
-			The second is method is to use the AES-GCM cipher mode. This is an authenticating cipher mode that uses AES-CTR mode for encryption and also maintains a hash field as you pass unencrypted data or ciphertext data to it. AES-GCM is generally secure as long as you follow these constraints:</p>
+			<pre class="code"><code class="language-c">
+/* ##########################################################
+Authenticated Encryption/Decryption with HMAC
+Sample CryptX API Usage
+by Anthony Cagliano
+######################################################### */
+				#include &lt;hashlib.h&gt;
+				#include &lt;encrypt.h&gt;
+				
+				cryptx_aes_ctx ctx;
+				cryptx_hmac_ctx hmac;
+				char *msg = "The daring fox jumped over the moon.";
+				char *aad = "A header";
+				
+				// Assumptions:
+				// __ AES session key in `aes_key`
+				// __ HMAC key in `hmac_key`
+				// __ Secure random IV in `iv`
+				
+				// init hmac state and allocate digest buffer
+				hmac_init(&hmac, hmac_key, sizeof hmac_key, SHA256);
+				uint8_t hmac_digest[hmac.digest_len];
+				
+				// initialize AES context with mode , key , and iv
+				cryptx_aes_init(&ctx, aes_key, sizeof aes_key, iv, sizeof(iv), CRYPTX_AES_CTR_FLAGS(8, 8));
+				
+				// encrypt message
+				cryptx_aes_encrypt(&ctx, msg, strlen(msg), msg);
+				
+				// hash aad, iv, ciphertext
+				cryptx_hmac_update(&hmac, aad, strlen(aad));
+				cryptx_hmac_update(&hmac, iv, sizeof iv);
+				cryptx_hmac_update(&hmac, msg, strlen(msg));
+				cryptx_hmac_final(&hmac, hmac_digest);
+				// send message of form: [aad][iv][ciphertext][hmac]
+			</code></pre><br /><br />
+			<span style="font-weight:bold; text-decoration:underline;">AES Galois Counter Mode</span>
+			<p>The second is method is to use the AES-GCM cipher mode. This is an authenticating cipher mode that uses AES-CTR mode for encryption and also maintains a hash field as you pass unencrypted data or ciphertext data to it. AES-GCM is generally secure as long as you follow these constraints:</p>
 			<ul class="alert">
-				<span style="font-weight:bold; text-decoration:underline;">AES Galois Counter Mode</span>
 				<li>Initialization vector/nonce blocks for encryption are securely pseudo-random.</li>
 				<li>Do not reuse the same initialization vector for another message stream. Once you render a digest for a data stream, you should generate a new initialization vector. Failure to do so can result in the cipher leaking information about the key used for encryption.</li>
 			</ul>
-			
-			<span style="font-weight:bold;">Example of authenticated encryption, CryptX. by Anthony Cagliano</span>
 			<pre class="code"><code class="language-c">
-#include &lt;hashlib.h&gt;
-#include &lt;encrypt.h&gt;
+				/* ##########################################################
+				Authenticated Encryption/Decryption with AES-GCM
+				Sample CryptX API Usage
+				by Anthony Cagliano
+				######################################################### */
+				#include &lt;hashlib.h&gt;
+				#include &lt;encrypt.h&gt;
+				
+				cryptx_aes_ctx ctx;
+				uint8_t tag[CRYPTX_AES_BLOCK_SIZE];
+				char *msg = "The daring fox jumped over the moon.";
+				char *aad = "A header";
+				
+				// Assumptions:
+				// __ AES session key in `aes_key`
+				// __ Secure random IV in `iv`
+				
+				// initialize AES context with mode , key , and iv
+				cryptx_aes_init(&ctx, aes_key, sizeof aes_key, iv, sizeof(iv), CRYPTX_AES_GCM_FLAGS);
+				
+				// authenticate aad
+				cryptx_aes_update_aad(&ctx, aad, strlen(aad));
+				
+				// encrypt message
+				cryptx_aes_encrypt(&ctx, msg, strlen(msg), msg);
+				
+				// return digest
+				cryptx_aes_digest(&ctx, tag);
+				
+				// send message of form: [aad][iv][ciphertext][tag]
+				// AES context becomes invalid after digest return. Re-init with new IV
+			</code></pre><br /><br />
+			
 
-// this assumes that the AES secret ‘aes_key‘ and the HMAC secret ‘hmac_key‘
-// have been negotiated beforehand.
-
-// let’s send a simple ascii string
-char* msg = "The daring fox jumped over the moon."
-
-// the header is a size word, containing size of string plus our IV
-// header can really be whatever you want, but some arbitrary nonsense as an example
-size_t header = sizeof(msg)+AES_IVSIZE;
-
-// allocate the memory we need
-cryptx_aes_ctx ctx;
-cryptx_hmac_ctx hmac;
-uint8_t iv[AES_IVSIZE];
-
-// doing this first allows us to
-hmac_init(&hmac, hmac_key, sizeof hmac_key, SHA256);
-
-// allocate a digest of the size we need
-uint8_t hmac_digest[hmac.digest_len];
-
-// !!!! NEVER PROCEED IF csrand_init() FAILS !!!
-if(!cryptx_csrand_init()) return false;
-cryptx_csrand_fill(iv, AES_IVSIZE);
-
-// initialize AES context with mode , key , and iv
-cryptx_aes_init(&ctx, aes_key, sizeof aes_key, iv, CRYPTX_AES_CTR_FLAGS(8, 8));
-
-// encrypt message
-// aes_encrypt supports in-place encryption
-cryptx_aes_encrypt(&ctx, msg, strlen(msg), msg);
-
-// hash everything you are sending, except the hash itself
-cryptx_hmac_update(&hmac, &header, sizeof header);
-cryptx_hmac_update(&hmac, iv, sizeof iv);
-cryptx_hmac_update(&hmac, msg, strlen(msg));
-cryptx_hmac_final(&hmac, hmac_digest);
-
-// ps_queue/send are psuedo functions implying queueing data to send
-// and then sending it
-ps_queue(&header, sizeof header);
-ps_queue(iv, sizeof iv);
-ps_queue(msg, sizeof msg);
-ps_queue(hmac_digest, sizeof hmac_digest);
-ps_send();
-			</code></pre>
 			<hr />
 			<iframe src="scripts/rtd-msg.html" style="width:100%; height:50px; border:none;"></iframe>
 			<br />

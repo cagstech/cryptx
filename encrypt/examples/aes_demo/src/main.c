@@ -13,9 +13,11 @@
 #include <string.h>
 #include <stdio.h>
 #include <encrypt.h>
+#include <alloca.h>
 
 #define CEMU_CONSOLE ((char*)0xFB0000)
 char *msg = "The lazy fox jumped over the dog!";
+char *secondmsg = "The dog got angry and barked";
 #define KEYSIZE (256>>3)    // 256 bits converted to bytes
 
 // we will reuse the key and IV for the sake of demo
@@ -45,7 +47,11 @@ void demo_aes_cbc(void){
 	
 	// declare buffers
 	size_t ctlen = CRYPTX_AES_CIPHERTEXT_LEN(strlen(msg));
-	uint8_t ebuf[100], dbuf[100];
+	sprintf(CEMU_CONSOLE, "String len: %u\nAllocated size: %u", strlen(msg), ctlen);
+	uint8_t ebuf[ctlen];
+	uint8_t dbuf[ctlen];
+	//uint8_t *ebuf = malloc(ctlen);
+	//uint8_t *dbuf = malloc(ctlen);
 	
 	sprintf(CEMU_CONSOLE, "\n-----------------------------------\nCyclic Block Chain (CBC) mode\n\n");
 	
@@ -54,7 +60,7 @@ void demo_aes_cbc(void){
 	sprintf(CEMU_CONSOLE, "cbc init complete, exit code %u\n", error);
 	
 	// encrypt string and echo status
-	memset(ebuf, 0, sizeof ebuf);
+	memset(ebuf, 0, ctlen);
 	error = cryptx_aes_encrypt(&ctx, msg, strlen(msg), ebuf);
 	sprintf(CEMU_CONSOLE, "cbc encryption done, exit code %u\n", error);
 	hexdump(ebuf, ctlen, "-- encrypted msg --");
@@ -64,7 +70,7 @@ void demo_aes_cbc(void){
 	sprintf(CEMU_CONSOLE, "cbc init complete, exit code %u\n", error);
 	
 	// encrypt string and echo status
-	memset(dbuf, 0, sizeof dbuf);
+	memset(dbuf, 0, ctlen);
 	error = cryptx_aes_decrypt(&ctx, ebuf, ctlen, dbuf);
 	sprintf(CEMU_CONSOLE, "cbc decryption done, exit code %u\n", error);
 	sprintf(CEMU_CONSOLE, "%s\n", dbuf);
@@ -74,7 +80,8 @@ void demo_aes_ctr(void){
 	
 	// declare buffers
 	size_t ctlen = strlen(msg);
-	uint8_t ebuf[100], dbuf[100];
+	uint8_t *ebuf = malloc(ctlen);
+	uint8_t *dbuf = malloc(ctlen);
 	
 	sprintf(CEMU_CONSOLE, "\n-----------------------------------\nCounter (CTR) mode\n\n");
 	
@@ -83,7 +90,7 @@ void demo_aes_ctr(void){
 	sprintf(CEMU_CONSOLE, "ctr init complete, exit code %u\n", error);
 	
 	// encrypt string and echo status
-	memset(ebuf, 0, sizeof ebuf);
+	memset(ebuf, 0, 48);
 	error = cryptx_aes_encrypt(&ctx, msg, strlen(msg), ebuf);
 	sprintf(CEMU_CONSOLE, "ctr encryption done, exit code %u\n", error);
 	hexdump(ebuf, ctlen, "-- encrypted msg --");
@@ -93,10 +100,12 @@ void demo_aes_ctr(void){
 	sprintf(CEMU_CONSOLE, "ctr init complete, exit code %u\n", error);
 	
 	// encrypt string and echo status
-	memset(dbuf, 0, sizeof dbuf);
+	memset(dbuf, 0, ctlen);
 	error = cryptx_aes_decrypt(&ctx, ebuf, ctlen, dbuf);
 	sprintf(CEMU_CONSOLE, "ctr decryption done, exit code %u\n", error);
 	sprintf(CEMU_CONSOLE, "%s\n", dbuf);
+	free(ebuf);
+	free(dbuf);
 }
 
 void demo_aes_gcm(void){
@@ -104,7 +113,8 @@ void demo_aes_gcm(void){
 	// declare buffers
 	size_t ctlen = strlen(msg);
 	char *associated = "Some random header";
-	uint8_t ebuf[100], dbuf[100];
+	uint8_t *ebuf = malloc(ctlen);
+	uint8_t *dbuf = malloc(ctlen);
 	uint8_t odigest[CRYPTX_AES_BLOCK_SIZE], vdigest[CRYPTX_AES_BLOCK_SIZE];
 	
 	sprintf(CEMU_CONSOLE, "\n-----------------------------------\nGalois Counter (GCM) mode\n\n");
@@ -117,7 +127,7 @@ void demo_aes_gcm(void){
 	cryptx_aes_update_aad(&ctx, associated, strlen(associated));
 	
 	// encrypt string and echo status
-	memset(ebuf, 0, sizeof ebuf);
+	memset(ebuf, 0, ctlen);
 	error = cryptx_aes_encrypt(&ctx, msg, strlen(msg), ebuf);
 	sprintf(CEMU_CONSOLE, "gcm encryption done, exit code %u\n", error);
 	hexdump(ebuf, ctlen, "-- encrypted msg --");
@@ -147,7 +157,7 @@ void demo_aes_gcm(void){
 	cryptx_aes_update_aad(&ctx, associated, strlen(associated));
 	
 	// decrypt string and echo status
-	memset(dbuf, 0, sizeof dbuf);
+	memset(dbuf, 0, ctlen);
 	error = cryptx_aes_decrypt(&ctx, ebuf, ctlen, dbuf);
 	sprintf(CEMU_CONSOLE, "gcm decryption done, exit code %u\n", error);
 	sprintf(CEMU_CONSOLE, "%s\n", dbuf);
@@ -158,6 +168,8 @@ void demo_aes_gcm(void){
 	error = cryptx_aes_digest(&ctx, vdigest);
 	sprintf(CEMU_CONSOLE, "gcm digest return done, exit code %u\n", error);
 	hexdump(vdigest, CRYPTX_AES_BLOCK_SIZE, "-- digest of aad + ciphertext --");
+	free(ebuf);
+	free(dbuf);
 }
 
 

@@ -1,4 +1,4 @@
-	library	ENCRYPT, 2
+	library	ENCRYPT, 3
 
 	export	cryptx_csrand_init
 	export	cryptx_csrand_get
@@ -26,6 +26,3 @@
 	export	cryptx_internal_ecc_point_add
 	export	cryptx_internal_ecc_point_double
 	export	cryptx_internal_ecc_point_mul_scalar
-	export	bytelen_to_bitlen
-	export	memrev
-	export	gf128_mul
