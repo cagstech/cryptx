@@ -38,6 +38,7 @@ struct cryptx_asn1_obj {
 	uint8_t *data;			/**< Defines a pointer to the data portion of the element */
 };
 
+
 /*********************************
  * @enum CRYPTX\_ASN1\_TYPES
  * Defines tag identifiers for ASN.1 encoding
@@ -97,6 +98,15 @@ enum CRYPTX_ASN1_FORMS {
 	ASN1_CONSTRUCTED		/**< data type composed of multiple primitive data types. */
 };
 
+
+uint8_t asn1_pkcs8[] = {0, 0, 1};
+
+typedef enum {
+	ASN1_OK,
+	ASN1_ARCH_BAD_LEN,
+	ASN1_SPEC_MISMATCH
+} asn1_error_t;
+
 /****************************************************************
  * @brief Parses ASN.1 encoded data and returns metadata into an array of structs.
  * @note This function is recursive for any element of @b constructed form.
@@ -110,8 +120,10 @@ enum CRYPTX_ASN1_FORMS {
  * @param iter_count Maximum number of ASN.1 elements to process before returning.
  * @returns The number of objects returned by the parser. Zero indicates an error.
  */
-size_t cryptx_asn1_decode(void *asn1_data, size_t len, struct cryptx_asn1_obj* objs, size_t iter_count);
-
+asn1_error_t cryptx_asn1_decode(
+					void *asn1_data, size_t len,
+					struct cryptx_asn1_obj* objs, size_t *objects_returned,
+					uint8_t *spec);
 
 //**************************************************************************************
 /*	Base64 Parsing

@@ -3,52 +3,16 @@
 	section	.text,"ax",@progbits
 	public	_main
 _main:
-	ld	hl, -198
+	ld	hl, -99
 	call	__frameset
-	ld	bc, -186
-	lea	iy, ix
-	add	iy, bc
-	ld	bc, -195
-	lea	hl, ix
-	add	hl, bc
-	ld	(hl), iy
-	lea	hl, ix - 96
-	push	ix
-	ld	bc, -189
-	add	ix, bc
-	ld	(ix), hl
-	pop	ix
-	lea	hl, iy
-	ld	bc, -192
-	lea	iy, ix
-	add	iy, bc
-	ld	(iy), hl
-	ld	(ix - 96), 0
-	ld	bc, -189
-	lea	hl, ix
-	add	hl, bc
-	ld	iy, (hl)
+	lea	hl, ix - 90
+	ld	(ix - 96), hl
+	ld	(ix - 90), 0
+	ld	iy, (ix - 96)
 	inc	iy
-	lea	de, iy
-	lea	iy, ix
-	add	iy, bc
-	ld	hl, (iy)
 	ld	bc, 89
-	ldir
-	ld	bc, -195
-	lea	hl, ix
-	add	hl, bc
-	ld	iy, (hl)
-	ld	(iy), 0
-	ld	bc, -192
-	lea	iy, ix
-	add	iy, bc
-	ld	hl, (iy)
-	push	hl
-	pop	iy
-	inc	iy
 	lea	de, iy
-	ld	bc, 89
+	ld	hl, (ix - 96)
 	ldir
 	ld	hl, _.str
 	push	hl
@@ -57,12 +21,10 @@ _main:
 	call	_sprintf
 	pop	hl
 	pop	hl
-	ld	hl, 10
+	ld	hl, _asn1_pkcs8
 	push	hl
-	ld	bc, -189
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	pea	ix - 93
+	ld	hl, (ix - 96)
 	push	hl
 	ld	hl, 162
 	push	hl
@@ -73,10 +35,7 @@ _main:
 	pop	de
 	pop	de
 	pop	de
-	ld	bc, -195
-	lea	iy, ix
-	add	iy, bc
-	ld	(iy), hl
+	pop	de
 	push	hl
 	ld	hl, _.str.1
 	push	hl
@@ -86,175 +45,56 @@ _main:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -189
-	lea	hl, ix
-	add	hl, bc
-	ld	iy, (hl)
+	ld	iy, (ix - 96)
 	lea	iy, iy + 3
-	or	a, a
-	sbc	hl, hl
-	ex	de, hl
+	ld	bc, 0
 BB0_1:
-	ld	bc, -195
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	de, (ix - 93)
+	push	bc
+	pop	hl
 	or	a, a
 	sbc	hl, de
-	jr	z, BB0_3
+	jr	nc, BB0_3
 	or	a, a
 	sbc	hl, hl
 	ld	l, (iy - 3)
-	push	ix
-	ld	bc, -189
-	add	ix, bc
-	ld	(ix), de
-	pop	ix
 	ld	de, (iy)
+	ld	(ix - 96), bc
 	ld	bc, (iy + 3)
 	push	bc
 	push	de
 	push	hl
-	ld	bc, -189
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
+	ld	hl, (ix - 96)
 	push	hl
 	ld	hl, _.str.2
 	push	hl
 	ld	hl, -327680
 	push	hl
-	ld	bc, -198
-	lea	hl, ix
-	add	hl, bc
-	ld	(hl), iy
+	ld	(ix - 99), iy
 	call	_sprintf
-	ld	bc, -189
-	lea	hl, ix
-	add	hl, bc
-	ld	de, (hl)
-	ld	bc, -198
-	lea	iy, ix
-	add	iy, bc
-	ld	iy, (iy)
+	ld	bc, (ix - 96)
+	ld	iy, (ix - 99)
 	pop	hl
 	pop	hl
 	pop	hl
 	pop	hl
 	pop	hl
 	pop	hl
-	inc	de
+	inc	bc
 	lea	iy, iy + 9
 	jr	BB0_1
 BB0_3:
-	ld	hl, (ix - 90)
-	push	hl
-	ld	hl, _.str.3
-	push	hl
-	ld	hl, -327680
-	push	hl
-	call	_sprintf
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 72)
-	ld	de, (ix - 75)
-	ld	bc, 10
-	push	bc
-	ld	(ix - 3), de
-	ld	de, -192
-	lea	iy, ix
-	add	iy, de
-	ld	bc, (iy)
-	push	bc
-	ld	de, (ix - 3)
-	push	de
-	push	hl
-	call	_cryptx_asn1_decode
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	ld	bc, -189
-	lea	iy, ix
-	add	iy, bc
-	ld	(iy), hl
-	push	hl
-	ld	hl, _.str.1
-	push	hl
-	ld	hl, -327680
-	push	hl
-	call	_sprintf
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	bc, -192
-	lea	hl, ix
-	add	hl, bc
-	ld	iy, (hl)
-	lea	iy, iy + 3
-	or	a, a
-	sbc	hl, hl
-	ex	de, hl
-BB0_4:
-	ld	bc, -189
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	or	a, a
-	sbc	hl, de
-	jr	z, BB0_6
-	or	a, a
-	sbc	hl, hl
-	ld	l, (iy - 3)
-	push	ix
-	ld	bc, -192
-	add	ix, bc
-	ld	(ix), de
-	pop	ix
-	ld	de, (iy)
-	ld	bc, (iy + 3)
-	push	bc
-	push	de
-	push	hl
-	ld	bc, -192
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	hl, _.str.2
-	push	hl
-	ld	hl, -327680
-	push	hl
-	ld	bc, -195
-	lea	hl, ix
-	add	hl, bc
-	ld	(hl), iy
-	call	_sprintf
-	ld	bc, -192
-	lea	hl, ix
-	add	hl, bc
-	ld	de, (hl)
-	ld	bc, -195
-	lea	iy, ix
-	add	iy, bc
-	ld	iy, (iy)
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	inc	de
-	lea	iy, iy + 9
-	jr	BB0_4
-BB0_6:
 	or	a, a
 	sbc	hl, hl
 	ld	sp, ix
 	pop	ix
 	ret
 	section	.text,"ax",@progbits
+
+	section	.data,"aw",@progbits
+	public	_asn1_pkcs8
+_asn1_pkcs8:
+	db	0, 0, ""
 
 	section	.data,"aw",@progbits
 	public	_asn1_demo
@@ -269,21 +109,16 @@ _.str:
 	section	.rodata,"a",@progbits
 	private	_.str.1
 _.str.1:
-	db	10, "Decode complete, %u objects parsed.", 10, 0
+	db	10, "Decode complete, exit code %u.", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.2
 _.str.2:
-	db	"Obj %u, Tag Id: %u, Size: %u, Addr: %u", 10, 0
+	db	"Obj %u, Tag Id: %u, Size: %u, Addr: %p", 10, 0
 
-	section	.rodata,"a",@progbits
-	private	_.str.3
-_.str.3:
-	db	"%s", 10, 0
-
-	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 72d82503a68765fd5a06d2026984f1fa399a54ea)"
+	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 6c61664110f888c0285ae4c48b150c9a7a4361bb)"
 	extern	__Unwind_SjLj_Register
-	extern	__frameset
 	extern	__Unwind_SjLj_Unregister
+	extern	__frameset
 	extern	_sprintf
 	extern	_cryptx_asn1_decode

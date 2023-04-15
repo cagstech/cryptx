@@ -1,4 +1,4 @@
-	library	ENCODEX, 2
+	library	ENCODEX, 3
 
 	export	cryptx_asn1_decode
 	export	cryptx_base64_encode

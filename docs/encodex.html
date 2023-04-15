@@ -3,6 +3,8 @@
 	<head>
 		<title>CryptX Documentation</title>
 		<link type="text/css" rel="stylesheet" href="style.css" />
+		<link rel="stylesheet" href="scripts/highlight/styles/default.min.css">
+			<script src="scripts/highlight/highlight.min.js"></script>
 		<style>
 		</style>
 	</head>
@@ -32,82 +34,122 @@
 				<li>Anthony Cagliano</li>
 				<li>Adam Beckingham</li>
 			</ul>
-			<div class="major-header">Definitions</div>
-			<dl>
-				<dt>ASN.1 (Abstract Syntax Notation One)</dt>
-				<dd>A data encoding format common to cryptography in which data is represented as a series of one or more tag, size, data groups. The most commonly occurring serialization format for ASN.1 is <span style="font-weight:bold">DER</span>, which stands for <span style="font-style:italic;">Distinguished Encoding Rules</span>.</dd><br />
-				<dt>Base 64</dt>
-				<dd>A data encoding format also common to cryptography in which data is expressed in six (6) bit groups of data (sextets) which are then mapped to one of 64 plaintext characters (A-Z,a-z,+/) and padding = characters. Base 64 is the encoding format used by PEM keyfiles.</dd><br />
-				<dt>BPP (Bits-Per-Pixel)</dt>
-				<dd>A data encoding format in which a bytewise data value that can be expressed within 4 bits or less is compressed such that multiple values fit within the same byte. This discards any higher, unused bits and makes the data smaller.</dd><br />
-				<dt>Octet Encoding</dt>
-				<dd>The standard encoding format in which each byte expresses 8 bits of information.</dd><br />
-			</dl>
-			<div class="major-header">Enumerations</div>
-			<div class="function-doc">enum CRYPTX_ASN1_TYPES {ASN1_RESVD = 0, ASN1_BOOLEAN, ASN1_INTEGER, ASN1_BITSTRING, ASN1_OCTETSTRING, ASN1_NULL, ASN1_OBJECTID, ASN1_OBJECTDESC, ASN1_INSTANCE, ASN1_REAL, ASN1_ENUMERATED, ASN1_EMBEDDEDPDV, ASN1_UTF8STRING, ASN1_RELATIVEOID, ASN1_SEQUENCE = 16, ASN1_SET, ASN1_NUMERICSTRING, ASN1_PRINTABLESTRING, ASN1_TELETEXSTRING, ASN1_VIDEOTEXSTRING, ASN1_IA5STRING, ASN1_UTCTIME, ASN1_GENERALIZEDTIME, ASN1_GRAPHICSTRING, ASN1_VISIBLESTRING, ASN1_GENERALSTRING, ASN1_UNIVERSALSTRING, ASN1_CHARSTRING, ASN1_BMPSTRING};</div>
-			<p>Defines possible ASN.1 basic tag types.</p>
-			<div class="function-doc">enum CRYPTX_ASN1_CLASSES {<br />
-				&emsp;&emsp;&emsp;ASN1_UNIVERSAL,<br />
-				&emsp;&emsp;&emsp;ASN1_APPLICATION,<br />
-				&emsp;&emsp;&emsp;ASN1_CONTEXTSPEC,<br />
-				&emsp;&emsp;&emsp;ASN1_PRIVATE<br />};</div>
-			<p>Defines possible class types for ASN.1-encoded objects.</p>
-			<div class="function-doc">enum CRYPTX_ASN1_FORMS {<br />
-				&emsp;&emsp;&emsp;ASN1_PRIMITIVE,<br />
-				&emsp;&emsp;&emsp;ASN1_CONSTRUCTED<br /> };</div>
-			<p>Defines possible forms for ASN.1-encoded objects.</p>
-			<div class="major-header">Structs</div>
-			<div class="function-doc">struct cryptx_asn1_obj {...};</div>
-			<p>Defines a structure for the decoding of ASN.1-encoded objects.</p>
-			<div class="major-header">Functions</div>
-			<div class="function-doc">size_t&emsp;cryptx_asn1_decode(<br />
-				&emsp;&emsp;&emsp;void *asn1_data, size_t len,<br />
-				&emsp;&emsp;&emsp;struct cryptx_asn1_obj* objs,<br />
-				&emsp;&emsp;&emsp;size_t iter_count);</div>
-			<p>Decodes an ASN.1 encoded data stream, returning object metadata into an array of <span style="font-weight:bold">cryptx_asn1_obj</span> structs.<br />
-			<span class="param">asn1_data</span>: Pointer to ASN.1-encoded data.<br />
-			<span class="param">len</span>: Length of the data.<br />
-			<span class="param">objs</span>: Pointer to an array of <span style="font-weight:bold">cryptx_asn1_obj</span> structs to decode objects into.<br />
-			<span class="param">iter_count</span>: Maximum number of ASN.1 objects to decode before returning<br />
-			<span class="return">output</span>: The number of objects successfully decoded.<br />
-			<span class="more-info">
-				The function will automatically recurse for any object with the ASN1_CONSTRUCTED bit set.<br />
-				An object that starts with ASN1_RESVD (0x00) is assumed to have a padding byte prepended. That byte is skipped by the parser prior to the start of decoding.<br />
-				In some keyfile formats, there is a BIT STRING object that is a constructed type but does not have the ASN1_CONSTRUCTED bit set. You will need to call this function again on that object to further parse it.<br />
-				Object sizes greater than 24 bits (3 bytes) are unsupported due to device limitations. Encountering an unsupported size will cause the parser to quit, returning any objects it has already decoded.
-			</span>
-			</p>
-			<div class="function-doc">size_t&emsp;cryptx_base64_encode(void* dest, const void* src, size_t len);</div>
-			<p>Encodes an octet-encoded byte stream into a sextet encoded byte stream.<br />
-			<span class="param">dest</span>: Pointer to buffer to write sextet-encoded (output) data to.<br />
-			<span class="param">src</span>: Pointer to data to encode.<br />
-			<span class="param">len</span>: Length of data to encode.<br />
-			<span class="return">output</span>: The length of the output encoded data.
-			</p>
-			<div class="function-doc">size_t&emsp;cryptx_base64_decode(void* dest, const void* src, size_t len);</div>
-			<p>Decodes a sextet encoded byte stream and returns octet-encoded bytes.<br />
-			<span class="param">dest</span>: Pointer to buffer to write decoded (output) data to.<br />
-			<span class="param">src</span>: Pointer to data to decode.<br />
-			<span class="param">len</span>: Length of data to decode.<br />
-			<span class="return">output</span>: The length of the output decoded data.
-			</p>
-			<div class="function-doc">bool&emsp;cryptx_bpp_encode(void* dest, const void* src, size_t len, uint8_t bpp);</div>
-			<p>Encodes an octet-encoded byte stream into bits-per-pixel encoding.<br />
-			<span class="param">dest</span>: Pointer to buffer to write bpp-encoded data to.<br />
-			<span class="param">src</span>: Pointer to data to encode/compress.<br />
-			<span class="param">len</span>: Length of the encoded (output) data stream.<br />
-			<span class="param">bpp</span>: Number of bits-per-pixel to encode into.<br />
-			</p>
-			<div class="function-doc">bool&emsp;cryptx_bpp_decode(void* dest, const void* src, size_t len, uint8_t bpp);</div>
-			<p>Decodes a bpp-encoded byte stream into octet-encoded bytes.<br />
-			<span class="param">dest</span>: Pointer to buffer to write decoded data to.<br />
-			<span class="param">src</span>: Pointer to data to decode/decompress.<br />
-			<span class="param">len</span>: Length of the encoded (input) data stream.<br />
-			<span class="param">bpp</span>: Number of bits-per-pixel to decode from.<br />
-			</p>
+			<div class="major-header">API Documentation</div>
+			<p>This page will detail usage guidelines and requirements for the encoding API provided by the ENCODEX library within CryptX. If you plan to use it within your application, please take care to familiarize yourself with the API invocation, constraints, and best practices.</p>
+			<div class="alert">
+				This red tooltip style indicates security-critical information. It provides implementation details that, if ignored, may result in your application leaking information. If you have any questions or do not understand something please contact me for clarification. Do not ignore the tooltip.
+			</div>
+			<div class="more-info">
+				This yellow tooltip style indicates a best practice or other information of note that is not necessarily security-critical but may cause unexpected behavior if not followed.
+			</div><br />
+			<div class="section">
+				<div class="minor-header">Abstract Syntax Notation One Encoding (ASN.1)</div>
+				<div class="section side-ruled">
+					<p>ASN.1 is a data encoding format common to cryptography in which data is represented as a series of objects consisting of a tag, object size, and object data. The most commonly occurring serialization format for ASN.1 is <span style="font-weight:bold">DER</span>, which stands for <span style="font-style:italic;">Distinguished Encoding Rules</span>.</p>
+					<p>Additionally, ENCODEX provides an extension to the ASN.1 decoder specifically designed to handle key objects of the PKCS&num;8 format. This formatting specification is a bit weird because, as you can see from the specification below, the PublicKey is wrapped in a SEQUENCE element, padded with a single zero byte, and then encoded as a BIT STRING itself. This element is then indicated to be a primitive element, so </p>
+					<pre class="code"><code class="language-c">
+						// assume that the DER-encoded key is loaded into `asn1_data`
+						/*
+						PKCS#8 encoding format for DER keys
+						PublicKeyInfo ::= SEQUENCE {
+							&emsp;&emsp;algorithm       AlgorithmIdentifier :: SEQUENCE {
+							&emsp;&emsp;&emsp;&emsp;algorithm_id&emsp;&emsp;&emsp;&emsp;OBJECT IDENTIFIER,
+							&emsp;&emsp;&emsp;&emsp;parameters&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;ANY DEFINED BY algorithm OPTIONAL
+							&emsp;&emsp;}
+							&emsp;&emsp;PublicKey       BIT STRING
+						}
+						*/
+						
+						// declare struct type for ASN.1 parsing
+						struct cryptx_asn1_obj output[5] = {0};
+						
+						// each call to the decoder does a pass over the data,
+						// returning all parsable objects.
+						// automatic recursion occurs for any object with a constructed tag bit set.
+						size_t obj_ct = cryptx_asn1_decode(asn1_data, sizeof asn1_data, output, 5);
+						
+						// For reasons unknown, the PublicKey BIT STRING is a strange constructed object
+						// It is a &quot;primitive&quot; BIT STRING object that wraps a single zero byte
+						// followed by the same construction as the RSAPublicKey object from PKCS#1.
+						/*
+						RSAPublicKey ::= SEQUENCE {
+						&emsp;&emsp;modulus&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;INTEGER,  -- n
+						&emsp;&emsp;publicExponent&emsp;&emsp;&emsp;&emsp;INTEGER   -- e
+						}
+						*/
+						// to extract it, run another decoding pass on the 3rd object returned above
+						obj_ct = cryptx_asn1_decode(output[2].data, output[2].len, &output[3], 2);
+						// output[3] and output[4] should contain the public modulus and exponent, respectively.
+						</code></pre>
+					
+					<dl>
+						<dt class="lib-ref">size_t cryptx_asn1_decode(<br />
+							&emsp;&emsp;&emsp;&emsp;void *asn1_data, size_t len,<br />
+							&emsp;&emsp;&emsp;&emsp;struct cryptx_asn1_obj* objs,<br />
+							&emsp;&emsp;&emsp;&emsp;size_t iter_count);</dt>
+						<dd>Decodes an ASN.1-encoded block of data into an array of structures that contain ASN.1 object metadata.<br />
+							<span class="param">asn1_data</span>: Pointer to data to decode.<br />
+							<span class="param">len</span>: Length of data to decode.<br />
+							<span class="param">objs</span>: Pointer to array of cryptx_asn1_obj structures.<br />
+							<span class="param">iter_count</span>: Length of objs array; Max number of ASN.1 objects to return.<br />
+							<span class="param">returns</span>: [size_t] Number of objects successfully returned.
+						</dd>
+					</dl>
+					<div class="more-info">
+						Metadata returned into the array of ASN.1 objects includes a pointer to the data portion of the object within the original input string <span style="font-family:monospace;">*asn1_data</span>. Therefore the original data block needs to preserved until all decoded objects are no longer needed.
+					</div>
+				</div><br />
+				<div class="minor-header">Base 64 Encoding</div>
+				<div class="section side-ruled">
+					<p>A data encoding format also common to cryptography in which data is expressed in six (6) bit groups of data (sextets) which are then mapped to one of 64 plaintext characters (A-Z,a-z,+/) and padding = characters. Base 64 is the encoding format used by PEM keyfiles.</p>
+					<dl>
+						<dt class="lib-ref">size_t cryptx_base64_encode(void* dest, const void* src, size_t len);</dt>
+						<dd>Encodes a byte-encoded data stream into a sextet-encoded (base64) data stream.<br />
+							<span class="param">dest</span>: Pointer to buffer to write output base64 data.<br />
+							<span class="param">src</span>: Pointer to data to encode.<br />
+							<span class="param">len</span>: Length of input data to encode.<br />
+							<span class="param">returns</span>: [size_t] Length of output base64 data.
+						</dd><br />
+						<dt class="lib-ref">size_t cryptx_base64_decode(void* dest, const void* src, size_t len);</dt>
+						<dd>Decodes a sextet-encoded data stream into a byte-encoded data stream.<br />
+							<span class="param">dest</span>: Pointer to buffer to write output data.<br />
+							<span class="param">src</span>: Pointer to sextet data to decode.<br />
+							<span class="param">len</span>: Length of input data to decode.<br />
+							<span class="param">returns</span>: [size_t] Length of output data.
+						</dd>
+					</dl>
+					
+					
+				</div><br />
+				<div class="minor-header">Bits-Per-Pixel Encoding (BPP)</div>
+				<div class="section side-ruled">
+					<p>A form of encoding/compression in which multiple bytes of data are collapsed into a smaller form based on the bit-length of the value&apos;s upper bound. For example, 8 bytes of values 0-3 (a 2-bit value) could be compressed into 4-bpp encoding and require only 2 bytes to represent. In the same way, 8 bytes of values 0-1 (a 1-bit value) could be compressed into 1-bpp encoding and require only 1 byte to represent.</p>
+					<dl>
+						<dt class="lib-ref">bool cryptx_bpp_encode(void* dest, const void* src, size_t len, uint8_t bpp);</dt>
+						<dd>Encodes a byte-encoded data stream into bit-per-pixel encoding.<br />
+							<span class="param">dest</span>: Pointer to buffer to write bpp-encoded data to.<br />
+							<span class="param">src</span>: Pointer to data to encode/compress.<br />
+							<span class="param">len</span>: Length of the encoded (output) data stream.<br />
+							<span class="param">bpp</span>: Number of bits-per-pixel to encode into.<br />
+						</dd><br />
+						<dt class="lib-ref">bool cryptx_bpp_decode(void* dest, const void* src, size_t len, uint8_t bpp);</dt>
+						<dd>Decodes a bit-per-pixel-encoded data stream into a byte-encoded data stream.<br />
+							<span class="param">dest</span>: Pointer to buffer to write decoded data to.<br />
+							<span class="param">src</span>: Pointer to data to decode/decompress.<br />
+							<span class="param">len</span>: Length of the encoded (input) data stream.<br />
+							<span class="param">bpp</span>: Number of bits-per-pixel to decode from.<br />
+						</dd>
+						
+					</dl>
+					<div class="more-info">
+						This encoding method truncates if the bitwise compression is not large enough to hold the value within the BPP encoding. For example, if you have a 4-bit value and you convert to 2-bpp encoding, the higher two bits of the data value will be lost. Please account for this properly within applications that make use of this module.
+					</div>
+				</div>
+			</div><br />
 			<hr />
 			<iframe src="scripts/rtd-msg.html" style="width:100%; height:50px; border:none;"></iframe>
 			<br />
 		</div></div>
 	</body>
+	<script>hljs.highlightAll();</script>
 </html>

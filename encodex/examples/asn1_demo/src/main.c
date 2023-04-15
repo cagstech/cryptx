@@ -1,3 +1,4 @@
+
 /*
  *--------------------------------------
  * Program Name: DEMO
@@ -11,18 +12,18 @@
  * pycryptodomex's RSA module looks like this:
  
  
-	SEQUENCE {
-		RSAMetadata ::= SEQUENCE {
-			pkcs#1IdString		OBJECT IDENTIFIER
-			nullObject			NULL
-		}
-		RSAData ::= BIT STRING {
-			RSAPublicKey ::= SEQUENCE {
-				modulus           INTEGER,  -- n
-				publicExponent    INTEGER   -- e
-			}
-		}
-	}
+ SEQUENCE {
+ RSAMetadata ::= SEQUENCE {
+ pkcs#1IdString		OBJECT IDENTIFIER
+ nullObject			NULL
+ }
+ RSAData ::= BIT STRING {
+ RSAPublicKey ::= SEQUENCE {
+ modulus           INTEGER,  -- n
+ publicExponent    INTEGER   -- e
+ }
+ }
+ }
  
  *
  */
@@ -41,9 +42,10 @@ uint8_t asn1_demo[] = {0x30,0x81,0x9f,0x30,0x0d,0x06,0x09,0x2a,0x86,0x48,0x86,0x
 int main(void)
 {
 	struct cryptx_asn1_obj output[10] = {0};
-	struct cryptx_asn1_obj output2[10] = {0};
+	size_t returned;
+	asn1_error_t err;
 	sprintf(CEMU_CONSOLE, "\n\n----------------------------------\nENCODEX ASN.1 Decoder Demo\n");
-
+	
 	// parse ASN.1 encoded data
 	/*
 	 This call to asn1_decode will return 3 objects.
@@ -54,27 +56,15 @@ int main(void)
 	 deconstructed further, but the BIT STRING object does not have this tag set.
 	 You will need to then call asn1_decode on this object specifically to break it down further.
 	 */
-	size_t obj_ct = cryptx_asn1_decode(asn1_demo, sizeof asn1_demo, output, 10);
-	sprintf(CEMU_CONSOLE, "\nDecode complete, %u objects parsed.\n", obj_ct);
-	for(int i=0; i<obj_ct; i++)
-		sprintf(CEMU_CONSOLE, "Obj %u, Tag Id: %u, Size: %u, Addr: %u\n", i, output[i].tag, output[i].len, output[i].data);
+	err = cryptx_asn1_decode(asn1_demo, sizeof asn1_demo, output, &returned, asn1_pkcs8);
+	sprintf(CEMU_CONSOLE, "\nDecode complete, exit code %u.\n", err);
+	for(int i=0; i<returned; i++)
+		sprintf(CEMU_CONSOLE, "Obj %u, Tag Id: %u, Size: %u, Addr: %p\n", i, output[i].tag, output[i].len, output[i].data);
 	
-	/*
-	 For reasons unknown, DER encodes the integer modulus and public exponent as a BIT STRING
-	 with a single byte of 0x00 padding, followed by a SEQUENCE containing the modulus and
-	 exponent.
-	 Also the modulus itself is usually prepended with a single 0x00 byte as well.
-	 This call to asn1_decode will return 2 objects.
-	 1. modulus
-	 2. exponent
-	 */
-	obj_ct = cryptx_asn1_decode(output[2].data, output[2].len, output2, 10);
-	sprintf(CEMU_CONSOLE, "\nDecode complete, %u objects parsed.\n", obj_ct);
-	for(int i=0; i<obj_ct; i++)
-		sprintf(CEMU_CONSOLE, "Obj %u, Tag Id: %u, Size: %u, Addr: %u\n", i, output2[i].tag, output2[i].len, output2[i].data);
 	
 	
 	// Strip the first byte of modulus and you have the information you need for
 	// rsa_encrypt().
-    return 0;
+	return 0;
 }
+
