@@ -45,22 +45,36 @@
 			<div class="section">
 				<div class="minor-header">Abstract Syntax Notation One Encoding (ASN.1)</div>
 				<div class="section side-ruled">
-					<p>ASN.1 is a data encoding format common to cryptography in which data is represented as a series of objects consisting of a tag, object size, and object data. The most commonly occurring serialization format for ASN.1 is <span style="font-weight:bold">DER</span>, which stands for <span style="font-style:italic;">Distinguished Encoding Rules</span>.</p>
+					<p>ASN.1 is a data encoding format common to cryptography in which data is represented as a series of objects consisting of a tag, object size, and object data. The most commonly occurring serialization format for ASN.1 is <span style="font-weight:bold">DER</span>, which stands for <span style="font-style:italic;">Distinguished Encoding Rules</span>. The API is quite simple.</p>
 					
-					<pre class="code"><code class="language-c">// declare struct type for ASN.1 parsing
-						#define MAX_ELEMS	5
-						struct cryptx_asn1_obj output[MAX_ELEMS] = {0};
-						uint8_t asn1_data = { /* some random ASN.1 data here */ };
+					<pre class="code"><code class="language-c">uint8_t asn1_data = { /* some random ASN.1 data here */ };
+						struct cryptx_asn1_context asn1_state;&emsp;&emsp;// stateful parser context
+						asn1_error_t err;&emsp;&emsp;&emsp;&emsp;// track response codes from parser
+						uint8_t *ptr;&emsp;&emsp;&emsp;&emsp;// pointer to data for each element
+						size_t elem_len;&emsp;&emsp;&emsp;&emsp;// length of the element
+						uint8_t tag;&emsp;&emsp;&emsp;&emsp;// tag value of the element
+						uint8_t flags;&emsp;&emsp;&emsp;&emsp;// flags for the element
+						// note that the above are reserved variables for the API to update
 						
-						// each call to the decoder does a pass over the data,
-						// returning all parsable objects.
-						// automatic recursion occurs for any object with a constructed tag bit set.
-						size_t obj_ct = cryptx_asn1_decode(asn1_data, sizeof asn1_data, output, MAX_ELEMS);
+						// initialize the parser. Return if error.
+						// NEVER ignore errors from things. It's how you crash stuff.
+						err = cryptx_asn1_start(&asn1_state, asn1_demo, sizeof asn1_demo);
+						if(err != ASN1_OK) return 1;
+						
+						// loop until END-OF-FILE returned
+						while(err != ASN1_EOF){
+						&emsp;&emsp;err = cryptx_asn1_decode(&asn1_state, &ptr, &elem_len, &tag, &flags);
+						&emsp;&emsp;if(err) sprintf(CEMU_CONSOLE, "Decoder error %u\n", err);
+						&emsp;&emsp;else
+						&emsp;&emsp;&emsp;&emsp;printf("Object Data, Tag Id: %u, Flags: %u, Size: %u, Addr: %p\n", tag, flags, elem_len, ptr);
+						&emsp;&emsp;if(!CRYPTX_ASN1_ISCONSTRUCTED(flags))
+						&emsp;&emsp;&emsp;&emsp;// if the element is PRIMITIVE type, skip to avoid recursing into it
+						&emsp;&emsp;&emsp;&emsp;err = cryptx_asn1_next(&asn1_state);
+						}
 					</code></pre>
 					
-					<p>Additionally, ENCODEX provides an extension to the ASN.1 decoder specifically designed to handle key objects of the PKCS&num;8 format. This formatting specification is a bit weird because, as you can see below, the PublicKey is padded with a single zero byte, wrapped in a SEQUENCE element, and then encoded as a BIT STRING itself. This element is then indicated to be a primitive element, meaning that depending on the CONSTRUCTED bit won&apos;t help here. Of course one option is to call the encoder again on the PublicKey element yourself. The other option is to use the PKCS#8 ASN.1 extension provided.</p>
-					<pre class="code"><code class="language-c">/*
-						PKCS#8 encoding format for DER keys
+					<p>Below, I will describe the PKCS#8 (PKCS standing for <span style="font-style:italic;">Public Key Cryptographic Standards</span>) ASN.1 serialization format. This is a format commonly utilized by cryptography libraries for exporting public and private keys. If you output using a different serialization format, you will need to look it up to see how to use the decoding API to extract the information you need.</p>
+					<pre class="code"><code class="language-c">PKCS#8 encoding format for DER-encoded public keys
 						PublicKeyInfo ::= SEQUENCE {
 							&emsp;&emsp;algorithm       AlgorithmIdentifier :: SEQUENCE {
 							&emsp;&emsp;&emsp;&emsp;algorithm_id&emsp;&emsp;&emsp;&emsp;OBJECT IDENTIFIER,
@@ -68,33 +82,73 @@
 							&emsp;&emsp;}
 							&emsp;&emsp;PublicKey       BIT STRING
 						}
-						*/
 						
-						// declare struct type for ASN.1 parsing
-						struct cryptx_pkcs8_asn1_obj key_obj;
-						uint8_t asn1_data[] = { /* some PKCS#8 data here */ };
 						
-						cryptx_asn1_pkcs8_decode(asn1_data, sizeof asn1_data, &key_obj);
-						// key metadata can be extracted from `key_obj.publickeyinfo`
-						// public modulus and exponent can be extracted from `key_obj.publickey`
+						// Output of the CryptX ASN.1 API using the `asn1_demo` example
+						----------------------------------
+						ENCODEX ASN.1 Decoder Demo
+						
+						ASN.1 parser init complete. Exit code 0.
+						// PublicKeyInfo encapsulating SEQUENCE algorithm (CONSTRUCTED)
+						Object Data, Tag Id: 16, Flags: 1, Size: 159, Addr: d1ab80
+						// algorithm encapsulating algorithm_id, parameters (CONSTRUCTED)
+						Object Data, Tag Id: 16, Flags: 1, Size: 13, Addr: d1ab82
+						// algorithm_id (PRIMITIVE)
+						Object Data, Tag Id: 6, Flags: 0, Size: 9, Addr: d1ab84
+						// parameters (NULL FIELD) (PRIMITIVE)
+						Object Data, Tag Id: 5, Flags: 0, Size: 0, Addr: d1ab8f
+						// Public Key (PRIMITIVE)
+						Object Data, Tag Id: 3, Flags: 0, Size: 141, Addr: d1ab92
 						</code></pre>
 					
 					<dl>
-						<dt class="lib-ref">size_t cryptx_asn1_decode(<br />
-							&emsp;&emsp;&emsp;&emsp;void *asn1_data, size_t len,<br />
-							&emsp;&emsp;&emsp;&emsp;struct cryptx_asn1_obj* elements,<br />
-							&emsp;&emsp;&emsp;&emsp;size_t elements_len);</dt>
-						<dd>Decodes an ASN.1-encoded block of data into an array of structures that contain ASN.1 object metadata.<br />
-							<span class="param">asn1_data</span>: Pointer to data to decode.<br />
-							<span class="param">len</span>: Length of data to decode.<br />
-							<span class="param">elements</span>: Pointer to array of cryptx_asn1_obj structures.<br />
-							<span class="param">elements_len</span>: Length of objs array; Max number of ASN.1 objects to return.<br />
-							<span class="param">returns</span>: [size_t] Number of objects successfully returned.
+						<dt class="lib-ref">ASN.1 API Overview<hr />
+							&emsp;Response Codes
+							<table width="100%" style="margin-left:5%; font-size:12px;">
+								<col width="40%" />
+								<col width="60%" />
+								<tr><td>ASN1_OK</td><td>No error occurred</td></tr>
+								<tr><td>ASN1_EOF</td><td>End of data stream reached</td></tr>
+								<tr><td>AES_INVALID_ARG</td><td>One or more arguments invalid</td></tr>
+								<tr><td>ASN1_LEN_OVERFLOW</td><td>Element too long for architecture.<br />The parser will be unable to proceed.</td></tr>
+							</table>
+						</dt>
+						<dd></dd><br />
+						<dt class="lib-ref">asn1_error_t cryptx_asn1_start(struct cryptx_asn1_context *context, void *asn1_data, size_t len);</dt>
+						<dd>Initializes a stateful ASN.1 parser context.<br />
+							<span class="param">context</span>: Pointer to ASN.1 context.<br />
+							<span class="param">asn1_data</span>: Pointer to ASN.1-encoded data stream.<br />
+							<span class="param">len</span>: Length of data stream.<br />
+							<span class="param">returns</span>: [asn1_error_t] Status code returned by the parser initialization.
+						</dd><br />
+						<dt class="lib-ref">asn1_error_t cryptx_asn1_decode(<br />
+							&emsp;&emsp;&emsp;&emsp;struct cryptx_asn1_context *context,<br />
+							&emsp;&emsp;&emsp;&emsp;uint8_t **element_data, size_t *element_len,<br />
+							&emsp;&emsp;&emsp;&emsp;uint8_t *tag, uint8_t *flags);</dt>
+						<dd>Parses the data at the current operating offset for more elements, returning the next element found.<br />
+							<span class="param">context</span>: Pointer to ASN.1 context.<br />
+							<span class="param">element_data</span>: Pointer to address of data segment of next element found.<br />
+							<span class="param">element_len</span>: Pointer to length of next element found.<br />
+							<span class="param">tag</span>: Pointer to tag value of next element found, with high 3 bits stripped.<br />
+							<span class="param">flags</span>: Pointer to flags stripped from tag.<br />
+							<span class="param">returns</span>: [asn1_error_t] Status code returned by the parser initialization.
+							<div class="more-info">
+								element_data, element_len, tag, and flags are all modified by this function to reflect the metadata of the next element. If you need their values for later, save them before calling this function again.
+							</div>
+							<div class="more-info">
+								element_data is a pointer to the element data segment within the original block of ASN.1-encoded data. If you need that data, you can use <span style="font-family:monospace;">memcpy(dest, *element_data, element_len);</span> to read it elsewhere, or just access it in place. This will depend on what you do with the original data buffer after decoding.
+							</div>
+							<div class="alert">
+								Calling this function on an element with no data inside it (PRIMITIVE) can result in undefined behavior from returning ASN1_LEN_OVERFLOW or ASN1_EOF to just returning an invalid object. <span class="font-weight:bold;">If the element is of type PRIMITIVE, call cryptx_asn1_next() before the next call to this function.</span><br /><br />
+								<span style="font-weight:bold;">There is one exception to this. The PublicKey element within the PKCS&num;8 standardization is actually a PKCS&num;1 PublicKey structure with a zero byte prepended and then encoded as a primitive BIT STRING.</span> In this particular case, it is safe to call this function on that element to recurse into the PublicKey structure and extract the public modulus and exponent of your key.
+							</div>
+						</dd><br />
+						<dt class="lib-ref">asn1_error_t cryptx_asn1_next(struct cryptx_asn1_context *context);</dt>
+						<dd>Advances the current operating offset to move to the next element of the same parser level.<br />
+							<span class="param">context</span>: Pointer to ASN.1 context.<br />
+							<span class="param">returns</span>: [asn1_error_t] Status code returned by the parser initialization.
 						</dd>
 					</dl>
-					<div class="more-info">
-						Metadata returned into the array of ASN.1 objects includes a pointer to the data portion of the object within the original input string <span style="font-family:monospace;">*asn1_data</span>. Therefore the original data block needs to preserved until all decoded objects are no longer needed.
-					</div>
 				</div><br />
 				<div class="minor-header">Base 64 Encoding</div>
 				<div class="section side-ruled">
