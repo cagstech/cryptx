@@ -141,7 +141,7 @@
 								element_data is a pointer to the element data segment within the original block of ASN.1-encoded data. If you need that data, you can use <span style="font-family:monospace;">memcpy(dest, *element_data, element_len);</span> to read it elsewhere, or just access it in place. This will depend on what you do with the original data buffer after decoding.
 							</div>
 							<div class="alert">
-								Calling this function on an element with no data inside it (PRIMITIVE) can result in undefined behavior from returning ASN1_LEN_OVERFLOW or ASN1_EOF to just returning an invalid object. <span class="font-weight:bold;">If the element is of type PRIMITIVE, call cryptx_asn1_next() before the next call to this function.</span><br /><br />
+								Calling this function on an element with no elements inside it (PRIMITIVE) can result in undefined behavior from returning ASN1_LEN_OVERFLOW or ASN1_EOF to just returning an invalid object. <span class="font-weight:bold;">If the element is of type PRIMITIVE, call cryptx_asn1_next() before the next call to this function.</span><br /><br />
 								<span style="font-weight:bold;">There is one exception to this. The PublicKey element within the PKCS&num;8 standardization is actually a PKCS&num;1 PublicKey structure with a zero byte prepended and then encoded as a primitive BIT STRING.</span> In this particular case, it is safe to call this function on that element to recurse into the PublicKey structure and extract the public modulus and exponent of your key.
 							</div>
 						</dd><br />
