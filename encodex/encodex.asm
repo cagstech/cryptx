@@ -40,58 +40,57 @@ _rmemcpy:
 
 
 asn1_decode:
-	ld	hl, -25
+	ld	hl, -18
 	call	ti._frameset
-	ld	iy, (ix + 6)
+	ld	hl, (ix + 6)
 	ld	de, (ix + 9)
 	ld	bc, 0
-	lea	hl, iy
-	add	hl, de
-	ld	a, (iy)
-	or	a, a
-	jr	z, .lbl_2
-	ld	de, 0
-	jr	.lbl_3
-.lbl_2:
-	ld	de, 1
-.lbl_3:
-	add	iy, de
-	ex	de, hl
-	ld	(ix - 6), bc
-.lbl_4:
-	lea	hl, iy
-	or	a, a
-	sbc	hl, de
-	jp	nc, .lbl_17
-	ld	(ix - 18), de
-	ld	de, (ix - 6)
-	push	de
-	pop	hl
-	ld	bc, 9
-	call	ti._imulu
-	push	de
-	pop	bc
 	push	hl
-	pop	de
-	ld	hl, (ix + 12)
-	add	hl, de
-	ld	(ix - 12), hl
-	ld	hl, (ix + 18)
+	pop	iy
+	add	iy, de
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	ld	a, 0
-	jr	z, .lbl_7
-	ld	hl, (ix + 18)
+	jp	z, .lbl_17
+	ex	de, hl
 	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	z, .lbl_17
+	ld	hl, (ix + 6)
 	ld	a, (hl)
-.lbl_7:
-	ld	(ix - 25), a
-	ld	a, (iy)
-	ld	(ix - 15), a
-	lea	hl, iy + 2
-	ld	(ix - 9), hl
-	ld	a, (iy + 1)
+	or	a, a
+	jr	z, .lbl_4
+	ld	de, 0
+	jr	.lbl_5
+.lbl_4:
+	ld	de, 1
+.lbl_5:
+	ld	hl, (ix + 6)
+	add	hl, de
+	push	bc
+	pop	de
+	lea	bc, iy
+	push	hl
+	pop	iy
+.lbl_6:
+	lea	hl, iy
+	or	a, a
+	sbc	hl, bc
+	jp	nc, .lbl_16
+	ld	(ix - 3), iy
+	push	bc
+	pop	iy
+	push	de
+	pop	hl
+	push	de
+	pop	bc
+	ld	de, (ix + 15)
+	or	a, a
+	sbc	hl, de
+	jp	nc, .lbl_17
+	ld	(ix - 12), iy
+	ld	(ix - 6), bc
 	push	bc
 	pop	hl
 	ld	bc, 9
@@ -99,133 +98,128 @@ asn1_decode:
 	push	hl
 	pop	de
 	ld	hl, (ix + 12)
+	ld	iy, (ix - 3)
+	add	hl, de
+	ld	c, (iy)
+	lea	de, iy + 2
+	ld	a, (iy + 1)
 	push	hl
 	pop	iy
-	add	iy, de
 	or	a, a
 	sbc	hl, hl
 	ld	(iy + 3), hl
 	cp	a, b
 	call	pe, ti._setflag
-	jp	m, .lbl_9
+	ld	(ix - 15), iy
+	jp	m, .lbl_10
 	or	a, a
 	sbc	hl, hl
 	ld	l, a
-	ld	(ix - 24), hl
+	ld	(ix - 3), hl
 	ld	(iy + 3), hl
-	jr	.lbl_11
-.lbl_9:
+	ld	(ix - 9), de
+	jr	.lbl_12
+.lbl_10:
 	and	a, 127
 	cp	a, 4
-	jp	nc, .lbl_19
+	jp	nc, .lbl_18
 	or	a, a
 	sbc	hl, hl
+	ld	(ix - 3), hl
+	ld	hl, (ix - 3)
 	ld	l, a
-	ld	(ix - 21), hl
+	ld	(ix - 3), hl
+	ld	hl, (ix - 3)
 	push	hl
-	ld	hl, (ix - 9)
-	push	hl
+	ld	(ix - 9), de
+	push	de
 	pea	iy + 3
-	ld	(ix - 24), iy
+	ld	(ix - 18), c
 	call	_rmemcpy
+	ld	c, (ix - 18)
+	ld	iy, (ix - 15)
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	de, (ix - 21)
+	ld	de, (ix - 3)
 	ld	hl, (ix - 9)
 	add	hl, de
 	ld	(ix - 9), hl
-	ld	iy, (ix - 24)
 	ld	hl, (iy + 3)
-	ld	(ix - 24), hl
-.lbl_11:
-	ld	e, (ix - 15)
-	ld	a, e
+	ld	(ix - 3), hl
+.lbl_12:
+	ld	a, c
 	and	a, 31
-	ld	hl, (ix - 12)
-	ld	(hl), a
+	ld	(iy), a
+	ld	a, c
+	ld	b, 5
+	call	ti._bshru
+	and	a, 1
+	ld	e, a
 	ld	hl, (ix - 6)
+	ld	a, c
 	ld	bc, 9
 	call	ti._imulu
 	push	hl
 	pop	bc
 	ld	iy, (ix + 12)
 	add	iy, bc
-	ld	a, e
-	ld	b, 5
-	call	ti._bshru
-	and	a, 1
-	ld	(ix - 21), a
-	ld	(iy + 2), a
-	ld	a, e
-	inc	b
+	ld	(iy + 2), e
+	ld	b, 6
 	call	ti._bshru
 	ld	(iy + 1), a
-	ld	bc, (ix - 9)
-	ld	(iy + 6), bc
-	push	bc
-	pop	hl
-	ld	de, (ix - 24)
-	add	hl, de
-	ld	(ix - 15), hl
-	bit	0, (ix - 21)
-	jr	nz, .lbl_13
-	ld	a, (ix - 25)
-	cp	a, 1
-	jr	nz, .lbl_15
-.lbl_13:
-	ld	hl, 0
-	push	hl
-	pea	ix - 3
-	ld	hl, (ix - 12)
-	push	hl
-	push	de
-	push	bc
-	call	asn1_decode
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	ld	bc, (ix - 6)
-	push	bc
-	pop	iy
-	dec	iy
-	ld	de, (ix - 3)
-	add	iy, de
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	push	bc
-	pop	hl
-	jr	z, .lbl_16
+	ld	hl, (ix - 9)
+	ld	(iy + 6), hl
 	push	hl
 	pop	iy
-	jr	.lbl_16
-.lbl_15:
-	ld	iy, (ix - 6)
-.lbl_16:
-	ld	bc, 0
-	ld	de, (ix - 18)
-	ld	hl, (ix - 15)
-	inc	iy
-	ld	(ix - 6), iy
+	ld	bc, (ix - 3)
+	add	iy, bc
+	ld	(ix - 18), iy
+	bit	0, e
 	push	hl
 	pop	iy
-	jp	.lbl_4
-.lbl_17:
+	jr	nz, .lbl_14
+	ld	bc, (ix - 12)
+	ld	de, (ix - 6)
+	jr	.lbl_15
+.lbl_14:
 	ld	hl, (ix + 15)
 	ld	de, (ix - 6)
-	ld	(hl), de
-.lbl_18:
+	or	a, a
+	sbc	hl, de
+	push	hl
+	ld	hl, (ix - 15)
+	push	hl
+	push	bc
+	push	iy
+	call	asn1_decode
+	push	hl
+	pop	de
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 6)
+	dec	hl
+	add	hl, de
+	ex	de, hl
+	ld	bc, (ix - 12)
+.lbl_15:
+	ld	iy, (ix - 18)
+	inc	de
+	jp	.lbl_6
+.lbl_16:
+	push	de
+	pop	bc
+.lbl_17:
 	push	bc
 	pop	hl
 	ld	sp, ix
 	pop	ix
 	ret
-.lbl_19:
+.lbl_18:
 	ld	bc, 1
-	jr	.lbl_18
+	jr	.lbl_17
 	
 
 base64_encode:

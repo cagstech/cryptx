@@ -33,7 +33,7 @@
 struct cryptx_asn1_obj {
 	uint8_t tag;			/**< Defines the ASN.1 element basic tag (low 5 bits of the id). See @b ASN1_TYPES. */
 	uint8_t f_class;		/**< Defines the ASN.1 class (high 2 bits of the id). See @b ASN1_CLASSES. */
-	bool f_form;			/**< Defines the ASN.1 construction scheme (bit 5 of the id). See @b ASN1_FORMS. */
+	uint8_t f_form;			/**< Defines the ASN.1 construction scheme (bit 5 of the id). See @b ASN1_FORMS. */
 	size_t len;				/**< Defines the length of the data portion of the element */
 	uint8_t *data;			/**< Defines a pointer to the data portion of the element */
 };
@@ -98,15 +98,6 @@ enum CRYPTX_ASN1_FORMS {
 	ASN1_CONSTRUCTED		/**< data type composed of multiple primitive data types. */
 };
 
-
-uint8_t asn1_pkcs8[] = {0, 0, 1};
-
-typedef enum {
-	ASN1_OK,
-	ASN1_ARCH_BAD_LEN,
-	ASN1_SPEC_MISMATCH
-} asn1_error_t;
-
 /****************************************************************
  * @brief Parses ASN.1 encoded data and returns metadata into an array of structs.
  * @note This function is recursive for any element of @b constructed form.
@@ -116,14 +107,46 @@ typedef enum {
  * and public exponent. See the asn1\_decode demo for details.
  * @param asn1_data Pointer to ASN.1-encoded data.
  * @param len The length of the encoded data.
- * @param objs Pointer to an array of @b asn1_obj_t structs to fill with decoded data.
- * @param iter_count Maximum number of ASN.1 elements to process before returning.
+ * @param elements Pointer to an array of @b cryptx_asn1_obj structs to fill with decoded data.
+ * @param elements_len Maximum number of ASN.1 elements to process before returning.
  * @returns The number of objects returned by the parser. Zero indicates an error.
  */
-asn1_error_t cryptx_asn1_decode(
+size_t cryptx_asn1_decode(
 					void *asn1_data, size_t len,
-					struct cryptx_asn1_obj* objs, size_t *objects_returned,
-					uint8_t *spec);
+					struct cryptx_asn1_obj* elements, size_t elements_len);
+
+/**********************************************************
+ * PKCS#8 ASN.1 Specification
+ * This is an API extension for decoding PKCS#8 public keys. It expects the following
+ * ASN.1 data  structure:
+ * @code
+ * PublicKeyInfo ::= SEQUENCE {
+ * 		algorithm		AlgorithmIdentifier :: SEQUENCE {
+ * 			algorithm_id    OBJECT IDENTIFIER,
+ * 			parameters      ANY DEFINED BY algorithm OPTIONAL [often NULL]
+ * 		}
+ * 		PublicKey		BIT STRING
+ * }
+ * @endcode
+ */
+
+/// Defines a complex structure for outputting PKCS#8 key data.
+struct cryptx_pkcs8_asn1_obj {
+	struct cryptx_asn1_obj publickeyinfo[3];		/**< holds object refs for algorithm id, parameters, and public key bit string */
+	struct cryptx_asn1_obj publickey[2];			/**< holds object refs for public modulus and public exponent */
+};
+
+/****************************************************************
+ * @brief Decodes a PKCS#8-encoded public key
+ * @param data Pointer to encoded data.
+ * @param len The length of the encoded data.
+ * @param obj Pointer to a specialized PKCS#8 output structure.
+ */
+static void cryptx_asn1_pkcs8_decode(void *data, size_t len, struct cryptx_pkcs8_asn1_obj *obj){
+	cryptx_asn1_decode(data, datalen, obj->publickeyinfo, 3);
+	cryptx_asn1_decode(obj->publickeyinfo[2].data, obj->publickeyinfo[2].len, obj->publickey, 2);
+}
+
 
 //**************************************************************************************
 /*	Base64 Parsing

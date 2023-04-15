@@ -42,8 +42,6 @@ uint8_t asn1_demo[] = {0x30,0x81,0x9f,0x30,0x0d,0x06,0x09,0x2a,0x86,0x48,0x86,0x
 int main(void)
 {
 	struct cryptx_asn1_obj output[10] = {0};
-	size_t returned;
-	asn1_error_t err;
 	sprintf(CEMU_CONSOLE, "\n\n----------------------------------\nENCODEX ASN.1 Decoder Demo\n");
 	
 	// parse ASN.1 encoded data
@@ -56,12 +54,19 @@ int main(void)
 	 deconstructed further, but the BIT STRING object does not have this tag set.
 	 You will need to then call asn1_decode on this object specifically to break it down further.
 	 */
-	err = cryptx_asn1_decode(asn1_demo, sizeof asn1_demo, output, &returned, asn1_pkcs8);
-	sprintf(CEMU_CONSOLE, "\nDecode complete, exit code %u.\n", err);
-	for(int i=0; i<returned; i++)
+	size_t out_ct = cryptx_asn1_decode(asn1_demo, sizeof asn1_demo, output, sizeof output);
+	sprintf(CEMU_CONSOLE, "\nDecode complete.\n");
+	for(int i=0; i<out_ct; i++)
 		sprintf(CEMU_CONSOLE, "Obj %u, Tag Id: %u, Size: %u, Addr: %p\n", i, output[i].tag, output[i].len, output[i].data);
 	
 	
+	// An extension to the ASN.1 decoder specifically designed to handle key objects of the PKCS#8 format.
+	struct cryptx_pkcs8_asn1_obj keydata;
+	cryptx_asn1_pkcs8_decode(asn1_demo, sizeof asn1_demo, &keydata);
+	for(int i=0; i<3; i++)
+		sprintf(CEMU_CONSOLE, "Obj %u, Tag Id: %u, Size: %u, Addr: %p\n", i, keydata.publickeyinfo[i].tag, keydata.publickeyinfo[i].len, keydata.publickeyinfo[i].data);
+	for(int i=0; i<2; i++)
+		sprintf(CEMU_CONSOLE, "Obj %u, Tag Id: %u, Size: %u, Addr: %p\n", i, keydata.publickey[i].tag, keydata.publickey[i].len, keydata.publickey[i].data);
 	
 	// Strip the first byte of modulus and you have the information you need for
 	// rsa_encrypt().
