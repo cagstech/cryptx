@@ -65,10 +65,12 @@ typedef struct _aes_gcm {
 	uint8_t last_block[16];
 	uint8_t ghash_key[16];
 	uint8_t aad_cache[16];
+	uint8_t auth_tag[16];
+	uint8_t auth_j0[16];
 	uint8_t aad_cache_len;
 	size_t aad_len;
-	uint8_t auth_tag[16];
-	uint8_t auth_digest[16];
+	size_t ct_len;
+	uint8_t gcm_op;
 } aes_gcm_t;
 
 typedef struct _aes_keyschedule_ctx {
@@ -126,7 +128,8 @@ typedef enum {
 	AES_INVALID_CIPHERMODE,
 	AES_INVALID_PADDINGMODE,
 	AES_INVALID_CIPHERTEXT,
-	AES_INVALID_OPERATION
+	AES_INVALID_OPERATION,
+	AES_BLOCK_THRESHOLD_EXCEEDED
 } aes_error_t;
 
 typedef enum {
@@ -1100,6 +1103,48 @@ enum _aes_op_assoc {
 	AES_OP_ENCRYPT,
 	AES_OP_DECRYPT
 };
+#define AES_GCM_NONCE_LEN 12
+#define AES_GCM_CTR_LEN 4
+#define AES_GCM_POLY 0xe1 // polynomial used in AES-GCM
+
+void gf128_mul(uint8_t *a, const uint8_t *b, uint8_t *c)
+{
+	uint8_t v[16] = {0};
+	uint8_t z[16] = {0};
+	uint8_t hibit = 0;
+	int i, j;
+	
+	for (i = 0; i < 16; i++) {
+		for (j = 0; j < 8; j++) {
+			if (b[i] & (1 << j)) {
+				xor_buf(&a[15 - i], v, 16);
+			}
+		}
+	}
+	
+	for (i = 0; i < 16; i++) {
+		for (j = 0; j < 8; j++) {
+			if (a[i] & (1 << j)) {
+				xor_buf(&v[15 - i], z, 16);
+			}
+		}
+	}
+	
+	for (i = 0; i < 16; i++) {
+		c[i] = z[15 - i];
+	}
+	
+	for (i = 0; i < 15; i++) {
+		if (a[i] & 0x80) {
+			hibit = 1;
+		}
+	}
+	
+	if (hibit) {
+		uint8_t r[16] = {0x87, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		xor_buf(r, c, 16);
+	}
+}
 
 #define ghash_start(buf)	memset((buf), 0, 16)
 
@@ -1125,7 +1170,7 @@ void ghash(aes_ctx *ctx, uint8_t *out_buf, const uint8_t *data, size_t len)
 			memcpy(tbuf, ctx->mode.gcm.aad_cache, cache_len);
 			memcpy(&tbuf[cache_len], data, data_offset);
 			xor_buf(tbuf, out_buf, AES_BLOCK_SIZE);
-			aes_gf2_mul(out_buf, out_buf, ctx->mode.gcm.ghash_key);
+			gf128_mul(out_buf, ctx->mode.gcm.ghash_key, out_buf);
 			ctx->mode.gcm.aad_cache_len = 0;
 		}
 	}
@@ -1143,7 +1188,7 @@ void ghash(aes_ctx *ctx, uint8_t *out_buf, const uint8_t *data, size_t len)
 			// if aad_len >= block size, update hash for block
 			memcpy(tbuf, &data[idx], AES_BLOCK_SIZE);
 			xor_buf(tbuf, out_buf, AES_BLOCK_SIZE);
-			aes_gf2_mul(out_buf, out_buf, ctx->mode.gcm.ghash_key);
+			gf128_mul(out_buf, ctx->mode.gcm.ghash_key, out_buf);
 		}
 	}
 }
@@ -1167,7 +1212,10 @@ void aes_gcm_prepare_iv(aes_ctx *ctx, const uint8_t *iv, size_t iv_len)
 		// hash the IV. Pad to block size
 		memset(tbuf, 0, AES_BLOCK_SIZE);
 		memcpy(tbuf, iv, iv_len);
+		memset(ctx->iv, 0, AES_BLOCK_SIZE);
 		ghash(ctx, ctx->iv, tbuf, sizeof(tbuf));
+		//xor_buf(tbuf, ctx->iv, AES_BLOCK_SIZE);
+		//gf128_mul(out_buf, ctx->mode.gcm.ghash_key, out_buf);
 		
 		memset(tbuf, 0, AES_BLOCK_SIZE>>1);
 		bytelen_to_bitlen(iv_len, &tbuf[8]);		// outputs in BE
@@ -1237,13 +1285,23 @@ aes_error_t hashlib_AESLoadKey(aes_ctx* ctx, const BYTE key[], size_t keysize, u
 		// sort out IV wonkiness in GCM mode
 		aes_gcm_prepare_iv(ctx, iv, iv_len);
 		memset(ctx->mode.gcm.auth_tag, 0, AES_BLOCK_SIZE);
+		memcpy(ctx->mode.gcm.auth_j0, ctx->iv, AES_BLOCK_SIZE);
+		increment_iv(ctx->iv, AES_GCM_NONCE_LEN, AES_GCM_CTR_LEN);
 	}
 	
 	return AES_OK;
 }
 
+enum GCM_OPS_ALLOWED {
+	GCM_ALLOW_AAD,
+	GCM_ALLOW_ENCRYPT,
+	GCM_ALLOW_NONE
+};
+
+
 aes_error_t cryptx_aes_update_aad(aes_ctx* ctx, uint8_t *aad, size_t aad_len){
 	if(ctx->cipher_mode != AES_GCM) return AES_INVALID_OPERATION;
+	if(ctx->mode.gcm.gcm_op > GCM_ALLOW_AAD) return AES_INVALID_OPERATION;
 	
 	// update the tag for full blocks of aad in input, cache any partial blocks
 	ghash(ctx, ctx->mode.gcm.auth_tag, aad, aad_len);
@@ -1254,35 +1312,42 @@ aes_error_t cryptx_aes_update_aad(aes_ctx* ctx, uint8_t *aad, size_t aad_len){
 aes_error_t cryptx_aes_digest(aes_ctx* ctx, uint8_t* digest){
 	if( (ctx == NULL) || (digest == NULL)) return AES_INVALID_ARG;
 	if(ctx->cipher_mode != AES_GCM) return AES_INVALID_CIPHERMODE;
-	memcpy(digest, ctx->mode.gcm.auth_digest, AES_BLOCK_SIZE);
+	ctx->mode.gcm.gcm_op = GCM_ALLOW_NONE;
+	uint8_t tbuf[AES_BLOCK_SIZE];
+	uint8_t *tag = ctx->mode.gcm.auth_tag;
+	
+	// pad rest of ciphertext cache with 0s
+	memset(tbuf, 0, AES_BLOCK_SIZE);
+	ghash(ctx, tag, tbuf, AES_BLOCK_SIZE - ctx->mode.gcm.aad_cache_len);
+	// at this point, tag should be GHASH(0-padded aad || 0-padded ciphertext)
+	
+	// final tag computed as GHASH( 0-padded aad || 0-padded ciphertext || u64-be-aad-len || u64-be-ciphertext-len)
+	bytelen_to_bitlen(ctx->mode.gcm.aad_len, tbuf);
+	bytelen_to_bitlen(ctx->mode.gcm.ct_len, &tbuf[8]);
+	ghash(ctx, tag, tbuf, AES_BLOCK_SIZE);
+	
+	// encrypt auth tag with CTR0
+	aes_encrypt_block(ctx->mode.gcm.auth_j0, tbuf, ctx);
+	xor_buf(tag, tbuf, AES_BLOCK_SIZE);
+	
+	memcpy(digest, tbuf, AES_BLOCK_SIZE);
 	return AES_OK;
 }
 
-
-aes_error_t cryptx_aes_encrypt_and_digest(
-										  aes_ctx *ctx,
-										  uint8_t *plaintxt, size_t plaintxt_len,
-										  uint8_t *aad, size_t aad_len,
-										  uint8_t *ciphertxt, uint8_t *digest
-										  ){
+bool cryptx_aes_verify(aes_ctx *ctx, uint8_t *aad, size_t aad_len, uint8_t *ciphertext, size_t ciphertext_len, uint8_t *tag){
+	aes_ctx tmp;
+	uint8_t digest[AES_BLOCK_SIZE];
 	
-	if(
-	   (ctx==NULL) ||
-	   (plaintxt==NULL) ||
-	   (plaintxt_len==0) ||
-	   (ciphertxt==NULL) ||
-	   (digest==NULL)) return AES_INVALID_ARG;
+	// do this work on a copy of ctx
+	memcpy(&tmp, ctx, sizeof(tmp));
 	
-	if(ctx->cipher_mode != AES_GCM) return AES_INVALID_CIPHERMODE;
-	aes_error_t internal_resp;
+	cryptx_aes_update_aad(&tmp, aad, aad_len);
+	hashlib_AESDecrypt(&tmp, ciphertext, ciphertext_len, NULL);
+	cryptx_aes_digest(&tmp, digest);
 	
-	cryptx_aes_update_aad(ctx, aad, aad_len);
-	internal_resp = hashlib_AESEncrypt(ctx, plaintxt, plaintxt_len, ciphertxt);
-	memcpy(digest, ctx->mode.gcm.auth_digest, AES_BLOCK_SIZE);
-	
-	return internal_resp;
+	//memset(&tmp, 0, sizeof(tmp));
+	return cryptx_digest_compare(tag, digest, AES_BLOCK_SIZE);
 }
-
 
 #define AES_BLOCKSIZE 16
 static const char iso_pad[] = {0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
@@ -1293,6 +1358,7 @@ aes_error_t hashlib_AESEncrypt(aes_ctx* ctx, const BYTE in[], size_t in_len, BYT
 	//int keysize = key->keysize;
 	//uint32_t *round_keys = key->round_keys;
 	int blocks, idx;
+	aes_error_t rv = AES_OK;
 	
 	if(ctx->op_assoc == AES_OP_DECRYPT) return AES_INVALID_OPERATION;
 	ctx->op_assoc = AES_OP_ENCRYPT;
@@ -1334,7 +1400,7 @@ aes_error_t hashlib_AESEncrypt(aes_ctx* ctx, const BYTE in[], size_t in_len, BYT
 			}
 			// encrypt message in CTR mode
 			for(idx = 0; idx <= blocks; idx++){
-				bytes_to_copy = MIN(AES_BLOCK_SIZE, in_len - (idx * AES_BLOCK_SIZE));
+				bytes_to_copy = MIN(AES_BLOCK_SIZE, in_len - bytes_offset - (idx * AES_BLOCK_SIZE));
 				//bytes_to_pad = AES_BLOCK_SIZE-bytes_to_copy;
 				memcpy(&out[idx*AES_BLOCK_SIZE+bytes_offset], &in[idx*AES_BLOCK_SIZE+bytes_offset], bytes_to_copy);
 				// memset(&buf[bytes_to_copy], 0, bytes_to_pad);        // if bytes_to_copy is less than blocksize, do nothing, since msg is truncated anyway
@@ -1350,21 +1416,17 @@ aes_error_t hashlib_AESEncrypt(aes_ctx* ctx, const BYTE in[], size_t in_len, BYT
 		}
 		case AES_GCM:
 		{
-#define AES_GCM_NONCE_LEN 12
-#define AES_GCM_CTR_LEN 4
-			uint8_t tbuf[AES_BLOCK_SIZE];
-			uint8_t c0[AES_BLOCK_SIZE];
 			uint8_t *tag = ctx->mode.gcm.auth_tag;
 			size_t bytes_to_copy = ctx->mode.gcm.last_block_stop;
 			size_t bytes_offset = 0;
-			
-			// save a copy of CTR0
-			memcpy(c0, iv, AES_BLOCK_SIZE);
-			
-			// pad rest of aad cache with 0's
-			memset(tbuf, 0, AES_BLOCK_SIZE);
-			ghash(ctx, tag, tbuf, AES_BLOCK_SIZE - ctx->mode.gcm.aad_cache_len);
-			
+			if(ctx->mode.gcm.gcm_op > GCM_ALLOW_ENCRYPT) return AES_INVALID_OPERATION;
+			if((ctx->mode.gcm.gcm_op == GCM_ALLOW_AAD) &&
+			   (ctx->mode.gcm.aad_cache_len)){
+				// pad rest of aad cache with 0's
+				memset(buf, 0, AES_BLOCK_SIZE);
+				ghash(ctx, tag, buf, AES_BLOCK_SIZE - ctx->mode.gcm.aad_cache_len);
+			}
+			ctx->mode.gcm.gcm_op = GCM_ALLOW_ENCRYPT;
 			// xor last bytes of encryption buf w/ new plaintext for new ciphertext
 			if(bytes_to_copy%AES_BLOCK_SIZE){
 				bytes_offset = AES_BLOCK_SIZE - bytes_to_copy;
@@ -1374,17 +1436,14 @@ aes_error_t hashlib_AESEncrypt(aes_ctx* ctx, const BYTE in[], size_t in_len, BYT
 				
 			}
 			
-			// start at CTR1
-			increment_iv(iv, AES_GCM_NONCE_LEN, AES_GCM_CTR_LEN);
-			
 			// encrypt remaining plaintext
 			for(idx = 0; idx <= blocks; idx++){
-				bytes_to_copy = MIN(AES_BLOCK_SIZE, in_len - (idx * AES_BLOCK_SIZE));
+				bytes_to_copy = MIN(AES_BLOCK_SIZE, in_len - bytes_offset - (idx * AES_BLOCK_SIZE));
 				//bytes_to_pad = AES_BLOCK_SIZE-bytes_to_copy;
 				memcpy(&out[idx*AES_BLOCK_SIZE+bytes_offset], &in[idx*AES_BLOCK_SIZE+bytes_offset], bytes_to_copy);
 				// memset(&buf[bytes_to_copy], 0, bytes_to_pad);        // if bytes_to_copy is less than blocksize, do nothing, since msg is truncated anyway
-				aes_encrypt_block(iv, tbuf, ctx);
-				xor_buf(tbuf, &out[idx*AES_BLOCK_SIZE+bytes_offset], bytes_to_copy);
+				aes_encrypt_block(iv, buf, ctx);
+				xor_buf(buf, &out[idx*AES_BLOCK_SIZE+bytes_offset], bytes_to_copy);
 				increment_iv(iv, AES_GCM_NONCE_LEN, AES_GCM_CTR_LEN);        // increment iv for continued use
 				if(idx==blocks){
 					memcpy(ctx->mode.gcm.last_block, buf, AES_BLOCK_SIZE);
@@ -1394,21 +1453,7 @@ aes_error_t hashlib_AESEncrypt(aes_ctx* ctx, const BYTE in[], size_t in_len, BYT
 			
 			// authenticate the ciphertext
 			ghash(ctx, tag, out, in_len);
-			
-			// pad rest of ciphertext cache with 0s
-			memset(tbuf, 0, AES_BLOCK_SIZE);
-			ghash(ctx, tag, tbuf, AES_BLOCK_SIZE - ctx->mode.gcm.aad_cache_len);
-			// at this point, tag should be GHASH(0-padded aad || 0-padded ciphertext)
-			
-			// final tag computed as GHASH( 0-padded aad || 0-padded ciphertext || u64-be-aad-len || u64-be-ciphertext-len)
-			bytelen_to_bitlen(ctx->mode.gcm.aad_len, tbuf);
-			bytelen_to_bitlen(in_len, &tbuf[8]);
-			ghash(ctx, tag, tbuf, AES_BLOCK_SIZE);
-			
-			// encrypt auth tag with CTR0
-			aes_encrypt_block(c0, c0, ctx);
-			memcpy(ctx->mode.gcm.auth_digest, tag, AES_BLOCK_SIZE);
-			xor_buf(c0, ctx->mode.gcm.auth_digest, AES_BLOCK_SIZE);
+			ctx->mode.gcm.ct_len += in_len;
 			
 			break;
 			
@@ -1418,27 +1463,29 @@ aes_error_t hashlib_AESEncrypt(aes_ctx* ctx, const BYTE in[], size_t in_len, BYT
 			
 	}
 	//memcpy(iv, iv_buf, sizeof iv_buf);
-	return AES_OK;
+	return rv;
 }
+
 
 aes_error_t hashlib_AESDecrypt(aes_ctx* ctx, const BYTE in[], size_t in_len, BYTE out[])
 {
 	BYTE buf_in[AES_BLOCK_SIZE], buf_out[AES_BLOCK_SIZE];
 	uint8_t* iv = ctx->iv;
+	aes_error_t rv = AES_OK;
 	//int keysize = key->keysize;
 	//uint32_t *round_keys = key->round_keys;
-	int blocks, idx;
+	int blocks = in_len / AES_BLOCK_SIZE, idx;
+	if((out == NULL) && (ctx->cipher_mode != AES_GCM)) return AES_INVALID_ARG;
 	
 	if(ctx->op_assoc == AES_OP_ENCRYPT) return AES_INVALID_OPERATION;
 	ctx->op_assoc = AES_OP_DECRYPT;
 	
-	if(in==NULL || out==NULL || ctx==NULL) return AES_INVALID_ARG;
+	if(in==NULL || ctx==NULL) return AES_INVALID_ARG;
 	if(in_len == 0) return AES_INVALID_CIPHERTEXT;
 	
 	switch(ctx->cipher_mode){
 		case AES_CBC:
 			if((in_len % AES_BLOCK_SIZE) != 0) return AES_INVALID_CIPHERTEXT;
-			blocks = in_len / AES_BLOCK_SIZE;
 			//memcpy(iv_buf, iv, AES_BLOCK_SIZE);
 			
 			for (idx = 0; idx < blocks; idx++) {
@@ -1459,7 +1506,45 @@ aes_error_t hashlib_AESDecrypt(aes_ctx* ctx, const BYTE in[], size_t in_len, BYT
 			
 		case AES_GCM:
 		{
+			uint8_t *tag = ctx->mode.gcm.auth_tag;
+			size_t bytes_to_copy = ctx->mode.gcm.last_block_stop;
+			size_t bytes_offset = 0;
+			if(ctx->mode.gcm.gcm_op > GCM_ALLOW_ENCRYPT) return AES_INVALID_OPERATION;
+			if((ctx->mode.gcm.gcm_op == GCM_ALLOW_AAD) &&
+			   (ctx->mode.gcm.aad_cache_len)){
+				// pad rest of aad cache with 0's
+				memset(buf_in, 0, AES_BLOCK_SIZE);
+				ghash(ctx, tag, buf_in, AES_BLOCK_SIZE - ctx->mode.gcm.aad_cache_len);
+			}
+			ghash(ctx, tag, in, in_len);
+			ctx->mode.gcm.ct_len += in_len;
+			
+			if(out){
+				ctx->mode.gcm.gcm_op = GCM_ALLOW_ENCRYPT;
+				if(bytes_to_copy%AES_BLOCK_SIZE){
+					bytes_offset = AES_BLOCK_SIZE - bytes_to_copy;
+					memcpy(out, in, bytes_offset);
+					xor_buf(&ctx->mode.gcm.last_block[bytes_to_copy], out, bytes_offset);
+					blocks = ((in_len - bytes_offset) / AES_BLOCK_SIZE);
+				}
+				
+				// encrypt remaining plaintext
+				for(idx = 0; idx <= blocks; idx++){
+					bytes_to_copy = MIN(AES_BLOCK_SIZE, in_len - bytes_offset - (idx * AES_BLOCK_SIZE));
+					//bytes_to_pad = AES_BLOCK_SIZE-bytes_to_copy;
+					memcpy(&out[idx*AES_BLOCK_SIZE+bytes_offset], &in[idx*AES_BLOCK_SIZE+bytes_offset], bytes_to_copy);
+					// memset(&buf[bytes_to_copy], 0, bytes_to_pad);        // if bytes_to_copy is less than blocksize, do nothing, since msg is truncated anyway
+					aes_encrypt_block(iv, buf_in, ctx);
+					xor_buf(buf_in, &out[idx*AES_BLOCK_SIZE+bytes_offset], bytes_to_copy);
+					increment_iv(iv, AES_GCM_NONCE_LEN, AES_GCM_CTR_LEN);        // increment iv for continued use
+					if(idx==blocks){
+						memcpy(ctx->mode.gcm.last_block, buf_in, AES_BLOCK_SIZE);
+						ctx->mode.gcm.last_block_stop = bytes_to_copy;
+					}
+				}
+			}
 		}
+			break;
 		default: return AES_INVALID_CIPHERMODE;
 	}
 	memset(buf_in, 0, sizeof buf_in);
@@ -1718,21 +1803,36 @@ enum ASN1_TYPES {
 };
 
 
-size_t asn1_decode(uint8_t *asn1_data, size_t asn1_len, asn1_obj_t *objs, size_t iter_count){
+typedef enum {
+	ASN1_OK,
+	ASN1_ARCH_BAD_LEN,
+	ASN1_SPEC_MISMATCH
+} asn1_error_t;
+
+struct asn1_specification {
+	uint8_t len;
+	uint8_t elem[];
+};
+
+
+
+
+asn1_error_t asn1_decode(uint8_t *asn1_data, size_t asn1_len, asn1_obj_t *objs, size_t *objs_ret, struct asn1_specification *spec){
 	uint8_t *asn1_current = asn1_data;			// set current to start of data to decode
 	uint8_t *asn1_end = asn1_current + asn1_len;
 	if(*asn1_current == 0) asn1_current++;
 	size_t i;
 	
-	for(i = 0; (i < iter_count) && (asn1_current < asn1_end); i++){		// loop until iter count hit. Break manually if done.
+	for(i = 0; asn1_current < asn1_end; i++){		// loop until iter count hit. Break manually if done.
 		asn1_obj_t *node_o = &objs[i];
+		uint8_t spec_tag_form = (spec == NULL) ? 0 : spec->elem[i];
 		uint8_t tag = *asn1_current++;
 		//node_o->tag = (*asn1_current++) & 0b11111;		// get numeric tag id
 		uint8_t byte_2nd = *asn1_current++;	// get byte 2. Can be size or can be size of size
 		node_o->len = 0;
 		if((byte_2nd>>7) & 1){			// if bit 7 of byte is set, this is a size word length
 			uint8_t size_len = byte_2nd & 0x7f;
-			if(size_len > 3) return i;			// due to device limits, seq len limited to u24.
+			if(size_len > 3) return ASN1_ARCH_BAD_LEN;			// due to device limits, seq len limited to u24.
 			rmemcpy((uint8_t*)&node_o->len, asn1_current, size_len);
 			asn1_current += size_len;
 		}
@@ -1749,16 +1849,19 @@ size_t asn1_decode(uint8_t *asn1_data, size_t asn1_len, asn1_obj_t *objs, size_t
 		asn1_current += node_o->len;
 		
 		// if the constructed flag is set, this element may contain other encoded types
-		if(node_o->f_constr){
-			i--;
-			size_t skip_i = asn1_decode(node_o->data, node_o->len, node_o, iter_count - i);
-			i += skip_i;
+		if((node_o->f_constr) || (spec_tag_form == 1)){
+			size_t node_interior_len;
+			if(asn1_decode(node_o->data, node_o->len, node_o, &node_interior_len, NULL) == ASN1_OK){
+				i--;
+				i += node_interior_len;
+			}
 		}
 		
 	}
-	return i;
+	*objs_ret = i;
+	if (spec != NULL) {if(i != spec->len) return ASN1_SPEC_MISMATCH;}
+	return ASN1_OK;
 }
-
 //#define MIN(a,b) (((a)<(b))?(a):(b))
 char b64_charset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 static int mod_table[] = {0, 2, 1};
