@@ -1817,7 +1817,7 @@ asn1_error_t asn1_decode(uint8_t *asn1_data, size_t asn1_len, asn1_obj_t *objs, 
 	
 	for(i = 0; asn1_current < asn1_end; i++){		// loop until iter count hit. Break manually if done.
 		asn1_obj_t *node_o = &objs[i];
-		uint8_t spec_tag_form = (spec == NULL) ? 0 : spec[i];
+		uint8_t tag_override = (spec == NULL) ? 0 : spec[i];
 		uint8_t tag = *asn1_current++;
 		//node_o->tag = (*asn1_current++) & 0b11111;		// get numeric tag id
 		uint8_t byte_2nd = *asn1_current++;	// get byte 2. Can be size or can be size of size
@@ -1841,7 +1841,7 @@ asn1_error_t asn1_decode(uint8_t *asn1_data, size_t asn1_len, asn1_obj_t *objs, 
 		asn1_current += node_o->len;
 		
 		// if the constructed flag is set, this element may contain other encoded types
-		if((node_o->f_constr) || spec[i]){
+		if((node_o->f_constr) || tag_override){
 			size_t node_interior_len;
 			if(asn1_decode(node_o->data, node_o->len, node_o, &node_interior_len, NULL) == ASN1_OK){
 				i--;
