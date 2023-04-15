@@ -18,8 +18,6 @@ include $(CURDIR)/../common.mk
 
 LIBS := hashlib encrypt encodex
 TOOLS := fasmg convbin
-DOC_FILES := QuickReference.pdf Cryptanalysis.pdf
-
 
 SRCDIR = $(call NATIVEPATH,$1)
 TOOLSDIR = $(call NATIVEPATH,../../tools/$1)
@@ -31,7 +29,7 @@ $(TOOLS): check
 	
 $(LIBS): fasmg
 	sed -i '' 's/BB.*_/\.lbl_/g' $(call SRCDIR,$@/$@.asm)
-	sed -i '' 's/__frameset/ti._frameset/g' $(call SRCDIR,$@/$@.asm)
+	#sed -i '' 's/__frameset/ti._frameset/g' $(call SRCDIR,$@/$@.asm)
 	sed -i '' 's/__ishl/ti._ishl/g' $(call SRCDIR,$@/$@.asm)
 	sed -i '' 's/__lshl/ti._lshl/g' $(call SRCDIR,$@/$@.asm)
 	sed -i '' 's/__bshl/ti._bshl/g' $(call SRCDIR,$@/$@.asm)
@@ -80,17 +78,6 @@ check:
 	$(Q)$(EZCC) --version || ( echo Please install ez80-clang && exit 1 )
 	$(Q)$(FASMG) $(NULL) $(NULL) || ( echo Please install fasmg && exit 1 )
 	
-pdf: $(DOC_FILES)
-QuickReference.pdf: docs/tex/QuickRef.tex
-	pdflatex -output-directory="docs/tex" -file-line-error -halt-on-error -interaction=nonstopmode -recorder  "docs/tex/QuickRef.tex"
-	cp docs/tex/QuickRef.pdf QuickReference.pdf
-Cryptanalysis.pdf: docs/tex/Cryptanalysis.tex
-	pdflatex -output-directory="docs/tex" -file-line-error -halt-on-error -interaction=nonstopmode -recorder  "docs/tex/Cryptanalysis.tex"
-	cp docs/tex/Cryptanalysis.pdf Cryptanalysis.pdf
-	
-html: docs/html/index.html
-docs/html/index.html: docs/.doxyfile
-	doxygen docs/.doxyfile
 	
 archive: cryptx.zip
 cryptx.zip:

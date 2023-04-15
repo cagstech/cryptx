@@ -7,4 +7,5 @@ obj/src/main.c.bc: src/main.c /Users/acagliano/CEdev/include/stdint.h \
   /Users/acagliano/CEdev/include/stdarg.h \
   /Users/acagliano/CEdev/include/encrypt.h \
   /Users/acagliano/CEdev/include/hashlib.h \
-  /Users/acagliano/CEdev/include/stddef.h
+  /Users/acagliano/CEdev/include/stddef.h \
+  /Users/acagliano/CEdev/include/alloca.h

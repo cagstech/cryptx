@@ -24,20 +24,6 @@
 	It is commonly used for the encoding of key data by various cryptography libraries.
 	Ex: DER-formatted keys use a modified version of ASN.1. */
 
-
-/*************************************************
- * @struct cryptx\_asn1\_obj\_t
- * Defines a struct type for extracting ASN.1 element metadata
- * See @b crytpx_decode_asn1.
- */
-struct cryptx_asn1_obj {
-	uint8_t tag;			/**< Defines the ASN.1 element basic tag (low 5 bits of the id). See @b ASN1_TYPES. */
-	uint8_t f_class;		/**< Defines the ASN.1 class (high 2 bits of the id). See @b ASN1_CLASSES. */
-	bool f_form;			/**< Defines the ASN.1 construction scheme (bit 5 of the id). See @b ASN1_FORMS. */
-	size_t len;				/**< Defines the length of the data portion of the element */
-	uint8_t *data;			/**< Defines a pointer to the data portion of the element */
-};
-
 /*********************************
  * @enum CRYPTX\_ASN1\_TYPES
  * Defines tag identifiers for ASN.1 encoding
@@ -87,30 +73,69 @@ enum CRYPTX_ASN1_CLASSES {
 	ASN1_PRIVATE			/**< reserved for use by a specific entity for their applications. */
 };
 
-/********************
- * @enum CRYPTX\_ASN1\_FORMS
- * Defines form identifiers for ASN.1 encoding.
- * See @b cryptx_asn1_obj.f_form.
+/// Returns the 2-bit tag class flag. See @b CRYPTX_ASN1_CLASSES above.
+#define CRYPTX_ASN1_GETCLASS(flags)			((flag)>>1 & 0b11)
+
+/// Returns the 1-bit tag form (1 = constructed, 0 = primitive)
+#define CRYPTX_ASN1_ISCONSTRUCTED(flags)		((flags) & 1)
+
+/*********************************
+ * @enum asn1\_error\_t
+ * Defines error codes from the ASN.1 parser
  */
-enum CRYPTX_ASN1_FORMS {
-	ASN1_PRIMITIVE,			/**< data type that cannot be broken down further. */
-	ASN1_CONSTRUCTED		/**< data type composed of multiple primitive data types. */
+typedef enum {
+	ASN1_OK,					/**< No errors occured. */
+	ASN1_EOF,					/**< End of ASN.1 data stream reached. This is not really an error, but intended to let users know when the end of the stream is reached.*/
+	ASN1_INVALID_ARG,			/**< One or more arguments invalid. */
+	ASN1_LEN_OVERFLOW,			/**< Length of an element overflowed arch size\_t allowance. Remainder of data stream unparsable. */
+} asn1_error_t;
+
+/******************************************
+ * @struct asn1\_context
+ * Defines an ASN.1 parser state context.
+ */
+struct cryptx_asn1_context {
+	void *asn1_data_start;			/**< start of the data stream */
+	void *asn1_data_end;			/**< end of the data stream, used for bounds checking */
+	void *asn1_this;				/**< start of data portion of current element to process */
+	void *asn1_next;				/**< start of next element to process */
 };
 
-/****************************************************************
- * @brief Parses ASN.1 encoded data and returns metadata into an array of structs.
- * @note This function is recursive for any element of @b constructed form.
- * @note For DER-formatted RSA public keys, you will need to call this function twice to
- * unpack the modulus and exponent. The second time should be on the
- * @b ASN1_BITSTRING that encodes the modulus
- * and public exponent. See the asn1\_decode demo for details.
- * @param asn1_data Pointer to ASN.1-encoded data.
- * @param len The length of the encoded data.
- * @param objs Pointer to an array of @b asn1_obj_t structs to fill with decoded data.
- * @param iter_count Maximum number of ASN.1 elements to process before returning.
- * @returns The number of objects returned by the parser. Zero indicates an error.
+/************************************************************************
+ * @brief Initializes an ASN.1 parser state to decode a block of data.
+ * @param context	Pointer to a @b cryptx_asn1_context to initialize.
+ * @param asn1_data	Block of ASN.1 encoded data to operate on.
+ * @param len		Length of data to operate on.
+ * @returns			An @b asn1_error_t indicating the status of the operation.
  */
-size_t cryptx_asn1_decode(void *asn1_data, size_t len, struct cryptx_asn1_obj* objs, size_t iter_count);
+asn1_error_t cryptx_asn1_start(struct cryptx_asn1_context *context, void *asn1_data, size_t len);
+
+/************************************************************************
+ * @brief Attempts to decode the data segment at the context's current operating address.
+ * @note This function returns one element at a time. The user will need to chain calls to the API
+ * to extract the information they need based on the specification of whatever they are decoding.
+ * See the @b asn1_demo in the examples folder.
+ * @param context		Pointer to a @b cryptx_asn1_context to operate on.
+ * @param element_data	Pointer to start of data segment of first decoded element.
+ * @param element_len	Length of the returned data segment.
+ * @param tag			Unmasked tag value (high 3 bits stripped) of the first decoded element.
+ * @param flags			Tag metadata (high 3 bits of tag).
+ * @returns				An @b asn1_error_t indicating the status of the operation.
+ * @note bit 0 of @b flags indicates whether the element is @b CONSTRUCTED (encapsulates multiple
+ * elements) or @b PRIMITIVE (contains no elements within). The best way to use the parser is to loop calls
+ * to @b cryptx_asn1_decode and then if the element is of form PRIMITIVE to call @b cryptx_asn1_next.
+ * @b cryptx_asn1_decode will ALWAYS attempt to recurse into the current element if this is not done and this
+ * may cause the decoder to either return an error or return something invalid.
+ */
+asn1_error_t cryptx_asn1_decode(struct cryptx_asn1_context *context, uint8_t **element_data, size_t *element_len, uint8_t *tag, uint8_t *flags);
+
+/****************************************************************
+ * @brief Skips the data segment for the last returned element so that the next call to
+ * @b cryptx_asn1_decode operates on the next element of the same parser level.
+ * @param context	Pointer to a @b cryptx_asn1_context to operate on.
+ * @returns 		An @b asn1_error_t indicating the status of the operation.
+ */
+asn1_error_t cryptx_asn1_next(struct cryptx_asn1_context *context);
 
 
 //**************************************************************************************

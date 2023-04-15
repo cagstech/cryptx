@@ -32,10 +32,18 @@ struct cryptx_aes_cbc_state { uint8_t padding_mode; };
 struct cryptx_aes_ctr_state {
 	uint8_t counter_pos_start; uint8_t counter_len;
 	uint8_t last_block_stop; uint8_t last_block[16]; };
+struct cryptx_aes_gcm_state {
+	uint8_t last_block_stop; uint8_t last_block[16];
+	uint8_t ghash_key[16];
+	uint8_t aad_cache[16]; uint8_t auth_tag[16]; uint8_t auth_j0[16];
+	uint8_t aad_cache_len; size_t aad_len; size_t ct_len;
+	uint8_t gcm_op;
+};
 
 typedef union {
-	struct cryptx_aes_cbc_state ctr;                      /**< metadata for counter mode */
-	struct cryptx_aes_ctr_state cbc;                      /**< metadata for cbc mode */
+	struct cryptx_aes_gcm_state gcm;					/**< metadata for GCM mode */
+	struct cryptx_aes_cbc_state ctr;                    /**< metadata for counter mode */
+	struct cryptx_aes_ctr_state cbc;                    /**< metadata for cbc mode */
 } cryptx_aes_private_h;
 
 
@@ -114,8 +122,8 @@ struct cryptx_aes_ctx {
 	uint32_t round_keys[60];                /**< round keys */
 	uint8_t iv[16];                         /**< IV state for next block */
 	uint8_t ciphermode;                     /**< selected operational mode of the cipher */
-	cryptx_aes_private_h metadata;			/**< opague, internal context metadata */
 	uint8_t op_assoc;                       /**< state-flag indicating if context is for encryption or decryption*/
+	cryptx_aes_private_h metadata;			/**< opague, internal context metadata */
 };
 
 /*************************
@@ -123,8 +131,9 @@ struct cryptx_aes_ctx {
  * Defines supported AES cipher modes.
  */
 enum cryptx_aes_cipher_modes {
-	AES_MODE_CBC,       /**< selects CBC mode */
-	AES_MODE_CTR        /**< selects CTR mode */
+	AES_MODE_CBC,       /**< selects Cyclic Block Chain (CBC) mode */
+	AES_MODE_CTR,       /**< selects Counter (CTR) mode */
+	AES_MODE_GCM		/**< selects Galois Counter (GCM) mode */
 };
 
 /****************************
@@ -166,6 +175,8 @@ enum cryptx_aes_padding_schemes {
 #define CRYPTX_AES_CTR_FLAGS(nonce_len, counter_len)	\
 	((0x0f & (counter_len))<<8) | ((0x0f & (nonce_len))<<4) | AES_MODE_CTR
 
+#define CRYPTX_AES_GCM_FLAGS	AES_MODE_GCM
+
 /*******************************************
  * @typedef aes\_error\_t
  * Defines response codes that can be returned from calls
@@ -187,8 +198,9 @@ typedef enum {
  * @param[in] key	Pointer to an 128, 192, or 256 bit key to load into the AES context.
  * @param[in] keylen	The size, in bytes, of the @b key to load.
  * @param[in] iv	Pointer to  Initialization vector, a buffer equal to the block size filled with random bytes.
+ * @param[in] ivlen	Length of the initalization vector. Capped at 16 bytes. Certain cipher modes have different recommendations.
  * @param[in] flags	A series of flags to configure the AES context with.
- * 				Use the provided @b CRYPTX_AES_CTR_FLAGS or @b CRYPTX_AES_CBC_FLAGS to pass flags.
+ * 				Use the provided @b CRYPTX_AES_CTR_FLAGS, @b CRYPTX_AES_CBC_FLAGS, or @b CRYPTX_AES_GCM_FLAGS to pass flags.
  * @returns An @b aes_error_t indicating the status of the AES operation.
  * @note Contexts are not bidirectional due to being stateful. If you need to process both encryption and decryption,
  * initialize seperate contexts for encryption and decryption. Both contexts will use the same key, but different initialization vectors.
@@ -196,13 +208,14 @@ typedef enum {
  * @warning Do not manually edit the @b ctx.mode field of the context structure.
  * This will break the cipher configuration. If you want to change cipher modes, do so by calling @b aes_init again.
  * @warning AES-CBC and CTR modes ensure confidentiality but do not provide message integrity verification.
- * If you need a truly secure construction, append a keyed hash (HMAC) to the encrypted message..
+ * If you need a truly secure construction, use GCM mode or append a keyed hash (HMAC) to the encrypted message..
  */
 aes_error_t cryptx_aes_init(
 				struct cryptx_aes_ctx* context,
 				const void* key,
 				size_t keylen,
 				const void* iv,
+				size_t ivlen,
 				uint24_t flags);
 
 /****************************************************************
@@ -215,7 +228,7 @@ aes_error_t cryptx_aes_init(
  * @note @b ciphertext should large enough to hold the encrypted message.
  *          For CBC mode, this is the smallest multiple of the blocksize that will hold the plaintext.
  *          See the @b CRYPTX_AES_CIPHERTEXT_LEN macro.
- *          For CTR mode, this is the same size as the plaintext.
+ *          For CTR and GCM modes, this is the same size as the plaintext.
  * @note @b plaintext and @b ciphertext are aliasable.
  * @note Encrypt is streamable, such that encrypt(msg1) + encrypt(msg2) is functionally identical to encrypt(msg1+msg2)
  * with the exception of intervening padding in CBC mode.
@@ -244,6 +257,57 @@ aes_error_t cryptx_aes_decrypt(
 					const void* ciphertext,
 					size_t len,
 					void* plaintext);
+
+/**************************************************************
+ * @brief Updates the cipher context for given AAD (Additional Authenticated Data).
+ * AAD is data that is only authenticated, not encrypted.
+ * @param[in] context	Pointer to an AES context.
+ * @param[in] aad		Pointer to additional authenticated data segment.
+ * @param[in] aad_len	Length of additional data segment.
+ * @returns An @b aes_error_t indicating the status of the AES operation.
+ * @note This function is only compatible with AES-GCM cipher mode. Attempting to
+ * use this function for any other cipher mode will return @b AES_INVALID_CIPHERMODE.
+ * @note This function can only be called between the call to @b cryptx_aes_init and the first call
+ * to @b cryptx_aes_encrypt or @b cryptx_aes_decrypt. Once encryption or decryption starts, you can
+ * no longer update AAD.
+ */
+aes_error_t cryptx_aes_update_aad(
+					struct cryptx_aes_ctx* context,
+					const void* aad, size_t aad_len);
+
+
+/*************************************************************************
+ * @brief Returns the current authentication tag for data parsed so far.
+ * @param[in] context	Pointer to an AES context
+ * @param[out] digest	Pointer to a buffer to output digest to. Must be at least 16 bytes large.
+ * @returns An @b aes_error_t indicating the status of the AES operation.
+ * @note This function is only compatible with AES-GCM cipher mode. Attempting to call it for any
+ * other cipher mode will return @b AES_INVALID_CIPHERMODE.
+ * @note Calling this function terminates your use of the current AES context. This is because
+ * reuse of the IV buffer can leak the hkey used for authentication. The next stream may use the same
+ * encryption key but should have a unique IV.
+ */
+aes_error_t cryptx_aes_digest(struct cryptx_aes_ctx* context, uint8_t *digest);
+
+/******************************************************************
+ * @brief Parses the specified AAD and ciphertext and then compares the output auth tag
+ * to an expected auth tag.
+ * @param[in] context	Pointer to an AES context.
+ * @param[in] aad		Pointer to associated data to authenticate.
+ * @param[in] aad_len	Length of associated data to authenticate.
+ * @param[in] ciphertext	Pointer to ciphertext to authenticate.
+ * @param[in] ciphertext_len	Length of ciphertext to authenticate.
+ * @param[in] tag		Pointer to expected auth tag to validate against.
+ * @returns TRUE if authentication  tag matches expected, FALSE otherwise.
+ * @note operates on a dummy copy of @b *context to avoid nuking the active copy
+ * @note If this function returns FALSE, do not decrypt the message.
+ */
+
+bool cryptx_aes_verify(
+				const struct cryptx_aes_ctx* context,
+				const void* aad, size_t aad_len,
+				const void* ciphertext, size_t ciphertext_len,
+				uint8_t *tag);
 
 
 //******************************************************************************************
