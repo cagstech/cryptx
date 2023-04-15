@@ -41,35 +41,31 @@ uint8_t asn1_demo[] = {0x30,0x81,0x9f,0x30,0x0d,0x06,0x09,0x2a,0x86,0x48,0x86,0x
 
 int main(void)
 {
-	struct cryptx_asn1_obj output[10] = {0};
+	struct cryptx_asn1_context asn1_state;
+	asn1_error_t err;
+	uint8_t *ptr;
+	size_t elem_len;
+	uint8_t tag;
+	uint8_t flags;
+	
 	sprintf(CEMU_CONSOLE, "\n\n----------------------------------\nENCODEX ASN.1 Decoder Demo\n");
 	
-	// parse ASN.1 encoded data
-	/*
-	 This call to asn1_decode will return 3 objects.
-	 1. pkcs#1IdString
-	 2. nullObject
-	 3. RSAData
-	 This is because any tag with the constructed bit set will be automatically
-	 deconstructed further, but the BIT STRING object does not have this tag set.
-	 You will need to then call asn1_decode on this object specifically to break it down further.
-	 */
-	size_t out_ct = cryptx_asn1_decode(asn1_demo, sizeof asn1_demo, output, sizeof output);
-	sprintf(CEMU_CONSOLE, "\nDecode complete.\n");
-	for(int i=0; i<out_ct; i++)
-		sprintf(CEMU_CONSOLE, "Obj %u, Tag Id: %u, Size: %u, Addr: %p\n", i, output[i].tag, output[i].len, output[i].data);
+	err = cryptx_asn1_start(&asn1_state, asn1_demo, sizeof asn1_demo);
+	sprintf(CEMU_CONSOLE, "\nASN.1 parser init complete. Exit code %u.\n",  err);
+	if(err != ASN1_OK) return 1;
+	
+	while(err != ASN1_EOF){
+		err = cryptx_asn1_decode(&asn1_state, &ptr, &elem_len, &tag, &flags);
+		if(err)
+			sprintf(CEMU_CONSOLE, "Decoder error %u\n", err);
+		else
+			sprintf(CEMU_CONSOLE, "Object Data, Tag Id: %u, Flags: %u, Size: %u, Addr: %p\n", tag, flags, elem_len, ptr);
+		if(!CRYPTX_ASN1_ISCONSTRUCTED(flags)){
+			err = cryptx_asn1_next(&asn1_state);
+		}
+	}
 	
 	
-	// An extension to the ASN.1 decoder specifically designed to handle key objects of the PKCS#8 format.
-	struct cryptx_pkcs8_asn1_obj keydata;
-	cryptx_asn1_pkcs8_decode(asn1_demo, sizeof asn1_demo, &keydata);
-	for(int i=0; i<3; i++)
-		sprintf(CEMU_CONSOLE, "Obj %u, Tag Id: %u, Size: %u, Addr: %p\n", i, keydata.publickeyinfo[i].tag, keydata.publickeyinfo[i].len, keydata.publickeyinfo[i].data);
-	for(int i=0; i<2; i++)
-		sprintf(CEMU_CONSOLE, "Obj %u, Tag Id: %u, Size: %u, Addr: %p\n", i, keydata.publickey[i].tag, keydata.publickey[i].len, keydata.publickey[i].data);
-	
-	// Strip the first byte of modulus and you have the information you need for
-	// rsa_encrypt().
 	return 0;
 }
 

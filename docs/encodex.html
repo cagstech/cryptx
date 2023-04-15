@@ -46,10 +46,20 @@
 				<div class="minor-header">Abstract Syntax Notation One Encoding (ASN.1)</div>
 				<div class="section side-ruled">
 					<p>ASN.1 is a data encoding format common to cryptography in which data is represented as a series of objects consisting of a tag, object size, and object data. The most commonly occurring serialization format for ASN.1 is <span style="font-weight:bold">DER</span>, which stands for <span style="font-style:italic;">Distinguished Encoding Rules</span>.</p>
-					<p>Additionally, ENCODEX provides an extension to the ASN.1 decoder specifically designed to handle key objects of the PKCS&num;8 format. This formatting specification is a bit weird because, as you can see from the specification below, the PublicKey is wrapped in a SEQUENCE element, padded with a single zero byte, and then encoded as a BIT STRING itself. This element is then indicated to be a primitive element, so </p>
-					<pre class="code"><code class="language-c">
-						// assume that the DER-encoded key is loaded into `asn1_data`
-						/*
+					
+					<pre class="code"><code class="language-c">// declare struct type for ASN.1 parsing
+						#define MAX_ELEMS	5
+						struct cryptx_asn1_obj output[MAX_ELEMS] = {0};
+						uint8_t asn1_data = { /* some random ASN.1 data here */ };
+						
+						// each call to the decoder does a pass over the data,
+						// returning all parsable objects.
+						// automatic recursion occurs for any object with a constructed tag bit set.
+						size_t obj_ct = cryptx_asn1_decode(asn1_data, sizeof asn1_data, output, MAX_ELEMS);
+					</code></pre>
+					
+					<p>Additionally, ENCODEX provides an extension to the ASN.1 decoder specifically designed to handle key objects of the PKCS&num;8 format. This formatting specification is a bit weird because, as you can see below, the PublicKey is padded with a single zero byte, wrapped in a SEQUENCE element, and then encoded as a BIT STRING itself. This element is then indicated to be a primitive element, meaning that depending on the CONSTRUCTED bit won&apos;t help here. Of course one option is to call the encoder again on the PublicKey element yourself. The other option is to use the PKCS#8 ASN.1 extension provided.</p>
+					<pre class="code"><code class="language-c">/*
 						PKCS#8 encoding format for DER keys
 						PublicKeyInfo ::= SEQUENCE {
 							&emsp;&emsp;algorithm       AlgorithmIdentifier :: SEQUENCE {
@@ -61,37 +71,24 @@
 						*/
 						
 						// declare struct type for ASN.1 parsing
-						struct cryptx_asn1_obj output[5] = {0};
+						struct cryptx_pkcs8_asn1_obj key_obj;
+						uint8_t asn1_data[] = { /* some PKCS#8 data here */ };
 						
-						// each call to the decoder does a pass over the data,
-						// returning all parsable objects.
-						// automatic recursion occurs for any object with a constructed tag bit set.
-						size_t obj_ct = cryptx_asn1_decode(asn1_data, sizeof asn1_data, output, 5);
-						
-						// For reasons unknown, the PublicKey BIT STRING is a strange constructed object
-						// It is a &quot;primitive&quot; BIT STRING object that wraps a single zero byte
-						// followed by the same construction as the RSAPublicKey object from PKCS#1.
-						/*
-						RSAPublicKey ::= SEQUENCE {
-						&emsp;&emsp;modulus&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;INTEGER,  -- n
-						&emsp;&emsp;publicExponent&emsp;&emsp;&emsp;&emsp;INTEGER   -- e
-						}
-						*/
-						// to extract it, run another decoding pass on the 3rd object returned above
-						obj_ct = cryptx_asn1_decode(output[2].data, output[2].len, &output[3], 2);
-						// output[3] and output[4] should contain the public modulus and exponent, respectively.
+						cryptx_asn1_pkcs8_decode(asn1_data, sizeof asn1_data, &key_obj);
+						// key metadata can be extracted from `key_obj.publickeyinfo`
+						// public modulus and exponent can be extracted from `key_obj.publickey`
 						</code></pre>
 					
 					<dl>
 						<dt class="lib-ref">size_t cryptx_asn1_decode(<br />
 							&emsp;&emsp;&emsp;&emsp;void *asn1_data, size_t len,<br />
-							&emsp;&emsp;&emsp;&emsp;struct cryptx_asn1_obj* objs,<br />
-							&emsp;&emsp;&emsp;&emsp;size_t iter_count);</dt>
+							&emsp;&emsp;&emsp;&emsp;struct cryptx_asn1_obj* elements,<br />
+							&emsp;&emsp;&emsp;&emsp;size_t elements_len);</dt>
 						<dd>Decodes an ASN.1-encoded block of data into an array of structures that contain ASN.1 object metadata.<br />
 							<span class="param">asn1_data</span>: Pointer to data to decode.<br />
 							<span class="param">len</span>: Length of data to decode.<br />
-							<span class="param">objs</span>: Pointer to array of cryptx_asn1_obj structures.<br />
-							<span class="param">iter_count</span>: Length of objs array; Max number of ASN.1 objects to return.<br />
+							<span class="param">elements</span>: Pointer to array of cryptx_asn1_obj structures.<br />
+							<span class="param">elements_len</span>: Length of objs array; Max number of ASN.1 objects to return.<br />
 							<span class="param">returns</span>: [size_t] Number of objects successfully returned.
 						</dd>
 					</dl>
