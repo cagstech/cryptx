@@ -66,7 +66,8 @@
 						&emsp;&emsp;err = cryptx_asn1_decode(&asn1_state, &ptr, &elem_len, &tag, &flags);
 						&emsp;&emsp;if(err) sprintf(CEMU_CONSOLE, "Decoder error %u\n", err);
 						&emsp;&emsp;else
-						&emsp;&emsp;&emsp;&emsp;printf("Object Data, Tag Id: %u, Flags: %u, Size: %u, Addr: %p\n", tag, flags, elem_len, ptr);
+						&emsp;&emsp;&emsp;&emsp;printf("Object Data, Tag Id: %u, Flags: %u, Size: %u, Addr: %p\n",<br />
+						&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;tag, flags, elem_len, ptr);
 						&emsp;&emsp;if(!CRYPTX_ASN1_ISCONSTRUCTED(flags))
 						&emsp;&emsp;&emsp;&emsp;// if the element is PRIMITIVE type, skip to avoid recursing into it
 						&emsp;&emsp;&emsp;&emsp;err = cryptx_asn1_next(&asn1_state);
@@ -99,6 +100,7 @@
 						Object Data, Tag Id: 5, Flags: 0, Size: 0, Addr: d1ab8f
 						// Public Key (PRIMITIVE)
 						Object Data, Tag Id: 3, Flags: 0, Size: 141, Addr: d1ab92
+						>>EOF
 						</code></pre>
 					
 					<dl>
