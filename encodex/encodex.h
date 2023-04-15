@@ -85,7 +85,7 @@ enum CRYPTX_ASN1_CLASSES {
  */
 typedef enum {
 	ASN1_OK,					/**< No errors occured. */
-	ASN1_EOF,					/**< End of ASN.1 data stream reached. */
+	ASN1_EOF,					/**< End of ASN.1 data stream reached. This is not really an error, but intended to let users know when the end of the stream is reached.*/
 	ASN1_INVALID_ARG,			/**< One or more arguments invalid. */
 	ASN1_LEN_OVERFLOW,			/**< Length of an element overflowed arch size\_t allowance. Remainder of data stream unparsable. */
 } asn1_error_t;
