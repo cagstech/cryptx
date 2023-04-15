@@ -1809,15 +1809,7 @@ typedef enum {
 	ASN1_SPEC_MISMATCH
 } asn1_error_t;
 
-struct asn1_specification {
-	uint8_t len;
-	uint8_t elem[];
-};
-
-
-
-
-asn1_error_t asn1_decode(uint8_t *asn1_data, size_t asn1_len, asn1_obj_t *objs, size_t *objs_ret, struct asn1_specification *spec){
+asn1_error_t asn1_decode(uint8_t *asn1_data, size_t asn1_len, asn1_obj_t *objs, size_t *objs_ret, uint8_t *spec){
 	uint8_t *asn1_current = asn1_data;			// set current to start of data to decode
 	uint8_t *asn1_end = asn1_current + asn1_len;
 	if(*asn1_current == 0) asn1_current++;
@@ -1825,7 +1817,7 @@ asn1_error_t asn1_decode(uint8_t *asn1_data, size_t asn1_len, asn1_obj_t *objs, 
 	
 	for(i = 0; asn1_current < asn1_end; i++){		// loop until iter count hit. Break manually if done.
 		asn1_obj_t *node_o = &objs[i];
-		uint8_t spec_tag_form = (spec == NULL) ? 0 : spec->elem[i];
+		uint8_t spec_tag_form = (spec == NULL) ? 0 : spec[i];
 		uint8_t tag = *asn1_current++;
 		//node_o->tag = (*asn1_current++) & 0b11111;		// get numeric tag id
 		uint8_t byte_2nd = *asn1_current++;	// get byte 2. Can be size or can be size of size
@@ -1849,7 +1841,7 @@ asn1_error_t asn1_decode(uint8_t *asn1_data, size_t asn1_len, asn1_obj_t *objs, 
 		asn1_current += node_o->len;
 		
 		// if the constructed flag is set, this element may contain other encoded types
-		if((node_o->f_constr) || (spec_tag_form == 1)){
+		if((node_o->f_constr) || spec[i]){
 			size_t node_interior_len;
 			if(asn1_decode(node_o->data, node_o->len, node_o, &node_interior_len, NULL) == ASN1_OK){
 				i--;
@@ -1859,9 +1851,9 @@ asn1_error_t asn1_decode(uint8_t *asn1_data, size_t asn1_len, asn1_obj_t *objs, 
 		
 	}
 	*objs_ret = i;
-	if (spec != NULL) {if(i != spec->len) return ASN1_SPEC_MISMATCH;}
 	return ASN1_OK;
 }
+
 //#define MIN(a,b) (((a)<(b))?(a):(b))
 char b64_charset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 static int mod_table[] = {0, 2, 1};
