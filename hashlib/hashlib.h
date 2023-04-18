@@ -218,10 +218,10 @@ void cryptx_hmac_final(struct cryptx_hmac_ctx* context, void* output);
 void cryptx_hmac_pbkdf2(
     const char* password,
     size_t passlen,
-    void* key,
-    size_t keylen,
     const void* salt,
     size_t saltlen,
+	uint8_t* key,
+    size_t keylen,
     size_t rounds,
     uint8_t hash_alg);
     
