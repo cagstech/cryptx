@@ -116,32 +116,25 @@
 							</table>
 						</dt>
 						<dd></dd><br />
-						<dt class="lib-ref">asn1_error_t cryptx_asn1_start(struct cryptx_asn1_context *context, void *asn1_data, size_t len);</dt>
-						<dd>Initializes a stateful ASN.1 parser context.<br />
-							<span class="param">context</span>: Pointer to ASN.1 context.<br />
-							<span class="param">asn1_data</span>: Pointer to ASN.1-encoded data stream.<br />
-							<span class="param">len</span>: Length of data stream.<br />
-							<span class="param">returns</span>: [asn1_error_t] Status code returned by the parser initialization.
-						</dd><br />
 						<dt class="lib-ref">asn1_error_t cryptx_asn1_decode(<br />
-							&emsp;&emsp;&emsp;&emsp;struct cryptx_asn1_context *context,<br />
-							&emsp;&emsp;&emsp;&emsp;uint8_t **element_data, size_t *element_len,<br />
-							&emsp;&emsp;&emsp;&emsp;uint8_t *tag, uint8_t *flags);</dt>
+							&emsp;&emsp;&emsp;&emsp;void *data_start, size_t data_len, uint8_t seek_to<br />
+							&emsp;&emsp;&emsp;&emsp;uint8_t *element_tag, size_t *element_len, void **element_data);</dt>
 						<dd>Parses the data at the current operating offset for more elements, returning the next element found.<br />
-							<span class="param">context</span>: Pointer to ASN.1 context.<br />
-							<span class="param">element_data</span>: Pointer to address of data segment of next element found.<br />
-							<span class="param">element_len</span>: Pointer to length of next element found.<br />
-							<span class="param">tag</span>: Pointer to tag value of next element found, with high 3 bits stripped.<br />
-							<span class="param">flags</span>: Pointer to flags stripped from tag.<br />
+							<span class="param">data_start</span>: Pointer to ASN.1-encoded data.<br />
+							<span class="param">data_len</span>: Length of ASN.1 block.<br />
+							<span class="param">seek_to</span>: Index of iterable ASN.1 element to return.<br />
+							<span class="param">element_tag</span>: Tag of returned element.<br />
+							<span class="param">element_len</span>: Length of returned element.<br />
+							<span class="param">element_data</span>: Pointer to returned element data segment.<br />
 							<span class="param">returns</span>: [asn1_error_t] Status code returned by the parser initialization.
 							<div class="more-info">
-								element_data, element_len, tag, and flags are all modified by this function to reflect the metadata of the next element. If you need their values for later, save them before calling this function again.
+								element_tag, element_len, and element_data are all modified by this function to reflect the metadata of the returned. If you need their values for later, save them before calling this function again.
 							</div>
 							<div class="more-info">
 								element_data is a pointer to the element data segment within the original block of ASN.1-encoded data. If you need that data, you can use <span style="font-family:monospace;">memcpy(dest, *element_data, element_len);</span> to read it elsewhere, or just access it in place. This will depend on what you do with the original data buffer after decoding.
 							</div>
 							<div class="alert">
-								Calling this function on an element with no elements inside it (PRIMITIVE) can result in undefined behavior from returning ASN1_LEN_OVERFLOW or ASN1_EOF to just returning an invalid object. <span class="font-weight:bold;">If the element is of type PRIMITIVE, call cryptx_asn1_next() before the next call to this function.</span><br /><br />
+								Calling this function on an element with no elements inside it (PRIMITIVE) can result in undefined behavior from returning ASN1_LEN_OVERFLOW or ASN1_END_OF_FILE to just returning an invalid object. <span class="font-weight:bold;">Use CRYPTX_ASN1_FORM() to see if a returned element is primitive or constructed before attempting to decode the data within.</span><br /><br />
 								<span style="font-weight:bold;">There is one exception to this. The PublicKey element within the PKCS&num;8 standardization is actually a PKCS&num;1 PublicKey structure with a zero byte prepended and then encoded as a primitive BIT STRING.</span> In this particular case, it is safe to call this function on that element to recurse into the PublicKey structure and extract the public modulus and exponent of your key.
 							</div>
 						</dd><br />
