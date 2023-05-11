@@ -53,24 +53,27 @@
 						uint8_t *ptr;&emsp;&emsp;&emsp;&emsp;// pointer to data for each element
 						size_t elem_len;&emsp;&emsp;&emsp;&emsp;// length of the element
 						uint8_t tag;&emsp;&emsp;&emsp;&emsp;// tag value of the element
-						uint8_t flags;&emsp;&emsp;&emsp;&emsp;// flags for the element
 						// note that the above are reserved variables for the API to update
 						
-						// initialize the parser. Return if error.
-						// NEVER ignore errors from things. It's how you crash stuff.
-						err = cryptx_asn1_start(&asn1_state, asn1_demo, sizeof asn1_demo);
-						if(err != ASN1_OK) return 1;
-						
-						// loop until END-OF-FILE returned
-						while(err != ASN1_EOF){
-						&emsp;&emsp;err = cryptx_asn1_decode(&asn1_state, &ptr, &elem_len, &tag, &flags);
-						&emsp;&emsp;if(err) sprintf(CEMU_CONSOLE, "Decoder error %u\n", err);
-						&emsp;&emsp;else
-						&emsp;&emsp;&emsp;&emsp;printf("Object Data, Tag Id: %u, Flags: %u, Size: %u, Addr: %p\n",<br />
-						&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;tag, flags, elem_len, ptr);
-						&emsp;&emsp;if(!CRYPTX_ASN1_ISCONSTRUCTED(flags))
-						&emsp;&emsp;&emsp;&emsp;// if the element is PRIMITIVE type, skip to avoid recursing into it
-						&emsp;&emsp;&emsp;&emsp;err = cryptx_asn1_next(&asn1_state);
+						// decode first element in the data
+						err = cryptx_asn1_decode(asn1_data, sizeof asn1_data, 0, &tag, &elem_len, &ptr);
+						if(err) {
+						&emsp;&emsp;sprintf(CEMU_CONSOLE, "Decoder error %u\n", err);
+						&emsp;&emsp;exit(1);
+						}
+						printf("Tag:%u, Size:%u, Addr:%p\n",<br />
+						&emsp;&emsp;&emsp;&emsp;tag, elem_len, ptr);
+						if(CRYPTX_ASN1_FORM(tag)){
+						&emsp;&emsp;uint8_t *inner_data;
+						&emsp;&emsp;size_t inner_len;
+						&emsp;&emsp;// if the element is CONSTRUCTED type, you can safely decode it as well
+						&emsp;&emsp;err = cryptx_asn1_decode(ptr, elem_len, 0, &tag, &inner_len, &inner_data);
+						&emsp;&emsp;if(err){
+						&emsp;&emsp;&emsp;&emsp;sprintf(CEMU_CONSOLE, "Decoder error %u\n", err);
+						&emsp;&emsp;&emsp;&emsp;exit(1);
+						&emsp;&emsp;}
+						&emsp;&emsp;printf("Tag:%u, Size:%u, Addr:%p\n",<br />
+						&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;tag, elem_len, ptr);
 						}
 					</code></pre>
 					
