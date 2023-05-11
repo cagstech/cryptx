@@ -22,7 +22,7 @@
 	ASN stands for Abstract Syntax Notation.
 	It is a standard notation language for defining data structures.
 	It is commonly used for the encoding of key data by various cryptography libraries.
-	Ex: DER-formatted keys use a modified version of ASN.1. */
+	Ex: DER keyfile format is a serialization standard for ASN.1. */
 
 /*********************************
  * @enum CRYPTX\_ASN1\_TYPES
@@ -64,7 +64,6 @@ enum CRYPTX_ASN1_TYPES {
 /**********************************
  * @enum CRYPTX\_ASN1\_CLASSES
  * Defines class identifiers for ASN.1 encoding.
- * See @b cryptx_asn1_obj.f_class.
  */
 enum CRYPTX_ASN1_CLASSES {
 	ASN1_UNIVERSAL,			/**< tags defined in the ASN.1 standard. Most use cases on calc will be this. */
@@ -73,69 +72,53 @@ enum CRYPTX_ASN1_CLASSES {
 	ASN1_PRIVATE			/**< reserved for use by a specific entity for their applications. */
 };
 
+/**********************************
+ * @enum CRYPTX\_ASN1\_FORMS
+ * Defines forms for ASN.1 encoding.
+ */
+enum CRYPTX_ASN1_FORMS {
+	ASN1_PRIMITIVE,			/**< this element should contain no nested elements. */
+	ASN1_CONSTRUCTED,		/**< this element contains nested elements. */
+};
+
 /// Returns the 2-bit tag class flag. See @b CRYPTX_ASN1_CLASSES above.
-#define CRYPTX_ASN1_GETCLASS(flags)			((flag)>>1 & 0b11)
+#define CRYPTX_ASN1_CLASS(tag)		(((tag)>>6) & 0b11)
 
 /// Returns the 1-bit tag form (1 = constructed, 0 = primitive)
-#define CRYPTX_ASN1_ISCONSTRUCTED(flags)		((flags) & 1)
+#define CRYPTX_ASN1_FORM(tag)		(((tag)>>5) & 1)
 
 /*********************************
  * @enum asn1\_error\_t
  * Defines error codes from the ASN.1 parser
  */
 typedef enum {
-	ASN1_OK,					/**< No errors occured. */
-	ASN1_EOF,					/**< End of ASN.1 data stream reached. This is not really an error, but intended to let users know when the end of the stream is reached.*/
-	ASN1_INVALID_ARG,			/**< One or more arguments invalid. */
-	ASN1_LEN_OVERFLOW,			/**< Length of an element overflowed arch size\_t allowance. Remainder of data stream unparsable. */
+	ASN1_OK,				/**< No errors occured. */
+	ASN1_END_OF_FILE,		/**< End of ASN.1 data stream reached. Not an error. */
+	ASN1_INVALID_ARG,		/**< One or more arguments invalid. */
+	ASN1_LEN_OVERFLOW,		/**< Length of an element overflowed arch size\_t allowance. Remainder of data stream unparsable. */
 } asn1_error_t;
 
-/******************************************
- * @struct asn1\_context
- * Defines an ASN.1 parser state context.
- */
-struct cryptx_asn1_context {
-	void *asn1_data_start;			/**< start of the data stream */
-	void *asn1_data_end;			/**< end of the data stream, used for bounds checking */
-	void *asn1_this;				/**< start of data portion of current element to process */
-	void *asn1_next;				/**< start of next element to process */
-};
-
 /************************************************************************
- * @brief Initializes an ASN.1 parser state to decode a block of data.
- * @param context	Pointer to a @b cryptx_asn1_context to initialize.
- * @param asn1_data	Block of ASN.1 encoded data to operate on.
- * @param len		Length of data to operate on.
- * @returns			An @b asn1_error_t indicating the status of the operation.
- */
-asn1_error_t cryptx_asn1_start(struct cryptx_asn1_context *context, void *asn1_data, size_t len);
-
-/************************************************************************
- * @brief Attempts to decode the data segment at the context's current operating address.
- * @note This function returns one element at a time. The user will need to chain calls to the API
- * to extract the information they need based on the specification of whatever they are decoding.
- * See the @b asn1_demo in the examples folder.
- * @param context		Pointer to a @b cryptx_asn1_context to operate on.
- * @param element_data	Pointer to start of data segment of first decoded element.
- * @param element_len	Length of the returned data segment.
- * @param tag			Unmasked tag value (high 3 bits stripped) of the first decoded element.
- * @param flags			Tag metadata (high 3 bits of tag).
+ * @brief Decodes the ASN.1 data at the given address. Seeks to an element from the front of the data.
+ * @param data_start	Pointer to a block of ASN.1-encoded data.
+ * @param data_len		Length of ASN.1-encoded block.
+ * @param seek_to		Number of ASN.1 elements to skip before returning one.
+ * @param element_tag	Masked tag value of the returned element.
+ * @param element_len	Length of the returned element.
+ * @param element_data	Pointer to the data of the returned element.
  * @returns				An @b asn1_error_t indicating the status of the operation.
- * @note bit 0 of @b flags indicates whether the element is @b CONSTRUCTED (encapsulates multiple
- * elements) or @b PRIMITIVE (contains no elements within). The best way to use the parser is to loop calls
- * to @b cryptx_asn1_decode and then if the element is of form PRIMITIVE to call @b cryptx_asn1_next.
- * @b cryptx_asn1_decode will ALWAYS attempt to recurse into the current element if this is not done and this
- * may cause the decoder to either return an error or return something invalid.
+ * @note @b ASN1_END_OF_FILE will be returned if @b seek_to is invalid.
+ * @note ASN.1 is a tree structure. You can use the @b element_data and @b element_len parameters
+ * returned by this function to iterate further up the tree. To see if an element is of a type for which this is
+ * valid, check the return value of @b CRYPTX_ASN1_FORM(element_tag).
  */
-asn1_error_t cryptx_asn1_decode(struct cryptx_asn1_context *context, uint8_t **element_data, size_t *element_len, uint8_t *tag, uint8_t *flags);
-
-/****************************************************************
- * @brief Skips the data segment for the last returned element so that the next call to
- * @b cryptx_asn1_decode operates on the next element of the same parser level.
- * @param context	Pointer to a @b cryptx_asn1_context to operate on.
- * @returns 		An @b asn1_error_t indicating the status of the operation.
- */
-asn1_error_t cryptx_asn1_next(struct cryptx_asn1_context *context);
+asn1_error_t cryptx_asn1_decode(
+					void *data_start,
+					size_t data_len,
+					uint8_t seek_to,
+					uint8_t *element_tag,
+					size_t *element_len,
+					void **element_data);
 
 
 //**************************************************************************************

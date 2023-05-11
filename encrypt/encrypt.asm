@@ -4682,15 +4682,11 @@ cryptx_aes_digest:
 	ret
 
 cryptx_aes_verify:
-	ld	hl, -381
+	ld	hl, -378
 	call	ti._frameset
 	ld	de, -372
 	lea	iy, ix
 	add	iy, de
-	ld	de, -381
-	lea	hl, ix
-	add	hl, de
-	ld	(hl), iy
 	ld	bc, 350
 	lea	hl, iy + 16
 	lea	de, iy
@@ -4699,25 +4695,33 @@ cryptx_aes_verify:
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), de
-	push	hl
-	pop	iy
+	push	ix
 	ld	bc, -375
-	lea	hl, ix
-	add	hl, bc
-	ld	(hl), iy
-	lea	de, iy
+	add	ix, bc
+	ld	(ix), hl
+	pop	ix
+	ex	de, hl
 	ld	hl, (ix + 6)
 	ld	bc, (ix - 3)
 	ldir
-	ld	hl, (ix + 12)
-	push	hl
 	ld	hl, (ix + 9)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	z, .lbl_2
+	ld	de, (ix + 12)
+	push	de
 	push	hl
-	push	iy
+	ld	bc, -375
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
 	call	cryptx_aes_update_aad
 	pop	hl
 	pop	hl
 	pop	hl
+.lbl_2:
 	ld	hl, 0
 	push	hl
 	ld	hl, (ix + 18)
@@ -4747,20 +4751,6 @@ cryptx_aes_verify:
 	call	cryptx_aes_digest
 	pop	hl
 	pop	hl
-	ld	bc, -381
-	lea	hl, ix
-	add	hl, bc
-	ld	iy, (hl)
-	ld	(iy + 16), 0
-	ld	bc, -375
-	lea	iy, ix
-	add	iy, bc
-	ld	hl, (iy)
-	push	hl
-	pop	de
-	inc	de
-	ld	bc, 349
-	ldir
 	ld	hl, 16
 	push	hl
 	ld	bc, -378
@@ -4774,6 +4764,7 @@ cryptx_aes_verify:
 	ld	sp, ix
 	pop	ix
 	ret
+	
 
 aes_encrypt:
 	save_interrupts

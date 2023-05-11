@@ -148,7 +148,6 @@ hmac_func_lookup:
     db 32
 
 
-
 ; probably better to just add the one u64 function used by hashlib rather than screw with dependencies
 ; void u64_addi(uint64_t *a, uint64_t *b);
 u64_addi:
@@ -217,6 +216,7 @@ hash_init:
     ; (ix+3) old ix
     ; (ix+6) context
     ; (ix+9) alg
+    ; (ix + 12) flags
     
     ; check if value of alg < hash_algs_impl, return 0 if not
     ld a, (ix + 9)
@@ -380,8 +380,7 @@ hmac_final:
     ld sp, ix
     pop ix
     ret
-    
-    
+
  
 ; void hash_sha256_init(SHA256_CTX *ctx);
 hash_sha256_init:
@@ -1322,6 +1321,8 @@ hash_mgf1:
 	jp stack_clear
  
  
+ 
+ 
 hmac_sha256_init:
 	save_interrupts
 
@@ -1445,6 +1446,7 @@ hmac_sha256_init:
 	restore_interrupts_noret hmac_sha256_init
 	jp stack_clear
     
+
  
 hmac_sha256_update:
 	call	ti._frameset0
@@ -2124,6 +2126,7 @@ digest_tostring:
 
 	restore_interrupts digest_tostring
 	ret
+ 
  
  _hexc:     db	"0123456789ABCDEF"
  _hash_out_lens:    db 32
