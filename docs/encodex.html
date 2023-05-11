@@ -61,8 +61,7 @@
 						&emsp;&emsp;sprintf(CEMU_CONSOLE, "Decoder error %u\n", err);
 						&emsp;&emsp;exit(1);
 						}
-						printf("Tag:%u, Size:%u, Addr:%p\n",<br />
-						&emsp;&emsp;&emsp;&emsp;tag, elem_len, ptr);
+						printf("Tag:%u, Size:%u, Addr:%p\n", tag, elem_len, ptr);
 						if(CRYPTX_ASN1_FORM(tag)){
 						&emsp;&emsp;uint8_t *inner_data;
 						&emsp;&emsp;size_t inner_len;
@@ -72,8 +71,7 @@
 						&emsp;&emsp;&emsp;&emsp;sprintf(CEMU_CONSOLE, "Decoder error %u\n", err);
 						&emsp;&emsp;&emsp;&emsp;exit(1);
 						&emsp;&emsp;}
-						&emsp;&emsp;printf("Tag:%u, Size:%u, Addr:%p\n",<br />
-						&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;tag, elem_len, ptr);
+						&emsp;&emsp;printf("Tag:%u, Size:%u, Addr:%p\n", tag, elem_len, ptr);
 						}
 					</code></pre>
 					
