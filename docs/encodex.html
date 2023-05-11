@@ -48,7 +48,6 @@
 					<p>ASN.1 is a data encoding format common to cryptography in which data is represented as a series of objects consisting of a tag, object size, and object data. The most commonly occurring serialization format for ASN.1 is <span style="font-weight:bold">DER</span>, which stands for <span style="font-style:italic;">Distinguished Encoding Rules</span>. The API is quite simple.</p>
 					
 					<pre class="code"><code class="language-c">uint8_t asn1_data = { /* some random ASN.1 data here */ };
-						struct cryptx_asn1_context asn1_state;&emsp;&emsp;// stateful parser context
 						asn1_error_t err;&emsp;&emsp;&emsp;&emsp;// track response codes from parser
 						uint8_t *ptr;&emsp;&emsp;&emsp;&emsp;// pointer to data for each element
 						size_t elem_len;&emsp;&emsp;&emsp;&emsp;// length of the element
