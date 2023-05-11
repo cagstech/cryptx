@@ -137,11 +137,6 @@
 								Calling this function on an element with no elements inside it (PRIMITIVE) can result in undefined behavior from returning ASN1_LEN_OVERFLOW or ASN1_END_OF_FILE to just returning an invalid object. <span class="font-weight:bold;">Use CRYPTX_ASN1_FORM() to see if a returned element is primitive or constructed before attempting to decode the data within.</span><br /><br />
 								<span style="font-weight:bold;">There is one exception to this. The PublicKey element within the PKCS&num;8 standardization is actually a PKCS&num;1 PublicKey structure with a zero byte prepended and then encoded as a primitive BIT STRING.</span> In this particular case, it is safe to call this function on that element to recurse into the PublicKey structure and extract the public modulus and exponent of your key.
 							</div>
-						</dd><br />
-						<dt class="lib-ref">asn1_error_t cryptx_asn1_next(struct cryptx_asn1_context *context);</dt>
-						<dd>Advances the current operating offset to move to the next element of the same parser level.<br />
-							<span class="param">context</span>: Pointer to ASN.1 context.<br />
-							<span class="param">returns</span>: [asn1_error_t] Status code returned by the parser initialization.
 						</dd>
 					</dl>
 				</div><br />
