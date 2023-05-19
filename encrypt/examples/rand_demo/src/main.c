@@ -24,7 +24,7 @@ int main(void)
     uint8_t salt[SALT_LEN];
 
     // initialize the secure RNG. Do not forget this!!!
-    if(!cryptx_csrand_init(SAMPLING_FAST)) return 1;
+    if(!cryptx_csrand_init()) return 1;
 	sprintf(CEMU_CONSOLE, "RNG init done.\n");
 	
 	// generate a single uint32_t

@@ -37,7 +37,7 @@ int main(void)
 	ecdh_error_t err;
 	
 	// Always check for false return value from csrand_init()
-	if(!cryptx_csrand_init(SAMPLING_FAST)) return 1;
+	if(!cryptx_csrand_init()) return 1;
 	
 	sprintf(CEMU_CONSOLE, "\n\n----------------------------------\nElliptic Curve Diffie-Hellman Demo\n");
 	

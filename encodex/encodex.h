@@ -111,6 +111,8 @@ typedef enum {
  * @note ASN.1 is a tree structure. You can use the @b element_data and @b element_len parameters
  * returned by this function to iterate further up the tree. To see if an element is of a type for which this is
  * valid, check the return value of @b CRYPTX_ASN1_FORM(element_tag).
+ * @note NULL may be passed for @b element_tag, @b element_len, and/or @b element_data if you do not
+ * need to return that particular bit of information.
  */
 asn1_error_t cryptx_asn1_decode(
 					void *data_start,
@@ -118,7 +120,7 @@ asn1_error_t cryptx_asn1_decode(
 					uint8_t seek_to,
 					uint8_t *element_tag,
 					size_t *element_len,
-					void **element_data);
+					uint8_t **element_data);
 
 
 //**************************************************************************************
@@ -128,6 +130,9 @@ asn1_error_t cryptx_asn1_decode(
 	of the input stream) which is then mapped to one of 64 printable
 	characters, or the = padding character. Base64 is often used to encode
 	cryptographic data such as the PEM key format, bcrypt, and more. */
+
+#define	CRYPTX_BASE64_GET_ENCODED_LEN(len)		((len) * 4 / 3)
+#define	CRYPTX_BASE64_GET_DECODED_LEN(len)		((len) * 3 / 4)
 
 /***************************************************************
  * @brief Converts an octet-encoded byte stream into a sextet-encoded byte stream.

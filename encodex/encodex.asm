@@ -43,131 +43,139 @@ _asn1_decode:
 	ld	hl, -16
 	call	ti._frameset
 	ld	iy, (ix + 6)
+	xor	a, a
 	ld	bc, 2
 	lea	hl, iy
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	z, .lbl_17
+	jr	nz, .lbl_2
+	push	bc
+	pop	hl
+	jp	.lbl_22
+.lbl_2:
 	ld	de, (ix + 9)
 	push	de
 	pop	hl
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	z, .lbl_17
-	ld	hl, (ix + 15)
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jp	z, .lbl_17
-	ld	hl, (ix + 18)
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jp	z, .lbl_17
-	ld	hl, (ix + 21)
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jp	z, .lbl_17
+	push	bc
+	pop	hl
+	jp	z, .lbl_22
+	ld	c, a
 	ld	a, (ix + 12)
 	ld	hl, 0
-	ld	(ix - 6), hl
-	ld	bc, 3
+	ld	(ix - 9), hl
 	lea	hl, iy
 	add	hl, de
-	ld	(ix - 9), hl
-	ld	de, 0
-	ld	(ix - 3), de
+	ex	de, hl
 	or	a, a
 	sbc	hl, hl
+	ld	(ix - 3), hl
 	ld	l, a
-	xor	a, a
+	ld	a, c
 	inc	hl
-.lbl_6:
-	ld	(ix - 12), hl
+	ld	(ix - 6), hl
+.lbl_4:
+	ld	hl, (ix - 6)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	z, .lbl_15
+	jp	z, .lbl_13
+	ld	(ix - 12), de
 	ld	de, (ix - 3)
 	add	iy, de
 	ld	a, (iy)
 	or	a, a
 	ld	de, 1
-	jr	z, .lbl_9
+	jr	z, .lbl_7
 	ld	de, 0
-.lbl_9:
+.lbl_7:
 	add	iy, de
 	lea	hl, iy
-	ld	de, (ix - 9)
+	ld	de, (ix - 12)
 	or	a, a
 	sbc	hl, de
-	jp	nc, .lbl_16
+	jp	nc, .lbl_20
 	ld	a, (iy)
 	ld	(ix - 13), a
 	lea	hl, iy + 2
-	ld	(ix - 6), hl
+	ld	(ix - 9), hl
 	ld	a, (iy + 1)
-	ld	de, 0
-	ld	(ix - 3), de
-	cp	a, d
+	or	a, a
+	sbc	hl, hl
+	ld	(ix - 3), hl
+	cp	a, h
 	call	pe, ti._setflag
-	jp	m, .lbl_12
+	jp	m, .lbl_10
 	or	a, a
 	sbc	hl, hl
 	ld	l, a
 	ld	(ix - 3), hl
-	jr	.lbl_14
-.lbl_12:
+	jr	.lbl_12
+.lbl_10:
 	and	a, 127
 	cp	a, 4
-	jr	nc, .lbl_17
+	jr	nc, .lbl_21
 	or	a, a
 	sbc	hl, hl
 	ld	l, a
 	ld	(ix - 16), hl
 	push	hl
-	ld	hl, (ix - 6)
+	ld	hl, (ix - 9)
 	push	hl
 	pea	ix - 3
 	call	_rmemcpy
-	ld	de, 0
-	push	de
-	pop	iy
-	ld	bc, 3
+	ld	de, (ix - 12)
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	de, (ix - 16)
+	ld	bc, (ix - 16)
+	ld	hl, (ix - 9)
+	add	hl, bc
+	ld	(ix - 9), hl
+.lbl_12:
 	ld	hl, (ix - 6)
-	add	hl, de
-	ld	(ix - 6), hl
-	lea	de, iy
-.lbl_14:
-	ld	hl, (ix - 12)
 	dec	hl
-	ld	iy, (ix - 6)
+	ld	(ix - 6), hl
+	ld	iy, (ix - 9)
 	ld	a, (ix - 13)
-	jp	.lbl_6
-.lbl_15:
+	jp	.lbl_4
+.lbl_13:
 	ld	hl, (ix + 15)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	z, .lbl_15
 	ld	(hl), a
-	ld	hl, (ix - 3)
+.lbl_15:
 	ld	iy, (ix + 18)
-	ld	(iy), hl
+	lea	hl, iy
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
 	ld	hl, (ix + 21)
-	ld	bc, (ix - 6)
-	ld	(hl), bc
-	push	de
-	pop	bc
-	jr	.lbl_17
-.lbl_16:
-	ld	bc, 1
+	jr	z, .lbl_17
+	ld	de, (ix - 3)
+	ld	(iy), de
 .lbl_17:
-	push	bc
-	pop	hl
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	z, .lbl_19
+	ld	de, (ix - 9)
+	ld	(hl), de
+.lbl_19:
+	or	a, a
+	sbc	hl, hl
+	jr	.lbl_22
+.lbl_20:
+	ld	hl, 1
+	jr	.lbl_22
+.lbl_21:
+	ld	hl, 3
+.lbl_22:
 	ld	sp, ix
 	pop	ix
 	ret

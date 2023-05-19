@@ -346,16 +346,7 @@ csrand_init:
 ; hl = starting address
 ; inputs: stack = samples / 4, Max is 256 (256*4 = 1024 samples)
 ; outputs: hl = address
-    pop hl
-    pop de
-    push de
-    push hl
-    inc e
-    dec e
     ld de, 256		; thorough sampling
-    jq z, .start
-    dec d
-    ld e, 128		; fast sampling
 .start:
 	ld a, e
 	ld (_smc_samples), a

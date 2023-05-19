@@ -61,15 +61,6 @@ typedef union {
 	of this library put significant effort into constructing a generator that satifies the
 	constraints for cryptographic security to the best extent possible on the hardware. */
 
-/*******************************************
- * @enum cryptx\_srng\_sampling\_mode
- * Defines sampling modes for @b cryptx\_csrand\_init
- */
-typedef enum cryptx_csrng_sampling_modes {
-	SAMPLING_THOROUGH	= 0,
-	SAMPLING_FAST		= 1
-} cryptx_csrng_sampling_mode;
-
 /*******************************************************************************
  * @brief Initializes the (HW)RNG.
  * @param[in] sampling_mode	Sampling mode to use for finding an entropic bit. See @b cryptx_csrng_sampling_mode.
@@ -80,7 +71,7 @@ typedef enum cryptx_csrng_sampling_modes {
  * @note Using the faster sampling mode may result in a less-entropic source byte being selected due to less
  * samples being collected. It is recommended to use THOROUGH.
  */
-bool cryptx_csrand_init(cryptx_csrng_sampling_mode mode);
+bool cryptx_csrand_init(void);
 
 /***********************************************
  * @brief Returns a securely psuedo-random 32-bit integer

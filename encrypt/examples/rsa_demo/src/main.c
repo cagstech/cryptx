@@ -36,7 +36,7 @@ int main(void)
 	rsa_error_t error;
     
     // Always check for false return value from csrand_init()
-    if(!cryptx_csrand_init(SAMPLING_FAST)) return 1;
+    if(!cryptx_csrand_init()) return 1;
 	
 	// RSA public keys are not generated in this manner
 	// you would generally receive said key from a remote host
