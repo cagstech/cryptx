@@ -16,74 +16,35 @@
 
 include $(CURDIR)/../common.mk
 
-LIBS := hashlib encrypt encodex
-TOOLS := fasmg convbin
+LIB_SRC			:= cryptx.asm
+LIB_LIB			:= cryptx.lib
+LIB_8XV			:= cryptx.8xv
+LIB_H			:= cryptx.h
+LIB_EXAMPLES	:= $(shell ls -d examples/*)
 
-SRCDIR = $(call NATIVEPATH,$1)
-TOOLSDIR = $(call NATIVEPATH,../../tools/$1)
+all: $(LIB_8XV)
 
-all: $(TOOLS) $(LIBS)
-	
-$(TOOLS): check
-	$(Q)$(MAKE) -C $(call TOOLSDIR,$@)
-	
-$(LIBS): fasmg
-	sed -i '' 's/BB.*_/\.lbl_/g' $(call SRCDIR,$@/$@.asm)
-	#sed -i '' 's/__frameset/ti._frameset/g' $(call SRCDIR,$@/$@.asm)
-	sed -i '' 's/__ishl/ti._ishl/g' $(call SRCDIR,$@/$@.asm)
-	sed -i '' 's/__lshl/ti._lshl/g' $(call SRCDIR,$@/$@.asm)
-	sed -i '' 's/__bshl/ti._bshl/g' $(call SRCDIR,$@/$@.asm)
-	sed -i '' 's/__ladd/ti._ladd/g' $(call SRCDIR,$@/$@.asm)
-	sed -i '' 's/__iremu/ti._iremu/g' $(call SRCDIR,$@/$@.asm)
-	sed -i '' 's/__lshru/ti._lshru/g' $(call SRCDIR,$@/$@.asm)
-	sed -i '' 's/__lor/ti._lor/g' $(call SRCDIR,$@/$@.asm)
-	sed -i '' 's/__idivu/ti._idivu/g' $(call SRCDIR,$@/$@.asm)
-	sed -i '' 's/__lxor/ti._lxor/g' $(call SRCDIR,$@/$@.asm)
-	sed -i '' 's/__bshru/ti._bshru/g' $(call SRCDIR,$@/$@.asm)
-	sed -i '' 's/__ishru/ti._ishru/g' $(call SRCDIR,$@/$@.asm)
-	$(Q)$(FASMG) $(call SRCDIR,$@/$@.asm)
-	
-
-#hashlib: hashlib/hashlib.8xv
-#encrypt: encrypt/cryptoc.8xv
-#encodex: encodex/encodex.8xv
-
-#hashlib/hashlib.8xv: hashlib/hashlib.asm
-#	sed -i '' 's/BB.*_/\.lbl_/g' hashlib/hashlib.asm
-#	$(Q)$(FASMG) $< $@
-
-#cryptoc/cryptoc.8xv: cryptoc/cryptoc.asm
-#	sed -i '' 's/BB.*_/\.lbl_/g' cryptoc/cryptoc.asm
-#	$(Q)$(FASMG) $< $@
-	
-#encodex/encodex.8xv: encodex/encodex.asm
-#	sed -i '' 's/BB.*_/\.lbl_/g' encodex/encodex.asm
-#	$(Q)$(FASMG) $< $@
-
+$(LIB_8XV): $(LIB_SRC)
+	$(Q)$(FASMG) $< $@
 
 clean:
-	$(foreach library,$(LIBS),$(call REMOVE, $(call SRCDIR,$(library))/$(library).lib $(call SRCDIR,$(library))/$(library).8xv))
+	$(Q)$(call REMOVE,$(LIB_LIB) $(LIB_8XV))
 
-install: $(LIBS)
+install: all
 	$(Q)$(call MKDIR,$(INSTALL_LIB))
 	$(Q)$(call MKDIR,$(INSTALL_H))
-	$(foreach library,$(LIBS),cp $(library)/$(library).lib $(INSTALL_LIB);)
-	$(foreach library,$(LIBS),cp $(library)/$(library).h $(INSTALL_H);)
-	
-group: $(LIBS)
-	convbin --iformat 8x --oformat 8xg-auto-extract \
-		$(foreach library,$(LIBS),$(addprefix --input ,$(call SRCDIR,$(library))/$(library).8xv)) --output $(call NATIVEPATH,CryptX.8xg)
-	
-check:
-	$(Q)$(EZCC) --version || ( echo Please install ez80-clang && exit 1 )
-	$(Q)$(FASMG) $(NULL) $(NULL) || ( echo Please install fasmg && exit 1 )
-	
-	
+	$(Q)$(call COPY,$(LIB_LIB),$(INSTALL_LIB))
+	$(Q)$(call COPY,$(LIB_H),$(INSTALL_H))
+
+examples: $(LIB_EXAMPLES)
+$(LIB_EXAMPLES):
+	$(MAKE) clean -C $@
+	$(MAKE) -C $@
+
 archive: cryptx.zip
 cryptx.zip:
-	zip cryptx.zip README.md CryptX.8xg -j \
-		$(foreach library,$(LIBS),$(call SRCDIR,$(library))/$(library).8xv)
+	rm cryptx.zip
+	zip cryptx.zip README.md cryptx.8xv cryptx.lib cryptx.h cryptx.asm
 
 
-.PHONY: all clean install
-
+.PHONY: all clean install examples archive $(LIB_EXAMPLES)

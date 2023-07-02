@@ -1,7 +1,0 @@
-	library	ENCODEX, 3
-
-	export	cryptx_asn1_decode
-	export	cryptx_base64_encode
-	export	cryptx_base64_decode
-	export	cryptx_bpp_encode
-	export	cryptx_bpp_decode
