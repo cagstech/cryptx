@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cryptography for the CE</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/epub.css" /> 
+  </head><body>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="cryptography-for-the-ce">
+<h1>Cryptography for the CE</h1>
+<p><strong>CryptX</strong> is a specialty library designed for integration with the TI-84+ CE toolchain that allows developers to easily implement cryptography into their projects without needing to worry about low-level implementation details. It also allows for bugfixes, feature additions, and changes to be pushed to the library usually without requiring developers to rebuild their projects.</p>
+<p>If this is your first introduction to the CE Toolchain, check out the <a class="reference external" href="https://github.com/CE-Programming/toolchain">toolchain repository</a><span class="link-target"> [https://github.com/CE-Programming/toolchain]</span> and familiarize yourself with how it works.</p>
+<p>You may be asking yourself “What makes CryptX any different than the many other tools on various forums claiming to hide or encrypt programs?”. In most cases those tools do not perform actual encryption but merely set a flag preventing the average person from seeing the programs. This does not prevent viewing, or even modification, of the data comprising those programs. This utility provides <strong>actual</strong> encryption. The following is an exhaustive list of what CryptX provides.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Hashing (Hash, HMAC, MGF1)</p></li>
+<li><p>Password-Based Key Derivation</p></li>
+<li><p>Secure Random Number Generation</p></li>
+<li><p>Advanced Encryption Standard</p></li>
+<li><p>Rivest-Shamir Adleman (RSA)</p></li>
+<li><p>Elliptic Curve Diffie-Hellman (implements SECT233k1)</p></li>
+<li><p>Abstract Syntax Notation One (ASN.1) and Base64 decoding</p></li>
+<li><p>Timing-safe buffer comparison</p></li>
+</ul>
+</div></blockquote>
+<p>Need more convincing? Check out the <a class="reference internal" href="static/analysis.xhtml#analysis"><span class="std std-ref">CryptX Analysis &amp; Overview</span></a> for more technical implementation details including platform-specific security considerations.</p>
+<p>Most of this library’s modules have been tested for compatibility with several other cryptographic libraries including <em>openssl</em>, <em>cryptodome/pycryptodome</em>, and <em>cryptography</em>, although in some cases where libraries do not expose their primitives, use of their <em>hazardous materials</em> layer may be required. If you do find an incompatibility with another cryptographic library, please open an issue on the <a class="reference external" href="https://github.com/acagliano/cryptx">CryptX Github</a><span class="link-target"> [https://github.com/acagliano/cryptx]</span>.</p>
+<div class="section" id="additional-resources">
+<h2>Additional Resources</h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="static/analysis.xhtml">CryptX Analysis &amp; Overview</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

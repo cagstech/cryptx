@@ -1,0 +1,61 @@
+\doxysection{cryptx\+\_\+priv\+\_\+hmac\+\_\+sha256\+\_\+state Struct Reference}
+\hypertarget{structcryptx__priv__hmac__sha256__state}{}\label{structcryptx__priv__hmac__sha256__state}\index{cryptx\_priv\_hmac\_sha256\_state@{cryptx\_priv\_hmac\_sha256\_state}}
+\doxysubsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{structcryptx__priv__hmac__sha256__state_a76528b6828a8be3bf9aec6c60f52d9ed}{ipad}} \mbox{[}64\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{structcryptx__priv__hmac__sha256__state_a2500321d12090b024ffa47c84d1fd4a7}{opad}} \mbox{[}64\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{structcryptx__priv__hmac__sha256__state_a211f5efbddeaf4f31dc6ce2183aab29a}{data}} \mbox{[}64\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{structcryptx__priv__hmac__sha256__state_a08a4247ddd5ec7698e39d0179e281255}{datalen}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{structcryptx__priv__hmac__sha256__state_a97047e014a3dcdd45fe2170667b39693}{bitlen}} \mbox{[}8\mbox{]}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{structcryptx__priv__hmac__sha256__state_a15e182b571ba9a3f833aeb6cdc046859}{state}} \mbox{[}8\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Field Documentation}
+\Hypertarget{structcryptx__priv__hmac__sha256__state_a97047e014a3dcdd45fe2170667b39693}\label{structcryptx__priv__hmac__sha256__state_a97047e014a3dcdd45fe2170667b39693} 
+\index{cryptx\_priv\_hmac\_sha256\_state@{cryptx\_priv\_hmac\_sha256\_state}!bitlen@{bitlen}}
+\index{bitlen@{bitlen}!cryptx\_priv\_hmac\_sha256\_state@{cryptx\_priv\_hmac\_sha256\_state}}
+\doxysubsubsection{\texorpdfstring{bitlen}{bitlen}}
+{\footnotesize\ttfamily uint8\+\_\+t cryptx\+\_\+priv\+\_\+hmac\+\_\+sha256\+\_\+state\+::bitlen\mbox{[}8\mbox{]}}
+
+holds the current length of transformed data \Hypertarget{structcryptx__priv__hmac__sha256__state_a211f5efbddeaf4f31dc6ce2183aab29a}\label{structcryptx__priv__hmac__sha256__state_a211f5efbddeaf4f31dc6ce2183aab29a} 
+\index{cryptx\_priv\_hmac\_sha256\_state@{cryptx\_priv\_hmac\_sha256\_state}!data@{data}}
+\index{data@{data}!cryptx\_priv\_hmac\_sha256\_state@{cryptx\_priv\_hmac\_sha256\_state}}
+\doxysubsubsection{\texorpdfstring{data}{data}}
+{\footnotesize\ttfamily uint8\+\_\+t cryptx\+\_\+priv\+\_\+hmac\+\_\+sha256\+\_\+state\+::data\mbox{[}64\mbox{]}}
+
+holds sha-\/256 block for transformation \Hypertarget{structcryptx__priv__hmac__sha256__state_a08a4247ddd5ec7698e39d0179e281255}\label{structcryptx__priv__hmac__sha256__state_a08a4247ddd5ec7698e39d0179e281255} 
+\index{cryptx\_priv\_hmac\_sha256\_state@{cryptx\_priv\_hmac\_sha256\_state}!datalen@{datalen}}
+\index{datalen@{datalen}!cryptx\_priv\_hmac\_sha256\_state@{cryptx\_priv\_hmac\_sha256\_state}}
+\doxysubsubsection{\texorpdfstring{datalen}{datalen}}
+{\footnotesize\ttfamily uint8\+\_\+t cryptx\+\_\+priv\+\_\+hmac\+\_\+sha256\+\_\+state\+::datalen}
+
+holds the current length of data in data\mbox{[}64\mbox{]} \Hypertarget{structcryptx__priv__hmac__sha256__state_a76528b6828a8be3bf9aec6c60f52d9ed}\label{structcryptx__priv__hmac__sha256__state_a76528b6828a8be3bf9aec6c60f52d9ed} 
+\index{cryptx\_priv\_hmac\_sha256\_state@{cryptx\_priv\_hmac\_sha256\_state}!ipad@{ipad}}
+\index{ipad@{ipad}!cryptx\_priv\_hmac\_sha256\_state@{cryptx\_priv\_hmac\_sha256\_state}}
+\doxysubsubsection{\texorpdfstring{ipad}{ipad}}
+{\footnotesize\ttfamily uint8\+\_\+t cryptx\+\_\+priv\+\_\+hmac\+\_\+sha256\+\_\+state\+::ipad\mbox{[}64\mbox{]}}
+
+holds the key xored with a magic value to be hashed with the inner digest \Hypertarget{structcryptx__priv__hmac__sha256__state_a2500321d12090b024ffa47c84d1fd4a7}\label{structcryptx__priv__hmac__sha256__state_a2500321d12090b024ffa47c84d1fd4a7} 
+\index{cryptx\_priv\_hmac\_sha256\_state@{cryptx\_priv\_hmac\_sha256\_state}!opad@{opad}}
+\index{opad@{opad}!cryptx\_priv\_hmac\_sha256\_state@{cryptx\_priv\_hmac\_sha256\_state}}
+\doxysubsubsection{\texorpdfstring{opad}{opad}}
+{\footnotesize\ttfamily uint8\+\_\+t cryptx\+\_\+priv\+\_\+hmac\+\_\+sha256\+\_\+state\+::opad\mbox{[}64\mbox{]}}
+
+holds the key xored with a magic value to be hashed with the outer digest \Hypertarget{structcryptx__priv__hmac__sha256__state_a15e182b571ba9a3f833aeb6cdc046859}\label{structcryptx__priv__hmac__sha256__state_a15e182b571ba9a3f833aeb6cdc046859} 
+\index{cryptx\_priv\_hmac\_sha256\_state@{cryptx\_priv\_hmac\_sha256\_state}!state@{state}}
+\index{state@{state}!cryptx\_priv\_hmac\_sha256\_state@{cryptx\_priv\_hmac\_sha256\_state}}
+\doxysubsubsection{\texorpdfstring{state}{state}}
+{\footnotesize\ttfamily uint32\+\_\+t cryptx\+\_\+priv\+\_\+hmac\+\_\+sha256\+\_\+state\+::state\mbox{[}8\mbox{]}}
+
+holds hash state for transformed data 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/acagliano/\+Repositories/toolchain/src/cryptx/\mbox{\hyperlink{cryptx_8h}{cryptx.\+h}}\end{DoxyCompactItemize}

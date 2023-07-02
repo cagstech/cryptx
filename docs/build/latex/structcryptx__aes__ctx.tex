@@ -1,0 +1,68 @@
+\doxysection{cryptx\+\_\+aes\+\_\+ctx Struct Reference}
+\hypertarget{structcryptx__aes__ctx}{}\label{structcryptx__aes__ctx}\index{cryptx\_aes\_ctx@{cryptx\_aes\_ctx}}
+
+
+{\ttfamily \#include $<$cryptx.\+h$>$}
+
+\doxysubsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+uint24\+\_\+t \mbox{\hyperlink{structcryptx__aes__ctx_aed50e8b9a653c1d20a0f324789ba8f84}{keysize}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{structcryptx__aes__ctx_ab7564e0e5d2e1bd96b083f913eda1382}{round\+\_\+keys}} \mbox{[}60\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{structcryptx__aes__ctx_a3cc495f40d5a578c335fd03fe2772e4a}{iv}} \mbox{[}16\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{structcryptx__aes__ctx_a46d05a8ea39c183bd6f09d5fa95bfe25}{ciphermode}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{structcryptx__aes__ctx_af6a8c176ebacf1d1fc6a25b1ec2ec6d8}{op\+\_\+assoc}}
+\item 
+\mbox{\hyperlink{unioncryptx__aes__private__h}{cryptx\+\_\+aes\+\_\+private\+\_\+h}} \mbox{\hyperlink{structcryptx__aes__ctx_a019c3bf1d587684ca720951dc0f390c3}{metadata}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Use when you need fast bi-\/directional encryption. 
+
+\doxysubsection{Field Documentation}
+\Hypertarget{structcryptx__aes__ctx_a46d05a8ea39c183bd6f09d5fa95bfe25}\label{structcryptx__aes__ctx_a46d05a8ea39c183bd6f09d5fa95bfe25} 
+\index{cryptx\_aes\_ctx@{cryptx\_aes\_ctx}!ciphermode@{ciphermode}}
+\index{ciphermode@{ciphermode}!cryptx\_aes\_ctx@{cryptx\_aes\_ctx}}
+\doxysubsubsection{\texorpdfstring{ciphermode}{ciphermode}}
+{\footnotesize\ttfamily uint8\+\_\+t cryptx\+\_\+aes\+\_\+ctx\+::ciphermode}
+
+selected operational mode of the cipher \Hypertarget{structcryptx__aes__ctx_a3cc495f40d5a578c335fd03fe2772e4a}\label{structcryptx__aes__ctx_a3cc495f40d5a578c335fd03fe2772e4a} 
+\index{cryptx\_aes\_ctx@{cryptx\_aes\_ctx}!iv@{iv}}
+\index{iv@{iv}!cryptx\_aes\_ctx@{cryptx\_aes\_ctx}}
+\doxysubsubsection{\texorpdfstring{iv}{iv}}
+{\footnotesize\ttfamily uint8\+\_\+t cryptx\+\_\+aes\+\_\+ctx\+::iv\mbox{[}16\mbox{]}}
+
+IV state for next block \Hypertarget{structcryptx__aes__ctx_aed50e8b9a653c1d20a0f324789ba8f84}\label{structcryptx__aes__ctx_aed50e8b9a653c1d20a0f324789ba8f84} 
+\index{cryptx\_aes\_ctx@{cryptx\_aes\_ctx}!keysize@{keysize}}
+\index{keysize@{keysize}!cryptx\_aes\_ctx@{cryptx\_aes\_ctx}}
+\doxysubsubsection{\texorpdfstring{keysize}{keysize}}
+{\footnotesize\ttfamily uint24\+\_\+t cryptx\+\_\+aes\+\_\+ctx\+::keysize}
+
+the size of the key, in bits \Hypertarget{structcryptx__aes__ctx_a019c3bf1d587684ca720951dc0f390c3}\label{structcryptx__aes__ctx_a019c3bf1d587684ca720951dc0f390c3} 
+\index{cryptx\_aes\_ctx@{cryptx\_aes\_ctx}!metadata@{metadata}}
+\index{metadata@{metadata}!cryptx\_aes\_ctx@{cryptx\_aes\_ctx}}
+\doxysubsubsection{\texorpdfstring{metadata}{metadata}}
+{\footnotesize\ttfamily \mbox{\hyperlink{unioncryptx__aes__private__h}{cryptx\+\_\+aes\+\_\+private\+\_\+h}} cryptx\+\_\+aes\+\_\+ctx\+::metadata}
+
+opague, internal context metadata \Hypertarget{structcryptx__aes__ctx_af6a8c176ebacf1d1fc6a25b1ec2ec6d8}\label{structcryptx__aes__ctx_af6a8c176ebacf1d1fc6a25b1ec2ec6d8} 
+\index{cryptx\_aes\_ctx@{cryptx\_aes\_ctx}!op\_assoc@{op\_assoc}}
+\index{op\_assoc@{op\_assoc}!cryptx\_aes\_ctx@{cryptx\_aes\_ctx}}
+\doxysubsubsection{\texorpdfstring{op\_assoc}{op\_assoc}}
+{\footnotesize\ttfamily uint8\+\_\+t cryptx\+\_\+aes\+\_\+ctx\+::op\+\_\+assoc}
+
+state-\/flag indicating if context is for encryption or decryption \Hypertarget{structcryptx__aes__ctx_ab7564e0e5d2e1bd96b083f913eda1382}\label{structcryptx__aes__ctx_ab7564e0e5d2e1bd96b083f913eda1382} 
+\index{cryptx\_aes\_ctx@{cryptx\_aes\_ctx}!round\_keys@{round\_keys}}
+\index{round\_keys@{round\_keys}!cryptx\_aes\_ctx@{cryptx\_aes\_ctx}}
+\doxysubsubsection{\texorpdfstring{round\_keys}{round\_keys}}
+{\footnotesize\ttfamily uint32\+\_\+t cryptx\+\_\+aes\+\_\+ctx\+::round\+\_\+keys\mbox{[}60\mbox{]}}
+
+round keys 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/acagliano/\+Repositories/toolchain/src/cryptx/\mbox{\hyperlink{cryptx_8h}{cryptx.\+h}}\end{DoxyCompactItemize}

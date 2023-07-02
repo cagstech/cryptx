@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Licensed under the Apache 2.0 License -->
+  <link rel="stylesheet" type="text/css" href="_static/fonts/open-sans/stylesheet.css" />
+  <!-- Licensed under the SIL Open Font License -->
+  <link rel="stylesheet" type="text/css" href="_static/fonts/source-serif-pro/source-serif-pro.css" />
+  <link rel="stylesheet" type="text/css" href="_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="_static/css/bootstrap-theme.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Cryptography for the CE &#8212; CryptX  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/guzzle.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="CryptX Analysis &amp; Overview" href="static/analysis.html" />
+  
+   
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="static/analysis.html" title="CryptX Analysis &amp; Overview"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">CryptX  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Cryptography for the CE</a></li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+
+      <div id="mobile-toggle">
+        <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+      </div>
+  <div id="left-column">
+    <div class="sphinxsidebar">
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2>Contents</h2>
+    <div class="sidebar-localtoc">
+      <ul>
+<li><a class="reference internal" href="#">Cryptography for the CE</a><ul>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+  </div>
+</div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="static/analysis.html"
+                          title="next chapter">CryptX Analysis &amp; Overview</a></p>
+  </div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <div id="main-search">
+      <form class="form-inline" action="search.html" method="GET" role="form">
+        <div class="input-group">
+          <input name="q" type="text" class="form-control" placeholder="Search...">
+        </div>
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+        <div id="right-column">
+          
+          <div role="navigation" aria-label="breadcrumbs navigation">
+            <ol class="breadcrumb">
+              <li><a href="#">Docs</a></li>
+              
+              <li>Cryptography for the CE</li>
+            </ol>
+          </div>
+          
+          <div class="document clearer body">
+            
+  <div class="section" id="cryptography-for-the-ce">
+<h1>Cryptography for the CE<a class="headerlink" href="#cryptography-for-the-ce" title="Permalink to this headline">¶</a></h1>
+<p><strong>CryptX</strong> is a specialty library designed for integration with the TI-84+ CE toolchain that allows developers to easily implement cryptography into their projects without needing to worry about low-level implementation details. It also allows for bugfixes, feature additions, and changes to be pushed to the library usually without requiring developers to rebuild their projects.</p>
+<p>If this is your first introduction to the CE Toolchain, check out the <a class="reference external" href="https://github.com/CE-Programming/toolchain">toolchain repository</a> and familiarize yourself with how it works.</p>
+<p>You may be asking yourself “What makes CryptX any different than the many other tools on various forums claiming to hide or encrypt programs?”. In most cases those tools do not perform actual encryption but merely set a flag preventing the average person from seeing the programs. This does not prevent viewing, or even modification, of the data comprising those programs. This utility provides <strong>actual</strong> encryption. The following is an exhaustive list of what CryptX provides.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Hashing (Hash, HMAC, MGF1)</p></li>
+<li><p>Password-Based Key Derivation</p></li>
+<li><p>Secure Random Number Generation</p></li>
+<li><p>Advanced Encryption Standard</p></li>
+<li><p>Rivest-Shamir Adleman (RSA)</p></li>
+<li><p>Elliptic Curve Diffie-Hellman (implements SECT233k1)</p></li>
+<li><p>Abstract Syntax Notation One (ASN.1) and Base64 decoding</p></li>
+<li><p>Timing-safe buffer comparison</p></li>
+</ul>
+</div></blockquote>
+<p>Need more convincing? Check out the <a class="reference internal" href="static/analysis.html#analysis"><span class="std std-ref">CryptX Analysis &amp; Overview</span></a> for more technical implementation details including platform-specific security considerations.</p>
+<p>Most of this library’s modules have been tested for compatibility with several other cryptographic libraries including <em>openssl</em>, <em>cryptodome/pycryptodome</em>, and <em>cryptography</em>, although in some cases where libraries do not expose their primitives, use of their <em>hazardous materials</em> layer may be required. If you do find an incompatibility with another cryptographic library, please open an issue on the <a class="reference external" href="https://github.com/acagliano/cryptx">CryptX Github</a>.</p>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="static/analysis.html">CryptX Analysis &amp; Overview</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+            
+  <div class="footer-relations">
+    
+      <div class="pull-right">
+        <a class="btn btn-default" href="static/analysis.html" title="next chapter (use the right arrow)">CryptX Analysis &amp; Overview</a>
+      </div>
+    </div>
+    <div class="clearer"></div>
+  
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="static/analysis.html" title="CryptX Analysis &amp; Overview"
+             >next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">CryptX  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Cryptography for the CE</a></li> 
+      </ul>
+    </div>
+<script type="text/javascript">
+  $("#mobile-toggle a").click(function () {
+    $("#left-column").toggle();
+  });
+</script>
+<script type="text/javascript" src="_static/js/bootstrap.js"></script>
+  <div class="footer">
+    &copy; Copyright 2023. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  </body>
+</html>
