@@ -17,17 +17,9 @@ extensions = [
 ]
 
 html_theme_options = {
-    "globaltoc_collapse": False,
+    'display_version': False,
+    'titles_only': False
 }
-
-import guzzle_sphinx_theme
-
-html_theme_path = guzzle_sphinx_theme.html_theme_path()
-html_theme = 'guzzle_sphinx_theme'
-
-# Register the theme as an extension to generate a sitemap.xml
-extensions.append("guzzle_sphinx_theme")
-
 
 latex_engine = 'pdflatex'
 latex_elements = {
@@ -49,7 +41,7 @@ master_doc = 'index'
 language = None
 exclude_patterns = ['build', '_build', 'Thumbs.db', '.DS_Store', 'venv']
 pygments_style = None
-html_theme = 'guzzle_sphinx_theme'
+html_theme = 'sphinx_rtd_theme'
 html_show_sourcelink = False
 
 try:
@@ -69,5 +61,4 @@ breathe_default_project = 'CE C/C++ Toolchain'
 breathe_show_define_initializer = True
 breathe_show_enumvalue_initializer = True
 subprocess.call('doxygen doxyfile', shell=True)
-breathe_projects['CE C/C++ Toolchain'] = 'doxygen/xml'
-breathe_projects['CE C Toolchain'] = 'doxygen/xml'
+breathe_projects['CryptX'] = 'doxygen/xml'

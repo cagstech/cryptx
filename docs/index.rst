@@ -22,11 +22,17 @@ Most of this library's modules have been tested for compatibility with several o
 
 
 Additional Resources
-^^^^^^^^^^^^^^^^^^^^^
+---------------------
 .. toctree::
     :maxdepth: 1
 
     static/analysis
+    
+    
+API Documentation
+----------------------
+.. doxygenfile:: cryptx.h
+	:project: CryptX
     
     
 
