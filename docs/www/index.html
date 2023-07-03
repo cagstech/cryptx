@@ -732,12 +732,48 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv416cryptx_hmac_initP15cryptx_hmac_ctxPKv6size_t7uint8_t">
 <span id="_CPPv316cryptx_hmac_initP15cryptx_hmac_ctxPKv6size_t7uint8_t"></span><span id="_CPPv216cryptx_hmac_initP15cryptx_hmac_ctxPKv6size_t7uint8_t"></span><span id="cryptx_hmac_init__cryptx_hmac_ctxP.voidCP.s.uint8_t"></span><span class="target" id="cryptx_8h_1a21c854c0bcb6f7497516847e080c27c3"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hmac_init</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv415cryptx_hmac_ctx" title="cryptx_hmac_ctx"><span class="n"><span class="pre">cryptx_hmac_ctx</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">key</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">keylen</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">hash_alg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416cryptx_hmac_initP15cryptx_hmac_ctxPKv6size_t7uint8_t" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Initializes an HMAC-state context for a specific hash algorithm. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Destroys 516 bytes of fastMem starting at 0xE30800. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> – Pointer to an HMAC-state context. </p></li>
+<li><p><strong>key</strong> – Pointer to a key used to initialize the HMAC state. </p></li>
+<li><p><strong>keylen</strong> – Length of the <strong>key</strong>. </p></li>
+<li><p><strong>hash_alg</strong> – The numeric ID of the hashing algorithm to use. See <strong>cryptx_hash_algorithms</strong>. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>true</strong> if initialized succeeded, <strong>false</strong> if failed. </p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv418cryptx_hmac_updateP15cryptx_hmac_ctxPKv6size_t">
 <span id="_CPPv318cryptx_hmac_updateP15cryptx_hmac_ctxPKv6size_t"></span><span id="_CPPv218cryptx_hmac_updateP15cryptx_hmac_ctxPKv6size_t"></span><span id="cryptx_hmac_update__cryptx_hmac_ctxP.voidCP.s"></span><span class="target" id="cryptx_8h_1a1ab7dcd49b5df0f9e697a5e14939d186"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hmac_update</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv415cryptx_hmac_ctx" title="cryptx_hmac_ctx"><span class="n"><span class="pre">cryptx_hmac_ctx</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_hmac_updateP15cryptx_hmac_ctxPKv6size_t" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Updates the hash-state for a given block of data. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Destroys 516 bytes of fastMem starting at 0xE30800. </p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Calling this on a context that has not been initialized may have unpredictable results. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> – Pointer to an HMAC-state context. </p></li>
+<li><p><strong>data</strong> – Pointer to a block of data to hash.. </p></li>
+<li><p><strong>len</strong> – Size of the <strong>data</strong> to hash. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv418cryptx_hmac_digestP15cryptx_hmac_ctxPv">
@@ -1103,10 +1139,7 @@
 <dl class="cpp struct">
 <dt class="sig sig-object cpp" id="_CPPv415cryptx_hmac_ctx">
 <span id="_CPPv315cryptx_hmac_ctx"></span><span id="_CPPv215cryptx_hmac_ctx"></span><span id="cryptx_hmac_ctx"></span><span class="target" id="structcryptx__hmac__ctx"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hmac_ctx</span></span></span><a class="headerlink" href="#_CPPv415cryptx_hmac_ctx" title="Permalink to this definition"></a><br /></dt>
-<dd><div class="docutils container">
-<em>#include &lt;cryptx.h&gt;</em></div>
-<p>Use when you want to verify data has not been changed in some manner AND is from an authorized endpoint. </p>
-<div class="breathe-sectiondef docutils container">
+<dd><div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N15cryptx_hmac_ctx4initE">

@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.7" xml:lang="en-US">
+  <compounddef id="structcryptx__priv__hash__sha256__state" kind="struct" language="C++" prot="public">
+    <compoundname>cryptx_priv_hash_sha256_state</compoundname>
+    <includes refid="cryptx_8h" local="no">cryptx.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcryptx__priv__hash__sha256__state_1ace8bc5d62baf6635d34d334d676f70dc" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t cryptx_priv_hash_sha256_state::data[64]</definition>
+        <argsstring>[64]</argsstring>
+        <name>data</name>
+        <qualifiedname>cryptx_priv_hash_sha256_state::data</qualifiedname>
+        <briefdescription>
+<para>holds sha-256 block for transformation </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="16" column="9" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__priv__hash__sha256__state_1a39895682d65bc3717534cf819f1c3a5e" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t cryptx_priv_hash_sha256_state::datalen</definition>
+        <argsstring></argsstring>
+        <name>datalen</name>
+        <qualifiedname>cryptx_priv_hash_sha256_state::datalen</qualifiedname>
+        <briefdescription>
+<para>holds the current length of data in data[64] </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="17" column="9" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__priv__hash__sha256__state_1aface79df571a3e926b521fe08fcc38cd" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t cryptx_priv_hash_sha256_state::bitlen[8]</definition>
+        <argsstring>[8]</argsstring>
+        <name>bitlen</name>
+        <qualifiedname>cryptx_priv_hash_sha256_state::bitlen</qualifiedname>
+        <briefdescription>
+<para>holds the current length of transformed data </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="18" column="9" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__priv__hash__sha256__state_1ac1ec56cb26c817b455f30a06002ea0ef" prot="public" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t cryptx_priv_hash_sha256_state::state[8]</definition>
+        <argsstring>[8]</argsstring>
+        <name>state</name>
+        <qualifiedname>cryptx_priv_hash_sha256_state::state</qualifiedname>
+        <briefdescription>
+<para>holds hash state for transformed data </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="19" column="10" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<sect3 id="structcryptx__priv__hash__sha256__state_1autotoc_md0">
+<title>PRIVATE STRUCTS/INTERNAL USE ONLY – DO NOT MODIFY</title>
+</sect3>
+    </detaileddescription>
+    <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="15" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="15" bodyend="20"/>
+    <listofallmembers>
+      <member refid="structcryptx__priv__hash__sha256__state_1aface79df571a3e926b521fe08fcc38cd" prot="public" virt="non-virtual"><scope>cryptx_priv_hash_sha256_state</scope><name>bitlen</name></member>
+      <member refid="structcryptx__priv__hash__sha256__state_1ace8bc5d62baf6635d34d334d676f70dc" prot="public" virt="non-virtual"><scope>cryptx_priv_hash_sha256_state</scope><name>data</name></member>
+      <member refid="structcryptx__priv__hash__sha256__state_1a39895682d65bc3717534cf819f1c3a5e" prot="public" virt="non-virtual"><scope>cryptx_priv_hash_sha256_state</scope><name>datalen</name></member>
+      <member refid="structcryptx__priv__hash__sha256__state_1ac1ec56cb26c817b455f30a06002ea0ef" prot="public" virt="non-virtual"><scope>cryptx_priv_hash_sha256_state</scope><name>state</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

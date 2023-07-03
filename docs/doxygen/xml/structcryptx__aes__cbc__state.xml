@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.7" xml:lang="en-US">
+  <compounddef id="structcryptx__aes__cbc__state" kind="struct" language="C++" prot="public">
+    <compoundname>cryptx_aes_cbc_state</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcryptx__aes__cbc__state_1a5c0aaacd0621efeb0c31042eaf47fdd4" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t cryptx_aes_cbc_state::padding_mode</definition>
+        <argsstring></argsstring>
+        <name>padding_mode</name>
+        <qualifiedname>cryptx_aes_cbc_state::padding_mode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="37" column="35" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="37" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="37" bodyend="37"/>
+    <listofallmembers>
+      <member refid="structcryptx__aes__cbc__state_1a5c0aaacd0621efeb0c31042eaf47fdd4" prot="public" virt="non-virtual"><scope>cryptx_aes_cbc_state</scope><name>padding_mode</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.7" xml:lang="en-US">
+  <compounddef id="unioncryptx__hmac__private__h" kind="union" language="C++" prot="public">
+    <compoundname>cryptx_hmac_private_h</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="unioncryptx__hmac__private__h_1affa5ba199a186161ee892222e5e63331" prot="public" static="no" mutable="no">
+        <type>struct cryptx_priv_hmac_sha256_state</type>
+        <definition>struct cryptx_priv_hmac_sha256_state cryptx_hmac_private_h::sha256</definition>
+        <argsstring></argsstring>
+        <name>sha256</name>
+        <qualifiedname>cryptx_hmac_private_h::sha256</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="34" column="36" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="33" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="33" bodyend="35"/>
+    <listofallmembers>
+      <member refid="unioncryptx__hmac__private__h_1affa5ba199a186161ee892222e5e63331" prot="public" virt="non-virtual"><scope>cryptx_hmac_private_h</scope><name>sha256</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

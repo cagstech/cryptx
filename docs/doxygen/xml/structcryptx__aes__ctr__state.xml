@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.7" xml:lang="en-US">
+  <compounddef id="structcryptx__aes__ctr__state" kind="struct" language="C++" prot="public">
+    <compoundname>cryptx_aes_ctr_state</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcryptx__aes__ctr__state_1a682bad6723c69eb60deff9bb4776c980" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t cryptx_aes_ctr_state::counter_pos_start</definition>
+        <argsstring></argsstring>
+        <name>counter_pos_start</name>
+        <qualifiedname>cryptx_aes_ctr_state::counter_pos_start</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="39" column="9" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__aes__ctr__state_1a9dc1be79bf28c78b160f868d6109798f" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t cryptx_aes_ctr_state::counter_len</definition>
+        <argsstring></argsstring>
+        <name>counter_len</name>
+        <qualifiedname>cryptx_aes_ctr_state::counter_len</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="39" column="35" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__aes__ctr__state_1a4bbe4892753b3672342740300626d6c9" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t cryptx_aes_ctr_state::last_block_stop</definition>
+        <argsstring></argsstring>
+        <name>last_block_stop</name>
+        <qualifiedname>cryptx_aes_ctr_state::last_block_stop</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="40" column="9" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__aes__ctr__state_1a06c591c65dc6bb358acfe1e6040df907" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t cryptx_aes_ctr_state::last_block[16]</definition>
+        <argsstring>[16]</argsstring>
+        <name>last_block</name>
+        <qualifiedname>cryptx_aes_ctr_state::last_block</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="40" column="33" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="38" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="38" bodyend="40"/>
+    <listofallmembers>
+      <member refid="structcryptx__aes__ctr__state_1a9dc1be79bf28c78b160f868d6109798f" prot="public" virt="non-virtual"><scope>cryptx_aes_ctr_state</scope><name>counter_len</name></member>
+      <member refid="structcryptx__aes__ctr__state_1a682bad6723c69eb60deff9bb4776c980" prot="public" virt="non-virtual"><scope>cryptx_aes_ctr_state</scope><name>counter_pos_start</name></member>
+      <member refid="structcryptx__aes__ctr__state_1a06c591c65dc6bb358acfe1e6040df907" prot="public" virt="non-virtual"><scope>cryptx_aes_ctr_state</scope><name>last_block</name></member>
+      <member refid="structcryptx__aes__ctr__state_1a4bbe4892753b3672342740300626d6c9" prot="public" virt="non-virtual"><scope>cryptx_aes_ctr_state</scope><name>last_block_stop</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

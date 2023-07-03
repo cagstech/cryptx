@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.7" xml:lang="en-US">
+  <compounddef id="_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>CryptX</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">CryptX<sp/>provides<sp/>industry-standard<sp/>cryptography<sp/>for<sp/>the<sp/>TI-84+<sp/>CE<sp/>graphing<sp/>calculator.</highlight></codeline>
+<codeline><highlight class="normal">The<sp/>package<sp/>contains<sp/>three(3)<sp/>separate<sp/>libraries<sp/>that<sp/>serve<sp/>different<sp/>functions.<sp/></highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Getting<sp/>Started<sp/>with<sp/>CryptX</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Visit<sp/>the<sp/>[CryptX<sp/>Documentation](https://acagliano.github.io/cryptx)<sp/>for<sp/>help<sp/>with<sp/>using<sp/></highlight></codeline>
+<codeline><highlight class="normal">the<sp/>library,<sp/>documentation,<sp/>cryptanalysis,<sp/>credits,<sp/>and<sp/>more.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Credits:<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">Some<sp/>algorithms<sp/>sourced<sp/>at<sp/>least<sp/>in<sp/>part<sp/>from<sp/>[B-con<sp/>crypto-algorithms](https://github.com/B-Con/crypto-algorithms).<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">Cemetech<sp/>user<sp/>Zeroko<sp/>-<sp/>information<sp/>on<sp/>CE<sp/>randomness.<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">beckadamtheinventor<sp/>&amp;<sp/>commandblockguy<sp/>-<sp/>coding<sp/>assistance,<sp/>conversion<sp/>of<sp/>some<sp/>C<sp/>routines<sp/>to<sp/>assembly<sp/>for<sp/>speed.<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">jacobly<sp/>-<sp/>modular<sp/>exponentiation</highlight></codeline>
+    </programlisting>
+    <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/README.md"/>
+  </compounddef>
+</doxygen>
