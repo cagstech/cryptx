@@ -10,12 +10,13 @@
         <name>init</name>
         <qualifiedname>cryptx_hash_ctx::init</qualifiedname>
         <briefdescription>
+<para>Pointer to function call for hash initialization. </para>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="60" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="60" bodyend="-1"/>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="85" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="85" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structcryptx__hash__ctx_1abcba976dfec24f43bbd0af1f3c4abfeb" prot="public" static="no" mutable="no">
         <type>void(*</type>
@@ -24,12 +25,13 @@
         <name>update</name>
         <qualifiedname>cryptx_hash_ctx::update</qualifiedname>
         <briefdescription>
+<para>Pointer to function call for hash update. </para>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="61" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="61" bodyend="-1"/>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="86" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="86" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structcryptx__hash__ctx_1a1bc11de9717a516b5c0d053121e9851d" prot="public" static="no" mutable="no">
         <type>void(*</type>
@@ -38,12 +40,13 @@
         <name>digest</name>
         <qualifiedname>cryptx_hash_ctx::digest</qualifiedname>
         <briefdescription>
+<para>Pointer to function call for digest output. </para>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="62" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="62" bodyend="-1"/>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="87" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="87" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structcryptx__hash__ctx_1a6bceb7d80541e569377e5d3684fd1721" prot="public" static="no" mutable="no">
         <type>uint8_t</type>
@@ -52,33 +55,54 @@
         <name>digest_len</name>
         <qualifiedname>cryptx_hash_ctx::digest_len</qualifiedname>
         <briefdescription>
+<para>Output length of hash digest, in bytes. </para>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="63" column="9" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="63" bodyend="-1"/>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="88" column="9" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="88" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structcryptx__hash__ctx_1a7ef6076b4878b27aea27fa71fc929a60" prot="public" static="no" mutable="no">
-        <type>cryptx_hash_private_h</type>
+        <type><ref refid="unioncryptx__hash__private__h" kindref="compound">cryptx_hash_private_h</ref></type>
         <definition>cryptx_hash_private_h cryptx_hash_ctx::metadata</definition>
         <argsstring></argsstring>
         <name>metadata</name>
         <qualifiedname>cryptx_hash_ctx::metadata</qualifiedname>
         <briefdescription>
+<para>PRIVATE, INTERNAL. </para>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="64" column="23" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="64" bodyend="-1"/>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="89" column="23" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="89" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="59" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="59" bodyend="65"/>
+    <collaborationgraph>
+      <node id="1">
+        <label>cryptx_hash_ctx</label>
+        <childnode refid="2" relation="usage">
+          <edgelabel>metadata</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>cryptx_hash_private_h</label>
+        <link refid="unioncryptx__hash__private__h"/>
+        <childnode refid="3" relation="usage">
+          <edgelabel>sha256</edgelabel>
+        </childnode>
+      </node>
+      <node id="3">
+        <label>cryptx_priv_hash_sha256_state</label>
+        <link refid="structcryptx__priv__hash__sha256__state"/>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="84" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="84" bodyend="90"/>
     <listofallmembers>
       <member refid="structcryptx__hash__ctx_1a1bc11de9717a516b5c0d053121e9851d" prot="public" virt="non-virtual"><scope>cryptx_hash_ctx</scope><name>digest</name></member>
       <member refid="structcryptx__hash__ctx_1a6bceb7d80541e569377e5d3684fd1721" prot="public" virt="non-virtual"><scope>cryptx_hash_ctx</scope><name>digest_len</name></member>

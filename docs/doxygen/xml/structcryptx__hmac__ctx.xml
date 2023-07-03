@@ -10,12 +10,13 @@
         <name>init</name>
         <qualifiedname>cryptx_hmac_ctx::init</qualifiedname>
         <briefdescription>
+<para>Pointer to function call for hmac initialization. </para>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="126" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="126" bodyend="-1"/>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="151" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="151" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structcryptx__hmac__ctx_1a02b8fb3b5fc0ba3c3e401cb8878b6b3b" prot="public" static="no" mutable="no">
         <type>void(*</type>
@@ -24,12 +25,13 @@
         <name>update</name>
         <qualifiedname>cryptx_hmac_ctx::update</qualifiedname>
         <briefdescription>
+<para>Pointer to function call for hmac update. </para>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="127" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="127" bodyend="-1"/>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="152" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="152" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structcryptx__hmac__ctx_1ab65e64eac18efc47f8753e659d5f4d3d" prot="public" static="no" mutable="no">
         <type>void(*</type>
@@ -38,12 +40,13 @@
         <name>digest</name>
         <qualifiedname>cryptx_hmac_ctx::digest</qualifiedname>
         <briefdescription>
+<para>Pointer to function call for hmac digest output. </para>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="128" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="128" bodyend="-1"/>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="153" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="153" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structcryptx__hmac__ctx_1ae379877c49e2e682861a975d9640607d" prot="public" static="no" mutable="no">
         <type>uint8_t</type>
@@ -52,33 +55,54 @@
         <name>digest_len</name>
         <qualifiedname>cryptx_hmac_ctx::digest_len</qualifiedname>
         <briefdescription>
+<para>Length of output digest for hmac, in bytes. </para>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="129" column="9" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="129" bodyend="-1"/>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="154" column="9" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="154" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structcryptx__hmac__ctx_1a005cd807fe6ffe5f87c41ea296457270" prot="public" static="no" mutable="no">
-        <type>cryptx_hmac_private_h</type>
+        <type><ref refid="unioncryptx__hmac__private__h" kindref="compound">cryptx_hmac_private_h</ref></type>
         <definition>cryptx_hmac_private_h cryptx_hmac_ctx::metadata</definition>
         <argsstring></argsstring>
         <name>metadata</name>
         <qualifiedname>cryptx_hmac_ctx::metadata</qualifiedname>
         <briefdescription>
+<para>PRIVATE, INTERNAL. </para>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="130" column="23" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="130" bodyend="-1"/>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="155" column="23" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="155" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="125" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="125" bodyend="131"/>
+    <collaborationgraph>
+      <node id="1">
+        <label>cryptx_hmac_ctx</label>
+        <childnode refid="2" relation="usage">
+          <edgelabel>metadata</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>cryptx_hmac_private_h</label>
+        <link refid="unioncryptx__hmac__private__h"/>
+        <childnode refid="3" relation="usage">
+          <edgelabel>sha256</edgelabel>
+        </childnode>
+      </node>
+      <node id="3">
+        <label>cryptx_priv_hmac_sha256_state</label>
+        <link refid="structcryptx__priv__hmac__sha256__state"/>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="150" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="150" bodyend="156"/>
     <listofallmembers>
       <member refid="structcryptx__hmac__ctx_1ab65e64eac18efc47f8753e659d5f4d3d" prot="public" virt="non-virtual"><scope>cryptx_hmac_ctx</scope><name>digest</name></member>
       <member refid="structcryptx__hmac__ctx_1ae379877c49e2e682861a975d9640607d" prot="public" virt="non-virtual"><scope>cryptx_hmac_ctx</scope><name>digest_len</name></member>

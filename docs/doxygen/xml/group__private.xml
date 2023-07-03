@@ -2,17 +2,9 @@
 <doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.7" xml:lang="en-US">
   <compounddef id="group__private" kind="group">
     <compoundname>private</compoundname>
-    <title>Private Structures</title>
-    <innerclass refid="structcryptx__priv__hash__sha256__state" prot="public">cryptx_priv_hash_sha256_state</innerclass>
-    <innerclass refid="unioncryptx__hash__private__h" prot="public">cryptx_hash_private_h</innerclass>
-    <innerclass refid="structcryptx__priv__hmac__sha256__state" prot="public">cryptx_priv_hmac_sha256_state</innerclass>
-    <innerclass refid="unioncryptx__hmac__private__h" prot="public">cryptx_hmac_private_h</innerclass>
-    <innerclass refid="structcryptx__aes__cbc__state" prot="public">cryptx_aes_cbc_state</innerclass>
-    <innerclass refid="structcryptx__aes__ctr__state" prot="public">cryptx_aes_ctr_state</innerclass>
-    <innerclass refid="structcryptx__aes__gcm__state" prot="public">cryptx_aes_gcm_state</innerclass>
-    <innerclass refid="unioncryptx__aes__private__h" prot="public">cryptx_aes_private_h</innerclass>
+    <title>Private</title>
     <briefdescription>
-<para>This define. </para>
+<para><bold>PRIVATE</bold> <ndash/> DO NOT MODIFY </para>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>

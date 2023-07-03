@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.9.7" xml:lang="en-US">
+  <compound refid="structCipher" kind="struct"><name>Cipher</name>
+  </compound>
   <compound refid="structcryptx__aes__cbc__state" kind="struct"><name>cryptx_aes_cbc_state</name>
     <member refid="structcryptx__aes__cbc__state_1a5c0aaacd0621efeb0c31042eaf47fdd4" kind="variable"><name>padding_mode</name></member>
   </compound>
@@ -73,9 +75,9 @@
   <compound refid="structHMAC" kind="struct"><name>HMAC</name>
   </compound>
   <compound refid="cryptx_8h" kind="file"><name>cryptx.h</name>
-    <member refid="cryptx_8h_1a5aa7b168ba3ea05c827e9ff212a8c2cb" kind="define"><name>CRYPTX_AES128_KEYLEN</name></member>
-    <member refid="cryptx_8h_1a48abe0abed8433c330f10a97329a23ba" kind="define"><name>CRYPTX_AES192_KEYLEN</name></member>
-    <member refid="cryptx_8h_1a1935030be806b7761f4aef3db98953a6" kind="define"><name>CRYPTX_AES256_KEYLEN</name></member>
+    <member refid="cryptx_8h_1aa08392858444e1cc894d5f98432411c9" kind="define"><name>CRYPTX_AES_128_KEYLEN</name></member>
+    <member refid="cryptx_8h_1a0ceacc8bb81e6ef0f60bbe736732e5e0" kind="define"><name>CRYPTX_AES_192_KEYLEN</name></member>
+    <member refid="cryptx_8h_1acb2aea7855878c1b9b505ecb9b9583b1" kind="define"><name>CRYPTX_AES_256_KEYLEN</name></member>
     <member refid="cryptx_8h_1a2d638028c68c84297614a1dc7ff318d9" kind="define"><name>CRYPTX_AES_BLOCK_SIZE</name></member>
     <member refid="cryptx_8h_1ac47330f91ba12f7856c0c198bdbf2753" kind="define"><name>CRYPTX_AES_IV_SIZE</name></member>
     <member refid="cryptx_8h_1a89521b82b1be81ea3e5f70c3593bf5a9" kind="define"><name>CRYPTX_AES_AUTHTAG_SIZE</name></member>
@@ -171,7 +173,7 @@
     <member refid="cryptx_8h_1a661281f90257c5e21dbb53654ba505e7" kind="function"><name>cryptx_hash_mgf1</name></member>
     <member refid="cryptx_8h_1a21c854c0bcb6f7497516847e080c27c3" kind="function"><name>cryptx_hmac_init</name></member>
     <member refid="cryptx_8h_1a1ab7dcd49b5df0f9e697a5e14939d186" kind="function"><name>cryptx_hmac_update</name></member>
-    <member refid="cryptx_8h_1a264d2d740ebf417b4b4e794565483ec2" kind="function"><name>cryptx_hmac_digest</name></member>
+    <member refid="cryptx_8h_1a710f6c433fa3e6d07c602a0fca5952d7" kind="function"><name>cryptx_hmac_digest</name></member>
     <member refid="cryptx_8h_1a428a5da208ae3b55b73f4e05242148e8" kind="function"><name>cryptx_hmac_pbkdf2</name></member>
     <member refid="cryptx_8h_1aa25931fdaf401a4fddf0023e272278f7" kind="function"><name>cryptx_digest_tostring</name></member>
     <member refid="cryptx_8h_1a36bdf1683237ed686ce175fde670ccff" kind="function"><name>cryptx_digest_compare</name></member>

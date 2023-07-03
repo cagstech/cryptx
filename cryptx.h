@@ -11,17 +11,27 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-/// ### PRIVATE STRUCTS/INTERNAL USE ONLY -- DO NOT MODIFY ###
+
+/**
+ @brief @b PRIVATE -- DO NOT MODIFY
+ */
 struct cryptx_priv_hash_sha256_state {
 	uint8_t data[64];		/**< holds sha-256 block for transformation */
 	uint8_t datalen;		/**< holds the current length of data in data[64] */
 	uint8_t bitlen[8];		/**< holds the current length of transformed data */
 	uint32_t state[8];		/**< holds hash state for transformed data */
 };
+
+/**
+ @brief @b PRIVATE -- DO NOT MODIFY
+ */
 typedef union {
 	struct cryptx_priv_hash_sha256_state sha256;
 } cryptx_hash_private_h;
 
+/**
+ @brief @b PRIVATE -- DO NOT MODIFY
+ */
 struct cryptx_priv_hmac_sha256_state {
 	uint8_t ipad[64];       /**< holds the key xored with a magic value to be hashed with the inner digest */
 	uint8_t opad[64];       /**< holds the key xored with a magic value to be hashed with the outer digest */
@@ -30,14 +40,29 @@ struct cryptx_priv_hmac_sha256_state {
 	uint8_t bitlen[8];		/**< holds the current length of transformed data */
 	uint32_t state[8];		/**< holds hash state for transformed data */
 };
+
+/**
+ @brief @b PRIVATE -- DO NOT MODIFY
+ */
 typedef union {
 	struct cryptx_priv_hmac_sha256_state sha256;
 } cryptx_hmac_private_h;
 
+/**
+ @brief @b PRIVATE -- DO NOT MODIFY
+ */
 struct cryptx_aes_cbc_state { uint8_t padding_mode; };
+
+/**
+ @brief @b PRIVATE -- DO NOT MODIFY
+ */
 struct cryptx_aes_ctr_state {
 	uint8_t counter_pos_start; uint8_t counter_len;
 	uint8_t last_block_stop; uint8_t last_block[16]; };
+
+/**
+ @brief @b PRIVATE -- DO NOT MODIFY
+ */
 struct cryptx_aes_gcm_state {
 	uint8_t last_block_stop; uint8_t last_block[16];
 	uint8_t ghash_key[16];
@@ -46,22 +71,22 @@ struct cryptx_aes_gcm_state {
 	uint8_t gcm_op;
 };
 
+/**
+ @brief @b PRIVATE -- DO NOT MODIFY
+ */
 typedef union {
 	struct cryptx_aes_gcm_state gcm;					/**< metadata for GCM mode */
 	struct cryptx_aes_cbc_state ctr;                    /**< metadata for counter mode */
 	struct cryptx_aes_ctr_state cbc;                    /**< metadata for cbc mode */
 } cryptx_aes_private_h;
 
-
-/// ### CRYPTOGRAPHIC HASHING -- Use to verify data integrity ###
-///
 /// @struct Hash-State context
 struct cryptx_hash_ctx {
-	bool (*init)(void* ctx);
-	void (*update)(void* ctx, const void* data, size_t len);
-	void (*digest)(void* ctx, void* output);
-	uint8_t digest_len;
-	cryptx_hash_private_h metadata;
+	bool (*init)(void* ctx);									/**< Pointer to function call for hash initialization */
+	void (*update)(void* ctx, const void* data, size_t len);	/**< Pointer to function call for hash update */
+	void (*digest)(void* ctx, void* output);					/**< Pointer to function call for digest output */
+	uint8_t digest_len;										/**< Output length of hash digest, in bytes */
+	cryptx_hash_private_h metadata;							/**< PRIVATE, INTERNAL */
 };
 
 /// @enum Supported hash algorithms
@@ -123,11 +148,11 @@ void cryptx_hash_mgf1(const void* data,
 
 /// @struct HMAC-state context
 struct cryptx_hmac_ctx {
-	bool (*init)(void* ctx, const void* key, size_t keylen);
-	void (*update)(void* ctx, const void* data, size_t len);
-	void (*digest)(void* ctx, void* output);
-	uint8_t digest_len;
-	cryptx_hmac_private_h metadata;
+	bool (*init)(void* ctx, const void* key, size_t keylen);		/**< Pointer to function call for hmac initialization */
+	void (*update)(void* ctx, const void* data, size_t len);		/**< Pointer to function call for hmac update */
+	void (*digest)(void* ctx, void* output);						/**< Pointer to function call for hmac digest output */
+	uint8_t digest_len;												/**< Length of output digest for hmac, in bytes */
+	cryptx_hmac_private_h metadata;									/**< PRIVATE, INTERNAL */
 };
 
 /**
@@ -154,38 +179,32 @@ bool cryptx_hmac_init(struct cryptx_hmac_ctx* context,
  */
 void cryptx_hmac_update(struct cryptx_hmac_ctx* context, const void* data, size_t len);
 
-/******************************************************
+/**
  *	@brief Output digest for current HMAC-state (preserves state).
- *	@param[in] context	Pointer to an HMAC-state context.
- *	@param[out]	digest	Pointer to a buffer to write digest to.
+ *	@param context	Pointer to an HMAC-state context.
+ *	@param digest	Pointer to a buffer to write digest to.
  *	@note @b digest must be at large enough to hold the hash digest.
  *	You can retrieve the necessary size by accessing the @b digest_len
  *	member of an initialized @b cryptx_hmac_ctx.
- *	@note Uses 516 bytes of fastMem starting at 0xE30800.
+ *	@note Destroys 516 bytes of fastMem starting at 0xE30800.
  *  @warning Calling this on a context that has not been initialized may have
  *	unpredictable results.
  */
-void cryptx_hmac_digest(struct cryptx_hmac_ctx* context, void* output);
+void cryptx_hmac_digest(struct cryptx_hmac_ctx* context, void* digest);
 
-
-//***************************************************************************************
-//	PASSWORD-BASED KEY DERIVATION FUNCTION 2 (PBKDF2)
-//***************************************************************************************
-/** Use when you want to generate a secure key (eg: for encryption) from a password. */
-
-/******************************************************
+/**
  * @brief Derives a key from a password, salt, and round count.
- * @param[in] password 	Pointer to a string containing the password.
- * @param[in] passlen	Byte length of the password.
- * @param[in] salt	 A psuedo-random string to use in each round of key derivation.
- * @param[in] saltlen	Byte length of the salt.
- * @param[in] rounds 	The number of times to iterate the HMAC function per block of @b keylen.
- * @param[out] key		Pointer to buffer to write key to.
- * @param[in] keylen	Length of @b key to generate.
- * @param[in] hash_alg 	The numeric ID of the hashing algorithm to use. See @b cryptx_hash_algorithms.
+ * @param password 	Pointer to a string containing the password.
+ * @param passlen	Byte length of the password.
+ * @param salt	 A psuedo-random string to use in each round of key derivation.
+ * @param saltlen	Byte length of the salt.
+ * @param rounds 	The number of times to iterate the HMAC function per block of @b keylen.
+ * @param key		Pointer to buffer to write key to.
+ * @param keylen	Length of @b key to generate.
+ * @param hash_alg 	The numeric ID of the hashing algorithm to use. See @b cryptx_hash_algorithms.
  * @note NIST recommends a salt of at least 128 bits (16 bytes).
- * @note @b rounds is used to increase the cost (computational time) of generating a key. What makes password-
- * hashing algorithms secure is the time needed to generate a rainbow table attack against it. More rounds means
+ * @note @b rounds is used to increase the cost (computational time) of generating a key. What makes a password-hashing
+ * algorithm secure is the time needed to generate a rainbow table attack against it. More rounds means
  * a more secure key, but more time spent generating it. Current cryptography standards recommend thousands of
  * rounds but that may not be feasible on the CE.
  */
@@ -198,51 +217,40 @@ void cryptx_hmac_pbkdf2(const char* password,
 						size_t rounds,
 						uint8_t hash_alg);
 
-
-//***************************************************************************************
-//	DIGEST OPERATIONS
-//***************************************************************************************
-/** Use when you need to compare or render digests. */
-
-/******************************************************
+/**
  * @brief Convert a digest to its hexstring representation.
- * @param[in] digest	Pointer to a buffer or digest.
- * @param[in] len		Byte length of @b digest.
- * @param[out] hexstr	Buffer to write the output hex string to.
- * @note @b hexstr must be at least twice @b len +1 bytes large.
+ * @param digest	Pointer to a buffer or digest.
+ * @param len		Byte length of @b digest.
+ * @param hexstr	Buffer to write the output hex string to.
+ * @note @b hexstr must be at least (2 \* len + 1) bytes large.
  */
 bool cryptx_digest_tostring(const void* digest, size_t len, uint8_t* hexstr);
 
-/******************************************************
+/**
  * @brief Compare two digests or buffers.
- * @param[in] digest1	Pointer to first buffer to compare.
- * @param[in] digest2	Pointer to second buffer to compare.
- * @param[in] len		Number of bytes to compare.
+ * @param digest1	Pointer to first buffer to compare.
+ * @param digest2	Pointer to second buffer to compare.
+ * @param len		Number of bytes to compare.
  * @return @b true if the buffers are equal, @b false if not equal.
  * @note This is a constant-time implementation.
  */
 bool cryptx_digest_compare(const void* digest1, const void* digest2, size_t len);
 
 
-//***************************************************************************************
-//	CRYPTOGRAPHICALLY-SECURE RANDOM NUMBER GENERATION
-//***************************************************************************************
-/** Use when you need to generate cryptographically-secure randomness (eg: keys, salts). */
-
-/******************************************************
+/**
  * @brief Initializes the (HW)RNG.
  * @returns @b true on success, @b false on failure.
  * @note If you forget to call this function, utilizing the RNG's other functions will self-initialize the RNG.
  */
 bool cryptx_csrand_init(void);
 
-/******************************************************
+/**
  * @brief Returns a securely psuedo-random 32-bit integer
  * @returns A securely psuedo-random 32-bit integer.
  */
 uint32_t cryptx_csrand_get(void);
 
-/******************************************************
+/**
  * @brief Fills a buffer with securely pseduo-random bytes
  * @param[in] buffer	Pointer to a buffer to fill with random bytes.
  * @param[in] size		Size of the buffer to fill.
@@ -251,12 +259,8 @@ uint32_t cryptx_csrand_get(void);
  */
 bool cryptx_csrand_fill(void* buffer, size_t size);
 
-
-//***************************************************************************************
-//	ADVANCED ENCRYPTION STANDARD (AES) ENCRYPTION
-//***************************************************************************************
-/** Use when you need fast bi-directional encryption. */
-
+/// ### ADVANCED ENCRYPTION STANARD ###
+/// @struct Cipher state context for AES
 struct cryptx_aes_ctx {
 	uint24_t keysize;                       /**< the size of the key, in bits */
 	uint32_t round_keys[60];                /**< round keys */
@@ -280,9 +284,9 @@ enum cryptx_aes_padding_schemes {
 	PAD_ISO2					/**< ISO-9797 M2 padding */
 };
 
-#define CRYPTX_AES128_KEYLEN	16		/** Defines the byte length of an AES-128 key. */
-#define CRYPTX_AES192_KEYLEN	24		/** Defines the byte length of an AES-192 key. */
-#define CRYPTX_AES256_KEYLEN	32		/** Defines the byte length of an AES-256 key. */
+#define CRYPTX_AES_128_KEYLEN	16		/** Defines the byte length of an AES-128 key. */
+#define CRYPTX_AES_192_KEYLEN	24		/** Defines the byte length of an AES-192 key. */
+#define CRYPTX_AES_256_KEYLEN	32		/** Defines the byte length of an AES-256 key. */
 
 #define CRYPTX_AES_BLOCK_SIZE	16		/** Defines the block size of the AES block, in bytes. */
 #define CRYPTX_AES_IV_SIZE	CRYPTX_AES_BLOCK_SIZE	/** Defines the length of the AES initialization vector. */
@@ -303,6 +307,7 @@ enum cryptx_aes_padding_schemes {
 #define cryptx_aes_get_ciphertext_len(len) \
 ((((len)%CRYPTX_AES_BLOCK_SIZE)==0) ? (len) + CRYPTX_AES_BLOCK_SIZE : (((len)>>4) + 1)<<4)
 
+/// Defines response codes returned by the AES API.
 typedef enum {
 	AES_OK,                             /**< AES operation completed successfully */
 	AES_INVALID_ARG,                    /**< AES operation failed, bad argument */
@@ -313,23 +318,16 @@ typedef enum {
 	AES_INVALID_OPERATION               /**< AES operation failed, used encrypt context for decrypt or vice versa */
 } aes_error_t;
 
-/******************************************************
+/**
  * @brief Initializes a stateful AES cipher context to be used for encryption or decryption.
- * @param[in] context	Pointer to an AES cipher context to initialize.
- * @param[in] key	Pointer to an 128, 192, or 256 bit key to load into the AES context.
- * @param[in] keylen	The size, in bytes, of the @b key to load.
- * @param[in] iv	Pointer to  Initialization vector, a buffer equal to the block size filled with random bytes.
- * @param[in] ivlen	Length of the initalization vector. Capped at 16 bytes. Certain cipher modes have different recommendations.
- * @param[in] flags	A series of flags to configure the AES context with.
+ * @param context	Pointer to an AES cipher context to initialize.
+ * @param key	Pointer to an 128, 192, or 256 bit key to load into the AES context.
+ * @param keylen	The size, in bytes, of the @b key to load.
+ * @param iv	Pointer to  Initialization vector, a buffer equal to the block size filled with random bytes.
+ * @param ivlen	Length of the initalization vector. Capped at 16 bytes. Certain cipher modes have different recommendations.
+ * @param flags	A series of flags to configure the AES context with.
  * 				Use the provided @b CRYPTX_AES_CTR_FLAGS, @b CRYPTX_AES_CBC_FLAGS, or @b CRYPTX_AES_GCM_FLAGS to pass flags.
  * @returns An @b aes_error_t indicating the status of the AES operation.
- * @note Contexts are not bidirectional due to being stateful. If you need to process both encryption and decryption,
- * initialize seperate contexts for encryption and decryption. Both contexts will use the same key, but different initialization vectors.
- * @warning It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.
- * @warning Do not manually edit the @b ctx.mode field of the context structure.
- * This will break the cipher configuration. If you want to change cipher modes, do so by calling @b aes_init again.
- * @warning AES-CBC and CTR modes ensure confidentiality but do not provide message integrity verification.
- * If you need a truly secure construction, use GCM mode or append a keyed hash (HMAC) to the encrypted message..
  */
 aes_error_t cryptx_aes_init(struct cryptx_aes_ctx* context,
 							const void* key,
@@ -338,84 +336,73 @@ aes_error_t cryptx_aes_init(struct cryptx_aes_ctx* context,
 							size_t ivlen,
 							uint24_t flags);
 
-/******************************************************
+/**
  * @brief Performs a stateful AES encryption of an arbitrary length of data.
- * @param[in] context	Pointer to an AES cipher context.
- * @param[in] plaintext	Pointer to data to encrypt.
- * @param[in] len		Length of data at @b plaintext to encrypt.
- * @param[out] ciphertext	Pointer to buffer to write encrypted data to.
+ * @param context	Pointer to an AES cipher context.
+ * @param plaintext	Pointer to data to encrypt.
+ * @param len		Length of data at @b plaintext to encrypt.
+ * @param ciphertext	Pointer to buffer to write encrypted data to.
  * @returns An @b aes_error_t indicating the status of the AES operation.
  * @note @b ciphertext should large enough to hold the encrypted message.
- *          For CBC mode, this is the smallest multiple of the blocksize that will hold the plaintext.
- *          See the @b CRYPTX_AES_CIPHERTEXT_LEN macro.
- *          For CTR and GCM modes, this is the same size as the plaintext.
+ *          See the @b cryptx_aes_get_ciphertext_len macro for CBC mode.
  * @note @b plaintext and @b ciphertext are aliasable.
- * @note Encrypt is streamable, such that encrypt(msg1) + encrypt(msg2) is functionally identical to encrypt(msg1+msg2)
- * with the exception of intervening padding in CBC mode.
- * @note Once a  context is used for encryption, it cannot be used for decryption.
+ * @note Encrypt is streamable, such that \f$ encrypt(msg1) + encrypt(msg2) \f$ is functionally identical to \f$ encrypt(msg1+msg2) \f$ with the exception of intervening padding in CBC mode.
  */
 aes_error_t cryptx_aes_encrypt(const struct cryptx_aes_ctx* context,
 							   const void* plaintext,
 							   size_t len,
 							   void* ciphertext);
 
-/******************************************************
+/**
  * @brief Performs a stateful AES decryption of an arbitrary length of data.
- * @param[in] context		Pointer to AES cipher context.
- * @param[in] ciphertext	Pointer to data to decrypt.
- * @param[in] len		Length of data at @b ciphertext to decrypt.
- * @param[out] plaintext	Pointer to buffer to write decryped data to.
+ * @param context		Pointer to AES cipher context.
+ * @param ciphertext	Pointer to data to decrypt.
+ * @param len		Length of data at @b ciphertext to decrypt.
+ * @param plaintext	Pointer to buffer to write decryped data to.
  * @returns An @b aes_error_t indicating the status of the AES operation.
  * @note @b plaintext and @b ciphertext are aliasable.
- * @note Decrypt is streamable, such that decrypt(msg1) + decrypt(msg2) is functionally identical to decrypt(msg1+msg2)
- * with the exception of intervening padding in CBC mode.
- * @note Once a context is used for decryption, it cannot be used for encryption.
+ * @note Decrypt is streamable, such that \f$ decrypt(msg1) + decrypt(msg2) \f$ is functionally identical to \f$ decrypt(msg1+msg2) \f$ with the exception of intervening padding in CBC mode.
  */
 aes_error_t cryptx_aes_decrypt(const struct cryptx_aes_ctx* context,
 							   const void* ciphertext,
 							   size_t len,
 							   void* plaintext);
 
-/******************************************************
+/**
  * @brief Updates the cipher context for given AAD (Additional Authenticated Data).
  * AAD is data that is only authenticated, not encrypted.
- * @param[in] context	Pointer to an AES context.
- * @param[in] aad		Pointer to additional authenticated data segment.
- * @param[in] aad_len	Length of additional data segment.
+ * @param context	Pointer to an AES context.
+ * @param aad		Pointer to additional authenticated data segment.
+ * @param aad_len	Length of additional data segment.
  * @returns An @b aes_error_t indicating the status of the AES operation.
- * @note This function is only compatible with AES-GCM cipher mode. Attempting to
- * use this function for any other cipher mode will return @b AES_INVALID_CIPHERMODE.
- * @note This function can only be called between the call to @b cryptx_aes_init and the first call
- * to @b cryptx_aes_encrypt or @b cryptx_aes_decrypt. Once encryption or decryption starts, you can
- * no longer update AAD.
+ * @note This function can only be called between cipher initialization and encryption/decryption. Attempting to
+ * call this function at any other time will return @b AES_INVALID_OPERATION.
  */
 aes_error_t cryptx_aes_update_aad(struct cryptx_aes_ctx* context,
 								  const void* aad, size_t aad_len);
 
-/******************************************************
+/**
  * @brief Returns the current authentication tag for data parsed so far.
- * @param[in] context	Pointer to an AES context
- * @param[out] digest	Pointer to a buffer to output digest to. Must be at least 16 bytes large.
+ * @param context	Pointer to an AES context
+ * @param digest	Pointer to a buffer to output digest to. Must be at least 16 bytes large.
  * @returns An @b aes_error_t indicating the status of the AES operation.
- * @note This function is only compatible with AES-GCM cipher mode. Attempting to call it for any
- * other cipher mode will return @b AES_INVALID_CIPHERMODE.
- * @note Calling this function terminates your use of the current AES context. This is because
- * reuse of the IV buffer can leak the hkey used for authentication. The next stream may use the same
- * encryption key but should have a unique IV.
+ * @warning <b>Nonce-misuse vulnerability/forbidden attack</b>: GCM is vulnerable to key discovery
+ * if the same nonce is reused to encrypt or decrypt multiple messages. Once you generate a digest for data processed
+ * by the cipher, cycle the nonce by generating a new one and calling @b cryptx_aes_init again with the new nonce.
+ * To ensure this is done properly, the context is marked invalid once this function is called.
  */
 aes_error_t cryptx_aes_digest(struct cryptx_aes_ctx* context, uint8_t *digest);
 
-/******************************************************
+/**
  * @brief Parses the specified AAD and ciphertext and then compares the output auth tag
  * to an expected auth tag.
- * @param[in] context	Pointer to an AES context.
- * @param[in] aad		Pointer to associated data to authenticate.
- * @param[in] aad_len	Length of associated data to authenticate.
- * @param[in] ciphertext	Pointer to ciphertext to authenticate.
- * @param[in] ciphertext_len	Length of ciphertext to authenticate.
- * @param[in] tag		Pointer to expected auth tag to validate against.
+ * @param context	Pointer to an AES context.
+ * @param aad		Pointer to associated data to authenticate.
+ * @param aad_len	Length of associated data to authenticate.
+ * @param ciphertext	Pointer to ciphertext to authenticate.
+ * @param ciphertext_len	Length of ciphertext to authenticate.
+ * @param tag		Pointer to expected auth tag to validate against.
  * @returns TRUE if authentication  tag matches expected, FALSE otherwise.
- * @note operates on a dummy copy of @b *context to avoid nuking the active copy
  * @note If this function returns FALSE, do not decrypt the message.
  */
 
@@ -425,11 +412,9 @@ bool cryptx_aes_verify(const struct cryptx_aes_ctx* context,
 					   uint8_t *tag);
 
 
-//***************************************************************************************
-//	RIVEST-SHAMIR-ADLEMAN (RSA) ENCRYPTION
-//***************************************************************************************
-/** Use when you need to encrypt a secret (eg: for AES) in order to create a secure session. */
+/// ### RIVEST-SHAMIR-ADLEMAN (RSA) ###
 
+/// Defines response codes returned by calls to the RSA API.
 typedef enum {
 	RSA_OK,                         /**< RSA encryption completed successfully */
 	RSA_INVALID_ARG,                /**< RSA encryption failed, bad argument */
@@ -441,20 +426,18 @@ typedef enum {
 /** Defines the maximum byte length of an RSA public modulus supported by this library. */
 #define CRYPTX_RSA_MODULUS_MAX		256
 
-/******************************************************
+/**
  * @brief Encrypts a message using the given RSA public key.
- * @param[in] msg	Pointer to a message to encrypt using RSA.
- * @param[in] msglen	The byte length of the @b msg.
- * @param[in] pubkey	Pointer to a public key to use for encryption.
- * @param[in] keylen	The length of the public key (modulus) to encrypt with.
- * @param[out] ciphertext 	Pointer a buffer to write the ciphertext to.
- * @param[in] oaep_hash_alg	The numeric ID of the hashing algorithm to use within OAEP encoding.
+ * @param msg	Pointer to a message to encrypt using RSA.
+ * @param msglen	The byte length of the @b msg.
+ * @param pubkey	Pointer to a public key to use for encryption.
+ * @param keylen	The length of the public key (modulus) to encrypt with.
+ * @param ciphertext 	Pointer a buffer to write the ciphertext to.
+ * @param oaep_hash_alg	The numeric ID of the hashing algorithm to use within OAEP encoding.
  *      See @b cryptx_hash_algorithms.
  * @returns  An @b rsa_error_t indicating the status of the RSA operation.
- * @note The size of @b ciphertext and @b keylen must be equal.
- * @note The @b msg will be encoded using OAEP before encryption.
- * @note msg and pubkey are both treated as byte arrays.
- * @note The public exponent is hardcoded to @b 65537.
+ * @note @b ciphertext should be at least @b msglen bytes large.
+ * @note OAEP encoding is applied to the message as part of the encryption.
  */
 rsa_error_t cryptx_rsa_encrypt(const void* msg,
 							   size_t msglen,
@@ -464,11 +447,8 @@ rsa_error_t cryptx_rsa_encrypt(const void* msg,
 							   uint8_t oaep_hash_alg);
 
 
-//***************************************************************************************
-//	ELLIPTIC CURVE DIFFIE-HELLMAN (ECDH) ENCRYPTION
-//***************************************************************************************
-/** An alternate form of secret (for AES) negotiation. */
-// Using curve SECT233k1
+/// ### ELLIPTIC CURVE DIFFIE-HELLMAN ###
+/// Using curve SECT233k1
 
 /** Defines the byte length of an ECDH private key supported by this library. */
 #define CRYPTX_ECDH_PRIVKEY_LEN		30
@@ -477,9 +457,11 @@ rsa_error_t cryptx_rsa_encrypt(const void* msg,
 #define CRYPTX_ECDH_PUBKEY_LEN		(CRYPTX_ECDH_PRIVKEY_LEN<<1)
 #define CRYPTX_ECDH_SECRET_LEN		CRYPTX_ECDH_PUBKEY_LEN
 
+/// Defines a macro to fill an ECDH private key with random bytes.
 #define	cryptx_ecdh_generate_privkey(privkey)	\
 	cryptx_csrand_fill((privkey), (CRYPTX_ECDH_PRIVKEY_LEN))
 
+/// Defines possible response codes from calls to the ECDH API.
 typedef enum _ecdh_error {
 	ECDH_OK,
 	ECDH_INVALID_ARG,
@@ -487,24 +469,24 @@ typedef enum _ecdh_error {
 	ECDH_RPUBKEY_INVALID
 } ecdh_error_t;
 
-/******************************************************
+/**
  * @brief Generates a public key from the private key and some base point G on curve.
- * @param[in] privkey	Pointer to a randomized ECDH private key.
- * @param[out] pubkey	Pointer to buffer to write public key.
+ * @param privkey	Pointer to a randomized ECDH private key.
+ * @param pubkey	Pointer to buffer to write public key.
  * @note Output public key is a point on the curve expressed as two 30-byte coordinates
  * encoded in little endian byte order and padded with zeros (if needed). You may have to
  * deserialize the key and then serialize it into a different format to use it with
  * some encryption libraries.
  * @note This function expects that @b privkey be filled with random bytes. Failure to do so
- * may cause unexpected behavior. See @b CRYPTX_ECDH_GENERATE_PRIVKEY().
+ * may cause unexpected behavior. See @b cryptx_ecdh_generate_privkey().
  */
 ecdh_error_t cryptx_ecdh_publickey(const uint8_t *privkey, uint8_t *pubkey);
 
-/******************************************************
+/**
  * @brief Computes a secret from the private key and the remote public key.
- * @param[in] privkey	Pointer to local private key.
- * @param[in] rpubkey	Pointer to remote public key.
- * @param[out] secret	Pointer to buffer to write shared secret to.
+ * @param privkey	Pointer to local private key.
+ * @param rpubkey	Pointer to remote public key.
+ * @param secret	Pointer to buffer to write shared secret to.
  * @note @b secret must be at least @b CRYPTX_ECDH_SECRET_LEN bytes.
  * @note Output secret is a point on the curve expressed as two 30-byte coordinates
  * encoded in little endian byte order and padded with zeros if needed. You may have to

@@ -5,11 +5,8 @@
     <briefdescription>
     </briefdescription>
     <detaileddescription>
-<sect3 id="structHash_1autotoc_md1">
-<title>CRYPTOGRAPHIC HASHING – Use to verify data integrity</title>
-</sect3>
     </detaileddescription>
-    <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="58" column="1"/>
+    <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="83" column="1"/>
     <listofallmembers>
     </listofallmembers>
   </compounddef>

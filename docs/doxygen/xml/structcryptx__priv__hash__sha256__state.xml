@@ -17,7 +17,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="16" column="9" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="16" bodyend="-1"/>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="19" column="9" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="19" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structcryptx__priv__hash__sha256__state_1a39895682d65bc3717534cf819f1c3a5e" prot="public" static="no" mutable="no">
         <type>uint8_t</type>
@@ -32,7 +32,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="17" column="9" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="17" bodyend="-1"/>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="20" column="9" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="20" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structcryptx__priv__hash__sha256__state_1aface79df571a3e926b521fe08fcc38cd" prot="public" static="no" mutable="no">
         <type>uint8_t</type>
@@ -47,7 +47,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="18" column="9" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="18" bodyend="-1"/>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="21" column="9" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="21" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structcryptx__priv__hash__sha256__state_1ac1ec56cb26c817b455f30a06002ea0ef" prot="public" static="no" mutable="no">
         <type>uint32_t</type>
@@ -62,17 +62,15 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="19" column="10" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="19" bodyend="-1"/>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="22" column="10" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="22" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
+<para><bold>PRIVATE</bold> <ndash/> DO NOT MODIFY </para>
     </briefdescription>
     <detaileddescription>
-<sect3 id="structcryptx__priv__hash__sha256__state_1autotoc_md0">
-<title>PRIVATE STRUCTS/INTERNAL USE ONLY – DO NOT MODIFY</title>
-</sect3>
     </detaileddescription>
-    <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="15" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="15" bodyend="20"/>
+    <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="18" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="18" bodyend="23"/>
     <listofallmembers>
       <member refid="structcryptx__priv__hash__sha256__state_1aface79df571a3e926b521fe08fcc38cd" prot="public" virt="non-virtual"><scope>cryptx_priv_hash_sha256_state</scope><name>bitlen</name></member>
       <member refid="structcryptx__priv__hash__sha256__state_1ace8bc5d62baf6635d34d334d676f70dc" prot="public" virt="non-virtual"><scope>cryptx_priv_hash_sha256_state</scope><name>data</name></member>

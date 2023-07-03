@@ -21,6 +21,7 @@ html_theme_options = {
     'titles_only': False
 }
 
+
 latex_engine = 'pdflatex'
 latex_elements = {
   'papersize': 'letterpaper',
@@ -57,7 +58,7 @@ for version in versions:
    html_context['versions'].append( (version, '/toolchain/' + version + '/index.html') )
 
 breathe_projects = {}
-breathe_default_project = 'CE C/C++ Toolchain'
+breathe_default_project = 'CryptX'
 breathe_show_define_initializer = True
 breathe_show_enumvalue_initializer = True
 subprocess.call('doxygen doxyfile', shell=True)

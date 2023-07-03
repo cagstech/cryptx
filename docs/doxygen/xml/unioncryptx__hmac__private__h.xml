@@ -2,9 +2,10 @@
 <doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.7" xml:lang="en-US">
   <compounddef id="unioncryptx__hmac__private__h" kind="union" language="C++" prot="public">
     <compoundname>cryptx_hmac_private_h</compoundname>
+    <includes refid="cryptx_8h" local="no">cryptx.h</includes>
       <sectiondef kind="public-attrib">
       <memberdef kind="variable" id="unioncryptx__hmac__private__h_1affa5ba199a186161ee892222e5e63331" prot="public" static="no" mutable="no">
-        <type>struct cryptx_priv_hmac_sha256_state</type>
+        <type>struct <ref refid="structcryptx__priv__hmac__sha256__state" kindref="compound">cryptx_priv_hmac_sha256_state</ref></type>
         <definition>struct cryptx_priv_hmac_sha256_state cryptx_hmac_private_h::sha256</definition>
         <argsstring></argsstring>
         <name>sha256</name>
@@ -15,14 +16,28 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="34" column="36" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="34" bodyend="-1"/>
+        <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="48" column="36" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="48" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
+<para><bold>PRIVATE</bold> <ndash/> DO NOT MODIFY </para>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="33" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="33" bodyend="35"/>
+    <collaborationgraph>
+      <node id="1">
+        <label>cryptx_hmac_private_h</label>
+        <link refid="unioncryptx__hmac__private__h"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>sha256</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>cryptx_priv_hmac_sha256_state</label>
+        <link refid="structcryptx__priv__hmac__sha256__state"/>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="47" column="1" bodyfile="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="47" bodyend="49"/>
     <listofallmembers>
       <member refid="unioncryptx__hmac__private__h_1affa5ba199a186161ee892222e5e63331" prot="public" virt="non-virtual"><scope>cryptx_hmac_private_h</scope><name>sha256</name></member>
     </listofallmembers>
