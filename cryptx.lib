@@ -1,0 +1,35 @@
+	library	CRYPTX, 13
+
+	export	cryptx_hash_init
+	export	cryptx_hash_update
+	export	cryptx_hash_digest
+	export	cryptx_hash_mgf1
+	export	cryptx_hmac_init
+	export	cryptx_hmac_update
+	export	cryptx_hmac_digest
+	export	cryptx_hmac_pbkdf2
+	export	cryptx_digest_compare
+	export	cryptx_digest_tostring
+	export	cryptx_csrand_init
+	export	cryptx_csrand_get
+	export	cryptx_csrand_fill
+	export	cryptx_aes_init
+	export	cryptx_aes_encrypt
+	export	cryptx_aes_decrypt
+	export	cryptx_aes_update_aad
+	export	cryptx_aes_digest
+	export	cryptx_aes_verify
+	export	cryptx_rsa_encrypt
+	export	cryptx_ecdh_publickey
+	export	cryptx_ecdh_secret
+	export	cryptx_asn1_decode
+	export	cryptx_base64_encode
+	export	cryptx_base64_decode
+	export	cryptx_internal_aes_ecb_encrypt
+	export	cryptx_internal_aes_ecb_decrypt
+	export	cryptx_internal_rsa_oaep_encode
+	export	cryptx_internal_rsa_oaep_decode
+	export	cryptx_internal_powmod
+	export	cryptx_internal_ecc_point_add
+	export	cryptx_internal_ecc_point_double
+	export	cryptx_internal_ecc_point_mul_scalar
