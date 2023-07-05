@@ -27,6 +27,7 @@ Additional Resources
     :maxdepth: 1
 
     static/analysis
+    static/notes
     
     
 API Documentation
