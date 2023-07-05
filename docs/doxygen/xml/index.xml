@@ -36,6 +36,10 @@
     <member refid="unioncryptx__aes__private__h_1ab8d218d6589b9b07a4a306237e5eb157" kind="variable"><name>ctr</name></member>
     <member refid="unioncryptx__aes__private__h_1ae1fc34b70eb382df03714488d599dfab" kind="variable"><name>cbc</name></member>
   </compound>
+  <compound refid="structcryptx__ecc__point" kind="struct"><name>cryptx_ecc_point</name>
+    <member refid="structcryptx__ecc__point_1a7a6b80237baf8237385a5827601d1337" kind="variable"><name>x</name></member>
+    <member refid="structcryptx__ecc__point_1ada79cb09d73636479cf469e6de935973" kind="variable"><name>y</name></member>
+  </compound>
   <compound refid="structcryptx__hash__ctx" kind="struct"><name>cryptx_hash_ctx</name>
     <member refid="structcryptx__hash__ctx_1ae1cc61f269fa5bbf1e8a36b9526c138a" kind="variable"><name>init</name></member>
     <member refid="structcryptx__hash__ctx_1abcba976dfec24f43bbd0af1f3c4abfeb" kind="variable"><name>update</name></member>
@@ -95,6 +99,7 @@
     <member refid="cryptx_8h_1a3c8b39f5fb3ad1d8d138b9791b18f01e" kind="define"><name>cryptx_asn1_get_form</name></member>
     <member refid="cryptx_8h_1a9db7be56d66674980b5540cab9405cc7" kind="define"><name>cryptx_base64_get_encoded_len</name></member>
     <member refid="cryptx_8h_1a5629130707448f8475166398fb18a486" kind="define"><name>cryptx_base64_get_decoded_len</name></member>
+    <member refid="cryptx_8h_1ad0e904358b21cab26ad541d594184a89" kind="define"><name>CRYPTX_GF2_INTLEN</name></member>
     <member refid="cryptx_8h_1a57f2f69b5ad395749c8604ca9f43f93b" kind="enum"><name>cryptx_hash_algorithms</name></member>
     <member refid="cryptx_8h_1a57f2f69b5ad395749c8604ca9f43f93bac7716785728694693ec29eccd5ffa0e1" kind="enumvalue"><name>SHA256</name></member>
     <member refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735" kind="enum"><name>cryptx_aes_cipher_modes</name></member>
@@ -167,6 +172,8 @@
     <member refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a434628c70562f3ab468d94e8eae7784d" kind="enumvalue"><name>ASN1_END_OF_FILE</name></member>
     <member refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33aa13d20ad819d43693d26c77b80fb4952" kind="enumvalue"><name>ASN1_INVALID_ARG</name></member>
     <member refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a0101185f2109f1ba75ea2c4833664474" kind="enumvalue"><name>ASN1_LEN_OVERFLOW</name></member>
+    <member refid="cryptx_8h_1a791c9616d63340d5f3d55673abefd768" kind="variable"><name>x</name></member>
+    <member refid="cryptx_8h_1a9671c45fbc76e3760ed5b891992cf94a" kind="variable"><name>y</name></member>
     <member refid="cryptx_8h_1a70b79d7bbba52b64700123ab77ab5a28" kind="function"><name>cryptx_hash_init</name></member>
     <member refid="cryptx_8h_1a0df23ee0aff04b31db05f5175bfe63a2" kind="function"><name>cryptx_hash_update</name></member>
     <member refid="cryptx_8h_1a1444bb4124409dbae8088ffbc9830ee3" kind="function"><name>cryptx_hash_digest</name></member>
@@ -192,5 +199,13 @@
     <member refid="cryptx_8h_1afbb965d7c7819b8685a1062d5e21e02c" kind="function"><name>cryptx_asn1_decode</name></member>
     <member refid="cryptx_8h_1a3e216a54646a3f7d04c37102905ef850" kind="function"><name>cryptx_base64_encode</name></member>
     <member refid="cryptx_8h_1a28db41653bf7ba5ef8bfcef425343722" kind="function"><name>cryptx_base64_decode</name></member>
+    <member refid="cryptx_8h_1aa26dcd5f7c0f1f679c91268bc5b69455" kind="function"><name>cryptx_hazmat_aes_ecb_encrypt</name></member>
+    <member refid="cryptx_8h_1a705b398f84e2020d762a0ce03c90bd90" kind="function"><name>cryptx_hazmat_aes_ecb_decrypt</name></member>
+    <member refid="cryptx_8h_1a686d9781ff0de6cf06424df197ce6e1e" kind="function"><name>cryptx_hazmat_rsa_oaep_encode</name></member>
+    <member refid="cryptx_8h_1ab367fc9a33e00bee5e9a9f8df5f2a697" kind="function"><name>cryptx_hazmat_rsa_oaep_decode</name></member>
+    <member refid="cryptx_8h_1a70bc16d6ac300e87e3fc9c9847254bd1" kind="function"><name>cryptx_hazmat_powmod</name></member>
+    <member refid="cryptx_8h_1a71ea61142ac4e58af9d8b8c9d2d17685" kind="function"><name>cryptx_hazmat_ecc_point_add</name></member>
+    <member refid="cryptx_8h_1ae4b37d491cbd4d5a16e0fb84d87b9270" kind="function"><name>cryptx_hazmat_ecc_point_double</name></member>
+    <member refid="cryptx_8h_1adf9bad66ca13288b71d9306d9c0a55e0" kind="function"><name>cryptx_hazmat_ecc_point_mul_scalar</name></member>
   </compound>
 </doxygenindex>

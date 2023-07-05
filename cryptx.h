@@ -487,7 +487,7 @@ ecdh_error_t cryptx_ecdh_publickey(const uint8_t *privkey, uint8_t *pubkey);
  * @param privkey	Pointer to local private key.
  * @param rpubkey	Pointer to remote public key.
  * @param secret	Pointer to buffer to write shared secret to.
- * @note @b secret must be at least @b CRYPTX_ECDH_SECRET_LEN bytes.
+ * @note @b secret must be at least @b CRYPTX_ECDH_SECRET_LEN bytes large.
  * @note Output secret is a point on the curve expressed as two 30-byte coordinates
  * encoded in little endian byte order and padded with zeros if needed. You may have to
  * deserialize the secret and then serialize it into a different format for compatibility with
@@ -498,10 +498,7 @@ ecdh_error_t cryptx_ecdh_publickey(const uint8_t *privkey, uint8_t *pubkey);
  */
 ecdh_error_t cryptx_ecdh_secret(const uint8_t *privkey, const uint8_t *rpubkey, uint8_t *secret);
 
-//***************************************************************************************
-//	ABSTRACT SYNTAX NOTATION ONE (ASN.1) DECODING
-//***************************************************************************************
-/** Used to decode ASN.1-encoded data structures, such as those output by most encryption libraries. */
+/// ### ABSTRACT SYNTAX NOTATION ONE (ASN.1) ###
 
 enum CRYPTX_ASN1_TAGS {
 	ASN1_RESVD = 0,				/**< RESERVED */
@@ -554,6 +551,7 @@ enum CRYPTX_ASN1_FORMS {
 /// Returns the 1-bit tag form (1 = constructed, 0 = primitive). See @b CRYPTX_ASN1_FORMS above.
 #define cryptx_asn1_get_form(tag)		(((tag)>>5) & 1)
 
+/// Defines error codes returned from calls to the ASN.1 API.
 typedef enum {
 	ASN1_OK,				/**< No errors occured. */
 	ASN1_END_OF_FILE,		/**< End of ASN.1 data stream reached. Not an error. */
@@ -561,7 +559,7 @@ typedef enum {
 	ASN1_LEN_OVERFLOW,		/**< Length of an element overflowed arch size\_t allowance. Remainder of data stream unparsable. */
 } asn1_error_t;
 
-/******************************************************
+/**
  * @brief Decodes the ASN.1 data at the given address. Seeks to an element from the front of the data.
  * @param data_start	Pointer to a block of ASN.1-encoded data.
  * @param data_len		Length of ASN.1-encoded block.
@@ -571,9 +569,6 @@ typedef enum {
  * @param element_data	Pointer to the data of the returned element.
  * @returns				An @b asn1_error_t indicating the status of the operation.
  * @note @b ASN1_END_OF_FILE will be returned if @b seek_to is invalid.
- * @note ASN.1 is a tree structure. You can use the @b element_data and @b element_len parameters
- * returned by this function to iterate further up the tree. To see if an element is of a type for which this is
- * valid, check the return value of @b CRYPTX_ASN1_FORM(element_tag).
  * @note NULL may be passed for @b element_tag, @b element_len, and/or @b element_data if you do not
  * need to return that particular bit of information.
  */
@@ -586,15 +581,14 @@ asn1_error_t cryptx_asn1_decode(
 					uint8_t **element_data);
 
 
-//***************************************************************************************
-//	BASE64 DECODING
-//***************************************************************************************
-/** Used to encode to or decode from Base64, another encoding format common to cryptography libraries. */
+/// ### BASE 64 ENCODE/DECODE ###
 
+/// Defines a macro to return the expected size of base64-encoded data, given octet-encoded length.
 #define	cryptx_base64_get_encoded_len(len)		((len) * 4 / 3)
+/// Defines a macro to return the expected size of octet-encoded data, given base64-encoded length.
 #define	cryptx_base64_get_decoded_len(len)		((len) * 3 / 4)
 
-/******************************************************
+/**
  * @brief Converts an octet-encoded byte stream into a sextet-encoded byte stream.
  * @param dest Pointer to output sextet-encoded data stream.
  * @param src Pointer to input octet-encoded data stream.
@@ -604,7 +598,7 @@ asn1_error_t cryptx_asn1_decode(
  */
 size_t cryptx_base64_encode(void *dest, const void *src, size_t len);
 
-/******************************************************
+/**
  * @brief Converts a sextet-encoded byte stream into a octet-encoded byte stream.
  * @param dest Pointer to output octet-encoded data stream.
  * @param src Pointer to input sextet-encoded data stream.
@@ -617,49 +611,106 @@ size_t cryptx_base64_decode(void *dest, const void *src, size_t len);
 
 #ifdef CRYPTX_ENABLE_HAZMAT
 
-/** AES-ECB mode single block encryption */
+/**
+ @brief AES-ECB mode single block encryption
+ @param block_in	Pointer to block of data to encrypt.
+ @param block_out	Pointer to buffer to write block of encrypted data.
+ @param ks	Pointer to AES key schedule.
+ @note ECB mode is insecure. Use this function as a constructor for other cipher modes, not standalone.
+ */
 void cryptx_hazmat_aes_ecb_encrypt(const void *block_in,
 									 void *block_out,
 									 struct cryptx_aes_ctx* ks);
 
-/** AES-ECB mode single block decryption */
+/**
+ @brief AES-ECB mode single block decryption
+ @param block_in	Pointer to block of data to decrypt.
+ @param block_out	Pointer to buffer to write block of decrypted data.
+ @param ks	Pointer to AES key schedule.
+ @note ECB mode is insecure. Use this function as a constructor for other cipher modes, not standalone.
+ */
 void cryptx_hazmat_aes_ecb_decrypt(const void *block_in,
 									 void *block_out,
 									 struct cryptx_aes_ctx* ks);
 
-/** RSA-OAEP encoding */
-bool cryptx_hazmat_rsa_oaep_encode(const void *plaintext,		/**< input */
+/**
+ @brief Optimal Asymmetric Encryption Padding v2.2 Encoder
+ @param plaintext	Pointer to block of data to encode.
+ @param len			Length of plaintext to encode.
+ @param encoded		Pointer to buffer to write encoded output.
+ @param modulus_len	Length of modulus to encode for (ex: length of RSA public modulus).
+ @param auth		An optional string to include in the encoding (NULL to omit).
+ @param hash_alg	Algorithm ID of the hash to use.
+ @returns True on successful encoding, False on error.
+ @note An error returned from the encoder usually is related to the size of plaintext. Maximum plaintext length
+ for encoding is the length of the modulus minus twice the length of the selected hash digest minus two more
+ padding bytes.
+ */
+bool cryptx_hazmat_rsa_oaep_encode(const void *plaintext,
 									 size_t len,
-									 void *encoded,				/**< output */
+									 void *encoded,
 									 size_t modulus_len,
 									 const uint8_t *auth,
 									 uint8_t hash_alg);
 
-/** RSA-OAEP decoding */
-bool cryptx_hazmat_rsa_oaep_decode(const void *encoded,		/**< input */
+/**
+ @brief Optimal Asymmetric Encryption Padding v2.2 Decoder
+ @param encoded		Pointer to block of data to decode.
+ @param len			Length of plaintext to encode.
+ @param plaintext	Pointer to buffer to write decoded output.
+ @param auth		String included in the encoding (NULL to omit).
+ @param hash_alg	Algorithm ID of the hash to use.
+ @returns True on successful decoding, False on error.
+ @note An error returned from the decoder usually means the input did not appear to be valid OAEP-encoded data.
+ OAEP 2.2-encoded data starts with the byte *0x00*.
+ */
+bool cryptx_hazmat_rsa_oaep_decode(const void *encoded,
 									 size_t len,
-									 void *plaintext,			/**< output */
+									 void *plaintext,
 									 const uint8_t *auth,
 									 uint8_t hash_alg);
 
-/** RSAEP modular exponentiation subfunction (by jacobly) */
-void cryptx_hazmat_powmod(uint8_t size,					/**< modulus bytelen */
-							uint8_t *restrict base,			/**< base */
-							uint24_t exp,					/**< exponent */
-							const uint8_t *restrict mod);	/**< modulus */
+/**
+ @brief Modular Exponentation
+ @param size	Length of the modulus, in bytes. *0* is actually 256.
+ @param base	Pointer to the base.
+ @param exp		Exponent.
+ @param mod		Pointer to modulus.
+ @note This is timing-safe if run from normal speed memory.
+ */
+void cryptx_hazmat_powmod(uint8_t size, uint8_t *restrict base, uint24_t exp, const uint8_t *restrict mod);
 
+/// Defines the length of a galois field for a curve of degree 233.
+#define CRYPTX_GF2_INTLEN 30
+
+/// Defines a point for use with elliptic curve arithmetic.
 struct cryptx_ecc_point {
-	uint8_t x[GF2_INTLEN];
-	uint8_t y[GF2_INTLEN];
+	uint8_t x[CRYPTX_GF2_INTLEN];
+	uint8_t y[CRYPTX_GF2_INTLEN];
 }
 
-/** Elliptic Curve point addition over SECT233K1 */
+/**
+ @brief Elliptic Curve Point Addition over SECT233k1
+ @param p	Pointer to first point to add.
+ @param q	Pointer to second point to add.
+ @note Outputs in @b p.
+ */
 void cryptx_hazmat_ecc_point_add(cryptx_ecc_point* p, cryptx_ecc_point* q);
 
-/** Elliptic Curve point doubling over SECT233K1 */
+/**
+ @brief Elliptic Curve Point Doubling over SECT233k1
+ @param p	Pointer to point to double.
+ @note Outputs in @b p.
+ */
 void cryptx_hazmat_ecc_point_double(cryptx_ecc_point* p);
 
-/** Elliptic Curve scalar multiplication over SECT233K1 */
+/**
+ @brief Elliptic Curve Scalar Multiplication over SECT233k1
+ @param p	Pointer to point to multiply.
+ @param scalar	Pointer to scalar.
+ @param scalar_bit_width	Length, in bits, of the scalar.
+ @note Outputs in @b p.
+ */
 void cryptx_hazmat_ecc_point_mul_scalar(cryptx_ecc_point* p,
 										  const uint8_t* scalar,
 										  size_t scalar_bit_width);

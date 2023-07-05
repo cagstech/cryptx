@@ -331,7 +331,7 @@
   </option>
   <option  id='PREDEFINED' default='no' type='stringlist'>
     <value><![CDATA[FORCE_INTERRUPTS=1]]></value>
-    <value><![CDATA[tiflags=]]></value>
+    <value><![CDATA[CRYPTX_ENABLE_HAZMAT=1]]></value>
   </option>
   <option  id='EXPAND_AS_DEFINED' default='yes' type='stringlist'>
   </option>

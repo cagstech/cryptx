@@ -32,6 +32,10 @@ Additional Resources
 API Documentation
 ----------------------
 
+.. code-block:: c
+
+	#include <cryptx.h>
+
 Hashing
 _________
 A *hash* is a cryptographic primitive that is used to determine if data has changed in storage or in transit.
@@ -76,6 +80,17 @@ Deriving Key from Password
 ___________________________
 	
 .. doxygenfunction:: cryptx_hmac_pbkdf2
+	:project: CryptX
+	
+Working with Digests
+_____________________
+
+The library provides two functions for interacting with digests returned by the hash and HMAC API, and even later the tags produced by encryption.
+
+.. doxygenfunction:: cryptx_digest_compare
+	:project: CryptX
+	
+.. doxygenfunction:: cryptx_digest_tostring
 	:project: CryptX
 
 Secure Random Number Generation
@@ -210,6 +225,8 @@ Elliptic curves are a newer introduction to cryptography and they boast more sec
 	&where: \\
 	&G = base\_point\_on\_curve
 	
+This library implements SECT233k1. This was chosen (1) because it offers approximately the same security level as RSA-2048, and (2) koblitz curves can be mathematically optimzed better than other curves. On a platform as slow as the TI-84+ CE, these optimizations are critical to make using this feasible. Even so, this elliptic curve implementation clocks in at about 14 seconds per operation (pubkey generation, secret compuation).
+	
 .. doxygendefine:: CRYPTX_ECDH_PRIVKEY_LEN
 	:project: CryptX
 
@@ -231,4 +248,102 @@ Elliptic curves are a newer introduction to cryptography and they boast more sec
 .. doxygenfunction:: cryptx_ecdh_secret
 	:project: CryptX
 	
+Abstract Syntax Notation One
+_____________________________
+
+Abstract Syntax Notation One (ASN.1) is a form of data encoding common to cryptography and one of the two usual output formats for keyfiles. ASN.1 is a tree structure of objects encoded by type, size, and data. A common serialization format for ASN.1 is DER, which stands for *Distinguished Encoding Rules*. It is standardized for cryptography. See the example below which expresses the encoding of a public key from *Public Key Cryptography Standards #8 (PKCS#8)*.
+
+.. code-block:: c
 	
+	PublicKeyInfo ::= SEQUENCE {
+		algorithm AlgorithmIdentifier :: SEQUENCE {
+			algorithm id OBJECT IDENTIFIER,
+			parameters ANY DEFINED BY algorithm OPTIONAL
+		}
+		PublicKey BIT STRING
+	}
+
+.. note::
+	Do not confuse encryption with encoding. Encoding is merely a method of expressing information. It does not prevent unauthorized parties from reading or modifying the data.
+	
+.. doxygenenum:: CRYPTX_ASN1_TAGS
+	:project: CryptX
+	
+.. doxygenenum:: CRYPTX_ASN1_CLASSES
+	:project: CryptX
+	
+.. doxygenenum:: CRYPTX_ASN1_FORMS
+	:project: CryptX
+	
+.. doxygendefine:: cryptx_asn1_get_tag
+	:project: CryptX
+	
+.. doxygendefine:: cryptx_asn1_get_class
+	:project: CryptX
+	
+.. doxygendefine:: cryptx_asn1_get_form
+	:project: CryptX
+	
+.. doxygenenum:: asn1_error_t
+	:project: CryptX
+	
+.. doxygenfunction:: cryptx_asn1_decode
+	:project: CryptX
+	
+Base64
+________
+
+Base64 (sextet-encoding) is the second of two encoding formats common to cryptography, including keyfiles exported by cryptographic libraries. In fact, PEM encoding usually has the key encoded first with ASN.1 and then into base64.
+
+In base64 a stream of octets (8 bits per byte) is parsed as a bit string in groups of six bits (hence sextet) which is then mapped to one of 64 printable characters.
+
+.. doxygendefine:: cryptx_base64_get_encoded_len
+	:project: CryptX
+	
+.. doxygendefine:: cryptx_base64_get_decoded_len
+	:project: CryptX
+	
+.. doxygenfunction:: cryptx_base64_encode
+	:project: CryptX
+	
+.. doxygenfunction:: cryptx_base64_decode
+	:project: CryptX
+	
+Hazardous Materials
+___________________
+
+This segment contains lower-level functions that are not part of the standard API. This allows developers who know what they are doing to write their own constructions.
+
+.. code-block:: c
+
+	#define CRYPTX_ENABLE_HAZMAT	// to enable the hazardous materials
+	
+.. doxygenfunction:: cryptx_hazmat_aes_ecb_encrypt
+	:project: CryptX
+	
+.. doxygenfunction:: cryptx_hazmat_aes_ecb_decrypt
+	:project: CryptX
+	
+.. doxygenfunction:: cryptx_hazmat_rsa_oaep_encode
+	:project: CryptX
+
+.. doxygenfunction:: cryptx_hazmat_rsa_oaep_decode
+	:project: CryptX
+	
+.. doxygenfunction:: cryptx_hazmat_powmod
+	:project: CryptX
+
+.. doxygendefine:: CRYPTX_GF2_INTLEN
+	:project: CryptX
+
+.. doxygenstruct:: cryptx_ecc_point
+	:project: CryptX
+	
+.. doxygenfunction:: cryptx_hazmat_ecc_point_add
+	:project: CryptX
+	
+.. doxygenfunction:: cryptx_hazmat_ecc_point_double
+	:project: CryptX
+	
+.. doxygenfunction:: cryptx_hazmat_ecc_point_mul_scalar
+	:project: CryptX
