@@ -312,7 +312,7 @@ In base64 a stream of octets (8 bits per byte) is parsed as a bit string in grou
 Hazardous Materials
 ___________________
 
-This segment contains lower-level functions that are not part of the standard API. This allows developers who know what they are doing to write their own constructions.
+This segment contains lower-level functions that are not part of the standard API. This allows developers who know what they are doing to write their own constructions. Remember that it is generally ill-advised to try to implement your own cryptography.
 
 .. code-block:: c
 

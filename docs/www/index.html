@@ -6,6 +6,7 @@
   <title>Cryptography for the CE &mdash; CryptX  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/proof.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -18,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="CryptX Analysis &amp; Overview" href="static/analysis.html" /> 
+    <link rel="next" title="Analysis &amp; Overview" href="static/analysis.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -37,7 +38,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="static/analysis.html">CryptX Analysis &amp; Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="static/analysis.html">Analysis &amp; Overview</a></li>
 </ul>
 
         </div>
@@ -80,13 +81,13 @@
 <li><p>Timing-safe buffer comparison</p></li>
 </ul>
 </div></blockquote>
-<p>Need more convincing? Check out the <a class="reference internal" href="static/analysis.html#analysis"><span class="std std-ref">CryptX Analysis &amp; Overview</span></a> for more technical implementation details including platform-specific security considerations.</p>
+<p>Need more convincing? Check out the <a class="reference internal" href="static/analysis.html#analysis"><span class="std std-ref">Analysis &amp; Overview</span></a> for more technical implementation details including platform-specific security considerations.</p>
 <p>Most of this library’s modules have been tested for compatibility with several other cryptographic libraries including <em>openssl</em>, <em>cryptodome/pycryptodome</em>, and <em>cryptography</em>, although in some cases where libraries do not expose their primitives, use of their <em>hazardous materials</em> layer may be required. If you do find an incompatibility with another cryptographic library, please open an issue on the <a class="reference external" href="https://github.com/acagliano/cryptx">CryptX Github</a>.</p>
 <div class="section" id="additional-resources">
 <h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="static/analysis.html">CryptX Analysis &amp; Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="static/analysis.html">Analysis &amp; Overview</a></li>
 </ul>
 </div>
 </div>
@@ -1414,7 +1415,7 @@
 </div>
 <div class="section" id="hazardous-materials">
 <h3>Hazardous Materials<a class="headerlink" href="#hazardous-materials" title="Permalink to this headline"></a></h3>
-<p>This segment contains lower-level functions that are not part of the standard API. This allows developers who know what they are doing to write their own constructions.</p>
+<p>This segment contains lower-level functions that are not part of the standard API. This allows developers who know what they are doing to write their own constructions. Remember that it is generally ill-advised to try to implement your own cryptography.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define CRYPTX_ENABLE_HAZMAT    </span><span class="c1">// to enable the hazardous materials</span>
 </pre></div>
 </div>
@@ -1599,7 +1600,7 @@ If the function has a return type:
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="static/analysis.html" class="btn btn-neutral float-right" title="CryptX Analysis &amp; Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="static/analysis.html" class="btn btn-neutral float-right" title="Analysis &amp; Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

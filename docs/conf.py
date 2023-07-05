@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
 
-sys.path.append('/opt/homebrew/lib/python3.11/site-packages')
+#sys.path.append('/opt/homebrew/lib/python3.11/site-packages')
 import subprocess, os
 
 project = 'CryptX'
@@ -13,7 +13,8 @@ default_version = os.environ['default_version']
 versions = os.environ['versions'].split()
 
 extensions = [
-    'breathe',
+    "breathe",
+    "sphinx_proof"
 ]
 
 html_theme_options = {
