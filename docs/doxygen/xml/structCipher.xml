@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.7" xml:lang="en-US">
+  <compounddef id="structCipher" kind="struct" language="C++" prot="public">
+    <compoundname>Cipher</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<sect3 id="structCipher_1autotoc_md1">
+<title>ADVANCED ENCRYPTION STANARD</title>
+<para>for AES </para>
+</sect3>
+    </detaileddescription>
+    <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/cryptx.h" line="263" column="1"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

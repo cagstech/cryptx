@@ -1,0 +1,28 @@
+Metadata-Version: 2.1
+Name: clang
+Version: 16.0.1.1
+Summary: libclang python bindings
+Home-page: http://clang.llvm.org/
+Download-URL: http://llvm.org/releases/download.html
+Author: LLVM team - pypi upload by Loic Jaquemet
+License: Apache-2.0 with LLVM exception
+Keywords: llvm,clang,libclang
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Topic :: Software Development :: Compilers
+Classifier: Programming Language :: Python :: 3
+
+This is the python bindings subdir of llvm clang repository.
+https://github.com/llvm/llvm-project/tree/main/clang/bindings/python
+
+This is a non-official packaging directly from the debian packages for the purpose of creating a pypi package.
+
+Build repository at https://github.com/trolldbois/python-clang/
+
+Install with 
+    pip install clang
+    pip install clang==14
+
+You will need to install llvm libclang libraries, which are not packaged with this package.
+

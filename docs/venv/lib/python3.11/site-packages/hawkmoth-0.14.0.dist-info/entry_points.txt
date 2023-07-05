@@ -1,0 +1,2 @@
+[console_scripts]
+hawkmoth = hawkmoth.__main__:main
