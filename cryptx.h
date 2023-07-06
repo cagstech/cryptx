@@ -252,8 +252,8 @@ uint32_t cryptx_csrand_get(void);
 
 /**
  * @brief Fills a buffer with securely pseduo-random bytes
- * @param[in] buffer	Pointer to a buffer to fill with random bytes.
- * @param[in] size		Size of the buffer to fill.
+ * @param buffer	Pointer to a buffer to fill with random bytes.
+ * @param size		Size of the buffer to fill.
  * @returns @b true on success, @b false on failure.
  * @returns @b buffer filled to size.
  */
