@@ -188,7 +188,7 @@ Chosen Ciphertext Attack
 Defense to *chosen ciphertext attack* involves the inclusion of an authentication tag with the outgoing message so that the message can be verified prior to decryption.
 
 	- **Advanced Encryyption Standard**:
-		- *Recommended* - Use Galois Counter mode. With this cipher mode you can generate an authentication tag from the cipher that is secure under the given session key. Append that tag to the outgoing message. Ensure proper nonce handling for GCM mode. Generate a new nonce for the session after returning a tag. GCM has a nasty tag forgery vulnerability if this is not ensured. *Some cryptographers will discourage the use of GCM mode due to the forbidden attack. While there are cipher modes that remove this vulnerability, I'll go against the grain and say GCM if fine if you close this vulnerability implementationally.*
+		- *Recommended* - Use Galois Counter mode. With this cipher mode you can generate an authentication tag from the cipher that is secure under the given session key. Append that tag to the outgoing message. Ensure proper nonce handling for GCM mode. Generate a new nonce for the session after returning a tag. GCM has a nasty tag forgery vulnerability if this is not ensured. *Some cryptographers will discourage the use of GCM mode due to the forbidden attack in favor of other cipher modes. CryptX currently supports no other authenticating cipher modes, so for the time being use GCM with proper nonce handling.*
 
 		- *Alternate* - Use CBC or Counter modes. Encrypt the plaintext and then generate a hash or HMAC of the ciphertext. Append the digest to the outgoing message.
 	

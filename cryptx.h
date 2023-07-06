@@ -411,7 +411,6 @@ bool cryptx_aes_verify(const struct cryptx_aes_ctx* context,
 					   const void* ciphertext, size_t ciphertext_len,
 					   uint8_t *tag);
 
-
 /// ### RIVEST-SHAMIR-ADLEMAN (RSA) ###
 
 /// Defines response codes returned by calls to the RSA API.
