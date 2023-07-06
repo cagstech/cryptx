@@ -36,7 +36,7 @@ To solve this problem, Zeroko performed some analysis on the unmapped memory and
 Proof of Cryptographic Strength
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In order to be secure (at least on paper), a PRNG has to pass 2 distinct additional unpredictability as- sessments in addition to the requirement that it also pass general statistical randomness tests (which this generator does for sufficient sample sizes). The two additional tests are the next-bit test and the state compromise test.
+In order to be secure (at least on paper), a PRNG has to pass 2 distinct additional unpredictability assessments in addition to the requirement that it also pass general statistical randomness tests (which this generator does for sufficient sample sizes). The two additional tests are the next-bit test and the state compromise test.
 
 **Next-Bit Test**:
 	
