@@ -177,7 +177,7 @@ Chosen Plaintext Attack
 
 Defense to *chosen plaintext attack* involves a cipher's output being indistinguishable from truly random output.
 
-	- **Advanced Encryption Standard**: Proper nonce handling. Generate a securely-random, unique nonce for each session or message as dictated by cipher mode constraints. See `NIST Special Publication 800 <https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38a.pdf>`_ for recommendations for ensuring nonce uniqueness.
+	- **AES**: Proper nonce handling. Generate a securely-random, unique nonce for each session or message as dictated by cipher mode constraints. See `NIST Special Publication 800 <https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38a.pdf>`_ for recommendations for ensuring nonce uniqueness.
 	- **RSA**: The *optimal asymmetric encryption padding v2.2* scheme includes a random string in the encoding prior to encryption.
 	- **ECDH**: Elliptic Curve Diffie-Hellman is a key negotiation protocol, not an encryption system, so considerations are slightly different. Choose a unique private key when using ECDH to negotiate a new session key for AES.
 
@@ -187,7 +187,7 @@ Chosen Ciphertext Attack
 
 Defense to *chosen ciphertext attack* involves the inclusion of an authentication tag with the outgoing message so that the message can be verified prior to decryption.
 
-	- **Advanced Encryyption Standard**:
+	- **AES**:
 		- *Recommended* - Use Galois Counter mode. With this cipher mode you can generate an authentication tag from the cipher that is secure under the given session key. Append that tag to the outgoing message. Ensure proper nonce handling for GCM mode. Generate a new nonce for the session after returning a tag. GCM has a nasty tag forgery vulnerability if this is not ensured. *Some cryptographers will discourage the use of GCM mode due to the forbidden attack in favor of other cipher modes. CryptX currently supports no other authenticating cipher modes, so for the time being use GCM with proper nonce handling.*
 
 		- *Alternate* - Use CBC or Counter modes. Encrypt the plaintext and then generate a hash or HMAC of the ciphertext. Append the digest to the outgoing message.

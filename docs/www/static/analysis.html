@@ -236,7 +236,7 @@ end macro
 <p>Defense to <em>chosen plaintext attack</em> involves a cipher’s output being indistinguishable from truly random output.</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><strong>Advanced Encryption Standard</strong>: Proper nonce handling. Generate a securely-random, unique nonce for each session or message as dictated by cipher mode constraints. See <a class="reference external" href="https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38a.pdf">NIST Special Publication 800</a> for recommendations for ensuring nonce uniqueness.</p></li>
+<li><p><strong>AES</strong>: Proper nonce handling. Generate a securely-random, unique nonce for each session or message as dictated by cipher mode constraints. See <a class="reference external" href="https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38a.pdf">NIST Special Publication 800</a> for recommendations for ensuring nonce uniqueness.</p></li>
 <li><p><strong>RSA</strong>: The <em>optimal asymmetric encryption padding v2.2</em> scheme includes a random string in the encoding prior to encryption.</p></li>
 <li><p><strong>ECDH</strong>: Elliptic Curve Diffie-Hellman is a key negotiation protocol, not an encryption system, so considerations are slightly different. Choose a unique private key when using ECDH to negotiate a new session key for AES.</p></li>
 </ul>
@@ -248,7 +248,7 @@ end macro
 <blockquote>
 <div><ul class="simple">
 <li><dl class="simple">
-<dt><strong>Advanced Encryyption Standard</strong>:</dt><dd><ul>
+<dt><strong>AES</strong>:</dt><dd><ul>
 <li><p><em>Recommended</em> - Use Galois Counter mode. With this cipher mode you can generate an authentication tag from the cipher that is secure under the given session key. Append that tag to the outgoing message. Ensure proper nonce handling for GCM mode. Generate a new nonce for the session after returning a tag. GCM has a nasty tag forgery vulnerability if this is not ensured. <em>Some cryptographers will discourage the use of GCM mode due to the forbidden attack in favor of other cipher modes. CryptX currently supports no other authenticating cipher modes, so for the time being use GCM with proper nonce handling.</em></p></li>
 <li><p><em>Alternate</em> - Use CBC or Counter modes. Encrypt the plaintext and then generate a hash or HMAC of the ciphertext. Append the digest to the outgoing message.</p></li>
 </ul>
