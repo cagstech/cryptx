@@ -25,11 +25,11 @@
 	export	cryptx_asn1_decode
 	export	cryptx_base64_encode
 	export	cryptx_base64_decode
-	export	cryptx_internal_aes_ecb_encrypt
-	export	cryptx_internal_aes_ecb_decrypt
-	export	cryptx_internal_rsa_oaep_encode
-	export	cryptx_internal_rsa_oaep_decode
-	export	cryptx_internal_powmod
-	export	cryptx_internal_ecc_point_add
-	export	cryptx_internal_ecc_point_double
-	export	cryptx_internal_ecc_point_mul_scalar
+	export	cryptx_hazmat_aes_ecb_encrypt
+	export	cryptx_hazmat_aes_ecb_decrypt
+	export	cryptx_hazmat_rsa_oaep_encode
+	export	cryptx_hazmat_rsa_oaep_decode
+	export	cryptx_hazmat_powmod
+	export	cryptx_hazmat_ecc_point_add
+	export	cryptx_hazmat_ecc_point_double
+	export	cryptx_hazmat_ecc_point_mul_scalar
