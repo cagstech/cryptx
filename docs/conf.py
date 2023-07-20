@@ -18,7 +18,7 @@ extensions = [
 ]
 
 html_theme_options = {
-    'display_version': False,
+    'display_version': True,
     'titles_only': False
 }
 
