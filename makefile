@@ -43,7 +43,6 @@ $(LIB_EXAMPLES):
 
 archive: cryptx.zip
 cryptx.zip:
-	rm cryptx.zip
 	zip cryptx.zip README.md cryptx.8xv cryptx.lib cryptx.h cryptx.asm
 
 

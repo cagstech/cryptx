@@ -7,7 +7,7 @@ CryptX is a work in progress and sees regular updates that add resistance to var
 
 If you have any questions about the proper usage of CryptX in your programs, any of its functionality, algorithms, etc, please do not hesitate to contact me on Discord at NefariousArcher. I would rather you ask questions than implement security improperly and risk compromising your implementation. I also enjoy discussing and learning about cybersecurity in general.
 
-Please update to new stable releases as soon as they become available and update any software you are developing to use the latest versions of HASHLIB as soon as you are able. At this stage in development, updates are usually security enhancements, not major feature additions.
+Please update to new stable releases as soon as they become available and update any software you are developing to use the latest versions of CryptX as soon as you are able. At this stage in development, updates are usually security enhancements, not major feature additions.
 
 Special thanks to the following individuals who contributed materially to the project:
 
