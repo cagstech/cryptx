@@ -1,7 +1,7 @@
 .. _analysis:
 
 Analysis & Overview
-============================
+=====================
 
 In this section we review the security profile of CryptX to allow the more technically-minded among our users to appreciate the effort put into making this library as secure as possible. Where necessary, algorithm constructions are documented for peer review. It is also noteworthy that this library is an open-source project. Therefore the entire code base is available on Github. Additionally, methods used to improve side-channel resistance are also presented for peer review. This section is live-updated as more information becomes available.
 
