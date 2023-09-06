@@ -1,7 +1,7 @@
 .. _api:
 
-API Documentation
-===================
+API Overview
+===============
 
 You must include the library's header in any file within your project where a function from the library is used.
 
@@ -13,12 +13,9 @@ You must include the library's header in any file within your project where a fu
 Secure Random Number Generation
 ___________________________________
 
-.. note::
-  Randomness is essential to proper encryption. Without a secure means of generating randomness, encryption has no guarantee of being secure. We'll talk more about what this means in the section on :ref:`Encryption <l_encrypt>`. Generic random number generators, like the one provided in the CE C toolchain, are not sufficient for cryptography because they are **deterministic** (def: a single input maps to a single output). Generally these generators are seeded with insecure information such as system time. If an attacker recovers the seed the output of the generator is compromised.
+Randomness is essential to proper encryption. Without a secure means of generating randomness, encryption has no guarantee of being secure. We'll talk more about what this means in the section on :ref:`Encryption <l_encrypt>`. Generic random number generators, like the one provided in the CE C toolchain, are not sufficient for cryptography because they are **deterministic** (def: a single input maps to a single output). Generally these generators are seeded with insecure information such as system time. If an attacker recovers the seed the output of the generator is compromised.
 
-  Generators intended for use with cryptography need to address these shortcomings. Their output must be indistinguishable from truly random (giving an attacker negligibly better odds than that of predicting any bit of a truly random sequence). Additionally, compromise of the generator's state (i.e. seed or other state information) should not compromise the effective security of the generator. The generator provided by this library meets those constraints. For details, see the :ref:`Analysis & Overview <analysis>` page.
-  
-----
+Generators intended for use with cryptography need to address these shortcomings. Their output must be indistinguishable from truly random (giving an attacker negligibly better odds than that of predicting any bit of a truly random sequence). Additionally, compromise of the generator's state (i.e. seed or other state information) should not compromise the effective security of the generator. The generator provided by this library meets those constraints. For details, see the :ref:`Analysis & Overview <analysis>` page.
 
 **Using the Secure RNG**
 
@@ -42,12 +39,9 @@ ___________________________________
 Integrity Verification
 ________________________
 
-.. note::
-  An important aspect of securing information is the ability to ensure that information has not been tampered with. This tampering can occur in long-term storage (ex: a bad actor attempts to modify a file on a system) or in transit (ex: a bad actor attempts to modify the contents of an Internet packet). A secure means of communication (or storage) needs the ability to detect such tampering.
+An important aspect of securing information is the ability to ensure that information has not been tampered with. This tampering can occur in long-term storage (ex: a bad actor attempts to modify a file on a system) or in transit (ex: a bad actor attempts to modify the contents of an Internet packet). A secure means of communication (or storage) needs the ability to detect such tampering.
 
-  **Hashes** and **HMAC** are tools that assist with integrity verification. The standard hash produces a fixed-length value (called a *digest*) from an arbitrary-length stream of data. Because secure hashes have a negligibly low chance of collision (two different inputs producing the same output), they can detect changes to a stream of data. An HMAC works similarly, except it transforms the hash state using a key that is generally known only to authorized parties prior to hashing the data. This means that an HMAC can only be generated or validated by an authorized party. A HMAC is also sometimes referred to as a *keyed hash*.
-
-----
+**Hashes** and **HMAC** are tools that assist with integrity verification. The standard hash produces a fixed-length value (called a *digest*) from an arbitrary-length stream of data. Because secure hashes have a negligibly low chance of collision (two different inputs producing the same output), they can detect changes to a stream of data. An HMAC works similarly, except it transforms the hash state using a key that is generally known only to authorized parties prior to hashing the data. This means that an HMAC can only be generated or validated by an authorized party. A HMAC is also sometimes referred to as a *keyed hash*.
 
 **Returning a Hash Digest**
 
@@ -63,8 +57,6 @@ ________________________
   // `digest` now contains the hash value
   
 * :ref:`view hash documentation <hash>`
-
-----
 
 **Returning an HMAC Digest**
 
@@ -88,13 +80,9 @@ ________________________
 
 * :ref:`view hmac documentation <hmac>`
 
-----
+**Returning an MGF1 Digest**
 
 **MGF1** (Mask-Generation Function v1) is a hash-derived function that allows for a digest of arbitrary length to be returned from a data stream of given size. Its usage is similar to the hash API above.
-
-----
-
-**Returning an MGF1 Digest**
 
 .. code-block:: c
 
@@ -107,14 +95,9 @@ ________________________
 
 * :ref:`view mgf1 documentation <mgf1>`
 
-----
-
-.. note::
-  A cryptography library needs a safe way to compare two digests to determine if they are the same. The `memcmp` and `strcmp/strncmp` functions in the toolchain are not timing-safe; they return as soon as a mismatch is found. This causes slight variations in execution time that may reveal which character(s) of the digest are correct. This library provides a variant of this function in which the full length provided is parsed regardless of where the first mismatch is leading to no variance in execution time. Such a function is referred to as a *constant-time implementation*.
-
-----
-
 **Comparing two Digests Securely**
+
+A cryptography library needs a safe way to compare two digests to determine if they are the same. The `memcmp` and `strcmp/strncmp` functions in the toolchain are not timing-safe; they return as soon as a mismatch is found. This causes slight variations in execution time that may reveal which character(s) of the digest are correct. This library provides a variant of this function in which the full length provided is parsed regardless of where the first mismatch is leading to no variance in execution time. Such a function is referred to as a *constant-time implementation*.
 
 .. code-block:: c
   
@@ -139,8 +122,8 @@ ________________________
     
 * :ref:`view digest_compare documentation <digest_compare>`
   
-----
-  
+**Converting a Digest to a String**
+
 Lastly, for debugging purposes and occasionally for UI purposes it may be desired to display a digest to the user as a readable string. A function is provided by this library to convert a binary digest into its printable hex-string equivalent.
 
 .. code-block:: c
@@ -153,6 +136,19 @@ Lastly, for debugging purposes and occasionally for UI purposes it may be desire
 * :ref:`view digest_tostring documentation <digest_tostring>`
 
 ----
+
+Encryption & Key Exchange
+__________________________
+
+Data obfuscation is another layer of information securty which is achieved through the use of encryption, or the rendering of information indecipherable for anyone without the key used to encrypt it. Encryption can be intended to protect information in long-term storage as well as to protect information in transit between two authorized endpoints.
+
+**AES - Symmetric Encryption**
+
+The gold standard for secure data transmission and storage is currently AES (*Advanced Encryption Standard*). The thing that makes AES great is that it is fast and secure. Running it on the calculator takes barely any time. However, AES does have a number of cipher configuration options that can make using it a bit complicated. We'll try to summarize that information as simply as possible.
+
+* AES has three operational key-lengths: 128, 192, and 256 bits. The length of the key also controls how many rounds (repetitions) of encryption occur. **Using 256 bit keys is recommended.**
+* CryptX supports three operational cipher modes: CBC, CTR, and GCM modes. **Using GCM is recommended as it integrates integrity verification into the output.**
+
 
 Password-Based Key Derivation
 ______________________________
