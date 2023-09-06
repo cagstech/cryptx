@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HASH Function Documentation &mdash; CryptX  documentation</title>
+  <title>function documentation: hash &mdash; CryptX  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/proof.css" type="text/css" />
@@ -55,7 +55,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>HASH Function Documentation</li>
+      <li>function documentation: hash</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -64,8 +64,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="hash-function-documentation">
-<span id="hash"></span><h1>HASH Function Documentation<a class="headerlink" href="#hash-function-documentation" title="Permalink to this headline"></a></h1>
+  <div class="section" id="function-documentation-hash">
+<span id="hash"></span><h1>function documentation: hash<a class="headerlink" href="#function-documentation-hash" title="Permalink to this headline"></a></h1>
 <dl class="cpp enum">
 <dt class="sig sig-object cpp" id="_CPPv422cryptx_hash_algorithms">
 <span id="_CPPv322cryptx_hash_algorithms"></span><span id="_CPPv222cryptx_hash_algorithms"></span><span class="target" id="cryptx_8h_1a57f2f69b5ad395749c8604ca9f43f93b"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hash_algorithms</span></span></span><a class="headerlink" href="#_CPPv422cryptx_hash_algorithms" title="Permalink to this definition"></a><br /></dt>
@@ -143,31 +143,6 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>context</strong> – Pointer to a hash-state context. </p></li>
 <li><p><strong>digest</strong> – Pointer to a buffer to write digest to. </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv416cryptx_hash_mgf1PKv6size_tPv6size_t7uint8_t">
-<span id="_CPPv316cryptx_hash_mgf1PKv6size_tPv6size_t7uint8_t"></span><span id="_CPPv216cryptx_hash_mgf1PKv6size_tPv6size_t7uint8_t"></span><span id="cryptx_hash_mgf1__voidCP.s.voidP.s.uint8_t"></span><span class="target" id="cryptx_8h_1a661281f90257c5e21dbb53654ba505e7"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hash_mgf1</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">datalen</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">outbuf</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">outlen</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">hash_alg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416cryptx_hash_mgf1PKv6size_tPv6size_t7uint8_t" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Computes a digest of arbitrary length for a given block of data. </p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><strong>outbuf</strong> must be at least <strong>outlen</strong> bytes large. </p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Destroys 516 bytes of fastMem starting at 0xE30800. </p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> – Pointer to data to hash. </p></li>
-<li><p><strong>datalen</strong> – Size of <strong>data</strong> to hash. </p></li>
-<li><p><strong>outbuf</strong> – Pointer to buffer to write digest to. </p></li>
-<li><p><strong>outlen</strong> – Number of bytes to write to <strong>outbuf</strong>. </p></li>
-<li><p><strong>hash_alg</strong> – The numeric ID of the hashing algorithm to use. See <strong>cryptx_hash_algorithms</strong>. </p></li>
 </ul>
 </dd>
 </dl>

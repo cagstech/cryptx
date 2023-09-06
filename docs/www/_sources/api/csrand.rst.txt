@@ -1,7 +1,7 @@
 .. _csrand:
 
-CSRAND Function Documentation
-=============================
+function documentation: csrand
+===============================
 
 .. doxygenfunction:: cryptx_csrand_get
 	:project: CryptX

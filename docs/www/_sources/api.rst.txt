@@ -14,13 +14,15 @@ Secure Random Number Generation
 ___________________________________
 
 .. note::
-
-  Randomness is essential to proper encryption. Without a secure means of generating randomness, encryption has no guarantee of being secure. Generic random number generators, like the one provided in the CE C toolchain, are not sufficient for cryptography because they are **deterministic** (def: a single input maps to a single output). Generally these generators are seeded with insecure information such as system time. If an attacker recovers the seed the output of the generator is compromised.
+  Randomness is essential to proper encryption. Without a secure means of generating randomness, encryption has no guarantee of being secure. We'll talk more about what this means in the section on :ref:`Encryption <l_encrypt>`. Generic random number generators, like the one provided in the CE C toolchain, are not sufficient for cryptography because they are **deterministic** (def: a single input maps to a single output). Generally these generators are seeded with insecure information such as system time. If an attacker recovers the seed the output of the generator is compromised.
 
   Generators intended for use with cryptography need to address these shortcomings. Their output must be indistinguishable from truly random (giving an attacker negligibly better odds than that of predicting any bit of a truly random sequence). Additionally, compromise of the generator's state (i.e. seed or other state information) should not compromise the effective security of the generator. The generator provided by this library meets those constraints. For details, see the :ref:`Analysis & Overview <analysis>` page.
   
+----
+
+**Using the Secure RNG**
+
 .. code-block:: c
-  :caption: Using the Secure RNG
   
   // cryptx_csrand_init() is now called automatically when any
   // random get or fill function is called
@@ -33,8 +35,9 @@ ___________________________________
   uint8_t rand[BUFLEN];
   cryptx_csrand_fill(rand, BUFLEN);
   
-* :ref:`view csrand function documentation <csrand>`
-  
+* :ref:`view csrand documentation <csrand>`
+
+----
 
 Integrity Verification
 ________________________
@@ -44,8 +47,11 @@ ________________________
 
   **Hashes** and **HMAC** are tools that assist with integrity verification. The standard hash produces a fixed-length value (called a *digest*) from an arbitrary-length stream of data. Because secure hashes have a negligibly low chance of collision (two different inputs producing the same output), they can detect changes to a stream of data. An HMAC works similarly, except it transforms the hash state using a key that is generally known only to authorized parties prior to hashing the data. This means that an HMAC can only be generated or validated by an authorized party. A HMAC is also sometimes referred to as a *keyed hash*.
 
+----
+
+**Returning a Hash Digest**
+
 .. code-block:: c
-  :caption: Returning a hash digest
 
   char* text = "Hello World!"   // String to hash
   cryptx_hash_ctx hash;         // Declare hash context
@@ -55,9 +61,14 @@ ________________________
   cryptx_hash_update(&hash, text, strlen(text));  // Hash string
   cryptx_hash_digest(&hash, digest);    // Return digest
   // `digest` now contains the hash value
+  
+* :ref:`view hash documentation <hash>`
+
+----
+
+**Returning an HMAC Digest**
 
 .. code-block:: c
-  :caption: Returning an HMAC digest
 
   char* text = "Hello World!"   // String to hash
   cryptx_hmac_ctx hash;         // Declare hmac context
@@ -75,16 +86,73 @@ ________________________
   cryptx_hash_digest(&hash, digest);    // Return digest
   // `digest` now contains the hmac value
 
-* :ref:`view hash function documentation <hash>`
-* :ref:`view hmac function documentation <hmac>`
+* :ref:`view hmac documentation <hmac>`
 
-There is a final method of integrity verification that will be touched upon in the :ref:`Encryption <l_encrypt_w_auth>` section.
- 
-.. doxygenfunction:: cryptx_digest_compare
-	:project: CryptX
-	
-.. doxygenfunction:: cryptx_digest_tostring
-	:project: CryptX
+----
+
+**MGF1** (Mask-Generation Function v1) is a hash-derived function that allows for a digest of arbitrary length to be returned from a data stream of given size. Its usage is similar to the hash API above.
+
+----
+
+**Returning an MGF1 Digest**
+
+.. code-block:: c
+
+  char* text = "Hello World!"   // String to hash
+  #define MGF1BUF_LEN 32
+  uint8_t mgf1buf[MGF1BUF_LEN];
+  
+  cryptx_hash_mgf1(text, strlen(text), mgf1buf, MGF1BUF_LEN, SHA256);
+  // `mgf1buf` now contains the digest value
+
+* :ref:`view mgf1 documentation <mgf1>`
+
+----
+
+.. note::
+  A cryptography library needs a safe way to compare two digests to determine if they are the same. The `memcmp` and `strcmp/strncmp` functions in the toolchain are not timing-safe; they return as soon as a mismatch is found. This causes slight variations in execution time that may reveal which character(s) of the digest are correct. This library provides a variant of this function in which the full length provided is parsed regardless of where the first mismatch is leading to no variance in execution time. Such a function is referred to as a *constant-time implementation*.
+
+----
+
+**Comparing two Digests Securely**
+
+.. code-block:: c
+  
+  #define RECV_BUF_LEN 1024
+  uint8_t buf[RECV_BUFF_LEN];
+  size_t packet_len;
+  
+  // get incoming data into `buf`, update `packet_len`
+  // assume last 32 bytes of `buf` are a hash of the rest
+  network_recv(buf, &packet_len);
+  
+  // hash the data on receiving end
+  cryptx_hash_ctx hash;
+  cryptx_hash_init(&hash, SHA256);
+  uint8_t t_digest[hash.digest_len];
+  cryptx_hash_update(&hash, buf, packet_len-32);
+  cryptx_hash_digest(&hash, t_digest);
+  
+  // compare computed digest with one embedded in packet
+  if(!cryptx_digest_compare(t_digest, &buf[packet_len-32], hash.digest_len))
+    return 1;   // data failed integrity check
+    
+* :ref:`view digest_compare documentation <digest_compare>`
+  
+----
+  
+Lastly, for debugging purposes and occasionally for UI purposes it may be desired to display a digest to the user as a readable string. A function is provided by this library to convert a binary digest into its printable hex-string equivalent.
+
+.. code-block:: c
+
+  // assume some digest is in `digest`
+  char hexstr[hash.digest_len * 2 + 1];
+  cryptx_digest_tostring(digest, hash.digest_len, hexstr);
+  printf("%s", hexstr);
+  
+* :ref:`view digest_tostring documentation <digest_tostring>`
+
+----
 
 Password-Based Key Derivation
 ______________________________

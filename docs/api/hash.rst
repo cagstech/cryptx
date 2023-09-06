@@ -1,6 +1,6 @@
 .. _hash:
 
-HASH Function Documentation
+function documentation: hash
 =============================
 
 .. doxygenenum:: cryptx_hash_algorithms
@@ -13,7 +13,4 @@ HASH Function Documentation
 	:project: CryptX
 	
 .. doxygenfunction:: cryptx_hash_digest
-	:project: CryptX
-	
-.. doxygenfunction:: cryptx_hash_mgf1
 	:project: CryptX

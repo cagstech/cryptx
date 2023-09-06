@@ -1,7 +1,7 @@
 .. _hmac:
 
-HMAC Function Documentation
-============================
+function documentation: hmac
+=============================
 .. doxygenfunction:: cryptx_hmac_init
 	:project: CryptX
 	

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>function documentation: csrand &mdash; CryptX  documentation</title>
+  <title>mgf1 function documentation &mdash; CryptX  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/proof.css" type="text/css" />
@@ -55,7 +55,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>function documentation: csrand</li>
+      <li>mgf1 function documentation</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -64,35 +64,29 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="function-documentation-csrand">
-<span id="csrand"></span><h1>function documentation: csrand<a class="headerlink" href="#function-documentation-csrand" title="Permalink to this headline"></a></h1>
+  <div class="section" id="mgf1-function-documentation">
+<span id="mgf1"></span><h1>mgf1 function documentation<a class="headerlink" href="#mgf1-function-documentation" title="Permalink to this headline"></a></h1>
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv417cryptx_csrand_getv">
-<span id="_CPPv317cryptx_csrand_getv"></span><span id="_CPPv217cryptx_csrand_getv"></span><span id="cryptx_csrand_get__void"></span><span class="target" id="cryptx_8h_1a61b09a810e766ef1d2ff00c85ece63f2"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_csrand_get</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417cryptx_csrand_getv" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Returns a securely psuedo-random 32-bit integer. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A securely psuedo-random 32-bit integer. </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv418cryptx_csrand_fillPv6size_t">
-<span id="_CPPv318cryptx_csrand_fillPv6size_t"></span><span id="_CPPv218cryptx_csrand_fillPv6size_t"></span><span id="cryptx_csrand_fill__voidP.s"></span><span class="target" id="cryptx_8h_1a8c550bae2fddbf8a04655325ba2c9e8f"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_csrand_fill</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">buffer</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">size</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_csrand_fillPv6size_t" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Fills a buffer with securely pseduo-random bytes. </p>
+<dt class="sig sig-object cpp" id="_CPPv416cryptx_hash_mgf1PKv6size_tPv6size_t7uint8_t">
+<span id="_CPPv316cryptx_hash_mgf1PKv6size_tPv6size_t7uint8_t"></span><span id="_CPPv216cryptx_hash_mgf1PKv6size_tPv6size_t7uint8_t"></span><span id="cryptx_hash_mgf1__voidCP.s.voidP.s.uint8_t"></span><span class="target" id="cryptx_8h_1a661281f90257c5e21dbb53654ba505e7"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hash_mgf1</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">datalen</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">outbuf</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">outlen</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">hash_alg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416cryptx_hash_mgf1PKv6size_tPv6size_t7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Computes a digest of arbitrary length for a given block of data. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>outbuf</strong> must be at least <strong>outlen</strong> bytes large. </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Destroys 516 bytes of fastMem starting at 0xE30800. </p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>buffer</strong> – Pointer to a buffer to fill with random bytes. </p></li>
-<li><p><strong>size</strong> – Size of the buffer to fill. </p></li>
+<li><p><strong>data</strong> – Pointer to data to hash. </p></li>
+<li><p><strong>datalen</strong> – Size of <strong>data</strong> to hash. </p></li>
+<li><p><strong>outbuf</strong> – Pointer to buffer to write digest to. </p></li>
+<li><p><strong>outlen</strong> – Number of bytes to write to <strong>outbuf</strong>. </p></li>
+<li><p><strong>hash_alg</strong> – The numeric ID of the hashing algorithm to use. See <strong>cryptx_hash_algorithms</strong>. </p></li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>true</strong> on success, <strong>false</strong> on failure. </p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>buffer</strong> filled to size. </p>
 </dd>
 </dl>
 </dd></dl>
