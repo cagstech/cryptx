@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Documentation &mdash; CryptX  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/proof.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Analysis &amp; Overview" href="static/analysis.html" />
+    <link rel="prev" title="Cryptography for the CE" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> CryptX
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#secure-random-number-generation">Secure Random Number Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#integrity-verification">Integrity Verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#password-based-key-derivation">Password-Based Key Derivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#symmetric-encryption">Symmetric Encryption</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#public-key-encryption">Public Key Encryption</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#key-exchange-protocols">Key Exchange Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abstract-syntax-notation-one">Abstract Syntax Notation One</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#base64-encoding-and-decoding">Base64 Encoding and Decoding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hazardous-materials">Hazardous Materials</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="static/analysis.html">Analysis &amp; Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="static/notes.html">Closing Notes</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">CryptX</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>API Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="api-documentation">
+<span id="api"></span><h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline"></a></h1>
+<p>You must include the library’s header in any file within your project where a function from the library is used.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cryptx.h&gt;</span>
+</pre></div>
+</div>
+<div class="section" id="secure-random-number-generation">
+<h2>Secure Random Number Generation<a class="headerlink" href="#secure-random-number-generation" title="Permalink to this headline"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Randomness is essential to proper encryption. Without a secure means of generating randomness, encryption has no guarantee of being secure. Generic random number generators, like the one provided in the CE C toolchain, are not sufficient for cryptography because they are <strong>deterministic</strong> (def: a single input maps to a single output). Generally these generators are seeded with insecure information such as system time. If an attacker recovers the seed the output of the generator is compromised.</p>
+<p>Generators intended for use with cryptography need to address these shortcomings. Their output must be indistinguishable from truly random (giving an attacker negligibly better odds than that of predicting any bit of a truly random sequence). Additionally, compromise of the generator’s state (i.e. seed or other state information) should not compromise the effective security of the generator. The generator provided by this library meets those constraints. For details, see the <a class="reference internal" href="static/analysis.html#analysis"><span class="std std-ref">Analysis &amp; Overview</span></a> page.</p>
+</div>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-number">Listing 1 </span><span class="caption-text">Using the Secure RNG</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// cryptx_csrand_init() is now called automatically when any</span>
+<span class="c1">// random get or fill function is called</span>
+
+<span class="c1">// returning a single u_rand_int</span>
+<span class="kt">uint32_t</span><span class="w"> </span><span class="n">rand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cryptx_csrand_get</span><span class="p">();</span>
+
+<span class="c1">// filling a buffer with random bytes</span>
+<span class="cp">#define BUFLEN  16</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">rand</span><span class="p">[</span><span class="n">BUFLEN</span><span class="p">];</span>
+<span class="n">cryptx_csrand_fill</span><span class="p">(</span><span class="n">rand</span><span class="p">,</span><span class="w"> </span><span class="n">BUFLEN</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<ul class="simple">
+<li><p><a class="reference internal" href="api/csrand.html#csrand"><span class="std std-ref">view csrand function documentation</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="integrity-verification">
+<h2>Integrity Verification<a class="headerlink" href="#integrity-verification" title="Permalink to this headline"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>An important aspect of securing information is the ability to ensure that information has not been tampered with. This tampering can occur in long-term storage (ex: a bad actor attempts to modify a file on a system) or in transit (ex: a bad actor attempts to modify the contents of an Internet packet). A secure means of communication (or storage) needs the ability to detect such tampering.</p>
+<p><strong>Hashes</strong> and <strong>HMAC</strong> are tools that assist with integrity verification. The standard hash produces a fixed-length value (called a <em>digest</em>) from an arbitrary-length stream of data. Because secure hashes have a negligibly low chance of collision (two different inputs producing the same output), they can detect changes to a stream of data. An HMAC works similarly, except it transforms the hash state using a key that is generally known only to authorized parties prior to hashing the data. This means that an HMAC can only be generated or validated by an authorized party. A HMAC is also sometimes referred to as a <em>keyed hash</em>.</p>
+</div>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-number">Listing 2 </span><span class="caption-text">Returning a hash digest</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Hello World!&quot;</span><span class="w">   </span><span class="c1">// String to hash</span>
+<span class="n">cryptx_hash_ctx</span><span class="w"> </span><span class="n">hash</span><span class="p">;</span><span class="w">         </span><span class="c1">// Declare hash context</span>
+
+<span class="n">cryptx_hash_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="n">SHA256</span><span class="p">);</span><span class="w">  </span><span class="c1">// Initialize hash context</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">digest</span><span class="p">[</span><span class="n">hash</span><span class="p">.</span><span class="n">digest_len</span><span class="p">];</span><span class="w">  </span><span class="c1">// Buffer of digest length</span>
+<span class="n">cryptx_hash_update</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="n">text</span><span class="p">,</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="n">text</span><span class="p">));</span><span class="w">  </span><span class="c1">// Hash string</span>
+<span class="n">cryptx_hash_digest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="n">digest</span><span class="p">);</span><span class="w">    </span><span class="c1">// Return digest</span>
+<span class="c1">// `digest` now contains the hash value</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-number">Listing 3 </span><span class="caption-text">Returning an HMAC digest</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Hello World!&quot;</span><span class="w">   </span><span class="c1">// String to hash</span>
+<span class="n">cryptx_hmac_ctx</span><span class="w"> </span><span class="n">hash</span><span class="p">;</span><span class="w">         </span><span class="c1">// Declare hmac context</span>
+<span class="cp">#define HMAC_KLEN 16</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">key</span><span class="p">[</span><span class="n">HMAC_KLEN</span><span class="p">];</span><span class="w">       </span><span class="c1">// Define HMAC key buffer</span>
+
+<span class="c1">// generate random key</span>
+<span class="n">cryptx_csrand_fill</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">HMAC_KLEN</span><span class="p">);</span>
+
+<span class="c1">// intialize HMAC for given key and algorithm</span>
+<span class="n">cryptx_hmac_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">HMAC_KLEN</span><span class="p">,</span><span class="w"> </span><span class="n">SHA256</span><span class="p">);</span>
+
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">digest</span><span class="p">[</span><span class="n">hash</span><span class="p">.</span><span class="n">digest_len</span><span class="p">];</span><span class="w">  </span><span class="c1">// Buffer of digest length</span>
+<span class="n">cryptx_hash_update</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="n">text</span><span class="p">,</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="n">text</span><span class="p">));</span><span class="w">  </span><span class="c1">// Hash string</span>
+<span class="n">cryptx_hash_digest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="n">digest</span><span class="p">);</span><span class="w">    </span><span class="c1">// Return digest</span>
+<span class="c1">// `digest` now contains the hmac value</span>
+</pre></div>
+</div>
+</div>
+<ul class="simple">
+<li><p><a class="reference internal" href="api/hash.html#hash"><span class="std std-ref">view hash function documentation</span></a></p></li>
+<li><p><a class="reference internal" href="api/hmac.html#hmac"><span class="std std-ref">view hmac function documentation</span></a></p></li>
+</ul>
+<p>There is a final method of integrity verification that will be touched upon in the <span class="xref std std-ref">Encryption</span> section.</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv421cryptx_digest_comparePKvPKv6size_t">
+<span id="_CPPv321cryptx_digest_comparePKvPKv6size_t"></span><span id="_CPPv221cryptx_digest_comparePKvPKv6size_t"></span><span id="cryptx_digest_compare__voidCP.voidCP.s"></span><span class="target" id="cryptx_8h_1a36bdf1683237ed686ce175fde670ccff"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_digest_compare</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">digest1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">digest2</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421cryptx_digest_comparePKvPKv6size_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Compare two digests or buffers. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is a constant-time implementation. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>digest1</strong> – Pointer to first buffer to compare. </p></li>
+<li><p><strong>digest2</strong> – Pointer to second buffer to compare. </p></li>
+<li><p><strong>len</strong> – Number of bytes to compare. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>true</strong> if the buffers are equal, <strong>false</strong> if not equal. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv422cryptx_digest_tostringPKv6size_tP7uint8_t">
+<span id="_CPPv322cryptx_digest_tostringPKv6size_tP7uint8_t"></span><span id="_CPPv222cryptx_digest_tostringPKv6size_tP7uint8_t"></span><span id="cryptx_digest_tostring__voidCP.s.uint8_tP"></span><span class="target" id="cryptx_8h_1aa25931fdaf401a4fddf0023e272278f7"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_digest_tostring</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">digest</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">hexstr</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422cryptx_digest_tostringPKv6size_tP7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Convert a digest to its hexstring representation. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>hexstr</strong> must be at least (2 * len + 1) bytes large. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>digest</strong> – Pointer to a buffer or digest. </p></li>
+<li><p><strong>len</strong> – Byte length of <strong>digest</strong>. </p></li>
+<li><p><strong>hexstr</strong> – Buffer to write the output hex string to. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="password-based-key-derivation">
+<h2>Password-Based Key Derivation<a class="headerlink" href="#password-based-key-derivation" title="Permalink to this headline"></a></h2>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418cryptx_hmac_pbkdf2PKc6size_tPKv6size_tP7uint8_t6size_t6size_t7uint8_t">
+<span id="_CPPv318cryptx_hmac_pbkdf2PKc6size_tPKv6size_tP7uint8_t6size_t6size_t7uint8_t"></span><span id="_CPPv218cryptx_hmac_pbkdf2PKc6size_tPKv6size_tP7uint8_t6size_t6size_t7uint8_t"></span><span id="cryptx_hmac_pbkdf2__cCP.s.voidCP.s.uint8_tP.s.s.uint8_t"></span><span class="target" id="cryptx_8h_1a428a5da208ae3b55b73f4e05242148e8"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hmac_pbkdf2</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">password</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">passlen</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">salt</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">saltlen</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">key</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">keylen</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">rounds</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">hash_alg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_hmac_pbkdf2PKc6size_tPKv6size_tP7uint8_t6size_t6size_t7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Derives a key from a password, salt, and round count. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>NIST recommends a salt of at least 128 bits (16 bytes). </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>rounds</strong> is used to increase the cost (computational time) of generating a key. What makes a password-hashing algorithm secure is the time needed to generate a rainbow table attack against it. More rounds means a more secure key, but more time spent generating it. Current cryptography standards recommend thousands of rounds but that may not be feasible on the CE. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>password</strong> – Pointer to a string containing the password. </p></li>
+<li><p><strong>passlen</strong> – Byte length of the password. </p></li>
+<li><p><strong>salt</strong> – A psuedo-random string to use in each round of key derivation. </p></li>
+<li><p><strong>saltlen</strong> – Byte length of the salt. </p></li>
+<li><p><strong>rounds</strong> – The number of times to iterate the HMAC function per block of <strong>keylen</strong>. </p></li>
+<li><p><strong>key</strong> – Pointer to buffer to write key to. </p></li>
+<li><p><strong>keylen</strong> – Length of <strong>key</strong> to generate. </p></li>
+<li><p><strong>hash_alg</strong> – The numeric ID of the hashing algorithm to use. See <strong>cryptx_hash_algorithms</strong>. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="symmetric-encryption">
+<h2>Symmetric Encryption<a class="headerlink" href="#symmetric-encryption" title="Permalink to this headline"></a></h2>
+<p>AES is currently regarded as the gold standard for symmetric encryption. It is the primary encryption algorithm used in a secure session, after a (usually slower) key negotiation has succeeded. AES is fast and secure (to date it has not been broken if properly implemented). If you need the best possible security with this library, use AES-GCM cipher mode.</p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv414cryptx_aes_ctx">
+<span id="_CPPv314cryptx_aes_ctx"></span><span id="_CPPv214cryptx_aes_ctx"></span><span id="cryptx_aes_ctx"></span><span class="target" id="structcryptx__aes__ctx"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_ctx</span></span></span><a class="headerlink" href="#_CPPv414cryptx_aes_ctx" title="Permalink to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14cryptx_aes_ctx7keysizeE">
+<span id="_CPPv3N14cryptx_aes_ctx7keysizeE"></span><span id="_CPPv2N14cryptx_aes_ctx7keysizeE"></span><span id="cryptx_aes_ctx::keysize__uint24_t"></span><span class="target" id="structcryptx__aes__ctx_1aed50e8b9a653c1d20a0f324789ba8f84"></span><span class="n"><span class="pre">uint24_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">keysize</span></span></span><a class="headerlink" href="#_CPPv4N14cryptx_aes_ctx7keysizeE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>the size of the key, in bits </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14cryptx_aes_ctx10round_keysE">
+<span id="_CPPv3N14cryptx_aes_ctx10round_keysE"></span><span id="_CPPv2N14cryptx_aes_ctx10round_keysE"></span><span id="cryptx_aes_ctx::round_keys__uint32_tA"></span><span class="target" id="structcryptx__aes__ctx_1ab7564e0e5d2e1bd96b083f913eda1382"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">round_keys</span></span></span><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">60</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N14cryptx_aes_ctx10round_keysE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>round keys </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14cryptx_aes_ctx2ivE">
+<span id="_CPPv3N14cryptx_aes_ctx2ivE"></span><span id="_CPPv2N14cryptx_aes_ctx2ivE"></span><span id="cryptx_aes_ctx::iv__uint8_tA"></span><span class="target" id="structcryptx__aes__ctx_1a3cc495f40d5a578c335fd03fe2772e4a"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">iv</span></span></span><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">16</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N14cryptx_aes_ctx2ivE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>IV state for next block. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14cryptx_aes_ctx10ciphermodeE">
+<span id="_CPPv3N14cryptx_aes_ctx10ciphermodeE"></span><span id="_CPPv2N14cryptx_aes_ctx10ciphermodeE"></span><span id="cryptx_aes_ctx::ciphermode__uint8_t"></span><span class="target" id="structcryptx__aes__ctx_1a46d05a8ea39c183bd6f09d5fa95bfe25"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ciphermode</span></span></span><a class="headerlink" href="#_CPPv4N14cryptx_aes_ctx10ciphermodeE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>selected operational mode of the cipher </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14cryptx_aes_ctx8op_assocE">
+<span id="_CPPv3N14cryptx_aes_ctx8op_assocE"></span><span id="_CPPv2N14cryptx_aes_ctx8op_assocE"></span><span id="cryptx_aes_ctx::op_assoc__uint8_t"></span><span class="target" id="structcryptx__aes__ctx_1af6a8c176ebacf1d1fc6a25b1ec2ec6d8"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">op_assoc</span></span></span><a class="headerlink" href="#_CPPv4N14cryptx_aes_ctx8op_assocE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>state-flag indicating if context is for encryption or decryption </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14cryptx_aes_ctx8metadataE">
+<span id="_CPPv3N14cryptx_aes_ctx8metadataE"></span><span id="_CPPv2N14cryptx_aes_ctx8metadataE"></span><span id="cryptx_aes_ctx::metadata__cryptx_aes_private_h"></span><span class="target" id="structcryptx__aes__ctx_1a019c3bf1d587684ca720951dc0f390c3"></span><span class="n"><span class="pre">cryptx_aes_private_h</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">metadata</span></span></span><a class="headerlink" href="#_CPPv4N14cryptx_aes_ctx8metadataE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>opague, internal context metadata </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Contexts are not bidirectional due to being stateful. If you need to process both encryption and decryption, initialize seperate contexts for encryption and decryption. Both contexts will use the same key, but different initialization vectors.</p>
+<p>To prevent misuse, a context locks to the first operation it is used with and will return an error if used incorrectly.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.</p>
+<p>Do not manually edit the context structure. This will break the cipher configuration. If you want to change cipher modes, do so by calling <em>cryptx_aes_init</em> again.</p>
+<p>CBC and CTR modes by themselves ensure confidentiality but do not provide any assurances of message integrity or authenticity. If you need a truly secure construction, use GCM mode or append a keyed hash (HMAC) to the encrypted message..</p>
+</div>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv423cryptx_aes_cipher_modes">
+<span id="_CPPv323cryptx_aes_cipher_modes"></span><span id="_CPPv223cryptx_aes_cipher_modes"></span><span class="target" id="cryptx_8h_1a59334db45c5435de6ded4492dec34735"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_cipher_modes</span></span></span><a class="headerlink" href="#_CPPv423cryptx_aes_cipher_modes" title="Permalink to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N23cryptx_aes_cipher_modes12AES_MODE_CBCE">
+<span id="_CPPv3N23cryptx_aes_cipher_modes12AES_MODE_CBCE"></span><span id="_CPPv2N23cryptx_aes_cipher_modes12AES_MODE_CBCE"></span><span class="target" id="cryptx_8h_1a59334db45c5435de6ded4492dec34735ad21a3698b98b7368b14ec3d48314a132"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AES_MODE_CBC</span></span></span><a class="headerlink" href="#_CPPv4N23cryptx_aes_cipher_modes12AES_MODE_CBCE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>selects Cyclic Block Chain (CBC) mode </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N23cryptx_aes_cipher_modes12AES_MODE_CTRE">
+<span id="_CPPv3N23cryptx_aes_cipher_modes12AES_MODE_CTRE"></span><span id="_CPPv2N23cryptx_aes_cipher_modes12AES_MODE_CTRE"></span><span class="target" id="cryptx_8h_1a59334db45c5435de6ded4492dec34735a5ecd63cd0bd97d46f273461b6550cb8e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AES_MODE_CTR</span></span></span><a class="headerlink" href="#_CPPv4N23cryptx_aes_cipher_modes12AES_MODE_CTRE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>selects Counter (CTR) mode </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N23cryptx_aes_cipher_modes12AES_MODE_GCME">
+<span id="_CPPv3N23cryptx_aes_cipher_modes12AES_MODE_GCME"></span><span id="_CPPv2N23cryptx_aes_cipher_modes12AES_MODE_GCME"></span><span class="target" id="cryptx_8h_1a59334db45c5435de6ded4492dec34735aa41ebb36bc19b64d64ff6b7fc0d5e5df"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AES_MODE_GCM</span></span></span><a class="headerlink" href="#_CPPv4N23cryptx_aes_cipher_modes12AES_MODE_GCME" title="Permalink to this definition"></a><br /></dt>
+<dd><p>selects Galois Counter (GCM) mode </p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv426cryptx_aes_padding_schemes">
+<span id="_CPPv326cryptx_aes_padding_schemes"></span><span id="_CPPv226cryptx_aes_padding_schemes"></span><span class="target" id="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_padding_schemes</span></span></span><a class="headerlink" href="#_CPPv426cryptx_aes_padding_schemes" title="Permalink to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N26cryptx_aes_padding_schemes9PAD_PKCS7E">
+<span id="_CPPv3N26cryptx_aes_padding_schemes9PAD_PKCS7E"></span><span id="_CPPv2N26cryptx_aes_padding_schemes9PAD_PKCS7E"></span><span class="target" id="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433a673ae2fee0bfe0a962717b3f673b9b7c"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PAD_PKCS7</span></span></span><a class="headerlink" href="#_CPPv4N26cryptx_aes_padding_schemes9PAD_PKCS7E" title="Permalink to this definition"></a><br /></dt>
+<dd><p>PKCS#7 padding | DEFAULT. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N26cryptx_aes_padding_schemes11PAD_DEFAULTE">
+<span id="_CPPv3N26cryptx_aes_padding_schemes11PAD_DEFAULTE"></span><span id="_CPPv2N26cryptx_aes_padding_schemes11PAD_DEFAULTE"></span><span class="target" id="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433a322c11c9058ef67073a3ff9bdcb9f759"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PAD_DEFAULT</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N26cryptx_aes_padding_schemes9PAD_PKCS7E" title="cryptx_aes_padding_schemes::PAD_PKCS7"><span class="n"><span class="pre">PAD_PKCS7</span></span></a><a class="headerlink" href="#_CPPv4N26cryptx_aes_padding_schemes11PAD_DEFAULTE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>selects the scheme marked DEFAULT. </p>
+<p>Using this is recommended in case a change to the standards would set a stronger padding scheme as default </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N26cryptx_aes_padding_schemes8PAD_ISO2E">
+<span id="_CPPv3N26cryptx_aes_padding_schemes8PAD_ISO2E"></span><span id="_CPPv2N26cryptx_aes_padding_schemes8PAD_ISO2E"></span><span class="target" id="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433a7566d9371110a1a24db62b145c901ad8"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PAD_ISO2</span></span></span><a class="headerlink" href="#_CPPv4N26cryptx_aes_padding_schemes8PAD_ISO2E" title="Permalink to this definition"></a><br /></dt>
+<dd><p>ISO-9797 M2 padding. </p>
+</dd></dl>
+
+</dd></dl>
+
+<p>Here are some macros to assist with defining buffers for keys of supported length.</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_AES_128_KEYLEN">
+<span class="target" id="cryptx_8h_1aa08392858444e1cc894d5f98432411c9"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_128_KEYLEN</span></span></span><a class="headerlink" href="#c.CRYPTX_AES_128_KEYLEN" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_AES_192_KEYLEN">
+<span class="target" id="cryptx_8h_1a0ceacc8bb81e6ef0f60bbe736732e5e0"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_192_KEYLEN</span></span></span><a class="headerlink" href="#c.CRYPTX_AES_192_KEYLEN" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_AES_256_KEYLEN">
+<span class="target" id="cryptx_8h_1acb2aea7855878c1b9b505ecb9b9583b1"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_256_KEYLEN</span></span></span><a class="headerlink" href="#c.CRYPTX_AES_256_KEYLEN" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<p>And here are some macros defining properties of the cipher.</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_AES_BLOCK_SIZE">
+<span class="target" id="cryptx_8h_1a2d638028c68c84297614a1dc7ff318d9"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_BLOCK_SIZE</span></span></span><a class="headerlink" href="#c.CRYPTX_AES_BLOCK_SIZE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_AES_IV_SIZE">
+<span class="target" id="cryptx_8h_1ac47330f91ba12f7856c0c198bdbf2753"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_IV_SIZE</span></span></span><a class="headerlink" href="#c.CRYPTX_AES_IV_SIZE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_AES_AUTHTAG_SIZE">
+<span class="target" id="cryptx_8h_1a89521b82b1be81ea3e5f70c3593bf5a9"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_AUTHTAG_SIZE</span></span></span><a class="headerlink" href="#c.CRYPTX_AES_AUTHTAG_SIZE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<p>Some macros for passing cipher configuration options to <em>cryptx_aes_init</em>.</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_AES_CBC_FLAGS">
+<span class="target" id="cryptx_8h_1af0f7e8aa23de8ecc99b2420efefa4edc"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_CBC_FLAGS</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">padding_mode</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.CRYPTX_AES_CBC_FLAGS" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines a macro to enable AES CBC cipher mode and pass relevant configuration options. </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_AES_CTR_FLAGS">
+<span class="target" id="cryptx_8h_1a0ed8d02473b9a003653db30e1d856614"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_CTR_FLAGS</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">nonce_len</span></span>, <span class="n"><span class="pre">counter_len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.CRYPTX_AES_CTR_FLAGS" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines a macro to enable AES CTR cipher mode and pass relevant configuration options. </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_AES_GCM_FLAGS">
+<span class="target" id="cryptx_8h_1ac0de9d43e9ef5718060b164bf71e3ae0"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_GCM_FLAGS</span></span></span><a class="headerlink" href="#c.CRYPTX_AES_GCM_FLAGS" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines a macro to enable AES GCM cipher mode. </p>
+</dd></dl>
+
+<p>This macro returns the full size required by the ciphertext. This really only applies to CBC mode. CTR and GCM modes have the same ciphertext and plaintext length.</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.cryptx_aes_get_ciphertext_len">
+<span class="target" id="cryptx_8h_1adf4062c77f37927bc0178872056602ff"></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_get_ciphertext_len</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.cryptx_aes_get_ciphertext_len" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines a macro to return the byte length of an AES ciphertext given a plaintext length. </p>
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv411aes_error_t">
+<span id="_CPPv311aes_error_t"></span><span id="_CPPv211aes_error_t"></span><span class="target" id="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">aes_error_t</span></span></span><a class="headerlink" href="#_CPPv411aes_error_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines response codes returned by the AES API. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11aes_error_t6AES_OKE">
+<span id="_CPPv3N11aes_error_t6AES_OKE"></span><span id="_CPPv2N11aes_error_t6AES_OKE"></span><span class="target" id="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdaacf07636102724d2a7913911b0cf74b2"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AES_OK</span></span></span><a class="headerlink" href="#_CPPv4N11aes_error_t6AES_OKE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>AES operation completed successfully. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11aes_error_t15AES_INVALID_ARGE">
+<span id="_CPPv3N11aes_error_t15AES_INVALID_ARGE"></span><span id="_CPPv2N11aes_error_t15AES_INVALID_ARGE"></span><span class="target" id="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfda6d39b280aea9d8d62d126eef05d271db"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AES_INVALID_ARG</span></span></span><a class="headerlink" href="#_CPPv4N11aes_error_t15AES_INVALID_ARGE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>AES operation failed, bad argument. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11aes_error_t15AES_INVALID_MSGE">
+<span id="_CPPv3N11aes_error_t15AES_INVALID_MSGE"></span><span id="_CPPv2N11aes_error_t15AES_INVALID_MSGE"></span><span class="target" id="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdaae5e9a591aeda666b0e425d9a05834e3"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AES_INVALID_MSG</span></span></span><a class="headerlink" href="#_CPPv4N11aes_error_t15AES_INVALID_MSGE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>AES operation failed, message invalid. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11aes_error_t22AES_INVALID_CIPHERMODEE">
+<span id="_CPPv3N11aes_error_t22AES_INVALID_CIPHERMODEE"></span><span id="_CPPv2N11aes_error_t22AES_INVALID_CIPHERMODEE"></span><span class="target" id="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdad2b49ffeabf14aaf47db3d1bad18f84e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AES_INVALID_CIPHERMODE</span></span></span><a class="headerlink" href="#_CPPv4N11aes_error_t22AES_INVALID_CIPHERMODEE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>AES operation failed, cipher mode undefined. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11aes_error_t23AES_INVALID_PADDINGMODEE">
+<span id="_CPPv3N11aes_error_t23AES_INVALID_PADDINGMODEE"></span><span id="_CPPv2N11aes_error_t23AES_INVALID_PADDINGMODEE"></span><span class="target" id="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfda47bbd593fc3bdb7758a790bab86b41d9"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AES_INVALID_PADDINGMODE</span></span></span><a class="headerlink" href="#_CPPv4N11aes_error_t23AES_INVALID_PADDINGMODEE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>AES operation failed, padding mode undefined. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11aes_error_t22AES_INVALID_CIPHERTEXTE">
+<span id="_CPPv3N11aes_error_t22AES_INVALID_CIPHERTEXTE"></span><span id="_CPPv2N11aes_error_t22AES_INVALID_CIPHERTEXTE"></span><span class="target" id="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdaba928751c773ffa0287e47e1f86eae8b"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AES_INVALID_CIPHERTEXT</span></span></span><a class="headerlink" href="#_CPPv4N11aes_error_t22AES_INVALID_CIPHERTEXTE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>AES operation failed, ciphertext error. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11aes_error_t21AES_INVALID_OPERATIONE">
+<span id="_CPPv3N11aes_error_t21AES_INVALID_OPERATIONE"></span><span id="_CPPv2N11aes_error_t21AES_INVALID_OPERATIONE"></span><span class="target" id="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfda95a9dcbf64347e3c6f2c50d05e8937f5"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AES_INVALID_OPERATION</span></span></span><a class="headerlink" href="#_CPPv4N11aes_error_t21AES_INVALID_OPERATIONE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>AES operation failed, used encrypt context for decrypt or vice versa. </p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415cryptx_aes_initP14cryptx_aes_ctxPKv6size_tPKv6size_t8uint24_t">
+<span id="_CPPv315cryptx_aes_initP14cryptx_aes_ctxPKv6size_tPKv6size_t8uint24_t"></span><span id="_CPPv215cryptx_aes_initP14cryptx_aes_ctxPKv6size_tPKv6size_t8uint24_t"></span><span id="cryptx_aes_init__cryptx_aes_ctxP.voidCP.s.voidCP.s.uint24_t"></span><span class="target" id="cryptx_8h_1aee9ba52b80ab5bddd81193cdf26389e2"></span><a class="reference internal" href="#_CPPv411aes_error_t" title="aes_error_t"><span class="n"><span class="pre">aes_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_init</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv414cryptx_aes_ctx" title="cryptx_aes_ctx"><span class="n"><span class="pre">cryptx_aes_ctx</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">key</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">keylen</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iv</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">ivlen</span></span>, <span class="n"><span class="pre">uint24_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">flags</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415cryptx_aes_initP14cryptx_aes_ctxPKv6size_tPKv6size_t8uint24_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Initializes a stateful AES cipher context to be used for encryption or decryption. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> – Pointer to an AES cipher context to initialize. </p></li>
+<li><p><strong>key</strong> – Pointer to an 128, 192, or 256 bit key to load into the AES context. </p></li>
+<li><p><strong>keylen</strong> – The size, in bytes, of the <strong>key</strong> to load. </p></li>
+<li><p><strong>iv</strong> – Pointer to Initialization vector, a buffer equal to the block size filled with random bytes. </p></li>
+<li><p><strong>ivlen</strong> – Length of the initalization vector. Capped at 16 bytes. Certain cipher modes have different recommendations. </p></li>
+<li><p><strong>flags</strong> – A series of flags to configure the AES context with. Use the provided <strong>CRYPTX_AES_CTR_FLAGS</strong>, <strong>CRYPTX_AES_CBC_FLAGS</strong>, or <strong>CRYPTX_AES_GCM_FLAGS</strong> to pass flags. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An <strong>aes_error_t</strong> indicating the status of the AES operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418cryptx_aes_encryptPK14cryptx_aes_ctxPKv6size_tPv">
+<span id="_CPPv318cryptx_aes_encryptPK14cryptx_aes_ctxPKv6size_tPv"></span><span id="_CPPv218cryptx_aes_encryptPK14cryptx_aes_ctxPKv6size_tPv"></span><span id="cryptx_aes_encrypt__cryptx_aes_ctxCP.voidCP.s.voidP"></span><span class="target" id="cryptx_8h_1a571d4b9eb0fe3d069b10492025e47fe0"></span><a class="reference internal" href="#_CPPv411aes_error_t" title="aes_error_t"><span class="n"><span class="pre">aes_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_encrypt</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv414cryptx_aes_ctx" title="cryptx_aes_ctx"><span class="n"><span class="pre">cryptx_aes_ctx</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">plaintext</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ciphertext</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_aes_encryptPK14cryptx_aes_ctxPKv6size_tPv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Performs a stateful AES encryption of an arbitrary length of data. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>ciphertext</strong> should large enough to hold the encrypted message. See the <strong>cryptx_aes_get_ciphertext_len</strong> macro for CBC mode. </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plaintext</strong> and <strong>ciphertext</strong> are aliasable. </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Encrypt is streamable, such that <span class="math notranslate nohighlight">\( encrypt(msg1) + encrypt(msg2) \)</span> is functionally identical to <span class="math notranslate nohighlight">\( encrypt(msg1+msg2) \)</span> with the exception of intervening padding in CBC mode. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> – Pointer to an AES cipher context. </p></li>
+<li><p><strong>plaintext</strong> – Pointer to data to encrypt. </p></li>
+<li><p><strong>len</strong> – Length of data at <strong>plaintext</strong> to encrypt. </p></li>
+<li><p><strong>ciphertext</strong> – Pointer to buffer to write encrypted data to. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An <strong>aes_error_t</strong> indicating the status of the AES operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418cryptx_aes_decryptPK14cryptx_aes_ctxPKv6size_tPv">
+<span id="_CPPv318cryptx_aes_decryptPK14cryptx_aes_ctxPKv6size_tPv"></span><span id="_CPPv218cryptx_aes_decryptPK14cryptx_aes_ctxPKv6size_tPv"></span><span id="cryptx_aes_decrypt__cryptx_aes_ctxCP.voidCP.s.voidP"></span><span class="target" id="cryptx_8h_1ab5cf162f80d83c86c9dbba9aa866b289"></span><a class="reference internal" href="#_CPPv411aes_error_t" title="aes_error_t"><span class="n"><span class="pre">aes_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_decrypt</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv414cryptx_aes_ctx" title="cryptx_aes_ctx"><span class="n"><span class="pre">cryptx_aes_ctx</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ciphertext</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">plaintext</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_aes_decryptPK14cryptx_aes_ctxPKv6size_tPv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Performs a stateful AES decryption of an arbitrary length of data. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plaintext</strong> and <strong>ciphertext</strong> are aliasable. </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Decrypt is streamable, such that <span class="math notranslate nohighlight">\( decrypt(msg1) + decrypt(msg2) \)</span> is functionally identical to <span class="math notranslate nohighlight">\( decrypt(msg1+msg2) \)</span> with the exception of intervening padding in CBC mode. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> – Pointer to AES cipher context. </p></li>
+<li><p><strong>ciphertext</strong> – Pointer to data to decrypt. </p></li>
+<li><p><strong>len</strong> – Length of data at <strong>ciphertext</strong> to decrypt. </p></li>
+<li><p><strong>plaintext</strong> – Pointer to buffer to write decryped data to. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An <strong>aes_error_t</strong> indicating the status of the AES operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>The following functions are only valid for Galois Counter Mode (GCM). Attempting to use them for any other cipher mode will return <strong>AES_INVALID_CIPHERMODE</strong>.</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv421cryptx_aes_update_aadP14cryptx_aes_ctxPKv6size_t">
+<span id="_CPPv321cryptx_aes_update_aadP14cryptx_aes_ctxPKv6size_t"></span><span id="_CPPv221cryptx_aes_update_aadP14cryptx_aes_ctxPKv6size_t"></span><span id="cryptx_aes_update_aad__cryptx_aes_ctxP.voidCP.s"></span><span class="target" id="cryptx_8h_1a3d55233d4178e3f6c6b96272fda56ae0"></span><a class="reference internal" href="#_CPPv411aes_error_t" title="aes_error_t"><span class="n"><span class="pre">aes_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_update_aad</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv414cryptx_aes_ctx" title="cryptx_aes_ctx"><span class="n"><span class="pre">cryptx_aes_ctx</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">aad</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">aad_len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421cryptx_aes_update_aadP14cryptx_aes_ctxPKv6size_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Updates the cipher context for given AAD (Additional Authenticated Data). </p>
+<p>AAD is data that is only authenticated, not encrypted. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function can only be called between cipher initialization and encryption/decryption. Attempting to call this function at any other time will return <strong>AES_INVALID_OPERATION</strong>. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> – Pointer to an AES context. </p></li>
+<li><p><strong>aad</strong> – Pointer to additional authenticated data segment. </p></li>
+<li><p><strong>aad_len</strong> – Length of additional data segment. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An <strong>aes_error_t</strong> indicating the status of the AES operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417cryptx_aes_digestP14cryptx_aes_ctxP7uint8_t">
+<span id="_CPPv317cryptx_aes_digestP14cryptx_aes_ctxP7uint8_t"></span><span id="_CPPv217cryptx_aes_digestP14cryptx_aes_ctxP7uint8_t"></span><span id="cryptx_aes_digest__cryptx_aes_ctxP.uint8_tP"></span><span class="target" id="cryptx_8h_1a7aaae6b33efe97c579d24729680eda79"></span><a class="reference internal" href="#_CPPv411aes_error_t" title="aes_error_t"><span class="n"><span class="pre">aes_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_digest</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv414cryptx_aes_ctx" title="cryptx_aes_ctx"><span class="n"><span class="pre">cryptx_aes_ctx</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">digest</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417cryptx_aes_digestP14cryptx_aes_ctxP7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the current authentication tag for data parsed so far. </p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Nonce-misuse vulnerability/forbidden attack</strong>: GCM is vulnerable to key discovery if the same nonce is reused to encrypt or decrypt multiple messages. Once you generate a digest for data processed by the cipher, cycle the nonce by generating a new one and calling <strong>cryptx_aes_init</strong> again with the new nonce. To ensure this is done properly, the context is marked invalid once this function is called. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> – Pointer to an AES context </p></li>
+<li><p><strong>digest</strong> – Pointer to a buffer to output digest to. Must be at least 16 bytes large. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An <strong>aes_error_t</strong> indicating the status of the AES operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417cryptx_aes_verifyPK14cryptx_aes_ctxPKv6size_tPKv6size_tP7uint8_t">
+<span id="_CPPv317cryptx_aes_verifyPK14cryptx_aes_ctxPKv6size_tPKv6size_tP7uint8_t"></span><span id="_CPPv217cryptx_aes_verifyPK14cryptx_aes_ctxPKv6size_tPKv6size_tP7uint8_t"></span><span id="cryptx_aes_verify__cryptx_aes_ctxCP.voidCP.s.voidCP.s.uint8_tP"></span><span class="target" id="cryptx_8h_1a69437bd1ca1d4fe40dc50d91da7c1be4"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_verify</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv414cryptx_aes_ctx" title="cryptx_aes_ctx"><span class="n"><span class="pre">cryptx_aes_ctx</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">aad</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">aad_len</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ciphertext</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">ciphertext_len</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">tag</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417cryptx_aes_verifyPK14cryptx_aes_ctxPKv6size_tPKv6size_tP7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Parses the specified AAD and ciphertext and then compares the output auth tag to an expected auth tag. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If this function returns FALSE, do not decrypt the message. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> – Pointer to an AES context. </p></li>
+<li><p><strong>aad</strong> – Pointer to associated data to authenticate. </p></li>
+<li><p><strong>aad_len</strong> – Length of associated data to authenticate. </p></li>
+<li><p><strong>ciphertext</strong> – Pointer to ciphertext to authenticate. </p></li>
+<li><p><strong>ciphertext_len</strong> – Length of ciphertext to authenticate. </p></li>
+<li><p><strong>tag</strong> – Pointer to expected auth tag to validate against. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>TRUE if authentication tag matches expected, FALSE otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="public-key-encryption">
+<h2>Public Key Encryption<a class="headerlink" href="#public-key-encryption" title="Permalink to this headline"></a></h2>
+<p>RSA is currently one of the most commonly used key exchange/public key encryption methods. It is commonly used to share a secret for symmetric encryption (such as AES) at the start of a secure session. In recent times, however, RSA has been becoming easier to defeat due to advances in computing. This implementation is encrypt-only, supports modulus length between 1024 and 2048 bits, and uses a public exponent of <span class="math notranslate nohighlight">\(2^{2^4} + 1\)</span> or 65,537.</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_RSA_MODULUS_MAX">
+<span class="target" id="cryptx_8h_1a265dcd336b31e2b95870d864c85cee2a"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_RSA_MODULUS_MAX</span></span></span><a class="headerlink" href="#c.CRYPTX_RSA_MODULUS_MAX" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines the maximum byte length of an RSA public modulus supported by this library. </p>
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv411rsa_error_t">
+<span id="_CPPv311rsa_error_t"></span><span id="_CPPv211rsa_error_t"></span><span class="target" id="cryptx_8h_1a0486449f609d0e485bad091a671d9294"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rsa_error_t</span></span></span><a class="headerlink" href="#_CPPv411rsa_error_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines response codes returned by calls to the RSA API. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11rsa_error_t6RSA_OKE">
+<span id="_CPPv3N11rsa_error_t6RSA_OKE"></span><span id="_CPPv2N11rsa_error_t6RSA_OKE"></span><span class="target" id="cryptx_8h_1a0486449f609d0e485bad091a671d9294a2cafdb683e1870a33bcb821420626cae"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RSA_OK</span></span></span><a class="headerlink" href="#_CPPv4N11rsa_error_t6RSA_OKE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>RSA encryption completed successfully. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11rsa_error_t15RSA_INVALID_ARGE">
+<span id="_CPPv3N11rsa_error_t15RSA_INVALID_ARGE"></span><span id="_CPPv2N11rsa_error_t15RSA_INVALID_ARGE"></span><span class="target" id="cryptx_8h_1a0486449f609d0e485bad091a671d9294aab9ab38286c4180a1aa9f6e8df42e5db"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RSA_INVALID_ARG</span></span></span><a class="headerlink" href="#_CPPv4N11rsa_error_t15RSA_INVALID_ARGE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>RSA encryption failed, bad argument. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11rsa_error_t15RSA_INVALID_MSGE">
+<span id="_CPPv3N11rsa_error_t15RSA_INVALID_MSGE"></span><span id="_CPPv2N11rsa_error_t15RSA_INVALID_MSGE"></span><span class="target" id="cryptx_8h_1a0486449f609d0e485bad091a671d9294aedeb18a96b96e292369abed5b2f0a271"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RSA_INVALID_MSG</span></span></span><a class="headerlink" href="#_CPPv4N11rsa_error_t15RSA_INVALID_MSGE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>RSA encryption failed, bad msg or msg too long. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11rsa_error_t19RSA_INVALID_MODULUSE">
+<span id="_CPPv3N11rsa_error_t19RSA_INVALID_MODULUSE"></span><span id="_CPPv2N11rsa_error_t19RSA_INVALID_MODULUSE"></span><span class="target" id="cryptx_8h_1a0486449f609d0e485bad091a671d9294a843ec210de66176ef63e2d2b8ebdeb65"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RSA_INVALID_MODULUS</span></span></span><a class="headerlink" href="#_CPPv4N11rsa_error_t19RSA_INVALID_MODULUSE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>RSA encryption failed, modulus invalid. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11rsa_error_t18RSA_ENCODING_ERRORE">
+<span id="_CPPv3N11rsa_error_t18RSA_ENCODING_ERRORE"></span><span id="_CPPv2N11rsa_error_t18RSA_ENCODING_ERRORE"></span><span class="target" id="cryptx_8h_1a0486449f609d0e485bad091a671d9294a43eadc89540121b902e02afabc7a7eb9"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RSA_ENCODING_ERROR</span></span></span><a class="headerlink" href="#_CPPv4N11rsa_error_t18RSA_ENCODING_ERRORE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>RSA encryption failed, OAEP encoding error. </p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418cryptx_rsa_encryptPKv6size_tPKv6size_tPv7uint8_t">
+<span id="_CPPv318cryptx_rsa_encryptPKv6size_tPKv6size_tPv7uint8_t"></span><span id="_CPPv218cryptx_rsa_encryptPKv6size_tPKv6size_tPv7uint8_t"></span><span id="cryptx_rsa_encrypt__voidCP.s.voidCP.s.voidP.uint8_t"></span><span class="target" id="cryptx_8h_1aa4f5ae1eb3d9636c20dec64503a4896b"></span><a class="reference internal" href="#_CPPv411rsa_error_t" title="rsa_error_t"><span class="n"><span class="pre">rsa_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_rsa_encrypt</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">msg</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">msglen</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pubkey</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">keylen</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ciphertext</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">oaep_hash_alg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_rsa_encryptPKv6size_tPKv6size_tPv7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Encrypts a message using the given RSA public key. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>ciphertext</strong> should be at least <strong>msglen</strong> bytes large. </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>OAEP encoding is applied to the message as part of the encryption. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>msg</strong> – Pointer to a message to encrypt using RSA. </p></li>
+<li><p><strong>msglen</strong> – The byte length of the <strong>msg</strong>. </p></li>
+<li><p><strong>pubkey</strong> – Pointer to a public key to use for encryption. </p></li>
+<li><p><strong>keylen</strong> – The length of the public key (modulus) to encrypt with. </p></li>
+<li><p><strong>ciphertext</strong> – Pointer a buffer to write the ciphertext to. </p></li>
+<li><p><strong>oaep_hash_alg</strong> – The numeric ID of the hashing algorithm to use within OAEP encoding. See <strong>cryptx_hash_algorithms</strong>. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An <strong>rsa_error_t</strong> indicating the status of the RSA operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="key-exchange-protocols">
+<h2>Key Exchange Protocols<a class="headerlink" href="#key-exchange-protocols" title="Permalink to this headline"></a></h2>
+<p>Elliptic curves are a newer introduction to cryptography and they boast more security than more traditional algorithms. For example, in order to achieve the same security level you would have with a 2048-bit RSA key, you need only around 240 bits. <strong>Elliptic Curve Diffie-Hellman</strong> is a variation on standard Diffie-Hellman that uses elliptic curves to transform a private key into a public key.</p>
+<p><strong>Standard Diffie-Hellman</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}&amp;pubkey = G^{privkey} \mod m \\
+&amp;secret = rpubkey^{privkey} \mod m \\
+&amp;where: \\
+&amp;G = public\_base \\
+&amp;m = public\_modulus\end{split}\]</div>
+<p><strong>Elliptic Curve Diffie-Hellman</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}&amp;pubkey = G * privkey \\
+&amp;secret = rpubkey * privkey * cofactor \\
+&amp;where: \\
+&amp;G = base\_point\_on\_curve\end{split}\]</div>
+<p>This library implements SECT233k1. This was chosen (1) because it offers approximately the same security level as RSA-2048, and (2) koblitz curves can be mathematically optimzed better than other curves. On a platform as slow as the TI-84+ CE, these optimizations are critical to make using this feasible. Even so, this elliptic curve implementation clocks in at about 14 seconds per operation (pubkey generation, secret compuation).</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_ECDH_PRIVKEY_LEN">
+<span class="target" id="cryptx_8h_1ac753c393f9a2f85ebd589ed14823ccd7"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_ECDH_PRIVKEY_LEN</span></span></span><a class="headerlink" href="#c.CRYPTX_ECDH_PRIVKEY_LEN" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines the byte length of an ECDH private key supported by this library. </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_ECDH_PUBKEY_LEN">
+<span class="target" id="cryptx_8h_1ad75ef28855bfeec84da3e324494c3082"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_ECDH_PUBKEY_LEN</span></span></span><a class="headerlink" href="#c.CRYPTX_ECDH_PUBKEY_LEN" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines the byte length of an ECDH public key supported by this library. </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_ECDH_SECRET_LEN">
+<span class="target" id="cryptx_8h_1aa95fc648d6050a2e47e08f24176167c6"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_ECDH_SECRET_LEN</span></span></span><a class="headerlink" href="#c.CRYPTX_ECDH_SECRET_LEN" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.cryptx_ecdh_generate_privkey">
+<span class="target" id="cryptx_8h_1a1bd4fb56d54940c2534049e2a5a73351"></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_ecdh_generate_privkey</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">privkey</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.cryptx_ecdh_generate_privkey" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines a macro to fill an ECDH private key with random bytes. </p>
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv412ecdh_error_t">
+<span id="_CPPv312ecdh_error_t"></span><span id="_CPPv212ecdh_error_t"></span><span class="target" id="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ecdh_error_t</span></span></span><a class="headerlink" href="#_CPPv412ecdh_error_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines possible response codes from calls to the ECDH API. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12ecdh_error_t7ECDH_OKE">
+<span id="_CPPv3N12ecdh_error_t7ECDH_OKE"></span><span id="_CPPv2N12ecdh_error_t7ECDH_OKE"></span><span class="target" id="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944a1fc3b5fa5eb8adaa46a9257ee782acbb"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ECDH_OK</span></span></span><a class="headerlink" href="#_CPPv4N12ecdh_error_t7ECDH_OKE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12ecdh_error_t16ECDH_INVALID_ARGE">
+<span id="_CPPv3N12ecdh_error_t16ECDH_INVALID_ARGE"></span><span id="_CPPv2N12ecdh_error_t16ECDH_INVALID_ARGE"></span><span class="target" id="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944a635480018ca2a67bd5994a91091abc5a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ECDH_INVALID_ARG</span></span></span><a class="headerlink" href="#_CPPv4N12ecdh_error_t16ECDH_INVALID_ARGE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12ecdh_error_t20ECDH_PRIVKEY_INVALIDE">
+<span id="_CPPv3N12ecdh_error_t20ECDH_PRIVKEY_INVALIDE"></span><span id="_CPPv2N12ecdh_error_t20ECDH_PRIVKEY_INVALIDE"></span><span class="target" id="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944a761fc8a34f1342ebe085e06300fb907f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ECDH_PRIVKEY_INVALID</span></span></span><a class="headerlink" href="#_CPPv4N12ecdh_error_t20ECDH_PRIVKEY_INVALIDE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12ecdh_error_t20ECDH_RPUBKEY_INVALIDE">
+<span id="_CPPv3N12ecdh_error_t20ECDH_RPUBKEY_INVALIDE"></span><span id="_CPPv2N12ecdh_error_t20ECDH_RPUBKEY_INVALIDE"></span><span class="target" id="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944a6bb841ab7c886611c50ce3e4a8bcdf08"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ECDH_RPUBKEY_INVALID</span></span></span><a class="headerlink" href="#_CPPv4N12ecdh_error_t20ECDH_RPUBKEY_INVALIDE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv421cryptx_ecdh_publickeyPK7uint8_tP7uint8_t">
+<span id="_CPPv321cryptx_ecdh_publickeyPK7uint8_tP7uint8_t"></span><span id="_CPPv221cryptx_ecdh_publickeyPK7uint8_tP7uint8_t"></span><span id="cryptx_ecdh_publickey__uint8_tCP.uint8_tP"></span><span class="target" id="cryptx_8h_1a495fa773d3d4c650a289c7da236a8026"></span><a class="reference internal" href="#_CPPv412ecdh_error_t" title="ecdh_error_t"><span class="n"><span class="pre">ecdh_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_ecdh_publickey</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">privkey</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pubkey</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421cryptx_ecdh_publickeyPK7uint8_tP7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Generates a public key from the private key and some base point G on curve. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Output public key is a point on the curve expressed as two 30-byte coordinates encoded in little endian byte order and padded with zeros (if needed). You may have to deserialize the key and then serialize it into a different format to use it with some encryption libraries. </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function expects that <strong>privkey</strong> be filled with random bytes. Failure to do so may cause unexpected behavior. See <strong><a class="reference internal" href="#cryptx_8h_1a1bd4fb56d54940c2534049e2a5a73351"><span class="std std-ref">cryptx_ecdh_generate_privkey()</span></a></strong>. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>privkey</strong> – Pointer to a randomized ECDH private key. </p></li>
+<li><p><strong>pubkey</strong> – Pointer to buffer to write public key. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418cryptx_ecdh_secretPK7uint8_tPK7uint8_tP7uint8_t">
+<span id="_CPPv318cryptx_ecdh_secretPK7uint8_tPK7uint8_tP7uint8_t"></span><span id="_CPPv218cryptx_ecdh_secretPK7uint8_tPK7uint8_tP7uint8_t"></span><span id="cryptx_ecdh_secret__uint8_tCP.uint8_tCP.uint8_tP"></span><span class="target" id="cryptx_8h_1ad975a0ac10f02d9509081ae57f790f50"></span><a class="reference internal" href="#_CPPv412ecdh_error_t" title="ecdh_error_t"><span class="n"><span class="pre">ecdh_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_ecdh_secret</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">privkey</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">rpubkey</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">secret</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_ecdh_secretPK7uint8_tPK7uint8_tP7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Computes a secret from the private key and the remote public key. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>secret</strong> must be at least <strong>CRYPTX_ECDH_SECRET_LEN</strong> bytes large. </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Output secret is a point on the curve expressed as two 30-byte coordinates encoded in little endian byte order and padded with zeros if needed. You may have to deserialize the secret and then serialize it into a different format for compatibility with other encryption libraries. </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is generally not recommended to use the computed secret as an encryption key as is. It is preferred to pass the secret to a KDF or a cryptographic primitive such as a hash function and use that output as your symmetric key. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>privkey</strong> – Pointer to local private key. </p></li>
+<li><p><strong>rpubkey</strong> – Pointer to remote public key. </p></li>
+<li><p><strong>secret</strong> – Pointer to buffer to write shared secret to. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="abstract-syntax-notation-one">
+<h2>Abstract Syntax Notation One<a class="headerlink" href="#abstract-syntax-notation-one" title="Permalink to this headline"></a></h2>
+<p>Abstract Syntax Notation One (ASN.1) is a form of data encoding common to cryptography and one of the two usual output formats for keyfiles. ASN.1 is a tree structure of objects encoded by type, size, and data. A common serialization format for ASN.1 is DER, which stands for <em>Distinguished Encoding Rules</em>. It is standardized for cryptography. See the example below which expresses the encoding of a public key from <em>Public Key Cryptography Standards #8 (PKCS#8)</em>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">PublicKeyInfo</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="n">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">algorithm</span><span class="w"> </span><span class="n">AlgorithmIdentifier</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">algorithm</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="n">OBJECT</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="p">,</span>
+<span class="w">                </span><span class="n">parameters</span><span class="w"> </span><span class="n">ANY</span><span class="w"> </span><span class="n">DEFINED</span><span class="w"> </span><span class="n">BY</span><span class="w"> </span><span class="n">algorithm</span><span class="w"> </span><span class="n">OPTIONAL</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">PublicKey</span><span class="w"> </span><span class="n">BIT</span><span class="w"> </span><span class="n">STRING</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Do not confuse encryption with encoding. Encoding is merely a method of expressing information. It does not prevent unauthorized parties from reading or modifying the data.</p>
+</div>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv416CRYPTX_ASN1_TAGS">
+<span id="_CPPv316CRYPTX_ASN1_TAGS"></span><span id="_CPPv216CRYPTX_ASN1_TAGS"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_ASN1_TAGS</span></span></span><a class="headerlink" href="#_CPPv416CRYPTX_ASN1_TAGS" title="Permalink to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS10ASN1_RESVDE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS10ASN1_RESVDE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS10ASN1_RESVDE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a0b4ee1817dddda0e7bb95f8c9c5262cc"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_RESVD</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS10ASN1_RESVDE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>RESERVED. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS12ASN1_BOOLEANE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS12ASN1_BOOLEANE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS12ASN1_BOOLEANE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5afcacc079274ffffd6f8f30005a478309"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_BOOLEAN</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS12ASN1_BOOLEANE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>defines a BOOLEAN object </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS12ASN1_INTEGERE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS12ASN1_INTEGERE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS12ASN1_INTEGERE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ace678073d12a09bd35a9d14ee843f4f6"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_INTEGER</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS12ASN1_INTEGERE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>defines an INTEGER object </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS14ASN1_BITSTRINGE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS14ASN1_BITSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS14ASN1_BITSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a80cce3c21b5cf2a46abcf2d6559f16a2"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_BITSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS14ASN1_BITSTRINGE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>defines a BIT STRING object </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS16ASN1_OCTETSTRINGE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS16ASN1_OCTETSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS16ASN1_OCTETSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ad652362316e1126ce1f372ee9f42fdf7"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_OCTETSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS16ASN1_OCTETSTRINGE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>defines an OCTET STRING object </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS9ASN1_NULLE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS9ASN1_NULLE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS9ASN1_NULLE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ab9aa4736a7a0bec12fda19d770381ade"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_NULL</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS9ASN1_NULLE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>defines a NULL object (0 size, no data) </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS13ASN1_OBJECTIDE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS13ASN1_OBJECTIDE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS13ASN1_OBJECTIDE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ab4e5697bbcfa96959f724b475deb438d"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_OBJECTID</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS13ASN1_OBJECTIDE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>defines an OBJECT IDENTIFIER </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS15ASN1_OBJECTDESCE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS15ASN1_OBJECTDESCE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS15ASN1_OBJECTDESCE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5afa75f14a7646b0ee90575da2299c9303"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_OBJECTDESC</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS15ASN1_OBJECTDESCE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>defines an OBJECT DESCRIPTION </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS13ASN1_INSTANCEE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS13ASN1_INSTANCEE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS13ASN1_INSTANCEE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a2169eaf366165cd4dfe1aca66659935c"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_INSTANCE</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS13ASN1_INSTANCEE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>defines an INSTANCE </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS9ASN1_REALE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS9ASN1_REALE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS9ASN1_REALE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ade199cbdfbec356bae58bc468797580a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_REAL</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS9ASN1_REALE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>defines a REAL object </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS15ASN1_ENUMERATEDE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS15ASN1_ENUMERATEDE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS15ASN1_ENUMERATEDE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a5bb35c428781f325e40ea36ab317bc42"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_ENUMERATED</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS15ASN1_ENUMERATEDE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS16ASN1_EMBEDDEDPDVE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS16ASN1_EMBEDDEDPDVE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS16ASN1_EMBEDDEDPDVE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a7c167c8e276b910d748db386f78383af"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_EMBEDDEDPDV</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS16ASN1_EMBEDDEDPDVE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS15ASN1_UTF8STRINGE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS15ASN1_UTF8STRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS15ASN1_UTF8STRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a64811d53c5db0139556f07ec23185f08"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_UTF8STRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS15ASN1_UTF8STRINGE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS16ASN1_RELATIVEOIDE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS16ASN1_RELATIVEOIDE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS16ASN1_RELATIVEOIDE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a5234ef0948bc0487ae9474e21ce0df3f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_RELATIVEOID</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS16ASN1_RELATIVEOIDE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS13ASN1_SEQUENCEE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS13ASN1_SEQUENCEE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS13ASN1_SEQUENCEE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a472ab1907cf28338eff639b8b5ab667c"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_SEQUENCE</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">16</span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS13ASN1_SEQUENCEE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>defines a SEQUENCE </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS8ASN1_SETE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS8ASN1_SETE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS8ASN1_SETE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5aefff306acd391300face0a8080ad415e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_SET</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS8ASN1_SETE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>defines a SET </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_NUMERICSTRINGE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS18ASN1_NUMERICSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS18ASN1_NUMERICSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5af1b09bf2be320630525edcbbffe0424e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_NUMERICSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_NUMERICSTRINGE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS20ASN1_PRINTABLESTRINGE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS20ASN1_PRINTABLESTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS20ASN1_PRINTABLESTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a336e057dd223cc6f701304f0461a2ddf"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_PRINTABLESTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS20ASN1_PRINTABLESTRINGE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_TELETEXSTRINGE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS18ASN1_TELETEXSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS18ASN1_TELETEXSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a9bf70ad3dd4bf8c417d2df3a0567b7a4"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_TELETEXSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_TELETEXSTRINGE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS19ASN1_VIDEOTEXSTRINGE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS19ASN1_VIDEOTEXSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS19ASN1_VIDEOTEXSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a74f77040fbd3853dd952425441fe5768"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_VIDEOTEXSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS19ASN1_VIDEOTEXSTRINGE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS14ASN1_IA5STRINGE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS14ASN1_IA5STRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS14ASN1_IA5STRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ae00956dc4ea6da4a6f5b052e35ad4b75"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_IA5STRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS14ASN1_IA5STRINGE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS12ASN1_UTCTIMEE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS12ASN1_UTCTIMEE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS12ASN1_UTCTIMEE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a11abbe84d583fe76922cb89fe1220567"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_UTCTIME</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS12ASN1_UTCTIMEE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS20ASN1_GENERALIZEDTIMEE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS20ASN1_GENERALIZEDTIMEE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS20ASN1_GENERALIZEDTIMEE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a6b3d1c40aa79f25a72a9165a4cd691d4"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_GENERALIZEDTIME</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS20ASN1_GENERALIZEDTIMEE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_GRAPHICSTRINGE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS18ASN1_GRAPHICSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS18ASN1_GRAPHICSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a7866c130d61ad33372bb0cacdcc50e71"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_GRAPHICSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_GRAPHICSTRINGE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_VISIBLESTRINGE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS18ASN1_VISIBLESTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS18ASN1_VISIBLESTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5acb9714785116f8951d2cdfb45bcfaf6c"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_VISIBLESTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_VISIBLESTRINGE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_GENERALSTRINGE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS18ASN1_GENERALSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS18ASN1_GENERALSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5aaecdda4440eb96bc770733f950eab4dd"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_GENERALSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_GENERALSTRINGE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS20ASN1_UNIVERSALSTRINGE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS20ASN1_UNIVERSALSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS20ASN1_UNIVERSALSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a1e1d7c1dcf076d12776c085e5f534d58"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_UNIVERSALSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS20ASN1_UNIVERSALSTRINGE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS15ASN1_CHARSTRINGE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS15ASN1_CHARSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS15ASN1_CHARSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5af46947fb8b9acd84edae67bb08dabb28"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_CHARSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS15ASN1_CHARSTRINGE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS14ASN1_BMPSTRINGE">
+<span id="_CPPv3N16CRYPTX_ASN1_TAGS14ASN1_BMPSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS14ASN1_BMPSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5af68d6904a260c69ee964445f81bfbbc4"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_BMPSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS14ASN1_BMPSTRINGE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv419CRYPTX_ASN1_CLASSES">
+<span id="_CPPv319CRYPTX_ASN1_CLASSES"></span><span id="_CPPv219CRYPTX_ASN1_CLASSES"></span><span class="target" id="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_ASN1_CLASSES</span></span></span><a class="headerlink" href="#_CPPv419CRYPTX_ASN1_CLASSES" title="Permalink to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N19CRYPTX_ASN1_CLASSES14ASN1_UNIVERSALE">
+<span id="_CPPv3N19CRYPTX_ASN1_CLASSES14ASN1_UNIVERSALE"></span><span id="_CPPv2N19CRYPTX_ASN1_CLASSES14ASN1_UNIVERSALE"></span><span class="target" id="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a36845401ba730128d3078d9cd0730fe8"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_UNIVERSAL</span></span></span><a class="headerlink" href="#_CPPv4N19CRYPTX_ASN1_CLASSES14ASN1_UNIVERSALE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>tags defined in the ASN.1 standard. </p>
+<p>Most use cases on calc will be this. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N19CRYPTX_ASN1_CLASSES16ASN1_APPLICATIONE">
+<span id="_CPPv3N19CRYPTX_ASN1_CLASSES16ASN1_APPLICATIONE"></span><span id="_CPPv2N19CRYPTX_ASN1_CLASSES16ASN1_APPLICATIONE"></span><span class="target" id="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a1c873115fb577a391d1af735307abc45"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_APPLICATION</span></span></span><a class="headerlink" href="#_CPPv4N19CRYPTX_ASN1_CLASSES16ASN1_APPLICATIONE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>tags unique to a particular application. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N19CRYPTX_ASN1_CLASSES16ASN1_CONTEXTSPECE">
+<span id="_CPPv3N19CRYPTX_ASN1_CLASSES16ASN1_CONTEXTSPECE"></span><span id="_CPPv2N19CRYPTX_ASN1_CLASSES16ASN1_CONTEXTSPECE"></span><span class="target" id="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a0e4e8c83e4929fe69855de5c8c7a34d3"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_CONTEXTSPEC</span></span></span><a class="headerlink" href="#_CPPv4N19CRYPTX_ASN1_CLASSES16ASN1_CONTEXTSPECE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>tags that need to be identified within a particular, well-definded context. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N19CRYPTX_ASN1_CLASSES12ASN1_PRIVATEE">
+<span id="_CPPv3N19CRYPTX_ASN1_CLASSES12ASN1_PRIVATEE"></span><span id="_CPPv2N19CRYPTX_ASN1_CLASSES12ASN1_PRIVATEE"></span><span class="target" id="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900ac51c7440728bfe2d94426d0ca4f3d895"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_PRIVATE</span></span></span><a class="headerlink" href="#_CPPv4N19CRYPTX_ASN1_CLASSES12ASN1_PRIVATEE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>reserved for use by a specific entity for their applications. </p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv417CRYPTX_ASN1_FORMS">
+<span id="_CPPv317CRYPTX_ASN1_FORMS"></span><span id="_CPPv217CRYPTX_ASN1_FORMS"></span><span class="target" id="cryptx_8h_1af2211fe420abff08488c8f04de017080"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_ASN1_FORMS</span></span></span><a class="headerlink" href="#_CPPv417CRYPTX_ASN1_FORMS" title="Permalink to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17CRYPTX_ASN1_FORMS14ASN1_PRIMITIVEE">
+<span id="_CPPv3N17CRYPTX_ASN1_FORMS14ASN1_PRIMITIVEE"></span><span id="_CPPv2N17CRYPTX_ASN1_FORMS14ASN1_PRIMITIVEE"></span><span class="target" id="cryptx_8h_1af2211fe420abff08488c8f04de017080a916350d579d4895b1f843289b60b4572"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_PRIMITIVE</span></span></span><a class="headerlink" href="#_CPPv4N17CRYPTX_ASN1_FORMS14ASN1_PRIMITIVEE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>this element should contain no nested elements. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17CRYPTX_ASN1_FORMS16ASN1_CONSTRUCTEDE">
+<span id="_CPPv3N17CRYPTX_ASN1_FORMS16ASN1_CONSTRUCTEDE"></span><span id="_CPPv2N17CRYPTX_ASN1_FORMS16ASN1_CONSTRUCTEDE"></span><span class="target" id="cryptx_8h_1af2211fe420abff08488c8f04de017080ad03b2b41a6f3417a981a78ca887332e6"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_CONSTRUCTED</span></span></span><a class="headerlink" href="#_CPPv4N17CRYPTX_ASN1_FORMS16ASN1_CONSTRUCTEDE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>this element contains nested elements. </p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.cryptx_asn1_get_tag">
+<span class="target" id="cryptx_8h_1a13585a6206e220218a8f379327b04433"></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_asn1_get_tag</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">tag</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.cryptx_asn1_get_tag" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the unmasked tag. See <strong>CRYPTX_ASN1_TAGS</strong> above. </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.cryptx_asn1_get_class">
+<span class="target" id="cryptx_8h_1a5af192045bb48e03f788962f259a2a7e"></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_asn1_get_class</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">tag</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.cryptx_asn1_get_class" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the 2-bit tag class flag. See <strong>CRYPTX_ASN1_CLASSES</strong> above. </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.cryptx_asn1_get_form">
+<span class="target" id="cryptx_8h_1a3c8b39f5fb3ad1d8d138b9791b18f01e"></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_asn1_get_form</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">tag</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.cryptx_asn1_get_form" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the 1-bit tag form (1 = constructed, 0 = primitive). See <strong>CRYPTX_ASN1_FORMS</strong> above. </p>
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv412asn1_error_t">
+<span id="_CPPv312asn1_error_t"></span><span id="_CPPv212asn1_error_t"></span><span class="target" id="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">asn1_error_t</span></span></span><a class="headerlink" href="#_CPPv412asn1_error_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines error codes returned from calls to the ASN.1 API. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12asn1_error_t7ASN1_OKE">
+<span id="_CPPv3N12asn1_error_t7ASN1_OKE"></span><span id="_CPPv2N12asn1_error_t7ASN1_OKE"></span><span class="target" id="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33ae8a5623b62dab851b0dc76048afc0b4a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_OK</span></span></span><a class="headerlink" href="#_CPPv4N12asn1_error_t7ASN1_OKE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>No errors occured. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12asn1_error_t16ASN1_END_OF_FILEE">
+<span id="_CPPv3N12asn1_error_t16ASN1_END_OF_FILEE"></span><span id="_CPPv2N12asn1_error_t16ASN1_END_OF_FILEE"></span><span class="target" id="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a434628c70562f3ab468d94e8eae7784d"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_END_OF_FILE</span></span></span><a class="headerlink" href="#_CPPv4N12asn1_error_t16ASN1_END_OF_FILEE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>End of ASN.1 data stream reached. </p>
+<p>Not an error. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12asn1_error_t16ASN1_INVALID_ARGE">
+<span id="_CPPv3N12asn1_error_t16ASN1_INVALID_ARGE"></span><span id="_CPPv2N12asn1_error_t16ASN1_INVALID_ARGE"></span><span class="target" id="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33aa13d20ad819d43693d26c77b80fb4952"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_INVALID_ARG</span></span></span><a class="headerlink" href="#_CPPv4N12asn1_error_t16ASN1_INVALID_ARGE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>One or more arguments invalid. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12asn1_error_t17ASN1_LEN_OVERFLOWE">
+<span id="_CPPv3N12asn1_error_t17ASN1_LEN_OVERFLOWE"></span><span id="_CPPv2N12asn1_error_t17ASN1_LEN_OVERFLOWE"></span><span class="target" id="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a0101185f2109f1ba75ea2c4833664474"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_LEN_OVERFLOW</span></span></span><a class="headerlink" href="#_CPPv4N12asn1_error_t17ASN1_LEN_OVERFLOWE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Length of an element overflowed arch size_t allowance. </p>
+<p>Remainder of data stream unparsable. </p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418cryptx_asn1_decodePv6size_t7uint8_tP7uint8_tP6size_tPP7uint8_t">
+<span id="_CPPv318cryptx_asn1_decodePv6size_t7uint8_tP7uint8_tP6size_tPP7uint8_t"></span><span id="_CPPv218cryptx_asn1_decodePv6size_t7uint8_tP7uint8_tP6size_tPP7uint8_t"></span><span id="cryptx_asn1_decode__voidP.s.uint8_t.uint8_tP.sP.uint8_tPP"></span><span class="target" id="cryptx_8h_1afbb965d7c7819b8685a1062d5e21e02c"></span><a class="reference internal" href="#_CPPv412asn1_error_t" title="asn1_error_t"><span class="n"><span class="pre">asn1_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_asn1_decode</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data_start</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">data_len</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">seek_to</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">element_tag</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">element_len</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">element_data</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_asn1_decodePv6size_t7uint8_tP7uint8_tP6size_tPP7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Decodes the ASN.1 data at the given address. </p>
+<p>Seeks to an element from the front of the data. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>ASN1_END_OF_FILE</strong> will be returned if <strong>seek_to</strong> is invalid. </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>NULL may be passed for <strong>element_tag</strong>, <strong>element_len</strong>, and/or <strong>element_data</strong> if you do not need to return that particular bit of information. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_start</strong> – Pointer to a block of ASN.1-encoded data. </p></li>
+<li><p><strong>data_len</strong> – Length of ASN.1-encoded block. </p></li>
+<li><p><strong>seek_to</strong> – Number of ASN.1 elements to skip before returning one. </p></li>
+<li><p><strong>element_tag</strong> – Masked tag value of the returned element. </p></li>
+<li><p><strong>element_len</strong> – Length of the returned element. </p></li>
+<li><p><strong>element_data</strong> – Pointer to the data of the returned element. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An <strong>asn1_error_t</strong> indicating the status of the operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="base64-encoding-and-decoding">
+<h2>Base64 Encoding and Decoding<a class="headerlink" href="#base64-encoding-and-decoding" title="Permalink to this headline"></a></h2>
+<p>Base64 (sextet-encoding) is the second of two encoding formats common to cryptography, including keyfiles exported by cryptographic libraries. In fact, PEM encoding usually has the key encoded first with ASN.1 and then into base64.</p>
+<p>In base64 a stream of octets (8 bits per byte) is parsed as a bit string in groups of six bits (hence sextet) which is then mapped to one of 64 printable characters.</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.cryptx_base64_get_encoded_len">
+<span class="target" id="cryptx_8h_1a9db7be56d66674980b5540cab9405cc7"></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_base64_get_encoded_len</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.cryptx_base64_get_encoded_len" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines a macro to return the expected size of base64-encoded data, given octet-encoded length. </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.cryptx_base64_get_decoded_len">
+<span class="target" id="cryptx_8h_1a5629130707448f8475166398fb18a486"></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_base64_get_decoded_len</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.cryptx_base64_get_decoded_len" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines a macro to return the expected size of octet-encoded data, given base64-encoded length. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420cryptx_base64_encodePvPKv6size_t">
+<span id="_CPPv320cryptx_base64_encodePvPKv6size_t"></span><span id="_CPPv220cryptx_base64_encodePvPKv6size_t"></span><span id="cryptx_base64_encode__voidP.voidCP.s"></span><span class="target" id="cryptx_8h_1a3e216a54646a3f7d04c37102905ef850"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_base64_encode</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dest</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">src</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420cryptx_base64_encodePvPKv6size_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Converts an octet-encoded byte stream into a sextet-encoded byte stream. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>dest</strong> should be at least <strong>len</strong> * 4 / 3 bytes large. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dest</strong> – Pointer to output sextet-encoded data stream. </p></li>
+<li><p><strong>src</strong> – Pointer to input octet-encoded data stream. </p></li>
+<li><p><strong>len</strong> – Length of octet-encoded data stream. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Length of output sextet. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420cryptx_base64_decodePvPKv6size_t">
+<span id="_CPPv320cryptx_base64_decodePvPKv6size_t"></span><span id="_CPPv220cryptx_base64_decodePvPKv6size_t"></span><span id="cryptx_base64_decode__voidP.voidCP.s"></span><span class="target" id="cryptx_8h_1a28db41653bf7ba5ef8bfcef425343722"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_base64_decode</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dest</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">src</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420cryptx_base64_decodePvPKv6size_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Converts a sextet-encoded byte stream into a octet-encoded byte stream. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>dest</strong> should be at least <strong>len</strong> * 3 / 4 bytes large. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dest</strong> – Pointer to output octet-encoded data stream. </p></li>
+<li><p><strong>src</strong> – Pointer to input sextet-encoded data stream. </p></li>
+<li><p><strong>len</strong> – Length of sextet-encoded data stream. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Length of output octet. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="hazardous-materials">
+<h2>Hazardous Materials<a class="headerlink" href="#hazardous-materials" title="Permalink to this headline"></a></h2>
+<p>This segment contains lower-level functions that are not part of the standard API. This allows developers who know what they are doing to write their own constructions. Remember that it is generally ill-advised to try to implement your own cryptography.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define CRYPTX_ENABLE_HAZMAT    </span><span class="c1">// to enable the hazardous materials</span>
+</pre></div>
+</div>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv429cryptx_hazmat_aes_ecb_encryptPKvPvP14cryptx_aes_ctx">
+<span id="_CPPv329cryptx_hazmat_aes_ecb_encryptPKvPvP14cryptx_aes_ctx"></span><span id="_CPPv229cryptx_hazmat_aes_ecb_encryptPKvPvP14cryptx_aes_ctx"></span><span id="cryptx_hazmat_aes_ecb_encrypt__voidCP.voidP.cryptx_aes_ctxP"></span><span class="target" id="cryptx_8h_1aa26dcd5f7c0f1f679c91268bc5b69455"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hazmat_aes_ecb_encrypt</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">block_in</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">block_out</span></span>, <span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv414cryptx_aes_ctx" title="cryptx_aes_ctx"><span class="n"><span class="pre">cryptx_aes_ctx</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ks</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429cryptx_hazmat_aes_ecb_encryptPKvPvP14cryptx_aes_ctx" title="Permalink to this definition"></a><br /></dt>
+<dd><p>AES-ECB mode single block encryption. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>ECB mode is insecure. Use this function as a constructor for other cipher modes, not standalone. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_in</strong> – Pointer to block of data to encrypt. </p></li>
+<li><p><strong>block_out</strong> – Pointer to buffer to write block of encrypted data. </p></li>
+<li><p><strong>ks</strong> – Pointer to AES key schedule. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv429cryptx_hazmat_aes_ecb_decryptPKvPvP14cryptx_aes_ctx">
+<span id="_CPPv329cryptx_hazmat_aes_ecb_decryptPKvPvP14cryptx_aes_ctx"></span><span id="_CPPv229cryptx_hazmat_aes_ecb_decryptPKvPvP14cryptx_aes_ctx"></span><span id="cryptx_hazmat_aes_ecb_decrypt__voidCP.voidP.cryptx_aes_ctxP"></span><span class="target" id="cryptx_8h_1a705b398f84e2020d762a0ce03c90bd90"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hazmat_aes_ecb_decrypt</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">block_in</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">block_out</span></span>, <span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv414cryptx_aes_ctx" title="cryptx_aes_ctx"><span class="n"><span class="pre">cryptx_aes_ctx</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ks</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429cryptx_hazmat_aes_ecb_decryptPKvPvP14cryptx_aes_ctx" title="Permalink to this definition"></a><br /></dt>
+<dd><p>AES-ECB mode single block decryption. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>ECB mode is insecure. Use this function as a constructor for other cipher modes, not standalone. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_in</strong> – Pointer to block of data to decrypt. </p></li>
+<li><p><strong>block_out</strong> – Pointer to buffer to write block of decrypted data. </p></li>
+<li><p><strong>ks</strong> – Pointer to AES key schedule. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv429cryptx_hazmat_rsa_oaep_encodePKv6size_tPv6size_tPK7uint8_t7uint8_t">
+<span id="_CPPv329cryptx_hazmat_rsa_oaep_encodePKv6size_tPv6size_tPK7uint8_t7uint8_t"></span><span id="_CPPv229cryptx_hazmat_rsa_oaep_encodePKv6size_tPv6size_tPK7uint8_t7uint8_t"></span><span id="cryptx_hazmat_rsa_oaep_encode__voidCP.s.voidP.s.uint8_tCP.uint8_t"></span><span class="target" id="cryptx_8h_1a686d9781ff0de6cf06424df197ce6e1e"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hazmat_rsa_oaep_encode</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">plaintext</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">encoded</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">modulus_len</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">auth</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">hash_alg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429cryptx_hazmat_rsa_oaep_encodePKv6size_tPv6size_tPK7uint8_t7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Optimal Asymmetric Encryption Padding v2.2 Encoder. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>An error returned from the encoder usually is related to the size of plaintext. Maximum plaintext length for encoding is the length of the modulus minus twice the length of the selected hash digest minus two more padding bytes. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plaintext</strong> – Pointer to block of data to encode. </p></li>
+<li><p><strong>len</strong> – Length of plaintext to encode. </p></li>
+<li><p><strong>encoded</strong> – Pointer to buffer to write encoded output. </p></li>
+<li><p><strong>modulus_len</strong> – Length of modulus to encode for (ex: length of RSA public modulus). </p></li>
+<li><p><strong>auth</strong> – An optional string to include in the encoding (NULL to omit). </p></li>
+<li><p><strong>hash_alg</strong> – Algorithm ID of the hash to use. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True on successful encoding, False on error. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv429cryptx_hazmat_rsa_oaep_decodePKv6size_tPvPK7uint8_t7uint8_t">
+<span id="_CPPv329cryptx_hazmat_rsa_oaep_decodePKv6size_tPvPK7uint8_t7uint8_t"></span><span id="_CPPv229cryptx_hazmat_rsa_oaep_decodePKv6size_tPvPK7uint8_t7uint8_t"></span><span id="cryptx_hazmat_rsa_oaep_decode__voidCP.s.voidP.uint8_tCP.uint8_t"></span><span class="target" id="cryptx_8h_1ab367fc9a33e00bee5e9a9f8df5f2a697"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hazmat_rsa_oaep_decode</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">encoded</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">plaintext</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">auth</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">hash_alg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429cryptx_hazmat_rsa_oaep_decodePKv6size_tPvPK7uint8_t7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Optimal Asymmetric Encryption Padding v2.2 Decoder. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>An error returned from the decoder usually means the input did not appear to be valid OAEP-encoded data. OAEP 2.2-encoded data starts with the byte <em>0x00</em>. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>encoded</strong> – Pointer to block of data to decode. </p></li>
+<li><p><strong>len</strong> – Length of plaintext to encode. </p></li>
+<li><p><strong>plaintext</strong> – Pointer to buffer to write decoded output. </p></li>
+<li><p><strong>auth</strong> – String included in the encoding (NULL to omit). </p></li>
+<li><p><strong>hash_alg</strong> – Algorithm ID of the hash to use. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True on successful decoding, False on error. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygenfunction: Unable to resolve function “cryptx_hazmat_powmod” with arguments “None”.
+Candidate function could not be parsed. Parsing error is
+Error when parsing function declaration.
+If the function has no return type:
+  Error in declarator or parameters-and-qualifiers
+  Invalid C++ declaration: Expected identifier in nested name, got keyword: void [error at 4]
+    void cryptx_hazmat_powmod (uint8_t size, uint8_t *restrict base, uint24_t exp, const uint8_t *restrict mod)
+    —-^
+If the function has a return type:
+  Error in declarator or parameters-and-qualifiers
+  If pointer to member declarator:
+    Invalid C++ declaration: Expected ‘::’ in pointer to member (function). [error at 26]
+      void cryptx_hazmat_powmod (uint8_t size, uint8_t *restrict base, uint24_t exp, const uint8_t *restrict mod)
+      ————————–^
+  If declarator-id:
+    Invalid C++ declaration: Expecting “,” or “)” in parameters-and-qualifiers, got “b”. [error at 59]
+      void cryptx_hazmat_powmod (uint8_t size, uint8_t *restrict base, uint24_t exp, const uint8_t *restrict mod)
+      ———————————————————–^
+</p>
+</div>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_GF2_INTLEN">
+<span class="target" id="cryptx_8h_1ad0e904358b21cab26ad541d594184a89"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_GF2_INTLEN</span></span></span><a class="headerlink" href="#c.CRYPTX_GF2_INTLEN" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines the length of a galois field for a curve of degree 233. </p>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv416cryptx_ecc_point">
+<span id="_CPPv316cryptx_ecc_point"></span><span id="_CPPv216cryptx_ecc_point"></span><span id="cryptx_ecc_point"></span><span class="target" id="structcryptx__ecc__point"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_ecc_point</span></span></span><a class="headerlink" href="#_CPPv416cryptx_ecc_point" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines a point for use with elliptic curve arithmetic. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv427cryptx_hazmat_ecc_point_addP16cryptx_ecc_pointP16cryptx_ecc_point">
+<span id="_CPPv327cryptx_hazmat_ecc_point_addP16cryptx_ecc_pointP16cryptx_ecc_point"></span><span id="_CPPv227cryptx_hazmat_ecc_point_addP16cryptx_ecc_pointP16cryptx_ecc_point"></span><span id="cryptx_hazmat_ecc_point_add__cryptx_ecc_pointP.cryptx_ecc_pointP"></span><span class="target" id="cryptx_8h_1a71ea61142ac4e58af9d8b8c9d2d17685"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv416cryptx_ecc_point" title="cryptx_ecc_point"><span class="n"><span class="pre">cryptx_ecc_point</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hazmat_ecc_point_add</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv416cryptx_ecc_point" title="cryptx_ecc_point"><span class="n"><span class="pre">cryptx_ecc_point</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">p</span></span>, <a class="reference internal" href="#_CPPv416cryptx_ecc_point" title="cryptx_ecc_point"><span class="n"><span class="pre">cryptx_ecc_point</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">q</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv427cryptx_hazmat_ecc_point_addP16cryptx_ecc_pointP16cryptx_ecc_point" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Elliptic Curve Point Addition over SECT233k1. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Outputs in <strong>p</strong>. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> – Pointer to first point to add. </p></li>
+<li><p><strong>q</strong> – Pointer to second point to add. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv430cryptx_hazmat_ecc_point_doubleP16cryptx_ecc_point">
+<span id="_CPPv330cryptx_hazmat_ecc_point_doubleP16cryptx_ecc_point"></span><span id="_CPPv230cryptx_hazmat_ecc_point_doubleP16cryptx_ecc_point"></span><span id="cryptx_hazmat_ecc_point_double__cryptx_ecc_pointP"></span><span class="target" id="cryptx_8h_1ae4b37d491cbd4d5a16e0fb84d87b9270"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hazmat_ecc_point_double</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv416cryptx_ecc_point" title="cryptx_ecc_point"><span class="n"><span class="pre">cryptx_ecc_point</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">p</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv430cryptx_hazmat_ecc_point_doubleP16cryptx_ecc_point" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Elliptic Curve Point Doubling over SECT233k1. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Outputs in <strong>p</strong>. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>p</strong> – Pointer to point to double. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv434cryptx_hazmat_ecc_point_mul_scalarP16cryptx_ecc_pointPK7uint8_t6size_t">
+<span id="_CPPv334cryptx_hazmat_ecc_point_mul_scalarP16cryptx_ecc_pointPK7uint8_t6size_t"></span><span id="_CPPv234cryptx_hazmat_ecc_point_mul_scalarP16cryptx_ecc_pointPK7uint8_t6size_t"></span><span id="cryptx_hazmat_ecc_point_mul_scalar__cryptx_ecc_pointP.uint8_tCP.s"></span><span class="target" id="cryptx_8h_1adf9bad66ca13288b71d9306d9c0a55e0"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hazmat_ecc_point_mul_scalar</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv416cryptx_ecc_point" title="cryptx_ecc_point"><span class="n"><span class="pre">cryptx_ecc_point</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">p</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">scalar</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">scalar_bit_width</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv434cryptx_hazmat_ecc_point_mul_scalarP16cryptx_ecc_pointPK7uint8_t6size_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Elliptic Curve Scalar Multiplication over SECT233k1. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Outputs in <strong>p</strong>. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> – Pointer to point to multiply. </p></li>
+<li><p><strong>scalar</strong> – Pointer to scalar. </p></li>
+<li><p><strong>scalar_bit_width</strong> – Length, in bits, of the scalar. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Cryptography for the CE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="static/analysis.html" class="btn btn-neutral float-right" title="Analysis &amp; Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HASH Function Documentation &mdash; CryptX  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/proof.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> CryptX
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../static/analysis.html">Analysis &amp; Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../static/notes.html">Closing Notes</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CryptX</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>HASH Function Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="hash-function-documentation">
+<span id="hash"></span><h1>HASH Function Documentation<a class="headerlink" href="#hash-function-documentation" title="Permalink to this headline"></a></h1>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv422cryptx_hash_algorithms">
+<span id="_CPPv322cryptx_hash_algorithms"></span><span id="_CPPv222cryptx_hash_algorithms"></span><span class="target" id="cryptx_8h_1a57f2f69b5ad395749c8604ca9f43f93b"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hash_algorithms</span></span></span><a class="headerlink" href="#_CPPv422cryptx_hash_algorithms" title="Permalink to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N22cryptx_hash_algorithms6SHA256E">
+<span id="_CPPv3N22cryptx_hash_algorithms6SHA256E"></span><span id="_CPPv2N22cryptx_hash_algorithms6SHA256E"></span><span class="target" id="cryptx_8h_1a57f2f69b5ad395749c8604ca9f43f93bac7716785728694693ec29eccd5ffa0e1"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SHA256</span></span></span><a class="headerlink" href="#_CPPv4N22cryptx_hash_algorithms6SHA256E" title="Permalink to this definition"></a><br /></dt>
+<dd><p>algorithm type identifier for SHA-256 </p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416cryptx_hash_initP15cryptx_hash_ctx7uint8_t">
+<span id="_CPPv316cryptx_hash_initP15cryptx_hash_ctx7uint8_t"></span><span id="_CPPv216cryptx_hash_initP15cryptx_hash_ctx7uint8_t"></span><span id="cryptx_hash_init__cryptx_hash_ctxP.uint8_t"></span><span class="target" id="cryptx_8h_1a70b79d7bbba52b64700123ab77ab5a28"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hash_init</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_hash_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">hash_alg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416cryptx_hash_initP15cryptx_hash_ctx7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Initializes a hash-state context for a specific hash algorithm. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Destroys 516 bytes of fastMem starting at 0xE30800. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> – Pointer to a hash-state context. </p></li>
+<li><p><strong>hash_alg</strong> – The numeric ID of the hashing algorithm to use. See <strong>cryptx_hash_algorithms</strong>. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>true</strong> if hash initialization succeeded, <strong>false</strong> if failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418cryptx_hash_updateP15cryptx_hash_ctxPKv6size_t">
+<span id="_CPPv318cryptx_hash_updateP15cryptx_hash_ctxPKv6size_t"></span><span id="_CPPv218cryptx_hash_updateP15cryptx_hash_ctxPKv6size_t"></span><span id="cryptx_hash_update__cryptx_hash_ctxP.voidCP.s"></span><span class="target" id="cryptx_8h_1a0df23ee0aff04b31db05f5175bfe63a2"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hash_update</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_hash_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_hash_updateP15cryptx_hash_ctxPKv6size_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Updates the hash-state for a given block of data. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Destroys 516 bytes of fastMem starting at 0xE30800. </p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Calling this on a context that has not been initialized may have unpredictable results. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> – Pointer to a hash-state context. </p></li>
+<li><p><strong>data</strong> – Pointer to a block of data to hash.. </p></li>
+<li><p><strong>len</strong> – Size of the <strong>data</strong> to hash. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418cryptx_hash_digestP15cryptx_hash_ctxPv">
+<span id="_CPPv318cryptx_hash_digestP15cryptx_hash_ctxPv"></span><span id="_CPPv218cryptx_hash_digestP15cryptx_hash_ctxPv"></span><span id="cryptx_hash_digest__cryptx_hash_ctxP.voidP"></span><span class="target" id="cryptx_8h_1a1444bb4124409dbae8088ffbc9830ee3"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hash_digest</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_hash_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">digest</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_hash_digestP15cryptx_hash_ctxPv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Output digest for current hash-state (preserves state). </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>digest</strong> must be at large enough to hold the hash digest. You can retrieve the necessary size by accessing the <strong>digest_len</strong> member of an initialized <strong>cryptx_hash_ctx</strong>. </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Destroys 516 bytes of fastMem starting at 0xE30800. </p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Calling this on a context that has not been initialized may have unpredictable results. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> – Pointer to a hash-state context. </p></li>
+<li><p><strong>digest</strong> – Pointer to a buffer to write digest to. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416cryptx_hash_mgf1PKv6size_tPv6size_t7uint8_t">
+<span id="_CPPv316cryptx_hash_mgf1PKv6size_tPv6size_t7uint8_t"></span><span id="_CPPv216cryptx_hash_mgf1PKv6size_tPv6size_t7uint8_t"></span><span id="cryptx_hash_mgf1__voidCP.s.voidP.s.uint8_t"></span><span class="target" id="cryptx_8h_1a661281f90257c5e21dbb53654ba505e7"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hash_mgf1</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">datalen</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">outbuf</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">outlen</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">hash_alg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416cryptx_hash_mgf1PKv6size_tPv6size_t7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Computes a digest of arbitrary length for a given block of data. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>outbuf</strong> must be at least <strong>outlen</strong> bytes large. </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Destroys 516 bytes of fastMem starting at 0xE30800. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Pointer to data to hash. </p></li>
+<li><p><strong>datalen</strong> – Size of <strong>data</strong> to hash. </p></li>
+<li><p><strong>outbuf</strong> – Pointer to buffer to write digest to. </p></li>
+<li><p><strong>outlen</strong> – Number of bytes to write to <strong>outbuf</strong>. </p></li>
+<li><p><strong>hash_alg</strong> – The numeric ID of the hashing algorithm to use. See <strong>cryptx_hash_algorithms</strong>. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

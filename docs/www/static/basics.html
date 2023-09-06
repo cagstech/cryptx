@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cryptography Basics &mdash; CryptX  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/proof.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> CryptX
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis &amp; Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notes.html">Closing Notes</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CryptX</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Cryptography Basics</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="cryptography-basics">
+<span id="basics"></span><h1>Cryptography Basics<a class="headerlink" href="#cryptography-basics" title="Permalink to this headline"></a></h1>
+<p>This guide will define the CIA triad and help you to understand how to use Cryptx (and other cryptography libraries) as part of a secure infrastructure. We will define important terms and it is our hope that by reading this guide, you will have a basic understanding of how cryptography works and how and when to use various types of algorithms.</p>
+<div class="section" id="information-security-policy">
+<h2>Information Security Policy<a class="headerlink" href="#information-security-policy" title="Permalink to this headline"></a></h2>
+<p>Information security can be expressed using a policy model referred to as the <strong>CIA triad</strong> which defines important elements of protecting a resource–confidentiality, integrity, and availability.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Confidentiality</strong> means that the data stored and exchanged by a resource should be confidential except to parties authorized to read it. Confidentiality is achieved through the encryption of information using a secure cipher under a key known only to authorized parties.</p></li>
+<li><p><strong>Integrity</strong> means that the data should not be modified either on disk or in transit except by parties authorized to modify said data. Integrity is achieved through the usage of a hash, signature, or authentication tag included with the data that needs integrity assurance.</p></li>
+<li><p><strong>Availability</strong> means that a resource should be resistant to attempts to disrupt its functionality. This includes resistance to such things as denial of service as well as possible data loss or compromise. This can be achieved through redunancy of systems or services, multiple backups, and intrusion detection software that can detect and react to DOS attacks.</p></li>
+</ul>
+</div></blockquote>
+<p>Cryptographic libraries such as CryptX typically deal with the first two elements of this model, confidentiality and integrity. Service developers need to implement their own considerations for availablity.</p>
+</div>
+<div class="section" id="encryption">
+<h2>Encryption<a class="headerlink" href="#encryption" title="Permalink to this headline"></a></h2>
+<p><strong>Encryption</strong> is a transformation of information, usually under some key, such that deciphering the output (referred to as <em>ciphertext</em>) without the key is extremely difficult. A pair of inverse algorithms, one for encryption and one for decryption under a given key, is referred to as a <strong>cipher</strong>. There are several types of encryption systems:</p>
+<blockquote>
+<div><ul>
+<li><p><strong>Symmetric Encryption</strong>: A pair of algorithms defined like so:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Cipher</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+  <span class="n">ciphertext</span> <span class="o">=</span> <span class="n">E</span><span class="p">(</span><span class="n">plaintext</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+  <span class="n">plaintext</span> <span class="o">=</span> <span class="n">D</span><span class="p">(</span><span class="n">ciphertext</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The defining property of symmetric encryption is that the same key is valid for both encryption and decryption. One such encryption system is the <em>Advanced Encryption Standard (AES)</em>. AES is currently regarded as the gold standard for symmetric encryption.</p>
+</li>
+<li><p><strong>Public Key Encryption</strong>: A pair of algorithms defined like so:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Cipher</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">D</span><span class="p">):</span>
+  <span class="n">pubkey</span><span class="p">,</span><span class="n">privkey</span> <span class="o">=</span> <span class="n">keygen</span><span class="p">()</span>
+  <span class="n">ciphertext</span> <span class="o">=</span> <span class="n">E</span><span class="p">(</span><span class="n">plaintext</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">pubkey</span><span class="p">)</span>
+  <span class="n">plaintext</span> <span class="o">=</span> <span class="n">D</span><span class="p">(</span><span class="n">ciphertext</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">privkey</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The defining property of public key encryption is that there is a pair of keys, one public and one private. The setup of this system generally works like so: one endpoint generates a keypair, stores its private key to decrypt incoming messages, and distributes the public key in the clear so other parties can encrypt messages for it. One such encryption system is <em>Rivest-Shamir Adleman (RSA)</em>. In this system, the encrypt and decrypt algorithms are the same (a modular exponentation) and the keypair faciliates the encryption by having the public and private key be modular inverses of each other.</p>
+</li>
+<li><p><strong>Key Exchange Protocols</strong>: A pair of algorithms defined like so:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">KEX</span><span class="p">:</span>
+  <span class="n">pubkey</span><span class="p">,</span><span class="n">privkey</span> <span class="o">=</span> <span class="n">keygen</span><span class="p">()</span>
+  <span class="n">K</span> <span class="o">=</span> <span class="n">gen_secret</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Note that the definition is way more vague this time because key exchange works differently. Key Exchange is usually not a form of encryption but an algorithm that uses number relationships to arrive at the same key for different sets of numbers. One such system (implemented within CryptX) is <em>Elliptic Curve Diffie-Hellman (ECDH)</em>. ECDH operates like so:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ECDH:
+  Defines G as a base point of maximal order on a given elliptic curve
+  Defines `gen_pubkey(privkey)` as an algorithm that computes `pubkey = privkey * G` over the elliptic curve.
+  Defines `gen_secret(privkey, rpubkey)` as an algorithm that computes `secret = privkey * rpubkey * cofactor` over the elliptic curve.
+  privkey = rand()
+  pubkey = gen_pubkey(privkey)
+  secret = gen_secret(privkey, rpubkey)
+</pre></div>
+</div>
+<p>ECDH faciliates agreement on a secret by having both parties run through the algorithm. First each party generates a pair of keys and exchanges public keys with the other party. Then the secret generation algorithm takes advantage of the relationship between opposing public/private keys over the given curve to arrive at the same secret at both endpoints.</p>
+</li>
+</ul>
+<p>Having defined the three main forms of “encryption”, we can now discuss how to create a secure session (like the ones faciliated by STARTTLS, SSL, and other secure protocols).</p>
+<p>The most common method of session negotiation is use RSA to handshake on a secret for symmetric encryption and to then use AES for the rest of the session. ECDH can be substituted for RSA if the library you are using supports it.</p>
+</div></blockquote>
+</div>
+<div class="section" id="randomness">
+<h2>Randomness<a class="headerlink" href="#randomness" title="Permalink to this headline"></a></h2>
+<p>Randomness is so integral to cryptography that it gets first mention in this guide. Why is it so important, you might ask. Ever talk in Pig Latin with your friends when you were younger? Assuming you were never told how it works, how difficult would you say it would be to ascertain how Pig Latin transforms words? If your answer is “not difficult”, you’d be right. The next question is why is this? If your answer is “because every word is transformed in exactly the same way, so eventually you’d notice a pattern”, you’d be correct. In the simplest context, encryption having a discernable pattern defeats said encryption as soon as that pattern can be guessed with confidence.</p>
+<p>Randomization is the answer to this problem. Secure encryption systems require that the output of said encryption be indistinguishable from truly random output. They accomplish this by incorporating</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
