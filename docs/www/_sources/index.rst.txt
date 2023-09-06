@@ -9,7 +9,7 @@ Cryptography for the CE
 
 If this is your first introduction to the CE Toolchain, check out the `toolchain repository <https://github.com/CE-Programming/toolchain>`_ and familiarize yourself with how it works.
 
-**CryptX** is not some fever-dream that tinkers with some flags and calls it "encryption" like many of the other programs submitted to such archives as ticalc.org. It was the result of months of tedious work on the part of multiple individuals, analysis on the hardware, testing, and research to create a utility worthy of the name *cryptography library*. This utulity provides:
+**CryptX** is not some fever-dream that tinkers with some flags and calls it "encryption" like many of the other programs submitted to such archives as ticalc.org. It was the result of months of tedious work on the part of multiple individuals, analysis on the hardware, testing, and research to create a utility worthy of the name *cryptography library*. This utility provides:
 
 * Secure Random Number Generation
 * Integrity Verification
