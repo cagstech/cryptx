@@ -111,12 +111,14 @@
 <h2>Integrity Verification<a class="headerlink" href="#integrity-verification" title="Permalink to this headline"></a></h2>
 <p>An important aspect of securing information is the ability to ensure that information has not been tampered with. This tampering can occur in long-term storage (ex: a bad actor attempts to modify a file on a system) or in transit (ex: a bad actor attempts to modify the contents of an Internet packet). A secure means of communication (or storage) needs the ability to detect such tampering.</p>
 <p><strong>Hashes</strong> and <strong>HMAC</strong> are tools that assist with integrity verification. The standard hash produces a fixed-length value (called a <em>digest</em>) from an arbitrary-length stream of data. Because secure hashes have a negligibly low chance of collision (two different inputs producing the same output), they can detect changes to a stream of data. An HMAC works similarly, except it transforms the hash state using a key that is generally known only to authorized parties prior to hashing the data. This means that an HMAC can only be generated or validated by an authorized party. A HMAC is also sometimes referred to as a <em>keyed hash</em>.</p>
-<p><strong>Returning a Hash Digest</strong></p>
+<p><strong>Using the Hash API</strong></p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Hello World!&quot;</span><span class="w">   </span><span class="c1">// String to hash</span>
 <span class="n">cryptx_hash_ctx</span><span class="w"> </span><span class="n">hash</span><span class="p">;</span><span class="w">         </span><span class="c1">// Declare hash context</span>
 
-<span class="n">cryptx_hash_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="n">SHA256</span><span class="p">);</span><span class="w">  </span><span class="c1">// Initialize hash context</span>
-<span class="kt">uint8_t</span><span class="w"> </span><span class="n">digest</span><span class="p">[</span><span class="n">hash</span><span class="p">.</span><span class="n">digest_len</span><span class="p">];</span><span class="w">  </span><span class="c1">// Buffer of digest length</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">cryptx_hash_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="n">SHA256</span><span class="p">))</span><span class="w">  </span><span class="c1">// Initialize hash context</span>
+<span class="w">  </span><span class="k">return</span><span class="p">;</span><span class="w">   </span><span class="c1">// exit if fails</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">digest</span><span class="p">[</span><span class="n">hash</span><span class="p">.</span><span class="n">digest_len</span><span class="p">];</span><span class="w">  </span><span class="c1">// Create a buffer of correct size for hash</span>
+
 <span class="n">cryptx_hash_update</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="n">text</span><span class="p">,</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="n">text</span><span class="p">));</span><span class="w">  </span><span class="c1">// Hash string</span>
 <span class="n">cryptx_hash_digest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="n">digest</span><span class="p">);</span><span class="w">    </span><span class="c1">// Return digest</span>
 <span class="c1">// `digest` now contains the hash value</span>
@@ -125,7 +127,7 @@
 <ul class="simple">
 <li><p><a class="reference internal" href="api/hash.html#hash"><span class="std std-ref">view hash documentation</span></a></p></li>
 </ul>
-<p><strong>Returning an HMAC Digest</strong></p>
+<p><strong>Using the HMAC API</strong></p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Hello World!&quot;</span><span class="w">   </span><span class="c1">// String to hash</span>
 <span class="n">cryptx_hmac_ctx</span><span class="w"> </span><span class="n">hash</span><span class="p">;</span><span class="w">         </span><span class="c1">// Declare hmac context</span>
 <span class="cp">#define HMAC_KLEN 16</span>
@@ -136,17 +138,17 @@
 
 <span class="c1">// intialize HMAC for given key and algorithm</span>
 <span class="n">cryptx_hmac_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">HMAC_KLEN</span><span class="p">,</span><span class="w"> </span><span class="n">SHA256</span><span class="p">);</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">digest</span><span class="p">[</span><span class="n">hash</span><span class="p">.</span><span class="n">digest_len</span><span class="p">];</span><span class="w">  </span><span class="c1">// Create a buffer of correct size for hash</span>
 
-<span class="kt">uint8_t</span><span class="w"> </span><span class="n">digest</span><span class="p">[</span><span class="n">hash</span><span class="p">.</span><span class="n">digest_len</span><span class="p">];</span><span class="w">  </span><span class="c1">// Buffer of digest length</span>
-<span class="n">cryptx_hash_update</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="n">text</span><span class="p">,</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="n">text</span><span class="p">));</span><span class="w">  </span><span class="c1">// Hash string</span>
-<span class="n">cryptx_hash_digest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="n">digest</span><span class="p">);</span><span class="w">    </span><span class="c1">// Return digest</span>
+<span class="n">cryptx_hmac_update</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="n">text</span><span class="p">,</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="n">text</span><span class="p">));</span><span class="w">  </span><span class="c1">// Hash string</span>
+<span class="n">cryptx_hmac_digest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="n">digest</span><span class="p">);</span><span class="w">    </span><span class="c1">// Return digest</span>
 <span class="c1">// `digest` now contains the hmac value</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li><p><a class="reference internal" href="api/hmac.html#hmac"><span class="std std-ref">view hmac documentation</span></a></p></li>
 </ul>
-<p><strong>Returning an MGF1 Digest</strong></p>
+<p><strong>Using the MGF1 API</strong></p>
 <p><strong>MGF1</strong> (Mask-Generation Function v1) is a hash-derived function that allows for a digest of arbitrary length to be returned from a data stream of given size. Its usage is similar to the hash API above.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Hello World!&quot;</span><span class="w">   </span><span class="c1">// String to hash</span>
 <span class="cp">#define MGF1BUF_LEN 32</span>
@@ -201,11 +203,88 @@
 <h2>Encryption &amp; Key Exchange<a class="headerlink" href="#encryption-key-exchange" title="Permalink to this headline"></a></h2>
 <p>Data obfuscation is another layer of information securty which is achieved through the use of encryption, or the rendering of information indecipherable for anyone without the key used to encrypt it. Encryption can be intended to protect information in long-term storage as well as to protect information in transit between two authorized endpoints.</p>
 <p><strong>AES - Symmetric Encryption</strong></p>
-<p>The gold standard for secure data transmission and storage is currently AES (<em>Advanced Encryption Standard</em>). The thing that makes AES great is that it is fast and secure. Running it on the calculator takes barely any time. However, AES does have a number of cipher configuration options that can make using it a bit complicated. We’ll try to summarize that information as simply as possible.</p>
-<ul class="simple">
-<li><p>AES has three operational key-lengths: 128, 192, and 256 bits. The length of the key also controls how many rounds (repetitions) of encryption occur. <strong>Using 256 bit keys is recommended.</strong></p></li>
-<li><p>CryptX supports three operational cipher modes: CBC, CTR, and GCM modes. <strong>Using GCM is recommended as it integrates integrity verification into the output.</strong></p></li>
+<p>AES (<em>Advanced Encryption Standard</em>) is currently the gold standard for secure data transmission and storage. The thing that makes AES great is that it is fast and secure. Running it on the calculator takes barely any time. However, AES does have a number of operational parameters and constraints that can make using it a bit complicated. We’ll try to summarize that information as simply as possible.</p>
+<ul>
+<li><p><strong>Key-Length</strong></p>
+<p>AES has three operational key-lengths: 128, 192, and 256 bits. The length of the key also controls how many rounds (repetitions) of encryption occur. <strong>Using 256 bit keys is recommended.</strong></p>
+</li>
+<li><p><strong>Cipher Modes</strong></p>
+<p>CryptX supports three operational cipher modes: CBC, CTR, and GCM modes. <strong>Using GCM is recommended as it integrates integrity verification into the output.</strong></p>
+</li>
+<li><p><strong>Initialization Vector</strong></p>
+<p>AES uses an <em>initialization vector</em> (iv) which is a buffer of psuedo-random bytes specific to the session (or message for GCM mode).</p>
+</li>
 </ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// ** As Sender **</span>
+
+<span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;The dog jumped over the fox!&quot;</span><span class="p">;</span><span class="w">   </span><span class="c1">// string to send</span>
+<span class="n">cryptx_aes_ctx</span><span class="w"> </span><span class="n">aes</span><span class="p">;</span><span class="w">   </span><span class="c1">// declare empty AES context</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">aes_key</span><span class="p">[</span><span class="n">CRYPTX_AES_256_KEYLEN</span><span class="p">];</span><span class="w">   </span><span class="c1">// declare AES key buffer</span>
+<span class="n">cryptx_csrand_fill</span><span class="p">(</span><span class="n">aes_key</span><span class="p">,</span><span class="w"> </span><span class="n">CRYPTX_AES_256_KEYLEN</span><span class="p">);</span><span class="w"> </span><span class="c1">// random key</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">iv</span><span class="p">[</span><span class="n">CRYPTX_AES_IV_SIZE</span><span class="p">];</span><span class="w">    </span><span class="c1">// declare IV</span>
+<span class="n">cryptx_csrand_fill</span><span class="p">(</span><span class="n">iv</span><span class="p">,</span><span class="w"> </span><span class="n">CRYPTX_AES_IV_SIZE</span><span class="p">);</span><span class="w">   </span><span class="c1">// random iv</span>
+
+<span class="k">if</span><span class="p">(</span><span class="n">cryptx_aes_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">aes</span><span class="p">,</span><span class="w"> </span><span class="n">aes_key</span><span class="p">,</span><span class="w"> </span><span class="n">CRYPTX_AES_256_KEYLEN</span><span class="p">,</span>
+<span class="w">                  </span><span class="n">iv</span><span class="p">,</span><span class="w"> </span><span class="n">CRYPTX_AES_IV_SIZE</span><span class="p">,</span><span class="w"> </span><span class="n">CRYPTX_AES_GCM_FLAGS</span><span class="p">))</span>
+<span class="w">  </span><span class="k">return</span><span class="p">;</span><span class="w">   </span><span class="c1">// AES initialization error</span>
+
+<span class="kt">size_t</span><span class="w"> </span><span class="n">msg_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="c1">// encrypt in-place is valid</span>
+<span class="k">if</span><span class="p">(</span><span class="n">cryptx_aes_encrypt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">aes</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="n">msg_len</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">))</span>
+<span class="w">  </span><span class="k">return</span><span class="p">;</span><span class="w">   </span><span class="c1">// AES encryption failed</span>
+
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">auth_tag</span><span class="p">[</span><span class="n">CRYPTX_AES_AUTHTAG_SIZE</span><span class="p">];</span>
+<span class="k">if</span><span class="p">(</span><span class="n">cryptx_aes_digest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">aes</span><span class="p">,</span><span class="w"> </span><span class="n">auth_tag</span><span class="p">))</span>
+<span class="w">  </span><span class="k">return</span><span class="p">;</span><span class="w">   </span><span class="c1">// AES digest return failed</span>
+
+<span class="c1">// at this point the AES context is marked invalid until initialized again with a new IV.</span>
+<span class="c1">// See warning below</span>
+
+<span class="c1">// send receiver all information necessary to authenticate and decrypt</span>
+<span class="n">network_send</span><span class="p">(</span><span class="n">iv</span><span class="p">,</span><span class="w"> </span><span class="n">CRYPTX_AES_IV_SIZE</span><span class="p">);</span>
+<span class="n">network_send</span><span class="p">(</span><span class="n">auth_tag</span><span class="p">,</span><span class="w"> </span><span class="n">CRYPTX_AES_AUTHTAG_SIZE</span><span class="p">);</span>
+<span class="n">network_send</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="n">msg_len</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>GCM is vulnerable to a nasty tag forgery attack if the same IV is reused for multiple message/tag pairs. Generate and set a new IV for the context after a digest is returned.</p>
+</div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// ** As Receiver **</span>
+
+<span class="c1">// Assume that `aes_key` has already been exchanged</span>
+<span class="n">cryptx_aes_ctx</span><span class="w"> </span><span class="n">aes</span><span class="p">;</span><span class="w">   </span><span class="c1">// Define empty AES context</span>
+
+<span class="c1">// Allocate buffer for incoming packets</span>
+<span class="cp">#define RECVBUF_LEN 1024</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">buf</span><span class="p">[</span><span class="n">RECVBUF_LEN</span><span class="p">];</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="n">buf_len</span><span class="p">;</span>
+
+<span class="c1">// Receive message to `buf` update `buf_len`</span>
+<span class="n">network_recv</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">buf_len</span><span class="p">);</span>
+
+<span class="c1">// mirroring sent data above, IV is first 16 bytes of `buf`</span>
+<span class="k">if</span><span class="p">(</span><span class="n">cryptx_aes_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">aes</span><span class="p">,</span><span class="w"> </span><span class="n">aes_key</span><span class="p">,</span><span class="w"> </span><span class="n">CRYPTX_AES_256_KEYLEN</span><span class="p">,</span>
+<span class="w">                  </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">CRYPTX_AES_IV_SIZE</span><span class="p">,</span><span class="w"> </span><span class="n">CRYPTX_AES_GCM_FLAGS</span><span class="p">))</span>
+<span class="w">  </span><span class="k">return</span><span class="p">;</span><span class="w">   </span><span class="c1">// AES initialization error</span>
+
+<span class="c1">// these will be used multiple times</span>
+<span class="c1">// msg follows authtag and is rest of buf_len</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">buf</span><span class="p">[</span><span class="n">CRYPTX_AES_IV_SIZE</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">CRYPTX_AES_AUTHTAG_SIZE</span><span class="p">];</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="n">msg_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buf_len</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">CRYPTX_AES_IV_SIZE</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">CRYPTX_AES_AUTHTAG_SIZE</span><span class="p">;</span>
+
+<span class="c1">// authenticate incoming message first</span>
+<span class="c1">// authtag is 16 bytes and follows IV</span>
+<span class="c1">// REFUSE DECRYPTION IF INVALID</span>
+<span class="k">if</span><span class="o">!</span><span class="p">(</span><span class="n">cryptx_aes_verify</span><span class="p">(</span><span class="o">&amp;</span><span class="n">aes</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="n">msg_len</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">buf</span><span class="p">[</span><span class="n">CRYPTX_AES_IV_SIZE</span><span class="p">]))</span>
+<span class="w">  </span><span class="k">return</span><span class="p">;</span><span class="w">   </span><span class="c1">// return if auth fails</span>
+
+<span class="k">if</span><span class="p">(</span><span class="n">cryptx_aes_decrypt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">aes</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="n">msg_len</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">))</span>
+<span class="w">  </span><span class="k">return</span><span class="p">;</span><span class="w">   </span><span class="c1">// AES decryption failed</span>
+
+<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">);</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="password-based-key-derivation">
 <h2>Password-Based Key Derivation<a class="headerlink" href="#password-based-key-derivation" title="Permalink to this headline"></a></h2>

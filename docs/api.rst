@@ -43,22 +43,24 @@ An important aspect of securing information is the ability to ensure that inform
 
 **Hashes** and **HMAC** are tools that assist with integrity verification. The standard hash produces a fixed-length value (called a *digest*) from an arbitrary-length stream of data. Because secure hashes have a negligibly low chance of collision (two different inputs producing the same output), they can detect changes to a stream of data. An HMAC works similarly, except it transforms the hash state using a key that is generally known only to authorized parties prior to hashing the data. This means that an HMAC can only be generated or validated by an authorized party. A HMAC is also sometimes referred to as a *keyed hash*.
 
-**Returning a Hash Digest**
+**Using the Hash API**
 
 .. code-block:: c
 
   char* text = "Hello World!"   // String to hash
   cryptx_hash_ctx hash;         // Declare hash context
   
-  cryptx_hash_init(&hash, SHA256);  // Initialize hash context
-  uint8_t digest[hash.digest_len];  // Buffer of digest length
+  if(!cryptx_hash_init(&hash, SHA256))  // Initialize hash context
+    return;   // exit if fails
+  uint8_t digest[hash.digest_len];  // Create a buffer of correct size for hash
+  
   cryptx_hash_update(&hash, text, strlen(text));  // Hash string
   cryptx_hash_digest(&hash, digest);    // Return digest
   // `digest` now contains the hash value
   
 * :ref:`view hash documentation <hash>`
 
-**Returning an HMAC Digest**
+**Using the HMAC API**
 
 .. code-block:: c
 
@@ -72,15 +74,15 @@ An important aspect of securing information is the ability to ensure that inform
   
   // intialize HMAC for given key and algorithm
   cryptx_hmac_init(&hash, key, HMAC_KLEN, SHA256);
+  uint8_t digest[hash.digest_len];  // Create a buffer of correct size for hash
   
-  uint8_t digest[hash.digest_len];  // Buffer of digest length
-  cryptx_hash_update(&hash, text, strlen(text));  // Hash string
-  cryptx_hash_digest(&hash, digest);    // Return digest
+  cryptx_hmac_update(&hash, text, strlen(text));  // Hash string
+  cryptx_hmac_digest(&hash, digest);    // Return digest
   // `digest` now contains the hmac value
 
 * :ref:`view hmac documentation <hmac>`
 
-**Returning an MGF1 Digest**
+**Using the MGF1 API**
 
 **MGF1** (Mask-Generation Function v1) is a hash-derived function that allows for a digest of arbitrary length to be returned from a data stream of given size. Its usage is similar to the hash API above.
 
@@ -144,10 +146,91 @@ Data obfuscation is another layer of information securty which is achieved throu
 
 **AES - Symmetric Encryption**
 
-The gold standard for secure data transmission and storage is currently AES (*Advanced Encryption Standard*). The thing that makes AES great is that it is fast and secure. Running it on the calculator takes barely any time. However, AES does have a number of cipher configuration options that can make using it a bit complicated. We'll try to summarize that information as simply as possible.
+AES (*Advanced Encryption Standard*) is currently the gold standard for secure data transmission and storage. The thing that makes AES great is that it is fast and secure. Running it on the calculator takes barely any time. However, AES does have a number of operational parameters and constraints that can make using it a bit complicated. We'll try to summarize that information as simply as possible.
 
-* AES has three operational key-lengths: 128, 192, and 256 bits. The length of the key also controls how many rounds (repetitions) of encryption occur. **Using 256 bit keys is recommended.**
-* CryptX supports three operational cipher modes: CBC, CTR, and GCM modes. **Using GCM is recommended as it integrates integrity verification into the output.**
+* **Key-Length**
+  
+  AES has three operational key-lengths: 128, 192, and 256 bits. The length of the key also controls how many rounds (repetitions) of encryption occur. **Using 256 bit keys is recommended.**
+  
+* **Cipher Modes**
+  
+  CryptX supports three operational cipher modes: CBC, CTR, and GCM modes. **Using GCM is recommended as it integrates integrity verification into the output.**
+  
+* **Initialization Vector**
+  
+  AES uses an *initialization vector* (iv) which is a buffer of psuedo-random bytes specific to the session (or message for GCM mode).
+
+.. code-block:: c
+  
+  // ** As Sender **
+  
+  char *msg = "The dog jumped over the fox!";   // string to send
+  cryptx_aes_ctx aes;   // declare empty AES context
+  uint8_t aes_key[CRYPTX_AES_256_KEYLEN];   // declare AES key buffer
+  cryptx_csrand_fill(aes_key, CRYPTX_AES_256_KEYLEN); // random key
+  uint8_t iv[CRYPTX_AES_IV_SIZE];    // declare IV
+  cryptx_csrand_fill(iv, CRYPTX_AES_IV_SIZE);   // random iv
+  
+  if(cryptx_aes_init(&aes, aes_key, CRYPTX_AES_256_KEYLEN,
+                    iv, CRYPTX_AES_IV_SIZE, CRYPTX_AES_GCM_FLAGS))
+    return;   // AES initialization error
+    
+  size_t msg_len = strlen(msg) + 1;
+  // encrypt in-place is valid
+  if(cryptx_aes_encrypt(&aes, msg, msg_len, msg))
+    return;   // AES encryption failed
+    
+  uint8_t auth_tag[CRYPTX_AES_AUTHTAG_SIZE];
+  if(cryptx_aes_digest(&aes, auth_tag))
+    return;   // AES digest return failed
+  
+  // at this point the AES context is marked invalid until initialized again with a new IV.
+  // See warning below
+  
+  // send receiver all information necessary to authenticate and decrypt
+  network_send(iv, CRYPTX_AES_IV_SIZE);
+  network_send(auth_tag, CRYPTX_AES_AUTHTAG_SIZE);
+  network_send(msg, msg_len);
+  
+.. warning::
+  GCM is vulnerable to a nasty tag forgery attack if the same IV is reused for multiple message/tag pairs. Generate and set a new IV for the context after a digest is returned.
+
+.. code-block:: c
+  
+  // ** As Receiver **
+  
+  // Assume that `aes_key` has already been exchanged
+  cryptx_aes_ctx aes;   // Define empty AES context
+  
+  // Allocate buffer for incoming packets
+  #define RECVBUF_LEN 1024
+  uint8_t buf[RECVBUF_LEN];
+  size_t buf_len;
+  
+  // Receive message to `buf` update `buf_len`
+  network_recv(buf, &buf_len);
+  
+  // mirroring sent data above, IV is first 16 bytes of `buf`
+  if(cryptx_aes_init(&aes, aes_key, CRYPTX_AES_256_KEYLEN,
+                    buf, CRYPTX_AES_IV_SIZE, CRYPTX_AES_GCM_FLAGS))
+    return;   // AES initialization error
+  
+  // these will be used multiple times
+  // msg follows authtag and is rest of buf_len
+  uint8_t *msg = &buf[CRYPTX_AES_IV_SIZE + CRYPTX_AES_AUTHTAG_SIZE];
+  size_t msg_len = buf_len - CRYPTX_AES_IV_SIZE + CRYPTX_AES_AUTHTAG_SIZE;
+    
+  // authenticate incoming message first
+  // authtag is 16 bytes and follows IV
+  // REFUSE DECRYPTION IF INVALID
+  if!(cryptx_aes_verify(&aes, NULL, 0, msg, msg_len, &buf[CRYPTX_AES_IV_SIZE]))
+    return;   // return if auth fails
+    
+  if(cryptx_aes_decrypt(&aes, msg, msg_len, msg))
+    return;   // AES decryption failed
+    
+  printf("%s", msg);
+  
 
 
 Password-Based Key Derivation

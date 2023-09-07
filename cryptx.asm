@@ -202,6 +202,10 @@ hmac_func_lookup:
 	dl hmac_sha256_update
 	dl hmac_sha256_final
 	db 32
+; dl hmac_sha1_init
+;	dl hmac_sha1_update
+;	dl hmac_sha1_final
+;	db 20
 
 
 ; probably better to just add the one u64 function used by hashlib rather than screw with dependencies
