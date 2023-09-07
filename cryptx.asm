@@ -679,7 +679,7 @@ hash_sha1_init:
 	ld hl,$FF0000
 	ld bc,offset_state
 	ldir
-	ld c,8*4
+	ld c,8*5
 	ld hl,_sha1_state_init
 	ldir
 	ld a, 1
@@ -11127,6 +11127,13 @@ base64_decode:
  
  _hexc:     db	"0123456789ABCDEF"
  _hash_out_lens:    db 32
+ 
+ _sha1_state_init:
+	dd  $67452301
+	dd  $EFCDAB89
+	dd  $98BADCFE
+	dd  $10325476
+	dd  $c3d2e1f0
  
  _sha256_state_init:
 	dl 648807
