@@ -817,7 +817,7 @@ _sha1_final_pad_loop1:
 	ld bc,56
 	ldir
 _sha1_final_done_pad:
-	lea iy, ix-_sha1ctx_size
+	lea iy, ix-_sha1_ctx_size
 	ld c, (iy + offset_datalen)
 	ld b,8
 	mlt bc ;multiply 8-bit datalen by 8-bit value 8
@@ -2045,6 +2045,129 @@ hmac_sha256_init:
 
 	restore_interrupts_noret hmac_sha256_init
 	jp stack_clear
+ 
+ hmac_sha1_init:
+	save_interrupts
+
+	ld	hl, -70
+	call	ti._frameset
+	ld	hl, 64
+	ld	de, 0
+	lea	bc, ix + -64
+	ld	(ix + -67), bc
+	push	hl
+	push	de
+	push	bc
+	call	ti._memset
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	de, 65
+	ld	hl, (ix + 12)
+	or	a, a
+	sbc	hl, de
+	ld	de, 128
+	jq	c, .lbl_2
+	ld	hl, (ix + 6)
+	add	hl, de
+	ld	(ix + -70), hl
+	push	hl
+	call	hash_sha1_init
+	pop	hl
+	or	a, a
+	sbc	hl, hl
+	push	hl
+	ld	hl, (ix + 12)
+	push	hl
+	ld	hl, (ix + 9)
+	push	hl
+	ld	hl, (ix + -70)
+	push	hl
+	call	hash_sha1_update
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix + -67)
+	push	hl
+	ld	hl, (ix + -70)
+	push	hl
+	call	hash_sha1_final
+	jq	.lbl_3
+.lbl_2:
+	ld	hl, (ix + 12)
+	push	hl
+	ld	hl, (ix + 9)
+	push	hl
+	ld	hl, (ix + -67)
+	push	hl
+	call	ti._memcpy
+	pop	hl
+.lbl_3:
+	pop	hl
+	pop	hl
+	ld	hl, 64
+	push	hl
+	ld	hl, 54
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	call	ti._memset
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 64
+	push	hl
+	ld	hl, 92
+	push	hl
+	ld	iy, (ix + 6)
+	pea	iy + 64
+	call	ti._memset
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	de, 64
+	ld	bc, 0
+.lbl_5:
+	push	bc
+	pop	hl
+	or	a, a
+	sbc	hl, de
+	ld	hl, (ix + -67)
+	jq	z, .lbl_7
+	add	hl, bc
+	ld	l, (hl)
+	ld	iy, (ix + 6)
+	add	iy, bc
+	ld	a, (iy)
+	xor	a, l
+	ld	(iy), a
+	ld	a, (iy + 64)
+	xor	a, l
+	ld	(iy + 64), a
+	inc	bc
+	jq	.lbl_5
+.lbl_7:
+	ld	hl, (ix + 6)
+	ld	de, 128
+	add	hl, de
+	ld	(ix + -67), hl
+	push	hl
+	call	hash_sha1_init
+	pop	hl
+	or	a, a
+	sbc	hl, hl
+	push	hl
+	ld	hl, 64
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	ld	hl, (ix + -67)
+	push	hl
+	call	hash_sha1_update
+
+	restore_interrupts_noret hmac_sha1_init
+	jp stack_clear
 	
 
  
@@ -2061,6 +2184,23 @@ hmac_sha256_update:
 	push	iy
 	push	hl
 	call	hash_sha256_update
+	ld	sp, ix
+	pop	ix
+	ret
+ 
+hmac_sha1_update:
+	call	ti._frameset0
+	ld	hl, (ix + 6)
+	ld	iy, (ix + 9)
+	ld	bc, (ix + 12)
+	ld	de, 128
+	add	hl, de
+	ld	de, 0
+	push	de
+	push	bc
+	push	iy
+	push	hl
+	call	hash_sha1_update
 	ld	sp, ix
 	pop	ix
 	ret
@@ -2172,35 +2312,114 @@ hmac_sha256_final:
 
 	restore_interrupts_noret hmac_sha256_final
 	jp stack_clear
-	
-	
-hmac_sha256_reset:
+ 
+hmac_sha256_final:
 	save_interrupts
 
-	ld	hl, -3
+	ld	hl, -280
 	call	ti._frameset
-	ld	hl, (ix + 6)
-	ld	de, 128
-	add	hl, de
-	ld	(ix + -3), hl
+	ld	bc, (ix + 6)
+	ld	hl, 236
+	lea	de, ix + -38
+	ld	(ix + -3), bc
+	ld	bc, -280
+	lea	iy, ix + 0
+	add	iy, bc
+	ld	(iy + 0), de
+	push	ix
+	ld	bc, -274
+	add	ix, bc
+	lea	de, ix + 0
+	pop	ix
+	push	ix
+	ld	bc, -277
+	add	ix, bc
+	ld	(ix + 0), de
+	pop	ix
 	push	hl
-	call	hash_sha256_init
+	ld	bc, (ix + -3)
+	push	bc
+	push	de
+	call	ti._memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	de, 128
+	ld	bc, -277
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	add	hl, de
+	push	ix
+	add	ix, bc
+	ld	(ix + 0), hl
+	pop	ix
+	push	ix
+	ld	bc, -280
+	add	ix, bc
+	ld	de, (ix + 0)
+	pop	ix
+	push	de
+	push	hl
+	call	hash_sha1_final
+	pop	hl
+	pop	hl
+	ld	bc, -277
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	hash_sha1_init
 	pop	hl
 	or	a, a
 	sbc	hl, hl
 	push	hl
 	ld	hl, 64
 	push	hl
-	ld	hl, (ix + 6)
+	ld	iy, (ix + 6)
+	pea	iy + 64
+	ld	bc, -277
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
 	push	hl
-	ld	hl, (ix + -3)
+	call	hash_sha1_update
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	or	a, a
+	sbc	hl, hl
 	push	hl
-	call	hash_sha256_update
-	ld	sp, ix
-	pop	ix
+	ld	hl, 32
+	push	hl
+	ld	bc, -280
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	bc, -277
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	hash_sha1_update
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix + 9)
+	push	hl
+	ld	bc, -277
+	lea	hl, ix + 0
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	call	hash_sha1_final
 
-	restore_interrupts hmac_sha256_reset
-	ret
+	restore_interrupts_noret hmac_sha256_final
+	jp stack_clear
+	
 
 hmac_pbkdf2:
 	save_interrupts
