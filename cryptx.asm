@@ -195,7 +195,7 @@ hash_func_lookup:
 	dl hash_sha1_init
 	dl hash_sha1_update
 	dl hash_sha1_final
-	db 32
+	db 20
 
 hmac_func_lookup:
 	dl hmac_sha256_init
@@ -840,7 +840,7 @@ _sha1_final_pad_message_len_loop:
 
 	ld hl, (ix + 9)
 	lea iy, iy + offset_state
-	ld b, 8
+	ld b, 5
 	call _sha256_reverse_endianness
 
 	ld sp,ix
@@ -873,7 +873,7 @@ _sha1_w_buffer := _sha256_m_buffer ; reuse m buffer from sha256 as w
 	sbc hl,bc
 	jq z,._exit
 	ld iy,_sha1_w_buffer
-	ld b,16
+	ld b, 16
 	call _sha256_reverse_endianness ; first loop is essentially just reversing the endian-ness of the data into w
 	ld iy, (ix + 6)
 	lea hl, iy + offset_state

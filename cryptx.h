@@ -92,6 +92,7 @@ struct cryptx_hash_ctx {
 /// @enum Supported hash algorithms
 enum cryptx_hash_algorithms {
 	SHA256,             /**< algorithm type identifier for SHA-256 */
+	SHA1,               /**< algorithm type identifier for SHA-1 */
 };
 
 /**
