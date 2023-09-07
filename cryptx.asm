@@ -7,49 +7,49 @@ library CRYPTX, 13
 ;------------------------------------------
 
 ; hashing functions
-    export cryptx_hash_init
+	export cryptx_hash_init
 	export cryptx_hash_update
 	export cryptx_hash_digest
 	export cryptx_hash_mgf1
-    export cryptx_hmac_init
-    export cryptx_hmac_update
-    export cryptx_hmac_digest
-    export cryptx_hmac_pbkdf2
-    export cryptx_digest_compare
-    export cryptx_digest_tostring
-    
+	export cryptx_hmac_init
+	export cryptx_hmac_update
+	export cryptx_hmac_digest
+	export cryptx_hmac_pbkdf2
+	export cryptx_digest_compare
+	export cryptx_digest_tostring
+	
 ; encryption functions
 	export cryptx_csrand_init
-    export cryptx_csrand_get
-    export cryptx_csrand_fill
-    export cryptx_aes_init
-    export cryptx_aes_encrypt
-    export cryptx_aes_decrypt
-    export cryptx_aes_update_aad
-    export cryptx_aes_digest
-    export cryptx_aes_verify
-    export cryptx_rsa_encrypt
-    export cryptx_ecdh_publickey
-    export cryptx_ecdh_secret
-    
+	export cryptx_csrand_get
+	export cryptx_csrand_fill
+	export cryptx_aes_init
+	export cryptx_aes_encrypt
+	export cryptx_aes_decrypt
+	export cryptx_aes_update_aad
+	export cryptx_aes_digest
+	export cryptx_aes_verify
+	export cryptx_rsa_encrypt
+	export cryptx_ecdh_publickey
+	export cryptx_ecdh_secret
+	
 ; encoding functions
-    export cryptx_asn1_decode
-    export cryptx_base64_encode
-    export cryptx_base64_decode
-    
+	export cryptx_asn1_decode
+	export cryptx_base64_encode
+	export cryptx_base64_decode
+	
 
 ; hazardous materials
-    export cryptx_hazmat_aes_ecb_encrypt
-    export cryptx_hazmat_aes_ecb_decrypt
-    export cryptx_hazmat_rsa_oaep_encode
-    export cryptx_hazmat_rsa_oaep_decode
-    export cryptx_hazmat_powmod
-    export cryptx_hazmat_ecc_point_add
-    export cryptx_hazmat_ecc_point_double
-    export cryptx_hazmat_ecc_point_mul_scalar
+	export cryptx_hazmat_aes_ecb_encrypt
+	export cryptx_hazmat_aes_ecb_decrypt
+	export cryptx_hazmat_rsa_oaep_encode
+	export cryptx_hazmat_rsa_oaep_decode
+	export cryptx_hazmat_powmod
+	export cryptx_hazmat_ecc_point_add
+	export cryptx_hazmat_ecc_point_double
+	export cryptx_hazmat_ecc_point_mul_scalar
    
-    
-    
+	
+	
 ; redefine functions as library namespace
 cryptx_hash_init	= hash_init
 cryptx_hash_update	= hash_update
@@ -88,9 +88,9 @@ cryptx_internal_gf2_invert			= _bigint_invert
 cryptx_asn1_decode		= _asn1_decode
 cryptx_base64_encode	= base64_encode
 cryptx_base64_decode	= base64_decode
-    
-    
-    
+	
+	
+	
 
 ;------------------------------------------
 ; helper macro for saving the interrupt state, then disabling interrupts
@@ -99,7 +99,7 @@ macro save_interrupts?
 	push af
 	pop bc
 	ld (.__interrupt_state),bc
-    di
+	di
 end macro
 
 ;------------------------------------------
@@ -160,10 +160,6 @@ _indcallhl:
 ; Inputs:
 ;  HL : Address to call
 	jp	(hl)
- 
-_indcall:
-; Calls IY
-    jp  (iy)
 
 
 ;number of times to test each bit
@@ -192,16 +188,20 @@ _sha256_m_buffer_length := 64*4
 ; hash func table
 hash_func_lookup:
 ; sha256 func ptr and digest len
-    dl hash_sha256_init
-    dl hash_sha256_update
-    dl hash_sha256_final
-    db 32
-    
+	dl hash_sha256_init
+	dl hash_sha256_update
+	dl hash_sha256_final
+	db 32
+	dl hash_sha1_init
+	dl hash_sha1_update
+	dl hash_sha1_final
+	db 32
+
 hmac_func_lookup:
-    dl hmac_sha256_init
-    dl hmac_sha256_update
-    dl hmac_sha256_final
-    db 32
+	dl hmac_sha256_init
+	dl hmac_sha256_update
+	dl hmac_sha256_final
+	db 32
 
 
 ; probably better to just add the one u64 function used by hashlib rather than screw with dependencies
@@ -232,225 +232,867 @@ u64_addi:
 ?stackBot		:= 0D1987Eh
 ; use to erase the stack to prevent buffer leak side-channel attack
 stack_clear:
-    
-    ; save a, hl, e
-    ld (.smc_a), a
-    ld (.smc_hl), hl
-    ld a, e
-    ld (.smc_e), a
-    
-    ; set from stackBot + 4 to ix - 1 to 0
-    lea de, ix - 2
-    ld hl, -(stackBot + 3)
-    add hl, de
-    push hl
-    pop bc
-    lea hl, ix - 1
-    ld (hl), 0
-    lddr
-    
-    ; restore a, hl, e
-    ld e, 0
+	
+	; save a, hl, e
+	ld (.smc_a), a
+	ld (.smc_hl), hl
+	ld a, e
+	ld (.smc_e), a
+	
+	; set from stackBot + 4 to ix - 1 to 0
+	lea de, ix - 2
+	ld hl, -(stackBot + 3)
+	add hl, de
+	push hl
+	pop bc
+	lea hl, ix - 1
+	ld (hl), 0
+	lddr
+	
+	; restore a, hl, e
+	ld e, 0
 .smc_e:=$-1
-    ld a, 0
+	ld a, 0
 .smc_a:=$-1
-    ld hl, 0
+	ld hl, 0
 .smc_hl:=$-3
-    ld sp, ix
-    pop ix
-    ret
+	ld sp, ix
+	pop ix
+	ret
  
 ;------------------------------------------
 	
  
-hash_algs_impl  =   1
+hash_algs_impl  =   2
  
 ; hash_init(context, alg);
 hash_init:
-  	call	ti._frameset0
-    ; (ix+0) return vector
-    ; (ix+3) old ix
-    ; (ix+6) context
-    ; (ix+9) alg
-    ; (ix + 12) flags
-    
-    ; check if value of alg < hash_algs_impl, return 0 if not
-    ld a, (ix + 9)
-    ld l, a
-    cp a, hash_algs_impl
-    sbc a,a
-    jr z, .exit
-    
-    ; multiply alg by 10 to get correct set of pointers
-    ; copy 10 bytes from hmac_func_lookup+offset to context
-    ld h, 10
-    mlt hl
-    ld bc, hash_func_lookup
-    add hl, bc
-    ld de, (ix + 6)
-    ld bc, 10
-    ldir
-    
-    ; push arguments onto stack for internal hash caller
-    ld hl, (ix + 12)
-    push hl
-    ld hl, (ix + 9)
-    push hl
-    ld iy, (ix+6)
-    pea iy + 10
-    ld hl, (ix + 6)
-    ld hl, (hl)
-    call _indcallhl
-    
-    ; pop arguments from stack
-    pop hl,hl,hl
-    ld a, 1     ; return true
+	call	ti._frameset0
+	; (ix+0) return vector
+	; (ix+3) old ix
+	; (ix+6) context
+	; (ix+9) alg
+	; (ix + 12) flags
+	
+	; check if value of alg < hash_algs_impl, return 0 if not
+	ld a, (ix + 9)
+	ld l, a
+	cp a, hash_algs_impl
+	sbc a,a
+	jr z, .exit
+	
+	; multiply alg by 10 to get correct set of pointers
+	; copy 10 bytes from hmac_func_lookup+offset to context
+	ld h, 10
+	mlt hl
+	ld bc, hash_func_lookup
+	add hl, bc
+	ld de, (ix + 6)
+	ld bc, 10
+	ldir
+	
+	; push arguments onto stack for internal hash caller
+	ld hl, (ix + 12)
+	push hl
+	ld hl, (ix + 9)
+	push hl
+	ld iy, (ix+6)
+	pea iy + 10
+	ld hl, (ix + 6)
+	ld hl, (hl)
+	call _indcallhl
+	
+	; pop arguments from stack
+	pop hl,hl,hl
+	ld a, 1     ; return true
 .exit:
-    ld sp, ix
-    pop ix
-    ret
-    
-    
-    
+	ld sp, ix
+	pop ix
+	ret
+	
+	
+	
 ; hash_update(context, data, len);
 hash_update:
-    call	ti._frameset0
-    ; (ix+0) return vector
-    ; (ix+3) old ix
-    ; (ix+6) context
-    ; (ix+9) data
-    ; (ix+12) len
-    
-    ld hl, (ix + 12)
-    push hl
-    ld hl, (ix + 9)
-    push hl
-    ld iy, (ix + 6)
-    pea iy + 10
-    ld hl, (iy + 3)
-    call _indcallhl
-    ld sp, ix
-    pop ix
-    ret
-    
+	call	ti._frameset0
+	; (ix+0) return vector
+	; (ix+3) old ix
+	; (ix+6) context
+	; (ix+9) data
+	; (ix+12) len
+	
+	ld hl, (ix + 12)
+	push hl
+	ld hl, (ix + 9)
+	push hl
+	ld iy, (ix + 6)
+	pea iy + 10
+	ld hl, (iy + 3)
+	call _indcallhl
+	ld sp, ix
+	pop ix
+	ret
+	
 ; hash_final(context, outbuf);
 hash_final:
-     call	ti._frameset0
-    ; (ix+0) return vector
-    ; (ix+3) old ix
-    ; (ix+6) context
-    ; (ix+9) outbuf
-    
-    ld hl, (ix + 9)
-    push hl
-    ld iy, (ix + 6)
-    pea iy + 10
-    ld hl, (iy + 6)
-    call _indcallhl
-    ld sp, ix
-    pop ix
-    ret
-    
-    
+	call	ti._frameset0
+	; (ix+0) return vector
+	; (ix+3) old ix
+	; (ix+6) context
+	; (ix+9) outbuf
+	
+	ld hl, (ix + 9)
+	push hl
+	ld iy, (ix + 6)
+	pea iy + 10
+	ld hl, (iy + 6)
+	call _indcallhl
+	ld sp, ix
+	pop ix
+	ret
+	
+	
 ; hmac_init(context, key, keylen, alg);
 hmac_init:
- 	call	ti._frameset0
-    ; (ix+0) return vector
-    ; (ix+3) old ix
-    ; (ix+6) context
-    ; (ix+9) key
-    ; (ix+12) keylen
-    ; (ix+15) alg
-    
-    ; check if value of alg < hash_algs_impl, return 0 if not
-    ld a, (ix + 15)
-    ld l, a
-    cp a, hash_algs_impl
-    sbc a,a
-    jr z, .exit
-    
-    ; multiply alg by 10 to get correct set of pointers
-    ; copy 10 bytes from hmac_func_lookup+offset to context
-    ld h, 10
-    mlt hl
-    ld bc, hmac_func_lookup
-    add hl, bc
-    ld de, (ix + 6)
-    ld bc, 10
-    ldir
-    
-    ; push arguments onto stack for internal hash caller
-    ld hl, (ix + 12)
-    push hl
-    ld hl, (ix + 9)
-    push hl
-    ld iy, (ix+6)
-    pea iy + 10
-    ld hl, (iy)
-    call _indcallhl
-    
-    ; pop arguments from stack
-    pop hl,hl,hl
-    ld a, 1     ; return true
+	call	ti._frameset0
+	; (ix+0) return vector
+	; (ix+3) old ix
+	; (ix+6) context
+	; (ix+9) key
+	; (ix+12) keylen
+	; (ix+15) alg
+	
+	; check if value of alg < hash_algs_impl, return 0 if not
+	ld a, (ix + 15)
+	ld l, a
+	cp a, hash_algs_impl
+	sbc a,a
+	jr z, .exit
+	
+	; multiply alg by 10 to get correct set of pointers
+	; copy 10 bytes from hmac_func_lookup+offset to context
+	ld h, 10
+	mlt hl
+	ld bc, hmac_func_lookup
+	add hl, bc
+	ld de, (ix + 6)
+	ld bc, 10
+	ldir
+	
+	; push arguments onto stack for internal hash caller
+	ld hl, (ix + 12)
+	push hl
+	ld hl, (ix + 9)
+	push hl
+	ld iy, (ix+6)
+	pea iy + 10
+	ld hl, (iy)
+	call _indcallhl
+	
+	; pop arguments from stack
+	pop hl,hl,hl
+	ld a, 1     ; return true
 .exit:
-    ld sp, ix
-    pop ix
-    ret
-    
-    
+	ld sp, ix
+	pop ix
+	ret
+	
+	
 ; hmac_update(context, data, len);
 hmac_update:
-    call	ti._frameset0
-    ; (ix+0) return vector
-    ; (ix+3) old ix
-    ; (ix+6) context
-    ; (ix+9) data
-    ; (ix+12) len
-    
-    ld hl, (ix + 12)
-    push hl
-    ld hl, (ix + 9)
-    push hl
-    ld iy, (ix + 6)
-    pea iy + 10
-    ld hl, (iy + 3)
-    call _indcallhl
-    ld sp, ix
-    pop ix
-    ret
-    
+	call	ti._frameset0
+	; (ix+0) return vector
+	; (ix+3) old ix
+	; (ix+6) context
+	; (ix+9) data
+	; (ix+12) len
+	
+	ld hl, (ix + 12)
+	push hl
+	ld hl, (ix + 9)
+	push hl
+	ld iy, (ix + 6)
+	pea iy + 10
+	ld hl, (iy + 3)
+	call _indcallhl
+	ld sp, ix
+	pop ix
+	ret
+	
 ; hash_final(context, outbuf);
 hmac_final:
-     call	ti._frameset0
-    ; (ix+0) return vector
-    ; (ix+3) old ix
-    ; (ix+6) context
-    ; (ix+9) outbuf
-    
-    ld hl, (ix + 9)
-    push hl
-    ld iy, (ix + 6)
-    pea iy + 10
-    ld hl, (iy + 6)
-    call _indcallhl
-    ld sp, ix
-    pop ix
-    ret
+	call	ti._frameset0
+	; (ix+0) return vector
+	; (ix+3) old ix
+	; (ix+6) context
+	; (ix+9) outbuf
+	
+	ld hl, (ix + 9)
+	push hl
+	ld iy, (ix + 6)
+	pea iy + 10
+	ld hl, (iy + 6)
+	call _indcallhl
+	ld sp, ix
+	pop ix
+	ret
 
- 
+
+; reverse b longs endianness from iy to hl
+_sha256_reverse_endianness:
+	ld a, (iy + 0)
+	ld c, (iy + 1)
+	ld d, (iy + 2)
+	ld e, (iy + 3)
+	ld (hl), e
+	inc hl
+	ld (hl), d
+	inc hl
+	ld (hl), c
+	inc hl
+	ld (hl), a
+	inc hl
+	lea iy, iy + 4
+	djnz _sha256_reverse_endianness
+	ret
+
+; helper macro to xor [B,C] with [R1,R2] storing into [R1,R2]
+; destroys: af
+macro _xorbc? R1,R2
+	ld a,b
+	xor a,R1
+	ld R1,a
+	ld a,c
+	xor a,R2
+	ld R2,a
+end macro
+
+; helper macro to xor [(R3), (R3+1)] with [R1,R2] storing into [R1,R2]
+; destroys: af
+macro _xoriix? R1,R2, R3
+	ld a,R1
+	xor a,(R3)
+	ld R1,a
+	ld a,R2
+	xor a,(R3+1)
+	ld R2,a
+end macro
+
+; helper macro to and [(R3), (R3+1)] with [R1,R2] storing into [R1,R2]
+; destroys: af
+macro _andiix? R1,R2, R3
+	ld a,R1
+	and a,(R3)
+	ld R1,a
+	ld a,R2
+	and a,(R3+1)
+	ld R2,a
+end macro
+
+; helper macro to or [(R3), (R3+1)] with [R1,R2] storing into [R1,R2]
+; destroys: af
+macro _oriix? R1,R2, R3
+	ld a,R1
+	or a,(R3)
+	ld R1,a
+	ld a,R2
+	or a,(R3+1)
+	ld R2,a
+end macro
+
+; helper macro to add [(R3), (R3+1)] with [R1,R2] storing into [R1,R2]
+; destroys: af
+macro _addiix? R1,R2, R3
+	ld a,R1
+	add a,(R3)
+	ld R1,a
+	ld a,R2
+	adc a,(R3+1)
+	ld R2,a
+end macro
+
+; helper macro to adc [(R3), (R3+1)] with [R1,R2] storing into [R1,R2]
+; destroys: af
+macro _adciix? R1,R2, R3
+	ld a,R1
+	adc a,(R3)
+	ld R1,a
+	ld a,R2
+	adc a,(R3+1)
+	ld R2,a
+end macro
+
+; helper macro to add [(R3), (R3+1)] with [R1,R2] storing into [(R3), (R3+1)]
+; destroys: af
+macro _addiix_store? R1,R2, R3
+	ld a,R1
+	add a,(R3)
+	ld R1,a
+	ld a,R2
+	adc a,(R3+1)
+	ld R2,a
+end macro
+
+; helper macro to adc [(R3), (R3+1)] with [R1,R2] storing into [(R3), (R3+1)]
+; destroys: af
+macro _adciix_store? R1,R2, R3
+	ld a,R1
+	adc a,(R3)
+	ld (R3),a
+	ld a,R2
+	adc a,(R3+1)
+	ld (R3+1),a
+end macro
+
+; helper macro to xor [R1,R2] with [R3,R4] storing into [R1,R2]
+; destroys: af
+macro _xor? R1,R2,R3,R4
+	ld a,R1
+	xor a,R3
+	ld R1,a
+	ld a,R2
+	xor a,R4
+	ld R2,a
+end macro
+
+; helper macro to or [R1,R2] with [R3,R4] storing into [R1,R2]
+; destroys: af
+macro _or? R1,R2,R3,R4
+	ld a,R1
+	or a,R3
+	ld R1,a
+	ld a,R2
+	or a,R4
+	ld R2,a
+end macro
+
+; helper macro to and [R1,R2] with [R3,R4] storing into [R1,R2]
+; destroys: af
+macro _and? R1,R2,R3,R4
+	ld a,R1
+	and a,R3
+	ld R1,a
+	ld a,R2
+	and a,R4
+	ld R2,a
+end macro
+
+; helper macro to add [R1,R2] with [R3,R4] storing into [R1,R2]
+; destroys: af
+macro _add? R1,R2,R3,R4
+	ld a,R1
+	add a,R3
+	ld R1,a
+	ld a,R2
+	adc a,R4
+	ld R2,a
+end macro
+
+; helper macro to adc [R1,R2] with [R3,R4] storing into [R1,R2]
+; destroys: af
+macro _adc? R1,R2,R3,R4
+	ld a,R1
+	adc a,R3
+	ld R1,a
+	ld a,R2
+	adc a,R4
+	ld R2,a
+end macro
+
+; helper macro to add [B,C] with [R1,R2] storing into [R1,R2]
+; destroys: af
+; note: this will add including the carry flag, so be sure of what the carry flag is before this
+; note: if you're chaining this into a number longer than 16 bits, the order must be low->high
+macro _addbclow? R1,R2
+	ld a,c
+	add a,R2
+	ld R2,a
+	ld a,b
+	adc a,R1
+	ld R1,a
+end macro
+macro _addbchigh? R1,R2
+	ld a,c
+	adc a,R2
+	ld R2,a
+	ld a,b
+	adc a,R1
+	ld R1,a
+end macro
+
+; helper macro to move [d,e,h,l] <- [l,e,d,h] therefore shifting 8 bits right.
+; destroys: af
+macro _rotright8?
+	ld a,l
+	ld l,h
+	ld h,e
+	ld e,d
+	ld d,a
+end macro
+
+; helper macro to move [d,e,h,l] <- [e,h,l,d] therefore shifting 8 bits left.
+; destroys: af
+macro _rotleft8?
+	ld a,d
+	ld d,e
+	ld e,h
+	ld h,l
+	ld l,a
+end macro
+
+
+; #define ROTLEFT(a,b) (((a) << (b)) | ((a) >> (32-(b))))
+;input: [d,e,h,l], b
+;output: [d,e,h,l]
+;destroys: af, b
+_ROTLEFT:
+	xor a,a
+	rl l
+	rl h
+	rl e
+	rl d
+	adc a,l
+	ld l,a
+	djnz .
+	ret
+
+; #define ROTRIGHT(a,b) (((a) >> (b)) | ((a) << (32-(b))))
+;input: [d,e,h,l], b
+;output: [d,e,h,l]
+;destroys: af, b
+_ROTRIGHT:
+	xor a,a
+	rr d
+	rr e
+	rr h
+	rr l
+	rra
+	or a,d
+	ld d,a
+	djnz .
+	ret
+
+; void hash_sha1_init(SHA256_CTX *ctx);
+hash_sha1_init:
+	pop iy,de
+	push de
+	ld hl,$FF0000
+	ld bc,offset_state
+	ldir
+	ld c,8*4
+	ld hl,_sha1_state_init
+	ldir
+	ld a, 1
+_indcall:
+; Calls IY
+	jp (iy)
+
 ; void hash_sha256_init(SHA256_CTX *ctx);
 hash_sha256_init:
-    pop iy,de
-    push de
-    ld hl,$FF0000
-    ld bc,offset_state
-    ldir
-    ld c,8*4
-    ld hl,_sha256_state_init
-    ldir
-    ld a, 1
-    jp (iy)
-    
+	pop iy,de
+	push de
+	ld hl,$FF0000
+	ld bc,offset_state
+	ldir
+	ld c,8*4
+	ld hl,_sha256_state_init
+	ldir
+	ld a, 1
+	jp (iy)
+	
+; void hash_sha1_update(SHA256_CTX *ctx);
+hash_sha1_update:
+	save_interrupts
+
+	call ti._frameset0
+	; (ix + 0) RV
+	; (ix + 3) old IX
+	; (ix + 6) arg1: ctx
+	; (ix + 9) arg2: data
+	; (ix + 12) arg3: len
+
+	ld iy, (ix + 6) ; iy = context
+	
+	ld a, (iy + offset_datalen)
+	ld bc, 0
+	ld c, a
+	
+	ld de, (ix+9)
+	ld hl, (ix+6)
+	add hl, bc
+	ex de, hl
+
+	ld bc, (ix + 12)
+	call _sha1_update_loop
+	cp a,64
+	call z, _sha1_update_apply_transform
+	
+	ld iy, (ix+6)
+	ld (iy + offset_datalen), a
+	pop ix
+
+	restore_interrupts hash_sha1_update
+	ret
+
+_sha1_update_loop:
+	inc a
+	ldi ;ld (de),(hl) / inc de / inc hl / dec bc
+	ret po ;return if bc==0 (ldi decrements bc and updates parity flag)
+	cp a,64
+	call z, _sha1_update_apply_transform
+	jr _sha1_update_loop
+_sha1_update_apply_transform:
+	push hl, de, bc
+	ld bc, (ix + 6)
+	push bc
+	call _sha1_transform	  ; if we have one block (64-bytes), transform block
+	pop iy
+	ld bc, 512				  ; add 1 blocksize of bitlen to the bitlen field
+	push bc
+	pea iy + offset_bitlen
+	call u64_addi
+	pop bc, bc, bc, de, hl
+	xor a,a
+	ld de, (ix + 6)
+	ret
+
+
+; void hashlib_Sha1Final(SHA256_CTX *ctx, BYTE hash[]);
+hash_sha1_final:
+	save_interrupts
+
+	ld hl,-_sha256ctx_size
+	call ti._frameset
+	; ix-_sha256ctx_size to ix-1
+	; (ix + 0) Return address
+	; (ix + 3) saved IX
+	; (ix + 6) arg1: ctx
+	; (ix + 9) arg2: outbuf
+	
+	; scf
+	; sbc hl,hl
+	; ld (hl),2
+
+	ld iy, (ix + 6)					; iy =  context block
+	lea hl, iy
+	lea de, ix-_sha256ctx_size
+	ld bc, _sha256ctx_size
+	ldir
+
+	ld bc, 0
+	ld c, (iy + offset_datalen)     ; data length
+	lea hl, ix-_sha256ctx_size					; ld hl, context_block_cache_addr
+	add hl, bc						; hl + bc (context_block_cache_addr + bytes cached)
+
+	ld a,55
+	sub a,c ;c is set to datalen earlier
+	ld (hl),$80
+	jq c, _sha1_final_over_56
+	inc a
+_sha1_final_under_56:
+	ld b,a
+	xor a,a
+_sha1_final_pad_loop2:
+	inc hl
+	ld (hl), a
+	djnz _sha1_final_pad_loop2
+	jr _sha1_final_done_pad
+_sha1_final_over_56:
+	ld a, 64
+	sub a,c
+	ld b,a
+	xor a,a
+_sha1_final_pad_loop1:
+	inc hl
+	ld (hl), a
+	djnz _sha1_final_pad_loop1
+	push iy
+	call _sha1_transform
+	pop de
+	ld hl,$FF0000
+	ld bc,56
+	ldir
+_sha1_final_done_pad:
+	lea iy, ix-_sha1ctx_size
+	ld c, (iy + offset_datalen)
+	ld b,8
+	mlt bc ;multiply 8-bit datalen by 8-bit value 8
+	push bc
+	pea iy + offset_bitlen
+	call u64_addi
+	pop bc,bc
+
+	lea iy, ix-_sha1ctx_size ;ctx
+	lea hl,iy + offset_bitlen
+	lea de,iy + offset_data + 63
+
+	ld b,8
+_sha1_final_pad_message_len_loop:
+	ld a,(hl)
+	ld (de),a
+	inc hl
+	dec de
+	djnz _sha1_final_pad_message_len_loop
+
+	push iy ;ctx
+	call _sha1_transform
+	pop iy
+
+	ld hl, (ix + 9)
+	lea iy, iy + offset_state
+	ld b, 8
+	call _sha256_reverse_endianness
+
+	ld sp,ix
+	pop ix
+
+	restore_interrupts hash_sha1_final
+	ret
+
+; void _sha1_transform(SHA256_CTX *ctx);
+_sha1_transform:
+._e := -4
+._d := -8
+._c := -12
+._b := -16
+._a := -20
+._state_vars := -20
+._tmp1 := -24
+._tmp2 := -28
+._i := -29
+._frame_offset := -29
+_sha1_w_buffer := _sha256_m_buffer ; reuse m buffer from sha256 as w
+	ld hl,._frame_offset
+	call ti._frameset
+	ld hl,_sha1_k
+	ld (.sha1_k_smc),hl
+	ld hl,_sha1_w_buffer
+	ld (.step_3_smc),hl
+	add hl,bc
+	or a,a
+	sbc hl,bc
+	jq z,._exit
+	ld iy,_sha1_w_buffer
+	ld b,16
+	call _sha256_reverse_endianness ; first loop is essentially just reversing the endian-ness of the data into w
+	ld iy, (ix + 6)
+	lea hl, iy + offset_state
+	lea de, ix + ._state_vars
+	ld bc, 4*5
+	ldir
+	ld (ix + ._i), 0
+.outerloop:
+	ld a, (ix + ._i)
+	cp a, 16
+	jq c,.skip_inner_1
+	and a, $F
+	ld c,a
+	sbc hl,hl
+	ld l,a
+	ld de, _sha1_w_buffer
+	add hl,de ; &w[s]
+	push hl
+	ld a,c
+	add a, 2
+	ld c,a
+	and a, $F
+	sbc hl,hl
+	ld l,a
+	add hl,de ; &w[(s + 2) & 0xf]
+	push hl
+	ld a,c
+	add a,8-2
+	ld c,a
+	and a,$F
+	sbc hl,hl
+	ld l,a
+	add hl,de ; &w[(s + 8) & 0xf]
+	push hl
+	ld a,c
+	add a,13-8
+	and a,$F
+	sbc hl,hl
+	ld l,a
+	add hl,de ; &w[(s + 13) & 0xf]
+
+; w[(s+13)&0xf]
+	ld de,(hl)
+	inc hl
+	inc hl
+	ld bc,(hl)
+
+; ^ w[(s+8)&0xf]
+	pop hl
+	_xorihl d,e
+	_xorihl b,c
+
+; ^ w[(s+2)&0xf]
+	pop hl
+	_xorihl d,e
+	_xorihl b,c
+
+; ^ w[s]
+	pop hl
+	_xorihl d,e
+	_xorihl b,c
+
+	ld h,b
+	ld l,c
+	ld b,1
+	call _ROTLEFT
+.skip_inner_1:
+	
+	ld a, (ix + ._i)
+	cp a, 20
+	jq nc,.i_gteq_20
+; low word of ((~b) & d) | (b & c)
+	ld de, (ix + ._d + 0)
+	ld a, (ix + ._b + 0)
+	cpl
+	and a,e
+	ld e,a
+	ld a, (ix + ._b + 1)
+	cpl
+	and a,d
+	ld d,a
+	ld bc, (ix + ._b + 0)
+	_andiix b,c, ix+._b+0
+	ld a,c
+	or a,e
+	ld l,a
+	ld a,b
+	or a,d
+	ld h,a
+; high word of ((~b) & d) | (b & c)
+	ld de, (ix + ._d + 2)
+	ld a, (ix + ._b + 2)
+	cpl
+	and a,e
+	ld e,a
+	ld a, (ix + ._b + 3)
+	cpl
+	and a,d
+	ld d,a
+	ld bc, (ix + ._b + 2)
+	_andiix b,c, ix+._b+2
+	ld a,c
+	or a,e
+	ld e,a
+	ld a,b
+	or a,d
+	ld d,a
+	jq .step_3
+.i_gteq_20:
+	cp a,40
+	jr nc,.i_gteq_40
+.i_gteq_60:
+	ld hl, (ix + ._b + 0)
+	ld de, (ix + ._b + 2)
+	_xoriix h,l, ix+._c+0
+	_xoriix d,e, ix+._c+2
+	_xoriix h,l, ix+._d+0
+	_xoriix d,e, ix+._d+2
+	jr .step_3
+.i_gteq_40:
+	cp a,60
+	jr nc,.i_gteq_60
+; low word of (b&c) | (b&d) | (c&d)
+	ld hl, (ix + ._b + 0)
+	_andiix h,l, ix+._c+0
+	ld de, (ix + ._b + 0)
+	_andiix d,e, ix+._d+0
+	_or h,l,d,e
+	ld de, (ix + ._b + 0)
+	_andiix d,e, ix+._d+0
+	_or h,l,d,e
+; high word of (b&c) | (b&d) | (c&d)
+	ld de, (ix + ._b + 0)
+	_andiix d,e, ix+._c+0
+	ld bc, (ix + ._b + 0)
+	_andiix b,c, ix+._d+0
+	_or d,e,b,c
+	ld bc, (ix + ._b + 0)
+	_andiix b,c, ix+._d+0
+	_or d,e,b,c
+
+.step_3:
+	ld iy,_sha1_w_buffer
+.step_3_smc := $-3
+	_addiix h,l, ix+._e+0
+	_adciix d,e, ix+._e+2
+	_addiix h,l, iy+0
+	_adciix d,e, iy+2
+	ld iy,_sha1_k
+.sha1_k_smc := $-3
+	_addiix h,l, iy+0
+	_adciix d,e, iy+2
+	push de,hl
+	ld hl,(ix + ._a + 0)
+	ld de,(ix + ._a + 2)
+	ld b,5
+	call _ROTLEFT ; rotl32(a, 5)
+	pop bc
+	_add h,l,b,c
+	pop bc
+	_adc d,e,b,c
+	; d,e,h,l = rotl32(a, 5) + f(t, b,c,d) + e + w[s] + k[t/20];
+	push de,hl
+	lea hl, ix + ._d + 3
+	lea de, ix + ._e + 3
+	ld bc,4*4
+	lddr
+	ld hl,(ix + ._c + 0)
+	ld de,(ix + ._c + 2)
+	ld b,32-30
+	call _ROTRIGHT ; rotl32(b, 30)
+	ld (ix + ._c + 0),l
+	ld (ix + ._c + 1),h
+	ld (ix + ._c + 2),e
+	ld (ix + ._c + 3),d
+	pop hl,de
+	ld (ix + ._a + 0),l
+	ld (ix + ._a + 1),h
+	ld (ix + ._a + 2),e
+	ld (ix + ._a + 3),d
+	ld a, (ix + ._i)
+	inc a
+	cp a,80
+	jr z,.done
+	cp a,20
+	jr z,.next_k
+	cp a,40
+	jr z,.next_k
+	cp a,60
+	jr nz,.not_next_k
+.next_k:
+	ld hl,(.sha1_k_smc)
+	inc hl
+	ld (.sha1_k_smc),hl
+.not_next_k:	
+	ld hl,(.step_3_smc)
+	inc hl
+	and a,$F
+	jr nz,.set_step_3_smc
+	ld hl,_sha1_w_buffer
+.set_step_3_smc:
+	ld (.step_3_smc),hl
+	jq .loop
+.done:
+	ld iy, (ix + 6)
+	
+repeat 5
+	ld hl,(ix + ._a + (% * 4 + 0))
+	ld de,(ix + ._a + (% * 4 + 2))
+	_addiix_store h,l, (iy + offset_state + (% * 4 + 0))
+	_adciix_store d,e, (iy + offset_state + (% * 4 + 2))
+end repeat
+
+	ld sp,ix
+	pop ix
+	ret
+
+
+
 
 ; void hashlib_Sha256Update(SHA256_CTX *ctx, const BYTE data[], size_t len);
 hash_sha256_update:
@@ -605,108 +1247,6 @@ _sha256_final_pad_message_len_loop:
 	pop ix
 
 	restore_interrupts hash_sha256_final
-	ret
-
-; reverse b longs endianness from iy to hl
-_sha256_reverse_endianness:
-	ld a, (iy + 0)
-	ld c, (iy + 1)
-	ld d, (iy + 2)
-	ld e, (iy + 3)
-	ld (hl), e
-	inc hl
-	ld (hl), d
-	inc hl
-	ld (hl), c
-	inc hl
-	ld (hl), a
-	inc hl
-	lea iy, iy + 4
-	djnz _sha256_reverse_endianness
-	ret
-
-; helper macro to xor [B,C] with [R1,R2] storing into [R1,R2]
-; destroys: af
-macro _xorbc? R1,R2
-	ld a,b
-	xor a,R1
-	ld R1,a
-	ld a,c
-	xor a,R2
-	ld R2,a
-end macro
-
-; helper macro to add [B,C] with [R1,R2] storing into [R1,R2]
-; destroys: af
-; note: this will add including the carry flag, so be sure of what the carry flag is before this
-; note: if you're chaining this into a number longer than 16 bits, the order must be low->high
-macro _addbclow? R1,R2
-	ld a,c
-	add a,R2
-	ld R2,a
-	ld a,b
-	adc a,R1
-	ld R1,a
-end macro
-macro _addbchigh? R1,R2
-	ld a,c
-	adc a,R2
-	ld R2,a
-	ld a,b
-	adc a,R1
-	ld R1,a
-end macro
-
-; helper macro to move [d,e,h,l] <- [l,e,d,h] therefore shifting 8 bits right.
-; destroys: af
-macro _rotright8?
-	ld a,l
-	ld l,h
-	ld h,e
-	ld e,d
-	ld d,a
-end macro
-
-; helper macro to move [d,e,h,l] <- [e,h,l,d] therefore shifting 8 bits left.
-; destroys: af
-macro _rotleft8?
-	ld a,d
-	ld d,e
-	ld e,h
-	ld h,l
-	ld l,a
-end macro
-
-
-; #define ROTLEFT(a,b) (((a) << (b)) | ((a) >> (32-(b))))
-;input: [d,e,h,l], b
-;output: [d,e,h,l]
-;destroys: af, b
-_ROTLEFT:
-	xor a,a
-	rl l
-	rl h
-	rl e
-	rl d
-	adc a,l
-	ld l,a
-	djnz .
-	ret
-
-; #define ROTRIGHT(a,b) (((a) >> (b)) | ((a) << (32-(b))))
-;input: [d,e,h,l], b
-;output: [d,e,h,l]
-;destroys: af, b
-_ROTRIGHT:
-	xor a,a
-	rr d
-	rr e
-	rr h
-	rr l
-	rra
-	or a,d
-	ld d,a
-	djnz .
 	ret
 
 ; #define SIG0(x) (ROTRIGHT(x,7) ^ ROTRIGHT(x,18) ^ ((x) >> 3))
@@ -1075,10 +1615,10 @@ _sha256_transform:
 	ld sp,ix
 	pop ix
 	ret
-    
+	
 
  digest_compare:
-    pop	iy, de, hl, bc
+	pop	iy, de, hl, bc
 	push	bc, hl, de, iy
 	xor	a, a
 .loop:
@@ -1093,12 +1633,12 @@ _sha256_transform:
 	sbc	a, a
 	inc	a
 	ret
-    
+	
 	
 hash_mgf1:
 	save_interrupts
 
- 	ld	hl, -332
+	ld	hl, -332
 	call	ti._frameset
 	ld	bc, -304
 	lea	iy, ix
@@ -1373,7 +1913,7 @@ hash_mgf1:
 	ld	sp, ix
 	pop	ix
 	ret
-    restore_interrupts_noret hash_mgf1
+	restore_interrupts_noret hash_mgf1
 	jp stack_clear
  
  
@@ -1501,7 +2041,7 @@ hmac_sha256_init:
 
 	restore_interrupts_noret hmac_sha256_init
 	jp stack_clear
-    
+	
 
  
 hmac_sha256_update:
@@ -1521,11 +2061,11 @@ hmac_sha256_update:
 	pop	ix
 	ret
 	
-    
+	
 hmac_sha256_final:
 	save_interrupts
 
-    ld	hl, -280
+	ld	hl, -280
 	call	ti._frameset
 	ld	bc, (ix + 6)
 	ld	hl, 236
@@ -1629,11 +2169,11 @@ hmac_sha256_final:
 	restore_interrupts_noret hmac_sha256_final
 	jp stack_clear
 	
-    
+	
 hmac_sha256_reset:
 	save_interrupts
 
-    ld	hl, -3
+	ld	hl, -3
 	call	ti._frameset
 	ld	hl, (ix + 6)
 	ld	de, 128
@@ -2088,7 +2628,7 @@ hmac_pbkdf2:
 .lbl_17:
 	ld	sp, ix
 	pop	ix
-    restore_interrupts hmac_pbkdf2
+	restore_interrupts hmac_pbkdf2
 	ret
  
 
@@ -2187,42 +2727,42 @@ digest_tostring:
 _ll_swap_bytes:
 ; de = u8[8]
 ; reverses the bytes of a u8[8]
-    pop bc, de
-    push de, bc
-    ld hl, 8
-    add hl, de
+	pop bc, de
+	push de, bc
+	ld hl, 8
+	add hl, de
 ; de = arg0, hl = arg0 + 8
-    ld b, 4
+	ld b, 4
 .loop:
-    dec hl
-    ld a, (de)
-    ldi
-    dec hl
-    ld (hl), a
-    djnz .loop
-    ret
-    
+	dec hl
+	ld a, (de)
+	ldi
+	dec hl
+	ld (hl), a
+	djnz .loop
+	ret
+	
 _bytelen_to_bitlen:
 ; hl = size
 ; iy = dst
 ; converts a size_t to a u8[8]
 ; outputs in big endian
-    pop bc, hl, iy
-    push iy, hl, bc
-    xor a, a
-    add hl, hl
-    adc a, a
-    add hl, hl
-    adc a, a
-    add hl, hl
-    adc a, a
-    ld (iy + 5), a
-    ld (iy + 6), h
-    ld (iy + 7), l
-    sbc hl, hl
-    ld (iy + 0), hl
-    ld (iy + 2), hl
-    ret
+	pop bc, hl, iy
+	push iy, hl, bc
+	xor a, a
+	add hl, hl
+	adc a, a
+	add hl, hl
+	adc a, a
+	add hl, hl
+	adc a, a
+	ld (iy + 5), a
+	ld (iy + 6), h
+	ld (iy + 7), l
+	sbc hl, hl
+	ld (iy + 0), hl
+	ld (iy + 2), hl
+	ret
  
 ; aes_gf2_mul(uint8_t *op1, uint8_t *op2, uint8_t *out);
 _aes_gf2_mul_little:
@@ -2271,22 +2811,22 @@ _aes_gf2_mul_little:
 				inc de
 				djnz .loop_add
  
-               ; now double tmp
+			; now double tmp
 				lea hl, ix - 16		; tmp in hl	little endian
-                ld b, 16
-                or a                ; reset carry
+			 ld b, 16
+			 or a                ; reset carry
 .loop_mul2:
-                rr (hl)
-                inc hl		; little endian
-                djnz .loop_mul2
+			 rr (hl)
+			 inc hl		; little endian
+			 djnz .loop_mul2
  
-                ; now xor with polynomial x^128 + x^7 + x^2 + x + 1
-                ; if bit 128 set, xor least-significant byte with 10000111b
+			 ; now xor with polynomial x^128 + x^7 + x^2 + x + 1
+			 ; if bit 128 set, xor least-significant byte with 10000111b
  
-                sbc a, a
-                and a, 11100001b
-                xor a, (ix - 16)		; little endian
-                ld (ix - 16), a
+			 sbc a, a
+			 and a, 11100001b
+			 xor a, (ix - 16)		; little endian
+			 ld (ix - 16), a
  
 .no_xor_poly:
 			pop bc
@@ -2312,33 +2852,33 @@ csrand_init:
 ; hl = starting address
 ; inputs: stack = samples / 4, Max is 256 (256*4 = 1024 samples)
 ; outputs: hl = address
-    ld de, 256		; thorough sampling
+	ld de, 256		; thorough sampling
 .start:
 	ld a, e
 	ld (_smc_samples), a
  
-    push ix
-        ld ix, 0
-        ld hl, $D65800
-        ld bc,513
+	push ix
+	   ld ix, 0
+	   ld hl, $D65800
+	   ld bc,513
 .test_range_loop:
-        push bc
-            call _test_byte
-        pop bc
-        cpi
-        jp pe,.test_range_loop
+	   push bc
+		  call _test_byte
+	   pop bc
+	   cpi
+	   jp pe,.test_range_loop
  
-        lea hl, ix+0
-        ld (_sprng_read_addr), hl
+	   lea hl, ix+0
+	   ld (_sprng_read_addr), hl
  
-        xor a, a
-        sbc hl, bc  ; subtract 0 to set the z flag if HL is 0
-    pop ix
-    ret z
-    ld bc,0x0218
+	   xor a, a
+	   sbc hl, bc  ; subtract 0 to set the z flag if HL is 0
+	pop ix
+	ret z
+	ld bc,0x0218
 	ld (_csrand_init_skip_smc),bc
-    inc a
-    ret
+	inc a
+	ret
  
 _test_byte:
 ; inputs: hl = byte
@@ -2350,26 +2890,26 @@ _test_byte:
 ; outputs: a = 0x86
 ; destroys: f
 ; modifies: a, b, de, ix
-    ld a,0x46 ; second half of the `bit 0,(hl)` command
+	ld a,0x46 ; second half of the `bit 0,(hl)` command
 .test_byte_bitloop:
-    push hl
-        push de
-            call _test_bit  ; HL = deviance (|desired - actual|)
-        pop de
+	push hl
+	   push de
+		  call _test_bit  ; HL = deviance (|desired - actual|)
+	   pop de
  
-        add a,8       ; never overflows, so resets carry
-        sbc hl, de    ; check if HL is smaller than DE
+	   add a,8       ; never overflows, so resets carry
+	   sbc hl, de    ; check if HL is smaller than DE
  
-        jq nc, .skip_next_bit          ; HL >= DE
-        add hl,de
-        ex de,hl
-        pop ix
-        push ix
+	   jq nc, .skip_next_bit          ; HL >= DE
+	   add hl,de
+	   ex de,hl
+	   pop ix
+	   push ix
 .skip_next_bit:
-    pop hl
-    cp 0x86
-    jq nz, .test_byte_bitloop
-    ret
+	pop hl
+	cp 0x86
+	jq nz, .test_byte_bitloop
+	ret
   
 _test_bit:
 ; inputs: a = second byte of CB**
@@ -2378,52 +2918,52 @@ _test_bit:
 ; destroys: af, bc, de, hl
  
 _smc_samples:=$+1
-    ld b,0
-    ld (.smc1),a
-    ld (.smc2),a
-    ld (.smc3),a
-    ld (.smc4),a
-    ld de,0
+	ld b,0
+	ld (.smc1),a
+	ld (.smc2),a
+	ld (.smc3),a
+	ld (.smc4),a
+	ld de,0
 .loop:
-    bit 0,(hl)
+	bit 0,(hl)
 .smc1:=$-1
-    jq z,.next1
-    inc de
+	jq z,.next1
+	inc de
 .next1:
-    bit 0,(hl)
+	bit 0,(hl)
 .smc2:=$-1
-    jq nz,.next2    ; notice the inverted logic !
-    dec de          ; and the dec instead of inc !
+	jq nz,.next2    ; notice the inverted logic !
+	dec de          ; and the dec instead of inc !
 .next2:
-    bit 0,(hl)
+	bit 0,(hl)
 .smc3:=$-1
-    jq z, .next3
-    inc de
+	jq z, .next3
+	inc de
 .next3:
-    bit 0,(hl)
+	bit 0,(hl)
 .smc4:=$-1
-    jq nz,.next4    ; notice the inverted logic !
-    dec de          ; and the dec instead of inc !
+	jq nz,.next4    ; notice the inverted logic !
+	dec de          ; and the dec instead of inc !
 .next4:
-    djnz .loop
+	djnz .loop
  
-    ; return |DE|
-    or a,a
-    sbc hl,hl
-    sbc hl,de
-    ret nc
-    ex de,hl
-    ret
-    
+	; return |DE|
+	or a,a
+	sbc hl,hl
+	sbc hl,de
+	ret nc
+	ex de,hl
+	ret
+	
 	
 hashlib_SPRNGAddEntropy:
-    ld hl, (_sprng_read_addr)
-    add	hl,de
+	ld hl, (_sprng_read_addr)
+	add	hl,de
 	or	a,a
 	sbc	hl,de
-    ret z
-    ld de, _sprng_entropy_pool
-    ld b, 119
+	ret z
+	ld de, _sprng_entropy_pool
+	ld b, 119
 .byte_read_loop:
 	ld a, (hl)
 	xor a, (hl)
@@ -2434,9 +2974,9 @@ hashlib_SPRNGAddEntropy:
 	xor a, (hl)
 	ld (de), a
 	inc de
-    djnz .byte_read_loop
-    ret
-    
+	djnz .byte_read_loop
+	ret
+	
  
 csrand_get:
 
@@ -2488,12 +3028,12 @@ _csrand_init_skip_smc	:=	$
 	jq nz,.outer
 	
 ; destroy sprng state
-    ld hl, _sprng_entropy_pool
-    ld (hl), 0
-    ld de, _sprng_entropy_pool + 1
-    ld bc, _sprng_rand - _sprng_entropy_pool - 1
-    ldir
-    
+	ld hl, _sprng_entropy_pool
+	ld (hl), 0
+	ld de, _sprng_entropy_pool + 1
+	ld bc, _sprng_rand - _sprng_entropy_pool - 1
+	ldir
+	
 	ld hl, (_sprng_rand)
 	ld a, (_sprng_rand+3)
 	ld e, a
@@ -2558,7 +3098,7 @@ csrand_fill:
 	restore_interrupts csrand_fill
 	ret
 	
-    
+	
 _xor_buf:
 	ld	hl, -3
 	call	ti._frameset
@@ -7326,7 +7866,7 @@ aes_encrypt:
 	ld	de, 0
 	jp	.lbl_6
 	
-    
+	
 aes_decrypt:
 	save_interrupts
 
@@ -7750,7 +8290,7 @@ aes_decrypt:
 	restore_interrupts_noret aes_decrypt
 	jq stack_clear
 	
-    
+	
  
 oaep_encode:
 	save_interrupts
@@ -9244,57 +9784,57 @@ _lshift_add:
 ; inputs: iy = ptr to src, de = ptr to dest, a = shift count
 ; outputs: (de) += (iy) << a
 ; destroys: af, bc, de, hl, iy
-    ; divide a by 8 and put bits multiplier in c
-    or a, a
-    sbc hl, hl
-    ex de, hl
-    rra
-    ld e, a
-    sbc a, a
-    xor a, $55
-    ld c, a
-    srl e
-    sbc a, a
-    xor a, $33
-    and a, c
-    ld c, a
-    srl e
-    sbc a, a
-    xor a, $0F
-    and a, c
-    ld c, a
-    ; adjust dest pointer in hl
-    add hl, de
-    ; put loop counter in b
-    ld a, 30+1
-    sub a, e
-    rra
-    ld b, a
-    jr nc, .loop_lshift_add_entry
-    inc iy
+	; divide a by 8 and put bits multiplier in c
+	or a, a
+	sbc hl, hl
+	ex de, hl
+	rra
+	ld e, a
+	sbc a, a
+	xor a, $55
+	ld c, a
+	srl e
+	sbc a, a
+	xor a, $33
+	and a, c
+	ld c, a
+	srl e
+	sbc a, a
+	xor a, $0F
+	and a, c
+	ld c, a
+	; adjust dest pointer in hl
+	add hl, de
+	; put loop counter in b
+	ld a, 30+1
+	sub a, e
+	rra
+	ld b, a
+	jr nc, .loop_lshift_add_entry
+	inc iy
 .loop_lshift_add:
-    ld a, d
-    ld e, (iy - 1)
-    ld d, c
-    mlt de
-    or a, e
-    xor a, (hl)
-    ld (hl), a
-    inc hl
+	ld a, d
+	ld e, (iy - 1)
+	ld d, c
+	mlt de
+	or a, e
+	xor a, (hl)
+	ld (hl), a
+	inc hl
 .loop_lshift_add_entry:
-    ld a, d
-    ld e, (iy)
-    ld d, c
-    mlt de
-    or a, e
-    xor a, (hl)
-    ld (hl), a
-    inc hl
-    lea iy, iy + 2
-    djnz .loop_lshift_add
-    ret
-    
-    
+	ld a, d
+	ld e, (iy)
+	ld d, c
+	mlt de
+	or a, e
+	xor a, (hl)
+	ld (hl), a
+	inc hl
+	lea iy, iy + 2
+	djnz .loop_lshift_add
+	ret
+	
+	
 _get_degree:
 ; input: hl = ptr to binary polynomial (little endian-encoded)
 ; func:
@@ -9304,41 +9844,41 @@ _get_degree:
 ; output: a = degree of highest set bit + 1
 ; destroys: bc, flags
 	ld bc, 29       ; input is 32 bytes, jump to MSB (hl + 31)
-    add hl, bc
-    inc bc        ; check 30 bytes
-    xor a
+	add hl, bc
+	inc bc        ; check 30 bytes
+	xor a
 .byte_loop:
-    cpd     		; cp hl with a, dec hl, bc
-    jr nz, .found_byte
-    cpd
-    jr nz, .found_byte
-    cpd
-    jr nz, .found_byte
-    cpd
-    jr nz, .found_byte
-    cpd
-    jr nz, .found_byte
-    jp pe, .byte_loop
+	cpd     		; cp hl with a, dec hl, bc
+	jr nz, .found_byte
+	cpd
+	jr nz, .found_byte
+	cpd
+	jr nz, .found_byte
+	cpd
+	jr nz, .found_byte
+	cpd
+	jr nz, .found_byte
+	jp pe, .byte_loop
 ; exit
 	xor a
-    ret
+	ret
 .found_byte:
 ; process bits
 	ld b, c
 	inc b
 	inc hl
 	ld a, (hl)
-    ld c, 1
+	ld c, 1
 .bit_loop:
-    dec c
-    rla
-    jr nc, .bit_loop
-    ld a, b
-    add a, a
-    add a, a
-    add a, a
-    add a, c
-    ret
+	dec c
+	rla
+	jr nc, .bit_loop
+	ld a, b
+	add a, a
+	add a, a
+	add a, a
+	add a, c
+	ret
 
 
  
@@ -9994,41 +10534,41 @@ bigint_tobytes:
 ; rmemcpy(void *dest, void *src, size_t len)
 _rmemcpy:
 ; optimized by calc84maniac
-    ld  iy, -3
-    add iy, sp
-    ld  bc, (iy + 12)
-    sbc hl, hl
-    add hl, bc
-    ret nc
-    ld  de, (iy + 9)
-    add hl, de
-    ld  de, (iy + 6)
+	ld  iy, -3
+	add iy, sp
+	ld  bc, (iy + 12)
+	sbc hl, hl
+	add hl, bc
+	ret nc
+	ld  de, (iy + 9)
+	add hl, de
+	ld  de, (iy + 6)
 .loop:
-    ldi
-    ret po
-    dec hl
-    dec hl
-    jr  .loop
-    
-    
+	ldi
+	ret po
+	dec hl
+	dec hl
+	jr  .loop
+	
+	
 ; av(void *data, size_t len)
 _memrev:
-    pop hl, de, bc
-    push bc, de, de
-    ex (sp), hl
-    add hl, bc
-    set 0, c
-    cpd
+	pop hl, de, bc
+	push bc, de, de
+	ex (sp), hl
+	add hl, bc
+	set 0, c
+	cpd
 .loop:
-    ret po
-    ld a, (de)
-    dec bc
-    ldi
-    dec hl
-    ld (hl), a
-    dec hl
-    jr .loop
-    
+	ret po
+	ld a, (de)
+	dec bc
+	ldi
+	dec hl
+	ld (hl), a
+	dec hl
+	jr .loop
+	
 _asn1_decode:
 	ld	hl, -16
 	call	ti._frameset
@@ -10606,6 +11146,12 @@ base64_decode:
 	dl -2044647
 	db 91
  
+_sha1_k:
+	dd	$5A827999
+	dd	$6ED9EBA1
+	dd	$8F1BBCDC
+	dd	$CA62C1D6
+
 _sha256_k:
 	dd	1116352408
 	dd	1899447441
@@ -10686,11 +11232,11 @@ _ta_resist:
 _sprng_read_addr:        rb 3
 _sprng_entropy_pool.size = 119
 virtual at $E30800
-    _sprng_entropy_pool     rb _sprng_entropy_pool.size
-    _sprng_sha_digest       rb 32
-    _sprng_sha_mbuffer      rb (64*4)
-    _sprng_hash_ctx         rb _hashctx_size
-    _sprng_rand             rb 4
+	_sprng_entropy_pool     rb _sprng_entropy_pool.size
+	_sprng_sha_digest       rb 32
+	_sprng_sha_mbuffer      rb (64*4)
+	_sprng_hash_ctx         rb _hashctx_size
+	_sprng_rand             rb 4
 end virtual
 _sha256_m_buffer    :=  _sprng_sha_mbuffer
 
