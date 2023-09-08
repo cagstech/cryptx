@@ -29,7 +29,7 @@ library CRYPTX, 13
 	export cryptx_aes_digest
 	export cryptx_aes_verify
 	export cryptx_rsa_encrypt
-	export cryptx_ecdh_publickey
+	export cryptx_ec_keygen
 	export cryptx_ecdh_secret
 	
 ; encoding functions
@@ -68,7 +68,7 @@ cryptx_aes_init			= aes_init
 cryptx_aes_encrypt		= aes_encrypt
 cryptx_aes_decrypt		= aes_decrypt
 cryptx_rsa_encrypt		= rsa_encrypt
-cryptx_ecdh_publickey	= ecdh_publickey
+cryptx_ec_keygen	= ec_keygen
 cryptx_ecdh_secret		= ecdh_secret
 cryptx_hazmat_aes_ecb_encrypt		= aes_ecb_unsafe_encrypt
 cryptx_hazmat_aes_ecb_decrypt		= aes_ecb_unsafe_decrypt
@@ -3098,7 +3098,7 @@ csrand_init:
 	   sbc hl, bc  ; subtract 0 to set the z flag if HL is 0
 	pop ix
 	ret z
-	ld bc,0x0218
+	ld bc,0x0418
 	ld (_csrand_init_skip_smc),bc
 	inc a
 	ret
@@ -3207,6 +3207,8 @@ csrand_get:
 
 _csrand_init_skip_smc	:=	$
 	call csrand_init
+  or a
+  ret z
 
 ; set rand to 0
 	ld hl, 0
@@ -10531,23 +10533,31 @@ _point_isvalid:
 	pop	ix
 	ret
 	
-ecdh_publickey:
-	save_interrupts
+ec_keygen:
+  save_interrupts
 	call	ti._frameset0
-	ld	hl, (ix + 6)
+	ld	bc, (ix + 6)
 	ld	de, 1
+	push	bc
+	pop	hl
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	z, .lbl_3
+	jr	z, BB5_3
 	ld	hl, (ix + 9)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	z, .lbl_3
-	ld	de, 30
+	jr	z, BB5_3
+	ld	hl, 29
+	push	hl
+	push	bc
+	call	cryptx_csrand_fill
+	pop	hl
+	pop	hl
+	ld	hl, 30
+	push	hl
 	ld	hl, _sect233k1+30
-	push	de
 	push	hl
 	ld	hl, (ix + 9)
 	push	hl
@@ -10576,9 +10586,9 @@ ecdh_publickey:
 	pop	hl
 	pop	hl
 	ld	de, 0
-.lbl_3:
-	ex de, hl
-	restore_interrupts_noret ecdh_publickey
+BB5_3:
+	ex	de, hl
+	restore_interrupts_noret ec_keygen
 	jp stack_clear
 	
  

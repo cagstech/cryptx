@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>function documentation: RSA &mdash; CryptX  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/proof.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> CryptX
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../static/analysis.html">Analysis &amp; Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../static/notes.html">Closing Notes</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CryptX</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>function documentation: RSA</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="function-documentation-rsa">
+<span id="rsa"></span><h1>function documentation: RSA<a class="headerlink" href="#function-documentation-rsa" title="Permalink to this headline"></a></h1>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_RSA_MODULUS_MAX">
+<span class="target" id="cryptx_8h_1a265dcd336b31e2b95870d864c85cee2a"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_RSA_MODULUS_MAX</span></span></span><a class="headerlink" href="#c.CRYPTX_RSA_MODULUS_MAX" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines the maximum byte length of an RSA public modulus supported by this library. </p>
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv411rsa_error_t">
+<span id="_CPPv311rsa_error_t"></span><span id="_CPPv211rsa_error_t"></span><span class="target" id="cryptx_8h_1a0486449f609d0e485bad091a671d9294"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rsa_error_t</span></span></span><a class="headerlink" href="#_CPPv411rsa_error_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines response codes returned by calls to the RSA API. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11rsa_error_t6RSA_OKE">
+<span id="_CPPv3N11rsa_error_t6RSA_OKE"></span><span id="_CPPv2N11rsa_error_t6RSA_OKE"></span><span class="target" id="cryptx_8h_1a0486449f609d0e485bad091a671d9294a2cafdb683e1870a33bcb821420626cae"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RSA_OK</span></span></span><a class="headerlink" href="#_CPPv4N11rsa_error_t6RSA_OKE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>RSA encryption completed successfully. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11rsa_error_t15RSA_INVALID_ARGE">
+<span id="_CPPv3N11rsa_error_t15RSA_INVALID_ARGE"></span><span id="_CPPv2N11rsa_error_t15RSA_INVALID_ARGE"></span><span class="target" id="cryptx_8h_1a0486449f609d0e485bad091a671d9294aab9ab38286c4180a1aa9f6e8df42e5db"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RSA_INVALID_ARG</span></span></span><a class="headerlink" href="#_CPPv4N11rsa_error_t15RSA_INVALID_ARGE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>RSA encryption failed, bad argument. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11rsa_error_t15RSA_INVALID_MSGE">
+<span id="_CPPv3N11rsa_error_t15RSA_INVALID_MSGE"></span><span id="_CPPv2N11rsa_error_t15RSA_INVALID_MSGE"></span><span class="target" id="cryptx_8h_1a0486449f609d0e485bad091a671d9294aedeb18a96b96e292369abed5b2f0a271"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RSA_INVALID_MSG</span></span></span><a class="headerlink" href="#_CPPv4N11rsa_error_t15RSA_INVALID_MSGE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>RSA encryption failed, bad msg or msg too long. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11rsa_error_t19RSA_INVALID_MODULUSE">
+<span id="_CPPv3N11rsa_error_t19RSA_INVALID_MODULUSE"></span><span id="_CPPv2N11rsa_error_t19RSA_INVALID_MODULUSE"></span><span class="target" id="cryptx_8h_1a0486449f609d0e485bad091a671d9294a843ec210de66176ef63e2d2b8ebdeb65"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RSA_INVALID_MODULUS</span></span></span><a class="headerlink" href="#_CPPv4N11rsa_error_t19RSA_INVALID_MODULUSE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>RSA encryption failed, modulus invalid. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11rsa_error_t18RSA_ENCODING_ERRORE">
+<span id="_CPPv3N11rsa_error_t18RSA_ENCODING_ERRORE"></span><span id="_CPPv2N11rsa_error_t18RSA_ENCODING_ERRORE"></span><span class="target" id="cryptx_8h_1a0486449f609d0e485bad091a671d9294a43eadc89540121b902e02afabc7a7eb9"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RSA_ENCODING_ERROR</span></span></span><a class="headerlink" href="#_CPPv4N11rsa_error_t18RSA_ENCODING_ERRORE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>RSA encryption failed, OAEP encoding error. </p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418cryptx_rsa_encryptPKv6size_tPKv6size_tPv7uint8_t">
+<span id="_CPPv318cryptx_rsa_encryptPKv6size_tPKv6size_tPv7uint8_t"></span><span id="_CPPv218cryptx_rsa_encryptPKv6size_tPKv6size_tPv7uint8_t"></span><span id="cryptx_rsa_encrypt__voidCP.s.voidCP.s.voidP.uint8_t"></span><span class="target" id="cryptx_8h_1aa4f5ae1eb3d9636c20dec64503a4896b"></span><a class="reference internal" href="#_CPPv411rsa_error_t" title="rsa_error_t"><span class="n"><span class="pre">rsa_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_rsa_encrypt</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">msg</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">msglen</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pubkey</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">keylen</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ciphertext</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">oaep_hash_alg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_rsa_encryptPKv6size_tPKv6size_tPv7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Encrypts a message using the given RSA public key. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>ciphertext</strong> should be at least <strong>msglen</strong> bytes large. </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>OAEP encoding is applied to the message as part of the encryption. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>msg</strong> – Pointer to a message to encrypt using RSA. </p></li>
+<li><p><strong>msglen</strong> – The byte length of the <strong>msg</strong>. </p></li>
+<li><p><strong>pubkey</strong> – Pointer to a public key to use for encryption. </p></li>
+<li><p><strong>keylen</strong> – The length of the public key (modulus) to encrypt with. </p></li>
+<li><p><strong>ciphertext</strong> – Pointer a buffer to write the ciphertext to. </p></li>
+<li><p><strong>oaep_hash_alg</strong> – The numeric ID of the hashing algorithm to use within OAEP encoding. See <strong>cryptx_hash_algorithms</strong>. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An <strong>rsa_error_t</strong> indicating the status of the RSA operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

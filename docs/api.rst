@@ -1,5 +1,9 @@
 .. _api:
 
+This document is meant to serve as both an overview of the library API (through extensively-commented code samples) and an appreviated crash course on cryptography. This is so that users gain an understanding of why and how they would use the library's modules properly instead of just copypasta'ing code. Usage of this library is more likely to be done properly if users know why things are done certain ways.
+
+Links to detailed function documentation for each module are available at end of each section of this page.
+
 API Overview
 ===============
 
@@ -139,26 +143,65 @@ Lastly, for debugging purposes and occasionally for UI purposes it may be desire
 
 ----
 
-Encryption & Key Exchange
-__________________________
+Key Derivation & Management
+____________________________
+
+Encryption (and HMAC) require secure key generation and management. As mentioned before the strength of your encryption system depends on the security of your keys. This includes not only that the key be generated using a secure random generator or other secure algorithm but also that the user have a means for protecting any keys that need to be persistently stored (such as for database or file encryption).
+
+CryptX supports two methods of key generation: random and password-derived. To generate a random key, simply use the secure random generator as documented above, namely *cryptx_csrand_fill*. For a password-derived key there is an implementation of *hmac_pbkdf2* in CryptX. You would use it like so:
+
+.. code-block:: c
+  
+  // `prompt_user` is a psuedo-function implying a text-input UI
+  char* passwd = prompt_user();
+  
+  // declare buffer for AES key
+  uint8_t aes_key[CRYPTX_AES_256_KEYLEN];
+  
+  // declare buffer for PBKDF2 salt (random bytes)
+  uint8_t pbkdf2_salt[16];    // min length recommended
+  cryptx_csrand_fill(pbkdf2_salt, 16);
+  
+  #define PBKDF2_COST   1000
+  cryptx_hmac_pbkdf2(passwd, strlen(passwd),  // password and length of password
+                      pbkdf2_salt, 16,        // salt and length of salt
+                      aes_key, CRYPTX_AES_256_KEYLEN, // key outbuf and length of key to gen
+                      PBKDF2_COST, SHA256);   // # times to iterate hash and hash alg to use
+  
+  // aes_key now contains a password-derived secure key
+  // dump salt somewhere and require user input password to decrypt whatever
+  // this key is encrypting. Note that if user forgets password, data is
+  // not recoverable.
+  
+No matter how much people on the Internet like to claim that tech giants have your passwords and data, information security standards (like PCI-DSS, GDPR, and others) mandate that public-facing secure services--especially those that store sensitive personal information--implement these cryptosystems and store credentials using non-reversible algorithms (such as a hash) that save enough information to verify a credential but not enough to reveal it. This means that unless you are able to supply your password to generate a key for decryption, your data is VERY hard to recover. That is the nature of encryption, and it all cascades to a simple, unalienable fact that your information--be it your passwords, security keys, or other manner of security--is your responsibility. Remember that the next time you want to yell at a technican because you forgot your password.
+  
+
+----
+
+Symmetric Encryption
+_____________________
 
 Data obfuscation is another layer of information securty which is achieved through the use of encryption, or the rendering of information indecipherable for anyone without the key used to encrypt it. Encryption can be intended to protect information in long-term storage as well as to protect information in transit between two authorized endpoints.
 
-**AES - Symmetric Encryption**
+**AES (Advanced Encryption Standard)**
 
-AES (*Advanced Encryption Standard*) is currently the gold standard for secure data transmission and storage. The thing that makes AES great is that it is fast and secure. Running it on the calculator takes barely any time. However, AES does have a number of operational parameters and constraints that can make using it a bit complicated. We'll try to summarize that information as simply as possible.
+AES is currently the gold standard for secure data transmission and storage. The thing that makes AES great is that it is fast and secure. Running it on the calculator takes barely any time. However, AES does have a number of operational parameters and constraints that can make using it a bit complicated. We'll try to summarize that information as simply as possible.
 
-* **Key-Length**
+* AES has three variants defined by key length:
   
-  AES has three operational key-lengths: 128, 192, and 256 bits. The length of the key also controls how many rounds (repetitions) of encryption occur. **Using 256 bit keys is recommended.**
+  - AES-128 (128 bit keys, 10 rounds (repetitions) of encryption)
+  - AES-192 (192 bit keys, 12 rounds of encryption)
+  - AES-256 (256 bit keys, 14 rounds of encryption)
+  - **Using 256 bit keys is recommended.**
   
-* **Cipher Modes**
+* CryptX supports three operational cipher modes:
   
-  CryptX supports three operational cipher modes: CBC, CTR, and GCM modes. **Using GCM is recommended as it integrates integrity verification into the output.**
+  - Cyclic Block Chaining (CBC)
+  - Counter (CTR)
+  - Galois Counter (GCM)
+  - **Using GCM is recommended as it integrates integrity verification into the output.**
   
-* **Initialization Vector**
-  
-  AES uses an *initialization vector* (iv) which is a buffer of psuedo-random bytes specific to the session (or message for GCM mode).
+* AES uses an *initialization vector* (IV) which is a 16-byte buffer of random bytes specific to the session (or message for GCM mode) used to give the encryption randomized output.
 
 .. code-block:: c
   
@@ -192,8 +235,7 @@ AES (*Advanced Encryption Standard*) is currently the gold standard for secure d
   network_send(auth_tag, CRYPTX_AES_AUTHTAG_SIZE);
   network_send(msg, msg_len);
   
-.. warning::
-  GCM is vulnerable to a nasty tag forgery attack if the same IV is reused for multiple message/tag pairs. Generate and set a new IV for the context after a digest is returned.
+* :ref:`view AES documentation <aes>`
 
 .. code-block:: c
   
@@ -230,161 +272,86 @@ AES (*Advanced Encryption Standard*) is currently the gold standard for secure d
     return;   // AES decryption failed
     
   printf("%s", msg);
+
+* :ref:`view AES documentation <aes>`
+
+Public Key Cryptography & Key Exchange Protocols
+___________________________________________________
+
+AES is great but has a major shortcoming. You need a way to agree upon the secret on both sides of the secure session prior to starting to encrypt messages using it. If you send the key in the clear (unencrypted), what's the point of the encryption then? This is where we must discuss **key exchange protocols**. These are algorithms, some encryption methods and some mathematical computations, that allow two endpoints to agree on a shared secret for symmetric encryption.
+
+**Rivest-Shamir-Adleman (RSA) Encryption**
+
+The first option supported within CryptX is also one of the most commonly used on the Internet today. It is an encryption system developed by computer scientists Ron Rivest and Adi Shamir and mathematician Leonard Adleman--and named for them as well. RSA is a form of *asymmetric encryption* (encryption system that uses two opposing keys, a public one to encrypt and a private one to decrypt). Because the public key is used for encryption RSA is also a form of *public key cryptography*.
+
+How does that benefit us? Imagine you, using your web browser, attempt to connect to some secure website. Upon attempt to connect, the website sends you a public key that you can use to encrypt messages for it. You encrypt an AES secret using this public key and ship it to the website. The website decrypts that with its own private key. You and the website now have the AES secret and it was not leaked in transit (assuming the developer did things right). Go-go-gadget AES.
+
+Using RSA on calculator with CryptX is quite simple--it just takes some time. Most key exchange protocols use hefty mathematics and the calculator takes a lot more than a few milliseconds to pull them off. 2048-bit RSA takes about 8 seconds to complete. Additionally, this implementation automatically applies the *Optimal Asymmetric Encryption Padding (OAEP) v2.2* encoding scheme. This extends the length of the message to one bit less than the length of the public modulus and incorporates randomness into the encryption.
+
+.. code-block:: c
+
+  #define RECVBUF_LEN 1024
+  uint8_t recv_buf[RECVBUF_LEN];
+  size_t recv_len;
   
+  // read incoming to `recv_buf` update `recv_len`
+  network_recv(recv_buf, &recv_len);
+  uint8_t *rsa_pubkey = recv_buf;
+  
+  // define a buffer large enough to hold ciphertext
+  // an encoded, RSA-encrypted message is the same length as the public modulus
+  uint8_t rsa_ciphertext[recv_len];
+  
+  // generate AES secret
+  uint8_t aes_key[CRYPTX_AES_256_KEYLEN];
+  cryptx_csrand_fill(aes_key, CRYPTX_AES_256_KEYLEN);
+  
+  if(cryptx_rsa_encrypt(aes_key, CRYPTX_AES_256_KEYLEN,
+                        rsa_pubkey, recv_len,
+                        rsa_ciphertext, SHA256))
+    return;   // some RSA error occurred
+
+* :ref:`view RSA documentation <RSA>`
+
+**Elliptic Curve Diffie-Hellman (ECDH) Key Exchange**
+
+The second option supported within CryptX is perhaps not as widely used (and fairly new) but arguably more secure. It is an encryption system based upon the less secure Diffie-Hellman key exchange protocol, but using elliptic curve arithmetic instead of standard modular arithmetic. The behavior of an elliptic curve over a Galois field lends to a cryptosystem that is much harder to crack.
+
+Just like with RSA, using this on the calculator is quite simple--but time-consuming. Each function--key generation and secret computation--takes about 12-14 seconds to complete.
+
+.. code-block:: c
+
+  uint8_t ec_privkey[CRYPTX_ECDH_PRIVKEY_LEN];
+  uint8_t ec_pubkey[CRYPTX_ECDH_PUBKEY_LEN];
+  uint8_t ec_secret[CRYPTX_ECDH_SECRET_LEN];
+  
+  // generates a random private key and associated public key
+  // supports SECT233k1 elliptic curve
+  // these keys are compatible with both ECDH and later ECDSA
+  cryptx_ec_keygen(ec_privkey, ec_pubkey);
+  
+  // send your private key to the remote host
+  network_send(ec_pubkey, CRYPTX_ECDH_PUBKEY_LEN);
+  
+  // get remote host's public key into `ec_pubkey`. Size known.
+  network_recv(ec_pubkey, NULL);
+  
+  // compute secret
+  cryptx_ecdh_secret(ec_privkey, ec_pubkey, ec_secret);
+  
+  // ECDH computations have the property that given:
+  // keypairs: prA, puA and prB, puB, consisting of:
+  // private keys: prA, prB and
+  // public keys: puA, puB it follows that:
+  // prA * puB == prB * puA.
+  // This allows both parties to compute the same shared secret that is secure so
+  // long as the private keys are not leaked.
+  
+  // it is advised to HASH `ec_secret` and not use it as it.
+
+* :ref:`view elliptic curve documentation <ec>`
 
 
-Password-Based Key Derivation
-______________________________
-.. _`Password-Based Key Derivation` ::
-	
-.. doxygenfunction:: cryptx_hmac_pbkdf2
-	:project: CryptX
-
-Symmetric Encryption
-_____________________
-.. _`Symmetric Encryption` ::
-AES is currently regarded as the gold standard for symmetric encryption. It is the primary encryption algorithm used in a secure session, after a (usually slower) key negotiation has succeeded. AES is fast and secure (to date it has not been broken if properly implemented). If you need the best possible security with this library, use AES-GCM cipher mode.
-
-.. doxygenstruct:: cryptx_aes_ctx
-	:project: CryptX
-	:members: keysize,round_keys,iv,ciphermode,op_assoc,metadata
-
-.. note::
-
-	Contexts are not bidirectional due to being stateful. If you need to process both encryption and decryption, initialize seperate contexts for encryption and decryption. Both contexts will use the same key, but different initialization vectors.
-	
-	To prevent misuse, a context locks to the first operation it is used with and will return an error if used incorrectly.
-	
-.. warning::
-
-	It is recommended to cycle your key after encrypting 2^64 blocks of data with the same key.
-	
-	Do not manually edit the context structure. This will break the cipher configuration. If you want to change cipher modes, do so by calling *cryptx_aes_init* again.
-	
-	CBC and CTR modes by themselves ensure confidentiality but do not provide any assurances of message integrity or authenticity. If you need a truly secure construction, use GCM mode or append a keyed hash (HMAC) to the encrypted message..
-
-.. doxygenenum:: cryptx_aes_cipher_modes
-	:project: CryptX
-	
-.. doxygenenum:: cryptx_aes_padding_schemes
-	:project: CryptX
-	
-Here are some macros to assist with defining buffers for keys of supported length.
-
-.. doxygendefine:: CRYPTX_AES_128_KEYLEN
-	:project: CryptX
-.. doxygendefine:: CRYPTX_AES_192_KEYLEN
-	:project: CryptX
-.. doxygendefine:: CRYPTX_AES_256_KEYLEN
-	:project: CryptX
-	
-And here are some macros defining properties of the cipher.
-
-.. doxygendefine:: CRYPTX_AES_BLOCK_SIZE
-	:project: CryptX
-.. doxygendefine:: CRYPTX_AES_IV_SIZE
-	:project: CryptX
-.. doxygendefine:: CRYPTX_AES_AUTHTAG_SIZE
-	:project: CryptX
-	
-Some macros for passing cipher configuration options to *cryptx_aes_init*.
-
-.. doxygendefine:: CRYPTX_AES_CBC_FLAGS
-	:project: CryptX
-.. doxygendefine:: CRYPTX_AES_CTR_FLAGS
-	:project: CryptX
-.. doxygendefine:: CRYPTX_AES_GCM_FLAGS
-	:project: CryptX
-
-This macro returns the full size required by the ciphertext. This really only applies to CBC mode. CTR and GCM modes have the same ciphertext and plaintext length.
-
-.. doxygendefine:: cryptx_aes_get_ciphertext_len
-	:project: CryptX
-	
-.. doxygenenum:: aes_error_t
-	:project: CryptX
-
-.. doxygenfunction:: cryptx_aes_init
-	:project: CryptX
-	
-.. doxygenfunction:: cryptx_aes_encrypt
-	:project: CryptX
-	
-.. doxygenfunction:: cryptx_aes_decrypt
-	:project: CryptX
-	
-The following functions are only valid for Galois Counter Mode (GCM). Attempting to use them for any other cipher mode will return **AES_INVALID_CIPHERMODE**.
-
-.. doxygenfunction:: cryptx_aes_update_aad
-	:project: CryptX
-
-.. doxygenfunction:: cryptx_aes_digest
-	:project: CryptX
-
-.. doxygenfunction:: cryptx_aes_verify
-	:project: CryptX
-
-Public Key Encryption
-______________________
-.. _`Public Key Encryption` ::
-
-RSA is currently one of the most commonly used key exchange/public key encryption methods. It is commonly used to share a secret for symmetric encryption (such as AES) at the start of a secure session. In recent times, however, RSA has been becoming easier to defeat due to advances in computing. This implementation is encrypt-only, supports modulus length between 1024 and 2048 bits, and uses a public exponent of :math:`2^{2^4} + 1` or 65,537.
-
-.. doxygendefine:: CRYPTX_RSA_MODULUS_MAX
-	:project: CryptX
-
-.. doxygenenum:: rsa_error_t
-	:project: CryptX
-	
-.. doxygenfunction:: cryptx_rsa_encrypt
-	:project: CryptX
-	
-Key Exchange Protocols
-_______________________
-.. _`Key Exchange Protocols` ::
-
-Elliptic curves are a newer introduction to cryptography and they boast more security than more traditional algorithms. For example, in order to achieve the same security level you would have with a 2048-bit RSA key, you need only around 240 bits. **Elliptic Curve Diffie-Hellman** is a variation on standard Diffie-Hellman that uses elliptic curves to transform a private key into a public key.
-
-**Standard Diffie-Hellman**
-
-.. math::
-	&pubkey = G^{privkey} \mod m \\
-	&secret = rpubkey^{privkey} \mod m \\
-	&where: \\
-	&G = public\_base \\
-	&m = public\_modulus
-	
-**Elliptic Curve Diffie-Hellman**
-
-.. math::
-	&pubkey = G * privkey \\
-	&secret = rpubkey * privkey * cofactor \\
-	&where: \\
-	&G = base\_point\_on\_curve
-	
-This library implements SECT233k1. This was chosen (1) because it offers approximately the same security level as RSA-2048, and (2) koblitz curves can be mathematically optimzed better than other curves. On a platform as slow as the TI-84+ CE, these optimizations are critical to make using this feasible. Even so, this elliptic curve implementation clocks in at about 14 seconds per operation (pubkey generation, secret compuation).
-	
-.. doxygendefine:: CRYPTX_ECDH_PRIVKEY_LEN
-	:project: CryptX
-
-.. doxygendefine:: CRYPTX_ECDH_PUBKEY_LEN
-	:project: CryptX
-	
-.. doxygendefine:: CRYPTX_ECDH_SECRET_LEN
-	:project: CryptX
-	
-.. doxygendefine:: cryptx_ecdh_generate_privkey
-	:project: CryptX
-	
-.. doxygenenum:: ecdh_error_t
-	:project: CryptX
-	
-.. doxygenfunction:: cryptx_ecdh_publickey
-	:project: CryptX
-	
-.. doxygenfunction:: cryptx_ecdh_secret
-	:project: CryptX
-	
 Abstract Syntax Notation One
 _____________________________
 .. _`Abstract Syntax Notation One` ::

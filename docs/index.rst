@@ -13,8 +13,8 @@ If this is your first introduction to the CE Toolchain, check out the `toolchain
 
 * Secure Random Number Generation
 * Integrity Verification
-* Encryption & Key Exchange
 * (Password-Based) Key Derivation
+* Encryption & Key Exchange
 * Cryptographic Encoding (ASN.1, Base64)
 
 Last but not least, this library implements platform-specific considerations for side-channel attacks to the best extent possible on the hardware. This includes:

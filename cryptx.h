@@ -470,17 +470,17 @@ typedef enum _ecdh_error {
 } ecdh_error_t;
 
 /**
- * @brief Generates a public key from the private key and some base point G on curve.
- * @param privkey	Pointer to a randomized ECDH private key.
- * @param pubkey	Pointer to buffer to write public key.
+ * @brief Generates a pair of public/private keys for ECC over SECT233k1
+ * @param privkey	Pointer to EC private key buffer.
+ * @param pubkey	Pointer to EC public key buffer.
+ * @returns A random 29-byte EC private key and associated public key.
  * @note Output public key is a point on the curve expressed as two 30-byte coordinates
  * encoded in little endian byte order and padded with zeros (if needed). You may have to
  * deserialize the key and then serialize it into a different format to use it with
  * some encryption libraries.
- * @note This function expects that @b privkey be filled with random bytes. Failure to do so
- * may cause unexpected behavior. See @b cryptx_ecdh_generate_privkey().
+ * @note
  */
-ecdh_error_t cryptx_ecdh_publickey(const uint8_t *privkey, uint8_t *pubkey);
+ecdh_error_t cryptx_ec_keygen(const uint8_t *privkey, uint8_t *pubkey);
 
 /**
  * @brief Computes a secret from the private key and the remote public key.
