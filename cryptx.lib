@@ -20,7 +20,7 @@
 	export	cryptx_aes_digest
 	export	cryptx_aes_verify
 	export	cryptx_rsa_encrypt
-	export	cryptx_ecdh_publickey
+	export	cryptx_ec_keygen
 	export	cryptx_ecdh_secret
 	export	cryptx_asn1_decode
 	export	cryptx_base64_encode

@@ -120,7 +120,7 @@ macro restore_interrupts_noret? parent
 parent.__interrupt_state = $-3
 	push bc
 	pop af
-	jp po,.__dont_reenable_interrupts
+	jp po,parent.__dont_reenable_interrupts
 	ei
 parent.__dont_reenable_interrupts = $
 end macro
@@ -147,7 +147,7 @@ parent.__interrupt_state = $-3
 	ld c,a
 	pop af
 	ld a,c
-	jp po,.__dont_reenable_interrupts
+	jp po,parent.__dont_reenable_interrupts
 	ei
 parent.__dont_reenable_interrupts = $
 end macro
@@ -210,10 +210,10 @@ hmac_func_lookup:
 	dl hmac_sha256_update
 	dl hmac_sha256_final
 	db 32
-; dl hmac_sha1_init
-;	dl hmac_sha1_update
-;	dl hmac_sha1_final
-;	db 20
+	dl hmac_sha1_init
+	dl hmac_sha1_update
+	dl hmac_sha1_final
+	db 20
 
 
 ; probably better to just add the one u64 function used by hashlib rather than screw with dependencies
@@ -893,7 +893,7 @@ _sha1_w_buffer := _sha256_m_buffer ; reuse m buffer from sha256 as w
 	ld bc, 4*5
 	ldir
 	ld (ix + ._i), 0
-.outerloop:
+.loop:
 	ld a, (ix + ._i)
 	cp a, 16
 	jq c,.skip_inner_1
@@ -2331,7 +2331,7 @@ hmac_sha256_final:
 	restore_interrupts_noret hmac_sha256_final
 	jp stack_clear
  
-hmac_sha256_final:
+hmac_sha1_final:
 	save_interrupts
 
 	ld	hl, -280
@@ -2435,7 +2435,7 @@ hmac_sha256_final:
 	push	hl
 	call	hash_sha1_final
 
-	restore_interrupts_noret hmac_sha256_final
+	restore_interrupts_noret hmac_sha1_final
 	jp stack_clear
 	
 
