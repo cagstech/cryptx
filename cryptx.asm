@@ -174,6 +174,7 @@ virtual at 0
 	offset_state    rb 4*8
 	_sha256ctx_size:
 end virtual
+_sha1_ctx_size := offset_state+4*5
 
 virtual at 0
 	func_init		rb 3
@@ -690,19 +691,6 @@ hash_sha1_init:
 _indcall:
 ; Calls IY
 	jp (iy)
-
-; void hash_sha256_init(SHA256_CTX *ctx);
-hash_sha256_init:
-	pop iy,de
-	push de
-	ld hl,$FF0000
-	ld bc,offset_state
-	ldir
-	ld c,8*4
-	ld hl,_sha256_state_init
-	ldir
-	ld a, 1
-	jp (iy)
 	
 ; void hash_sha1_update(SHA256_CTX *ctx);
 hash_sha1_update:
@@ -826,7 +814,7 @@ _sha1_final_done_pad:
 	call u64_addi
 	pop bc,bc
 
-	lea iy, ix-_sha1ctx_size ;ctx
+	lea iy, ix-_sha1_ctx_size ;ctx
 	lea hl,iy + offset_bitlen
 	lea de,iy + offset_data + 63
 
@@ -1095,8 +1083,18 @@ end repeat
 	pop ix
 	ret
 
-
-
+; void hash_sha256_init(SHA256_CTX *ctx);
+hash_sha256_init:
+	pop iy,de
+	push de
+	ld hl,$FF0000
+	ld bc,offset_state
+	ldir
+	ld c,8*4
+	ld hl,_sha256_state_init
+	ldir
+	ld a, 1
+	jp (iy)
 
 ; void hashlib_Sha256Update(SHA256_CTX *ctx, const BYTE data[], size_t len);
 hash_sha256_update:
