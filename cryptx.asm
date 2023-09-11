@@ -174,7 +174,14 @@ virtual at 0
 	offset_state    rb 4*8
 	_sha256ctx_size:
 end virtual
-_sha1_ctx_size := offset_state+4*5
+
+virtual at 0
+	sha1_offset_data     rb 64
+	sha1_offset_datalen  rb 1
+	sha1_offset_bitlen   rb 8
+	sha1_offset_state    rb 4*8
+	_sha1_ctx_size:
+end virtual
 
 virtual at 0
 	func_init		rb 3
@@ -470,6 +477,19 @@ macro _xorbc? R1,R2
 	ld a,c
 	xor a,R2
 	ld R2,a
+end macro
+
+; helper macro to xor [(HL),(HL+1)] with [R1,R2] storing into [R1,R2], advancing HL
+; destroys: af
+macro _xorihl? R1,R2
+	ld a,R1
+	xor a,(hl)
+	ld R1,a
+	inc hl
+	ld a,R2
+	xor a,(hl)
+	ld R2,a
+	inc hl
 end macro
 
 ; helper macro to xor [(R3), (R3+1)] with [R1,R2] storing into [R1,R2]
@@ -863,7 +883,7 @@ _sha1_w_buffer := _sha256_m_buffer ; reuse m buffer from sha256 as w
 	add hl,bc
 	or a,a
 	sbc hl,bc
-	jq z,._exit
+	jq z,_sha256_transform._exit
 	ld iy,_sha1_w_buffer
 	ld b, 16
 	call _sha256_reverse_endianness ; first loop is essentially just reversing the endian-ness of the data into w
