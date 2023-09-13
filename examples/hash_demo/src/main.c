@@ -42,7 +42,7 @@ int main(void)
 	sprintf(CEMU_CONSOLE, "digest len: %u\n", ctx.digest_len);
 
 	void *sha256_digest = malloc(ctx.digest_len);
-	void *sha256_hex = malloc((ctx.digest_len<<1) + 1);
+	char *sha256_hex = malloc((ctx.digest_len<<1) + 1);
 
 	cryptx_hash_update(&ctx, &str, str_len);
 	cryptx_hash_digest(&ctx, sha256_digest);
@@ -50,7 +50,8 @@ int main(void)
 	cryptx_digest_tostring(sha256_digest, ctx.digest_len, sha256_hex);
 	// os_ClrHome();
 	// os_SetCursorPos(0,0);
-	sprintf(CEMU_CONSOLE, "HASHLIB SHA-256 DEMO\nSHA-256: %s\n", sha256_hex);
+	
+	sprintf(CEMU_CONSOLE, "HASHLIB SHA-256 DEMO\nSHA-256:  %s\nEXPECTED: AE22C10B43BF7A1F49FFB6A86C670145112C3AAEA3C506585928934E30613CCD\n", sha256_hex);
 
 	if(!cryptx_hash_init(&ctx, SHA1))
 		return 1;
@@ -67,7 +68,7 @@ int main(void)
 	cryptx_digest_tostring(sha256_digest, ctx.digest_len, sha256_hex);
 	// os_ClrHome();
 	// os_SetCursorPos(0,0);
-	sprintf(CEMU_CONSOLE, "HASHLIB SHA-1 DEMO\nSHA-256: %s\n", sha256_hex);
+	sprintf(CEMU_CONSOLE, "HASHLIB SHA-1 DEMO\nSHA-1:    %s\nEXPECTED: 5F16F45989CF5EB61D9AB322BE33C7989FF517D3\n", sha256_hex);
 
 	free(sha256_digest);
 	free(sha256_hex);

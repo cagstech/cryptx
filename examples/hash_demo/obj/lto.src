@@ -345,12 +345,12 @@ _.str.3:
 	section	.rodata,"a",@progbits
 	private	_.str.4
 _.str.4:
-	db	"HASHLIB SHA-256 DEMO", 10, "SHA-256: %s", 10, 0
+	db	"HASHLIB SHA-256 DEMO", 10, "SHA-256:  %s", 10, "EXPECTED: AE22C10B43BF7A1F49FFB6A86C670145112C3AAEA3C506585928934E30613CCD", 10, 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.5
 _.str.5:
-	db	"HASHLIB SHA-1 DEMO", 10, "SHA-256: %s", 10, 0
+	db	"HASHLIB SHA-1 DEMO", 10, "SHA-1:    %s", 10, "EXPECTED: 5F16F45989CF5EB61D9AB322BE33C7989FF517D3", 10, 0
 
 	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 6d9aa7a16db70f3d02ae304b08d4a03011281fef)"
 	extern	_cryptx_digest_tostring

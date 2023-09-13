@@ -885,74 +885,62 @@ _sha1_w_buffer := _sha256_m_buffer ; reuse m buffer from sha256 as w
 	jq z,_sha256_transform._exit
 	ld iy,_sha1_w_buffer
 	ld b, 16
-	call _sha256_reverse_endianness ; first loop is essentially just reversing the endian-ness of the data into w
+	call _sha256_reverse_endianness ; essentially just reversing the endian-ness of the data into w
 	ld iy, (ix + 6)
 	lea hl, iy + offset_state
 	lea de, ix + ._state_vars
 	ld bc, 4*5
 	ldir
-	ld (ix + ._i), 0
-.loop:
+	ld (ix + ._i), 16
+.loop1:
 	ld a, (ix + ._i)
-	cp a, 16
-	jq c,.skip_inner_1
-	and a, $F
-	ld c,a
+	cp a, 80
+	jq c,.done_loop1
+	or a,a
 	sbc hl,hl
 	ld l,a
-	ld de, _sha1_w_buffer
-	add hl,de ; &w[s]
+	ld de, _sha1_w_buffer - 3*4
+	add hl,de ; &w[i-3]
 	push hl
-	ld a,c
-	add a, 2
-	ld c,a
-	and a, $F
-	sbc hl,hl
-	ld l,a
-	add hl,de ; &w[(s + 2) & 0xf]
+	ld de,-5*4
+	add hl,de ; &w[i-8]
 	push hl
-	ld a,c
-	add a,8-2
-	ld c,a
-	and a,$F
-	sbc hl,hl
-	ld l,a
-	add hl,de ; &w[(s + 8) & 0xf]
+	ld de,-6*4
+	add hl,de ; &w[i-14]
 	push hl
-	ld a,c
-	add a,13-8
-	and a,$F
-	sbc hl,hl
-	ld l,a
-	add hl,de ; &w[(s + 13) & 0xf]
+	ld de,-2*4
+	add hl,de ; &w[i-16]
 
-; w[(s+13)&0xf]
-	ld de,(hl)
-	inc hl
-	inc hl
+; w[i-16]
 	ld bc,(hl)
+	inc hl
+	inc hl
+	ld de,(hl)
 
-; ^ w[(s+8)&0xf]
+; ^ w[i-14]
 	pop hl
-	_xorihl d,e
-	_xorihl b,c
+	_xorihl b,c ; low 16 bits
+	_xorihl d,e ; high 16 bits
 
-; ^ w[(s+2)&0xf]
+; ^ w[i-8]
 	pop hl
-	_xorihl d,e
 	_xorihl b,c
+	_xorihl d,e
 
-; ^ w[s]
+; ^ w[i-3]
 	pop hl
-	_xorihl d,e
 	_xorihl b,c
+	_xorihl d,e
 
 	ld h,b
 	ld l,c
 	ld b,1
 	call _ROTLEFT
-.skip_inner_1:
-	
+	jq .loop1
+
+.done_loop1:
+	ld (ix + ._i), 0
+.loop2:
 	ld a, (ix + ._i)
 	cp a, 20
 	jq nc,.i_gteq_20
@@ -1089,7 +1077,7 @@ _sha1_w_buffer := _sha256_m_buffer ; reuse m buffer from sha256 as w
 	ld hl,_sha1_w_buffer
 .set_step_3_smc:
 	ld (.step_3_smc),hl
-	jq .loop
+	jq .loop2
 .done:
 	ld iy, (ix + 6)
 	
