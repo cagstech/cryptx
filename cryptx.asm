@@ -180,14 +180,15 @@ virtual at 0
 	sha1_offset_datalen  rb 1
 	sha1_offset_bitlen   rb 8
 	sha1_offset_state    rb 4*5
-	_sha1_ctx_size:
+	_sha1ctx_size:
 end virtual
 
 virtual at 0
-	func_init		rb 3
-	func_update		rb 3
-	func_final		rb 3
-	sha_ctx			rb _sha256ctx_size
+	func_init           rb 3
+	func_update         rb 3
+	func_final          rb 3
+	digest_len          rb 1
+	sha_ctx             rb _sha256ctx_size
 	_hashctx_size:
 end virtual
 _sha256_m_buffer_length := 64*4
@@ -711,7 +712,7 @@ hash_sha1_init:
 _indcall:
 ; Calls IY
 	jp (iy)
-	
+
 ; void hash_sha1_update(SHA256_CTX *ctx);
 hash_sha1_update:
 	save_interrupts
@@ -769,13 +770,13 @@ _sha1_update_apply_transform:
 	ret
 
 
-; void hashlib_Sha1Final(SHA256_CTX *ctx, BYTE hash[]);
+; void hashlib_Sha1Final(SHA1_CTX *ctx, BYTE hash[]);
 hash_sha1_final:
 	save_interrupts
 
-	ld hl,-_sha256ctx_size
+	ld hl,-_sha1ctx_size
 	call ti._frameset
-	; ix-_sha256ctx_size to ix-1
+	; ix-_sha1ctx_size to ix-1
 	; (ix + 0) Return address
 	; (ix + 3) saved IX
 	; (ix + 6) arg1: ctx
@@ -787,13 +788,13 @@ hash_sha1_final:
 
 	ld iy, (ix + 6)					; iy =  context block
 	lea hl, iy
-	lea de, ix-_sha256ctx_size
-	ld bc, _sha256ctx_size
+	lea de, ix-_sha1ctx_size
+	ld bc, _sha1ctx_size
 	ldir
 
 	ld bc, 0
 	ld c, (iy + offset_datalen)     ; data length
-	lea hl, ix-_sha256ctx_size					; ld hl, context_block_cache_addr
+	lea hl, ix-_sha1ctx_size					; ld hl, context_block_cache_addr
 	add hl, bc						; hl + bc (context_block_cache_addr + bytes cached)
 
 	ld a,55
@@ -825,7 +826,7 @@ _sha1_final_pad_loop1:
 	ld bc,56
 	ldir
 _sha1_final_done_pad:
-	lea iy, ix-_sha1_ctx_size
+	lea iy, ix-_sha1ctx_size
 	ld c, (iy + offset_datalen)
 	ld b,8
 	mlt bc ;multiply 8-bit datalen by 8-bit value 8
@@ -834,7 +835,7 @@ _sha1_final_done_pad:
 	call u64_addi
 	pop bc,bc
 
-	lea iy, ix-_sha1_ctx_size ;ctx
+	lea iy, ix-_sha1ctx_size ;ctx
 	lea hl,iy + offset_bitlen
 	lea de,iy + offset_data + 63
 
@@ -846,7 +847,7 @@ _sha1_final_pad_message_len_loop:
 	dec de
 	djnz _sha1_final_pad_message_len_loop
 
-	push iy ;ctx
+	push iy ; ctx
 	call _sha1_transform
 	pop iy
 
@@ -869,10 +870,8 @@ _sha1_transform:
 ._b := -16
 ._a := -20
 ._state_vars := -20
-._tmp1 := -24
-._tmp2 := -28
-._i := -29
-._frame_offset := -29
+._i := -21
+._frame_offset := -21
 _sha1_w_buffer := _sha256_m_buffer ; reuse m buffer from sha256 as w
 	ld hl,._frame_offset
 	call ti._frameset
@@ -1049,6 +1048,7 @@ _sha1_w_buffer := _sha256_m_buffer ; reuse m buffer from sha256 as w
 	_adc d,e,b,c
 	; d,e,h,l = rotl32(a, 5) + f(t, b,c,d) + e + w[s] + k[t/20];
 	push de,hl
+	; _e = _d; _d = _c; _c = _b; _b = _a;
 	lea hl, ix + ._d + 3
 	lea de, ix + ._e + 3
 	ld bc,4*4
@@ -1068,6 +1068,7 @@ _sha1_w_buffer := _sha256_m_buffer ; reuse m buffer from sha256 as w
 	ld (ix + ._a + 3),d
 	ld a, (ix + ._i)
 	inc a
+	ld (ix + ._i), a
 	cp a,80
 	jr z,.done
 	cp a,20
@@ -1093,10 +1094,10 @@ _sha1_w_buffer := _sha256_m_buffer ; reuse m buffer from sha256 as w
 	ld iy, (ix + 6)
 	
 repeat 5
-	ld hl,(ix + ._a + (% * 4 + 0))
-	ld de,(ix + ._a + (% * 4 + 2))
-	_addiix_store h,l, (iy + offset_state + (% * 4 + 0))
-	_adciix_store d,e, (iy + offset_state + (% * 4 + 2))
+	ld hl,(ix + ._a + ((% - 1) * 4 + 0))
+	ld de,(ix + ._a + ((% - 1) * 4 + 2))
+	_addiix_store h,l, (iy + offset_state + ((% - 1) * 4 + 0))
+	_adciix_store d,e, (iy + offset_state + ((% - 1) * 4 + 2))
 end repeat
 
 	ld sp,ix
