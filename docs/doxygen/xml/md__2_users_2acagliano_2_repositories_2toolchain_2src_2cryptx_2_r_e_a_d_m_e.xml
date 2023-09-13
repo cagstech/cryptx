@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.7" xml:lang="en-US">
+  <compounddef id="md__2_users_2acagliano_2_repositories_2toolchain_2src_2cryptx_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md__2_users_2acagliano_2_repositories_2toolchain_2src_2cryptx_2_r_e_a_d_m_e</compoundname>
+    <title>CryptX</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md__2_users_2acagliano_2_repositories_2toolchain_2src_2cryptx_2_r_e_a_d_m_e_1autotoc_md0"/> CryptX provides industry-standard cryptography for the TI-84+ CE graphing calculator. The package contains three(3) separate libraries that serve different functions.</para>
+<sect1 id="md__2_users_2acagliano_2_repositories_2toolchain_2src_2cryptx_2_r_e_a_d_m_e_1autotoc_md1">
+<title>Getting Started with CryptX</title>
+<para>Visit the <ulink url="https://acagliano.github.io/cryptx">CryptX Documentation</ulink> for help with using the library, documentation, cryptanalysis, credits, and more.</para>
+<para>Credits: <linebreak/>
+ Some algorithms sourced at least in part from <ulink url="https://github.com/B-Con/crypto-algorithms">B-con crypto-algorithms</ulink>. <linebreak/>
+ Cemetech user Zeroko - information on CE randomness. <linebreak/>
+ beckadamtheinventor &amp; commandblockguy - coding assistance, conversion of some C routines to assembly for speed. <linebreak/>
+ jacobly - modular exponentiation </para>
+</sect1>
+    </detaileddescription>
+    <location file="/Users/acagliano/Repositories/toolchain/src/cryptx/README.md"/>
+  </compounddef>
+</doxygen>

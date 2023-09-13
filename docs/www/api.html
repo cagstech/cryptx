@@ -44,8 +44,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#key-derivation-management">Key Derivation &amp; Management</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#symmetric-encryption">Symmetric Encryption</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#public-key-cryptography-key-exchange-protocols">Public Key Cryptography &amp; Key Exchange Protocols</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#abstract-syntax-notation-one">Abstract Syntax Notation One</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#base64-encoding-and-decoding">Base64 Encoding and Decoding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cryptographic-encoding-formats">Cryptographic Encoding Formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#hazardous-materials">Hazardous Materials</a></li>
 </ul>
 </li>
@@ -326,7 +325,7 @@
 </div>
 <div class="section" id="public-key-cryptography-key-exchange-protocols">
 <h2>Public Key Cryptography &amp; Key Exchange Protocols<a class="headerlink" href="#public-key-cryptography-key-exchange-protocols" title="Permalink to this headline"></a></h2>
-<p>AES is great but has a major shortcoming. You need a way to agree upon the secret on both sides of the secure session prior to starting to encrypt messages using it. If you send the key in the clear (unencrypted), what’s the point of the encryption then? This is where we must discuss <strong>key exchange protocols</strong>. These are algorithms, some encryption methods and some mathematical computations, that allow two endpoints to agree on a shared secret for symmetric encryption.</p>
+<p>AES is great but has a major shortcoming. You need a way to agree upon the secret on both sides of the secure session prior to starting to encrypt messages using it. If you send the key in the clear (unencrypted), what’s the point of the encryption then? This is where <strong>key exchange protocols</strong> enter the discussion. These are algorithms, some encryption methods and some mathematical computations, that allow two endpoints to agree on a shared secret for symmetric encryption without leaking the secret.</p>
 <p><strong>Rivest-Shamir-Adleman (RSA) Encryption</strong></p>
 <p>The first option supported within CryptX is also one of the most commonly used on the Internet today. It is an encryption system developed by computer scientists Ron Rivest and Adi Shamir and mathematician Leonard Adleman–and named for them as well. RSA is a form of <em>asymmetric encryption</em> (encryption system that uses two opposing keys, a public one to encrypt and a private one to decrypt). Because the public key is used for encryption RSA is also a form of <em>public key cryptography</em>.</p>
 <p>How does that benefit us? Imagine you, using your web browser, attempt to connect to some secure website. Upon attempt to connect, the website sends you a public key that you can use to encrypt messages for it. You encrypt an AES secret using this public key and ship it to the website. The website decrypts that with its own private key. You and the website now have the AES secret and it was not leaked in transit (assuming the developer did things right). Go-go-gadget AES.</p>
@@ -392,9 +391,11 @@
 <li><p><a class="reference internal" href="api/ecc.html#ec"><span class="std std-ref">view elliptic curve documentation</span></a></p></li>
 </ul>
 </div>
-<div class="section" id="abstract-syntax-notation-one">
-<h2>Abstract Syntax Notation One<a class="headerlink" href="#abstract-syntax-notation-one" title="Permalink to this headline"></a></h2>
-<p>Abstract Syntax Notation One (ASN.1) is a form of data encoding common to cryptography and one of the two usual output formats for keyfiles. ASN.1 is a tree structure of objects encoded by type, size, and data. A common serialization format for ASN.1 is DER, which stands for <em>Distinguished Encoding Rules</em>. It is standardized for cryptography. See the example below which expresses the encoding of a public key from <em>Public Key Cryptography Standards #8 (PKCS#8)</em>.</p>
+<div class="section" id="cryptographic-encoding-formats">
+<h2>Cryptographic Encoding Formats<a class="headerlink" href="#cryptographic-encoding-formats" title="Permalink to this headline"></a></h2>
+<p>The <em>Public Key Cryptography Standards (PKCS)</em> defines, if you can believe it, standards for the encoding of public keys in storage and transit. The two most commonly used encoding formats are <em>Abstract Syntax Notation One (ASN.1)</em> and <em>Base64</em>. Do not confuse encryption with encoding. Encoding is merely a method of expressing information in plain-text format. It does not prevent unauthorized parties from reading or modifying the data.</p>
+<p><strong>Abstract Syntax Notation One (ASN.1)</strong></p>
+<p>Many cryptographic structures are encoded using <em>Distinguished Encoding Rules (DER)</em> which is a serialization format of ASN.1 standardized for cryptography. See the example below which expresses the encoding of a public key from <em>Public Key Cryptography Standards #8 (PKCS#8)</em>.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">PublicKeyInfo</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="n">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">algorithm</span><span class="w"> </span><span class="n">AlgorithmIdentifier</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
 <span class="w">                </span><span class="n">algorithm</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="n">OBJECT</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="p">,</span>
@@ -404,364 +405,67 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Do not confuse encryption with encoding. Encoding is merely a method of expressing information. It does not prevent unauthorized parties from reading or modifying the data.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define RECVBUF_LEN 1024</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">recv_buf</span><span class="p">[</span><span class="n">RECVBUF_LEN</span><span class="p">];</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="n">recv_len</span><span class="p">;</span>
+
+<span class="c1">// read incoming to `recv_buf` update `recv_len`</span>
+<span class="n">network_recv</span><span class="p">(</span><span class="n">recv_buf</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">recv_len</span><span class="p">);</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">rsa_pubkey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">recv_buf</span><span class="p">;</span>
+
+<span class="c1">// ** Decode DER-encoded structure **</span>
+<span class="c1">// decode parent SEQUENCE, tag_data and tag_datalen are pointers to data</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">tag_data</span><span class="p">;</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="n">tag_datalen</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="n">cryptx_asn1_decode</span><span class="p">(</span><span class="n">recv_buf</span><span class="p">,</span><span class="w"> </span><span class="n">recv_len</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">tag_datalen</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">tag_data</span><span class="p">))</span>
+<span class="w">  </span><span class="k">return</span><span class="p">;</span><span class="w">   </span><span class="c1">// decoding error, do something to handle</span>
+
+<span class="c1">// `PublicKey` object is actually a BIT STRING-encoded DER structure</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">keydata</span><span class="p">;</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="n">keylen</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="n">cryptx_asn1_decode</span><span class="p">(</span><span class="n">tag_data</span><span class="p">,</span><span class="w"> </span><span class="n">tag_datalen</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">keylen</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">keydata</span><span class="p">))</span>
+<span class="w">  </span><span class="k">return</span><span class="p">;</span><span class="w">   </span><span class="c1">// decoding error, do something to handle</span>
+
+<span class="c1">// Decode PKCS#1 Public Key structure</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">keystruct</span><span class="p">;</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="n">keystruct_len</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="n">cryptx_asn1_decode</span><span class="p">(</span><span class="n">keydata</span><span class="p">,</span><span class="w"> </span><span class="n">keylen</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">keystruct_len</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">keystruct</span><span class="p">))</span>
+<span class="w">  </span><span class="k">return</span><span class="p">;</span><span class="w">   </span><span class="c1">// decoding error, do something to handle</span>
+
+<span class="c1">// `keyinner` now contains two ASN.1 encoded objects, the modulus and the exponent</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">key_modulus</span><span class="p">;</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="n">key_modulus_size</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="n">cryptx_asn1_decode</span><span class="p">(</span><span class="n">keystruct</span><span class="p">,</span><span class="w"> </span><span class="n">keystruct_len</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">key_modulus_size</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">key_modulus</span><span class="p">))</span>
+<span class="w">  </span><span class="k">return</span><span class="p">;</span><span class="w">   </span><span class="c1">// decoding error, do something to handle</span>
+
+<span class="c1">// We only need modulus, library exponent is hardcoded to 65537.</span>
+<span class="c1">// In theory can you can *validate* that the exponent is supported</span>
+</pre></div>
 </div>
-<dl class="cpp enum">
-<dt class="sig sig-object cpp" id="_CPPv416CRYPTX_ASN1_TAGS">
-<span id="_CPPv316CRYPTX_ASN1_TAGS"></span><span id="_CPPv216CRYPTX_ASN1_TAGS"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_ASN1_TAGS</span></span></span><a class="headerlink" href="#_CPPv416CRYPTX_ASN1_TAGS" title="Permalink to this definition"></a><br /></dt>
-<dd><p><em>Values:</em></p>
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS10ASN1_RESVDE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS10ASN1_RESVDE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS10ASN1_RESVDE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a0b4ee1817dddda0e7bb95f8c9c5262cc"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_RESVD</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS10ASN1_RESVDE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>RESERVED. </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS12ASN1_BOOLEANE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS12ASN1_BOOLEANE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS12ASN1_BOOLEANE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5afcacc079274ffffd6f8f30005a478309"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_BOOLEAN</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS12ASN1_BOOLEANE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>defines a BOOLEAN object </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS12ASN1_INTEGERE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS12ASN1_INTEGERE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS12ASN1_INTEGERE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ace678073d12a09bd35a9d14ee843f4f6"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_INTEGER</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS12ASN1_INTEGERE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>defines an INTEGER object </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS14ASN1_BITSTRINGE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS14ASN1_BITSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS14ASN1_BITSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a80cce3c21b5cf2a46abcf2d6559f16a2"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_BITSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS14ASN1_BITSTRINGE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>defines a BIT STRING object </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS16ASN1_OCTETSTRINGE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS16ASN1_OCTETSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS16ASN1_OCTETSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ad652362316e1126ce1f372ee9f42fdf7"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_OCTETSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS16ASN1_OCTETSTRINGE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>defines an OCTET STRING object </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS9ASN1_NULLE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS9ASN1_NULLE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS9ASN1_NULLE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ab9aa4736a7a0bec12fda19d770381ade"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_NULL</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS9ASN1_NULLE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>defines a NULL object (0 size, no data) </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS13ASN1_OBJECTIDE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS13ASN1_OBJECTIDE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS13ASN1_OBJECTIDE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ab4e5697bbcfa96959f724b475deb438d"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_OBJECTID</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS13ASN1_OBJECTIDE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>defines an OBJECT IDENTIFIER </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS15ASN1_OBJECTDESCE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS15ASN1_OBJECTDESCE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS15ASN1_OBJECTDESCE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5afa75f14a7646b0ee90575da2299c9303"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_OBJECTDESC</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS15ASN1_OBJECTDESCE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>defines an OBJECT DESCRIPTION </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS13ASN1_INSTANCEE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS13ASN1_INSTANCEE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS13ASN1_INSTANCEE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a2169eaf366165cd4dfe1aca66659935c"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_INSTANCE</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS13ASN1_INSTANCEE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>defines an INSTANCE </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS9ASN1_REALE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS9ASN1_REALE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS9ASN1_REALE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ade199cbdfbec356bae58bc468797580a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_REAL</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS9ASN1_REALE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>defines a REAL object </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS15ASN1_ENUMERATEDE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS15ASN1_ENUMERATEDE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS15ASN1_ENUMERATEDE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a5bb35c428781f325e40ea36ab317bc42"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_ENUMERATED</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS15ASN1_ENUMERATEDE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS16ASN1_EMBEDDEDPDVE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS16ASN1_EMBEDDEDPDVE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS16ASN1_EMBEDDEDPDVE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a7c167c8e276b910d748db386f78383af"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_EMBEDDEDPDV</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS16ASN1_EMBEDDEDPDVE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS15ASN1_UTF8STRINGE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS15ASN1_UTF8STRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS15ASN1_UTF8STRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a64811d53c5db0139556f07ec23185f08"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_UTF8STRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS15ASN1_UTF8STRINGE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS16ASN1_RELATIVEOIDE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS16ASN1_RELATIVEOIDE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS16ASN1_RELATIVEOIDE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a5234ef0948bc0487ae9474e21ce0df3f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_RELATIVEOID</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS16ASN1_RELATIVEOIDE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS13ASN1_SEQUENCEE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS13ASN1_SEQUENCEE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS13ASN1_SEQUENCEE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a472ab1907cf28338eff639b8b5ab667c"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_SEQUENCE</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">16</span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS13ASN1_SEQUENCEE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>defines a SEQUENCE </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS8ASN1_SETE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS8ASN1_SETE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS8ASN1_SETE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5aefff306acd391300face0a8080ad415e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_SET</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS8ASN1_SETE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>defines a SET </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_NUMERICSTRINGE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS18ASN1_NUMERICSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS18ASN1_NUMERICSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5af1b09bf2be320630525edcbbffe0424e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_NUMERICSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_NUMERICSTRINGE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS20ASN1_PRINTABLESTRINGE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS20ASN1_PRINTABLESTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS20ASN1_PRINTABLESTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a336e057dd223cc6f701304f0461a2ddf"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_PRINTABLESTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS20ASN1_PRINTABLESTRINGE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_TELETEXSTRINGE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS18ASN1_TELETEXSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS18ASN1_TELETEXSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a9bf70ad3dd4bf8c417d2df3a0567b7a4"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_TELETEXSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_TELETEXSTRINGE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS19ASN1_VIDEOTEXSTRINGE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS19ASN1_VIDEOTEXSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS19ASN1_VIDEOTEXSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a74f77040fbd3853dd952425441fe5768"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_VIDEOTEXSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS19ASN1_VIDEOTEXSTRINGE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS14ASN1_IA5STRINGE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS14ASN1_IA5STRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS14ASN1_IA5STRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ae00956dc4ea6da4a6f5b052e35ad4b75"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_IA5STRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS14ASN1_IA5STRINGE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS12ASN1_UTCTIMEE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS12ASN1_UTCTIMEE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS12ASN1_UTCTIMEE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a11abbe84d583fe76922cb89fe1220567"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_UTCTIME</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS12ASN1_UTCTIMEE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS20ASN1_GENERALIZEDTIMEE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS20ASN1_GENERALIZEDTIMEE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS20ASN1_GENERALIZEDTIMEE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a6b3d1c40aa79f25a72a9165a4cd691d4"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_GENERALIZEDTIME</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS20ASN1_GENERALIZEDTIMEE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_GRAPHICSTRINGE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS18ASN1_GRAPHICSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS18ASN1_GRAPHICSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a7866c130d61ad33372bb0cacdcc50e71"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_GRAPHICSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_GRAPHICSTRINGE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_VISIBLESTRINGE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS18ASN1_VISIBLESTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS18ASN1_VISIBLESTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5acb9714785116f8951d2cdfb45bcfaf6c"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_VISIBLESTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_VISIBLESTRINGE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_GENERALSTRINGE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS18ASN1_GENERALSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS18ASN1_GENERALSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5aaecdda4440eb96bc770733f950eab4dd"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_GENERALSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS18ASN1_GENERALSTRINGE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS20ASN1_UNIVERSALSTRINGE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS20ASN1_UNIVERSALSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS20ASN1_UNIVERSALSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a1e1d7c1dcf076d12776c085e5f534d58"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_UNIVERSALSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS20ASN1_UNIVERSALSTRINGE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS15ASN1_CHARSTRINGE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS15ASN1_CHARSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS15ASN1_CHARSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5af46947fb8b9acd84edae67bb08dabb28"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_CHARSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS15ASN1_CHARSTRINGE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N16CRYPTX_ASN1_TAGS14ASN1_BMPSTRINGE">
-<span id="_CPPv3N16CRYPTX_ASN1_TAGS14ASN1_BMPSTRINGE"></span><span id="_CPPv2N16CRYPTX_ASN1_TAGS14ASN1_BMPSTRINGE"></span><span class="target" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5af68d6904a260c69ee964445f81bfbbc4"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_BMPSTRING</span></span></span><a class="headerlink" href="#_CPPv4N16CRYPTX_ASN1_TAGS14ASN1_BMPSTRINGE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="cpp enum">
-<dt class="sig sig-object cpp" id="_CPPv419CRYPTX_ASN1_CLASSES">
-<span id="_CPPv319CRYPTX_ASN1_CLASSES"></span><span id="_CPPv219CRYPTX_ASN1_CLASSES"></span><span class="target" id="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_ASN1_CLASSES</span></span></span><a class="headerlink" href="#_CPPv419CRYPTX_ASN1_CLASSES" title="Permalink to this definition"></a><br /></dt>
-<dd><p><em>Values:</em></p>
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N19CRYPTX_ASN1_CLASSES14ASN1_UNIVERSALE">
-<span id="_CPPv3N19CRYPTX_ASN1_CLASSES14ASN1_UNIVERSALE"></span><span id="_CPPv2N19CRYPTX_ASN1_CLASSES14ASN1_UNIVERSALE"></span><span class="target" id="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a36845401ba730128d3078d9cd0730fe8"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_UNIVERSAL</span></span></span><a class="headerlink" href="#_CPPv4N19CRYPTX_ASN1_CLASSES14ASN1_UNIVERSALE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>tags defined in the ASN.1 standard. </p>
-<p>Most use cases on calc will be this. </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N19CRYPTX_ASN1_CLASSES16ASN1_APPLICATIONE">
-<span id="_CPPv3N19CRYPTX_ASN1_CLASSES16ASN1_APPLICATIONE"></span><span id="_CPPv2N19CRYPTX_ASN1_CLASSES16ASN1_APPLICATIONE"></span><span class="target" id="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a1c873115fb577a391d1af735307abc45"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_APPLICATION</span></span></span><a class="headerlink" href="#_CPPv4N19CRYPTX_ASN1_CLASSES16ASN1_APPLICATIONE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>tags unique to a particular application. </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N19CRYPTX_ASN1_CLASSES16ASN1_CONTEXTSPECE">
-<span id="_CPPv3N19CRYPTX_ASN1_CLASSES16ASN1_CONTEXTSPECE"></span><span id="_CPPv2N19CRYPTX_ASN1_CLASSES16ASN1_CONTEXTSPECE"></span><span class="target" id="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a0e4e8c83e4929fe69855de5c8c7a34d3"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_CONTEXTSPEC</span></span></span><a class="headerlink" href="#_CPPv4N19CRYPTX_ASN1_CLASSES16ASN1_CONTEXTSPECE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>tags that need to be identified within a particular, well-definded context. </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N19CRYPTX_ASN1_CLASSES12ASN1_PRIVATEE">
-<span id="_CPPv3N19CRYPTX_ASN1_CLASSES12ASN1_PRIVATEE"></span><span id="_CPPv2N19CRYPTX_ASN1_CLASSES12ASN1_PRIVATEE"></span><span class="target" id="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900ac51c7440728bfe2d94426d0ca4f3d895"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_PRIVATE</span></span></span><a class="headerlink" href="#_CPPv4N19CRYPTX_ASN1_CLASSES12ASN1_PRIVATEE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>reserved for use by a specific entity for their applications. </p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="cpp enum">
-<dt class="sig sig-object cpp" id="_CPPv417CRYPTX_ASN1_FORMS">
-<span id="_CPPv317CRYPTX_ASN1_FORMS"></span><span id="_CPPv217CRYPTX_ASN1_FORMS"></span><span class="target" id="cryptx_8h_1af2211fe420abff08488c8f04de017080"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_ASN1_FORMS</span></span></span><a class="headerlink" href="#_CPPv417CRYPTX_ASN1_FORMS" title="Permalink to this definition"></a><br /></dt>
-<dd><p><em>Values:</em></p>
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N17CRYPTX_ASN1_FORMS14ASN1_PRIMITIVEE">
-<span id="_CPPv3N17CRYPTX_ASN1_FORMS14ASN1_PRIMITIVEE"></span><span id="_CPPv2N17CRYPTX_ASN1_FORMS14ASN1_PRIMITIVEE"></span><span class="target" id="cryptx_8h_1af2211fe420abff08488c8f04de017080a916350d579d4895b1f843289b60b4572"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_PRIMITIVE</span></span></span><a class="headerlink" href="#_CPPv4N17CRYPTX_ASN1_FORMS14ASN1_PRIMITIVEE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>this element should contain no nested elements. </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N17CRYPTX_ASN1_FORMS16ASN1_CONSTRUCTEDE">
-<span id="_CPPv3N17CRYPTX_ASN1_FORMS16ASN1_CONSTRUCTEDE"></span><span id="_CPPv2N17CRYPTX_ASN1_FORMS16ASN1_CONSTRUCTEDE"></span><span class="target" id="cryptx_8h_1af2211fe420abff08488c8f04de017080ad03b2b41a6f3417a981a78ca887332e6"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_CONSTRUCTED</span></span></span><a class="headerlink" href="#_CPPv4N17CRYPTX_ASN1_FORMS16ASN1_CONSTRUCTEDE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>this element contains nested elements. </p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.cryptx_asn1_get_tag">
-<span class="target" id="cryptx_8h_1a13585a6206e220218a8f379327b04433"></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_asn1_get_tag</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">tag</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.cryptx_asn1_get_tag" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Returns the unmasked tag. See <strong>CRYPTX_ASN1_TAGS</strong> above. </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.cryptx_asn1_get_class">
-<span class="target" id="cryptx_8h_1a5af192045bb48e03f788962f259a2a7e"></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_asn1_get_class</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">tag</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.cryptx_asn1_get_class" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Returns the 2-bit tag class flag. See <strong>CRYPTX_ASN1_CLASSES</strong> above. </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.cryptx_asn1_get_form">
-<span class="target" id="cryptx_8h_1a3c8b39f5fb3ad1d8d138b9791b18f01e"></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_asn1_get_form</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">tag</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.cryptx_asn1_get_form" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Returns the 1-bit tag form (1 = constructed, 0 = primitive). See <strong>CRYPTX_ASN1_FORMS</strong> above. </p>
-</dd></dl>
-
-<dl class="cpp enum">
-<dt class="sig sig-object cpp" id="_CPPv412asn1_error_t">
-<span id="_CPPv312asn1_error_t"></span><span id="_CPPv212asn1_error_t"></span><span class="target" id="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">asn1_error_t</span></span></span><a class="headerlink" href="#_CPPv412asn1_error_t" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Defines error codes returned from calls to the ASN.1 API. </p>
-<p><em>Values:</em></p>
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N12asn1_error_t7ASN1_OKE">
-<span id="_CPPv3N12asn1_error_t7ASN1_OKE"></span><span id="_CPPv2N12asn1_error_t7ASN1_OKE"></span><span class="target" id="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33ae8a5623b62dab851b0dc76048afc0b4a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_OK</span></span></span><a class="headerlink" href="#_CPPv4N12asn1_error_t7ASN1_OKE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>No errors occured. </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N12asn1_error_t16ASN1_END_OF_FILEE">
-<span id="_CPPv3N12asn1_error_t16ASN1_END_OF_FILEE"></span><span id="_CPPv2N12asn1_error_t16ASN1_END_OF_FILEE"></span><span class="target" id="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a434628c70562f3ab468d94e8eae7784d"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_END_OF_FILE</span></span></span><a class="headerlink" href="#_CPPv4N12asn1_error_t16ASN1_END_OF_FILEE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>End of ASN.1 data stream reached. </p>
-<p>Not an error. </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N12asn1_error_t16ASN1_INVALID_ARGE">
-<span id="_CPPv3N12asn1_error_t16ASN1_INVALID_ARGE"></span><span id="_CPPv2N12asn1_error_t16ASN1_INVALID_ARGE"></span><span class="target" id="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33aa13d20ad819d43693d26c77b80fb4952"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_INVALID_ARG</span></span></span><a class="headerlink" href="#_CPPv4N12asn1_error_t16ASN1_INVALID_ARGE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>One or more arguments invalid. </p>
-</dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N12asn1_error_t17ASN1_LEN_OVERFLOWE">
-<span id="_CPPv3N12asn1_error_t17ASN1_LEN_OVERFLOWE"></span><span id="_CPPv2N12asn1_error_t17ASN1_LEN_OVERFLOWE"></span><span class="target" id="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a0101185f2109f1ba75ea2c4833664474"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ASN1_LEN_OVERFLOW</span></span></span><a class="headerlink" href="#_CPPv4N12asn1_error_t17ASN1_LEN_OVERFLOWE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Length of an element overflowed arch size_t allowance. </p>
-<p>Remainder of data stream unparsable. </p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv418cryptx_asn1_decodePv6size_t7uint8_tP7uint8_tP6size_tPP7uint8_t">
-<span id="_CPPv318cryptx_asn1_decodePv6size_t7uint8_tP7uint8_tP6size_tPP7uint8_t"></span><span id="_CPPv218cryptx_asn1_decodePv6size_t7uint8_tP7uint8_tP6size_tPP7uint8_t"></span><span id="cryptx_asn1_decode__voidP.s.uint8_t.uint8_tP.sP.uint8_tPP"></span><span class="target" id="cryptx_8h_1afbb965d7c7819b8685a1062d5e21e02c"></span><a class="reference internal" href="#_CPPv412asn1_error_t" title="asn1_error_t"><span class="n"><span class="pre">asn1_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_asn1_decode</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data_start</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">data_len</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">seek_to</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">element_tag</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">element_len</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">element_data</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_asn1_decodePv6size_t7uint8_tP7uint8_tP6size_tPP7uint8_t" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Decodes the ASN.1 data at the given address. </p>
-<p>Seeks to an element from the front of the data. </p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><strong>ASN1_END_OF_FILE</strong> will be returned if <strong>seek_to</strong> is invalid. </p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>NULL may be passed for <strong>element_tag</strong>, <strong>element_len</strong>, and/or <strong>element_data</strong> if you do not need to return that particular bit of information. </p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data_start</strong> – Pointer to a block of ASN.1-encoded data. </p></li>
-<li><p><strong>data_len</strong> – Length of ASN.1-encoded block. </p></li>
-<li><p><strong>seek_to</strong> – Number of ASN.1 elements to skip before returning one. </p></li>
-<li><p><strong>element_tag</strong> – Masked tag value of the returned element. </p></li>
-<li><p><strong>element_len</strong> – Length of the returned element. </p></li>
-<li><p><strong>element_data</strong> – Pointer to the data of the returned element. </p></li>
+<ul class="simple">
+<li><p><a class="reference internal" href="api/encoding.html#encoding"><span class="std std-ref">view ASN.1 documentation</span></a></p></li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An <strong>asn1_error_t</strong> indicating the status of the operation. </p>
-</dd>
-</dl>
-</dd></dl>
+<p><strong>Base64 Encoding and Decoding</strong></p>
+<p>Base64 (sextet-encoding) is the second of two encoding formats common to cryptography, including keyfiles exported by cryptographic libraries. In fact, PEM-encoding usually has the key encoded first with ASN.1 and then into base64. In base64 a stream of octets (8 bits per byte) is parsed as a bit string in groups of six bits (hence sextet) which is then mapped to one of 64 printable characters.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define RECVBUF_LEN 1024</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">recv_buf</span><span class="p">[</span><span class="n">RECVBUF_LEN</span><span class="p">];</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="n">recv_len</span><span class="p">;</span>
 
+<span class="c1">// read incoming to `recv_buf` update `recv_len`</span>
+<span class="n">network_recv</span><span class="p">(</span><span class="n">recv_buf</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">recv_len</span><span class="p">);</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">rsa_pubkey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">recv_buf</span><span class="p">;</span>
+
+<span class="c1">// ** Decode PEM Base64 encoding **</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="n">octet_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cryptx_base64_get_decoded_len</span><span class="p">(</span><span class="n">recv_len</span><span class="p">);</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">octet_data</span><span class="p">[</span><span class="n">octet_len</span><span class="p">];</span>
+<span class="n">cryptx_base64_decode</span><span class="p">(</span><span class="n">octet_data</span><span class="p">,</span><span class="w"> </span><span class="n">recv_buf</span><span class="p">,</span><span class="w"> </span><span class="n">recv_len</span><span class="p">);</span>
+<span class="c1">// If this is PEM, now you have a DER-encoded object.</span>
+<span class="c1">// It&#39;s ASN.1 time, boi</span>
+</pre></div>
 </div>
-<div class="section" id="base64-encoding-and-decoding">
-<h2>Base64 Encoding and Decoding<a class="headerlink" href="#base64-encoding-and-decoding" title="Permalink to this headline"></a></h2>
-<p>Base64 (sextet-encoding) is the second of two encoding formats common to cryptography, including keyfiles exported by cryptographic libraries. In fact, PEM encoding usually has the key encoded first with ASN.1 and then into base64.</p>
-<p>In base64 a stream of octets (8 bits per byte) is parsed as a bit string in groups of six bits (hence sextet) which is then mapped to one of 64 printable characters.</p>
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.cryptx_base64_get_encoded_len">
-<span class="target" id="cryptx_8h_1a9db7be56d66674980b5540cab9405cc7"></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_base64_get_encoded_len</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.cryptx_base64_get_encoded_len" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Defines a macro to return the expected size of base64-encoded data, given octet-encoded length. </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.cryptx_base64_get_decoded_len">
-<span class="target" id="cryptx_8h_1a5629130707448f8475166398fb18a486"></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_base64_get_decoded_len</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.cryptx_base64_get_decoded_len" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Defines a macro to return the expected size of octet-encoded data, given base64-encoded length. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv420cryptx_base64_encodePvPKv6size_t">
-<span id="_CPPv320cryptx_base64_encodePvPKv6size_t"></span><span id="_CPPv220cryptx_base64_encodePvPKv6size_t"></span><span id="cryptx_base64_encode__voidP.voidCP.s"></span><span class="target" id="cryptx_8h_1a3e216a54646a3f7d04c37102905ef850"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_base64_encode</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dest</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">src</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420cryptx_base64_encodePvPKv6size_t" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Converts an octet-encoded byte stream into a sextet-encoded byte stream. </p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><strong>dest</strong> should be at least <strong>len</strong> * 4 / 3 bytes large. </p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>dest</strong> – Pointer to output sextet-encoded data stream. </p></li>
-<li><p><strong>src</strong> – Pointer to input octet-encoded data stream. </p></li>
-<li><p><strong>len</strong> – Length of octet-encoded data stream. </p></li>
+<ul class="simple">
+<li><p><a class="reference internal" href="api/encoding.html#encoding"><span class="std std-ref">view Base64 documentation</span></a></p></li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Length of output sextet. </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv420cryptx_base64_decodePvPKv6size_t">
-<span id="_CPPv320cryptx_base64_decodePvPKv6size_t"></span><span id="_CPPv220cryptx_base64_decodePvPKv6size_t"></span><span id="cryptx_base64_decode__voidP.voidCP.s"></span><span class="target" id="cryptx_8h_1a28db41653bf7ba5ef8bfcef425343722"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_base64_decode</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dest</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">src</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420cryptx_base64_decodePvPKv6size_t" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Converts a sextet-encoded byte stream into a octet-encoded byte stream. </p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><strong>dest</strong> should be at least <strong>len</strong> * 3 / 4 bytes large. </p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>dest</strong> – Pointer to output octet-encoded data stream. </p></li>
-<li><p><strong>src</strong> – Pointer to input sextet-encoded data stream. </p></li>
-<li><p><strong>len</strong> – Length of sextet-encoded data stream. </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Length of output octet. </p>
-</dd>
-</dl>
-</dd></dl>
-
 </div>
 <div class="section" id="hazardous-materials">
 <h2>Hazardous Materials<a class="headerlink" href="#hazardous-materials" title="Permalink to this headline"></a></h2>

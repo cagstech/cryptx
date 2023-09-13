@@ -91,10 +91,12 @@ _main:
 	ld	(ix - 124), de
 	push	hl
 	call	_strlen
-	ld	(ix - 127), hl
+	ld	bc, -130
+	lea	iy, ix
+	add	iy, bc
+	ld	(iy), hl
 	pop	hl
-	or	a, a
-	sbc	hl, hl
+	ld	hl, 1
 	push	hl
 	ld	hl, (ix - 124)
 	push	hl
@@ -103,17 +105,24 @@ _main:
 	pop	hl
 	bit	0, a
 	jp	z, BB1_2
-	or	a, a
-	sbc	hl, hl
-	ex	de, hl
+	ld	de, -327680
+	ld	hl, _.str.3
+	ld	bc, 0
+	ld	c, (ix - 112)
+	ld	(ix - 127), bc
+	push	bc
+	push	hl
+	push	de
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	de, (ix - 127)
 	ld	e, (ix - 112)
-	ld	bc, -139
-	lea	hl, ix
-	add	hl, bc
-	ld	(hl), de
+	ld	(ix - 127), de
 	ld	hl, 0
 	add	hl, sp
-	ld	bc, -136
+	ld	bc, -139
 	lea	iy, ix
 	add	iy, bc
 	ld	(iy), hl
@@ -122,7 +131,7 @@ _main:
 	or	a, a
 	sbc	hl, de
 	push	ix
-	ld	de, -133
+	ld	de, -136
 	add	ix, de
 	ld	(ix), hl
 	pop	ix
@@ -143,7 +152,7 @@ _main:
 	pop	iy
 	ld	(ix - 3), bc
 	push	ix
-	ld	bc, -130
+	ld	bc, -133
 	add	ix, bc
 	ld	(ix), iy
 	pop	ix
@@ -158,7 +167,10 @@ _main:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 127)
+	ld	bc, -130
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
 	push	hl
 	ld	hl, _str
 	push	hl
@@ -168,7 +180,7 @@ _main:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -133
+	ld	bc, -136
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -178,17 +190,14 @@ _main:
 	call	_cryptx_hash_digest
 	pop	hl
 	pop	hl
-	ld	bc, -130
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
-	ld	bc, -139
-	lea	hl, ix
-	add	hl, bc
-	ld	hl, (hl)
-	push	hl
 	ld	bc, -133
+	lea	hl, ix
+	add	hl, bc
+	ld	hl, (hl)
+	push	hl
+	ld	hl, (ix - 127)
+	push	hl
+	ld	bc, -136
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -208,12 +217,12 @@ _main:
 	call	_os_SetCursorPos
 	pop	hl
 	pop	hl
-	ld	bc, -130
+	ld	bc, -133
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
 	push	hl
-	ld	hl, _.str.3
+	ld	hl, _.str.4
 	push	hl
 	ld	hl, -327680
 	push	hl
@@ -221,7 +230,7 @@ _main:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	bc, -136
+	ld	bc, -139
 	lea	hl, ix
 	add	hl, bc
 	ld	hl, (hl)
@@ -260,6 +269,11 @@ _.str.2:
 	section	.rodata,"a",@progbits
 	private	_.str.3
 _.str.3:
+	db	"digest len: %u", 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.4
+_.str.4:
 	db	"HASHLIB SHA-256 DEMO", 10, "SHA-256: %s", 10, 0
 
 	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 6c61664110f888c0285ae4c48b150c9a7a4361bb)"

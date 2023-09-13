@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.7" xml:lang="en-US">
+  <compounddef id="structcryptx__hash__ctx" kind="struct" language="C++" prot="public">
+    <compoundname>cryptx_hash_ctx</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcryptx__hash__ctx_1ae1cc61f269fa5bbf1e8a36b9526c138a" prot="public" static="no" mutable="no">
+        <type>bool(*</type>
+        <definition>bool(* cryptx_hash_ctx::init) (void *ctx)</definition>
+        <argsstring>)(void *ctx)</argsstring>
+        <name>init</name>
+        <qualifiedname>cryptx_hash_ctx::init</qualifiedname>
+        <briefdescription>
+<para>Pointer to function call for hash initialization. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="85" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__hash__ctx_1abcba976dfec24f43bbd0af1f3c4abfeb" prot="public" static="no" mutable="no">
+        <type>void(*</type>
+        <definition>void(* cryptx_hash_ctx::update) (void *ctx, const void *data, size_t len)</definition>
+        <argsstring>)(void *ctx, const void *data, size_t len)</argsstring>
+        <name>update</name>
+        <qualifiedname>cryptx_hash_ctx::update</qualifiedname>
+        <briefdescription>
+<para>Pointer to function call for hash update. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="86" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="86" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__hash__ctx_1a1bc11de9717a516b5c0d053121e9851d" prot="public" static="no" mutable="no">
+        <type>void(*</type>
+        <definition>void(* cryptx_hash_ctx::digest) (void *ctx, void *output)</definition>
+        <argsstring>)(void *ctx, void *output)</argsstring>
+        <name>digest</name>
+        <qualifiedname>cryptx_hash_ctx::digest</qualifiedname>
+        <briefdescription>
+<para>Pointer to function call for digest output. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="87" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__hash__ctx_1a6bceb7d80541e569377e5d3684fd1721" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t cryptx_hash_ctx::digest_len</definition>
+        <argsstring></argsstring>
+        <name>digest_len</name>
+        <qualifiedname>cryptx_hash_ctx::digest_len</qualifiedname>
+        <briefdescription>
+<para>Output length of hash digest, in bytes. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="88" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="88" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__hash__ctx_1a7ef6076b4878b27aea27fa71fc929a60" prot="public" static="no" mutable="no">
+        <type><ref refid="unioncryptx__hash__private__h" kindref="compound">cryptx_hash_private_h</ref></type>
+        <definition>cryptx_hash_private_h cryptx_hash_ctx::metadata</definition>
+        <argsstring></argsstring>
+        <name>metadata</name>
+        <qualifiedname>cryptx_hash_ctx::metadata</qualifiedname>
+        <briefdescription>
+<para>PRIVATE, INTERNAL. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="89" column="23" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="89" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>cryptx_hash_ctx</label>
+        <childnode refid="2" relation="usage">
+          <edgelabel>metadata</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>cryptx_hash_private_h</label>
+        <link refid="unioncryptx__hash__private__h"/>
+        <childnode refid="3" relation="usage">
+          <edgelabel>sha256</edgelabel>
+        </childnode>
+      </node>
+      <node id="3">
+        <label>cryptx_priv_hash_sha256_state</label>
+        <link refid="structcryptx__priv__hash__sha256__state"/>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="84" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="84" bodyend="90"/>
+    <listofallmembers>
+      <member refid="structcryptx__hash__ctx_1a1bc11de9717a516b5c0d053121e9851d" prot="public" virt="non-virtual"><scope>cryptx_hash_ctx</scope><name>digest</name></member>
+      <member refid="structcryptx__hash__ctx_1a6bceb7d80541e569377e5d3684fd1721" prot="public" virt="non-virtual"><scope>cryptx_hash_ctx</scope><name>digest_len</name></member>
+      <member refid="structcryptx__hash__ctx_1ae1cc61f269fa5bbf1e8a36b9526c138a" prot="public" virt="non-virtual"><scope>cryptx_hash_ctx</scope><name>init</name></member>
+      <member refid="structcryptx__hash__ctx_1a7ef6076b4878b27aea27fa71fc929a60" prot="public" virt="non-virtual"><scope>cryptx_hash_ctx</scope><name>metadata</name></member>
+      <member refid="structcryptx__hash__ctx_1abcba976dfec24f43bbd0af1f3c4abfeb" prot="public" virt="non-virtual"><scope>cryptx_hash_ctx</scope><name>update</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

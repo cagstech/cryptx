@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.7" xml:lang="en-US">
+  <compounddef id="unioncryptx__aes__private__h" kind="union" language="C++" prot="public">
+    <compoundname>cryptx_aes_private_h</compoundname>
+    <includes refid="cryptx_8h" local="no">cryptx.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="unioncryptx__aes__private__h_1ad7b64d4d23bbe6483c6a8f80e1fceff1" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__aes__gcm__state" kindref="compound">cryptx_aes_gcm_state</ref></type>
+        <definition>struct cryptx_aes_gcm_state cryptx_aes_private_h::gcm</definition>
+        <argsstring></argsstring>
+        <name>gcm</name>
+        <qualifiedname>cryptx_aes_private_h::gcm</qualifiedname>
+        <briefdescription>
+<para>metadata for GCM mode </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="78" column="27" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="unioncryptx__aes__private__h_1ab8d218d6589b9b07a4a306237e5eb157" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__aes__cbc__state" kindref="compound">cryptx_aes_cbc_state</ref></type>
+        <definition>struct cryptx_aes_cbc_state cryptx_aes_private_h::ctr</definition>
+        <argsstring></argsstring>
+        <name>ctr</name>
+        <qualifiedname>cryptx_aes_private_h::ctr</qualifiedname>
+        <briefdescription>
+<para>metadata for counter mode </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="79" column="27" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="unioncryptx__aes__private__h_1ae1fc34b70eb382df03714488d599dfab" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__aes__ctr__state" kindref="compound">cryptx_aes_ctr_state</ref></type>
+        <definition>struct cryptx_aes_ctr_state cryptx_aes_private_h::cbc</definition>
+        <argsstring></argsstring>
+        <name>cbc</name>
+        <qualifiedname>cryptx_aes_private_h::cbc</qualifiedname>
+        <briefdescription>
+<para>metadata for cbc mode </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="80" column="27" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para><bold>PRIVATE</bold> <ndash/> DO NOT MODIFY </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="3">
+        <label>cryptx_aes_cbc_state</label>
+        <link refid="structcryptx__aes__cbc__state"/>
+      </node>
+      <node id="4">
+        <label>cryptx_aes_ctr_state</label>
+        <link refid="structcryptx__aes__ctr__state"/>
+      </node>
+      <node id="2">
+        <label>cryptx_aes_gcm_state</label>
+        <link refid="structcryptx__aes__gcm__state"/>
+      </node>
+      <node id="1">
+        <label>cryptx_aes_private_h</label>
+        <link refid="unioncryptx__aes__private__h"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>gcm</edgelabel>
+        </childnode>
+        <childnode refid="3" relation="usage">
+          <edgelabel>ctr</edgelabel>
+        </childnode>
+        <childnode refid="4" relation="usage">
+          <edgelabel>cbc</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="77" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="77" bodyend="81"/>
+    <listofallmembers>
+      <member refid="unioncryptx__aes__private__h_1ae1fc34b70eb382df03714488d599dfab" prot="public" virt="non-virtual"><scope>cryptx_aes_private_h</scope><name>cbc</name></member>
+      <member refid="unioncryptx__aes__private__h_1ab8d218d6589b9b07a4a306237e5eb157" prot="public" virt="non-virtual"><scope>cryptx_aes_private_h</scope><name>ctr</name></member>
+      <member refid="unioncryptx__aes__private__h_1ad7b64d4d23bbe6483c6a8f80e1fceff1" prot="public" virt="non-virtual"><scope>cryptx_aes_private_h</scope><name>gcm</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

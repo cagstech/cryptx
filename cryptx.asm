@@ -179,7 +179,7 @@ virtual at 0
 	sha1_offset_data     rb 64
 	sha1_offset_datalen  rb 1
 	sha1_offset_bitlen   rb 8
-	sha1_offset_state    rb 4*8
+	sha1_offset_state    rb 4*5
 	_sha1_ctx_size:
 end virtual
 
@@ -702,9 +702,9 @@ hash_sha1_init:
 	pop iy,de
 	push de
 	ld hl,$FF0000
-	ld bc,offset_state
+	ld bc,sha1_offset_state
 	ldir
-	ld c,8*5
+	ld c,4*5
 	ld hl,_sha1_state_init
 	ldir
 	ld a, 1

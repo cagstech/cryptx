@@ -34,23 +34,24 @@ void hexdump(uint8_t *addr, size_t len, uint8_t *label){
 
 int main(void)
 {
-    size_t str_len = strlen(str);
-    struct cryptx_hash_ctx ctx;
+  size_t str_len = strlen(str);
+  struct cryptx_hash_ctx ctx;
     
-    if(!cryptx_hash_init(&ctx, SHA256)) return 1;
-	
+  if(!cryptx_hash_init(&ctx, SHA1)) return 1;
+  sprintf(CEMU_CONSOLE, "digest len: %u", ctx.digest_len);
+  
 	uint8_t sha256_digest[ctx.digest_len];
 	uint8_t sha256_hex[(ctx.digest_len<<1)+1];
 	memset(sha256_hex, 0, sizeof(sha256_hex));
 	
-    cryptx_hash_update(&ctx, str, str_len);
-    cryptx_hash_digest(&ctx, sha256_digest);
+  cryptx_hash_update(&ctx, str, str_len);
+  cryptx_hash_digest(&ctx, sha256_digest);
    
-    cryptx_digest_tostring(sha256_digest, sizeof sha256_digest, sha256_hex);
+  cryptx_digest_tostring(sha256_digest, sizeof sha256_digest, sha256_hex);
 	os_ClrHome();
 	os_SetCursorPos(0,0);
 	sprintf(CEMU_CONSOLE, "HASHLIB SHA-256 DEMO\nSHA-256: %s\n", sha256_hex);
     //strcpy(CEMU_CONSOLE, sha256_hex);
     //strcpy(CEMU_CONSOLE, "\n");
-    return 0;
+  return 0;
 }

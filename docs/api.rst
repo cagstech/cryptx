@@ -278,7 +278,7 @@ AES is currently the gold standard for secure data transmission and storage. The
 Public Key Cryptography & Key Exchange Protocols
 ___________________________________________________
 
-AES is great but has a major shortcoming. You need a way to agree upon the secret on both sides of the secure session prior to starting to encrypt messages using it. If you send the key in the clear (unencrypted), what's the point of the encryption then? This is where we must discuss **key exchange protocols**. These are algorithms, some encryption methods and some mathematical computations, that allow two endpoints to agree on a shared secret for symmetric encryption.
+AES is great but has a major shortcoming. You need a way to agree upon the secret on both sides of the secure session prior to starting to encrypt messages using it. If you send the key in the clear (unencrypted), what's the point of the encryption then? This is where **key exchange protocols** enter the discussion. These are algorithms, some encryption methods and some mathematical computations, that allow two endpoints to agree on a shared secret for symmetric encryption without leaking the secret.
 
 **Rivest-Shamir-Adleman (RSA) Encryption**
 
@@ -352,11 +352,14 @@ Just like with RSA, using this on the calculator is quite simple--but time-consu
 * :ref:`view elliptic curve documentation <ec>`
 
 
-Abstract Syntax Notation One
-_____________________________
-.. _`Abstract Syntax Notation One` ::
+Cryptographic Encoding Formats
+_______________________________
 
-Abstract Syntax Notation One (ASN.1) is a form of data encoding common to cryptography and one of the two usual output formats for keyfiles. ASN.1 is a tree structure of objects encoded by type, size, and data. A common serialization format for ASN.1 is DER, which stands for *Distinguished Encoding Rules*. It is standardized for cryptography. See the example below which expresses the encoding of a public key from *Public Key Cryptography Standards #8 (PKCS#8)*.
+The *Public Key Cryptography Standards (PKCS)* defines, if you can believe it, standards for the encoding of public keys in storage and transit. The two most commonly used encoding formats are *Abstract Syntax Notation One (ASN.1)* and *Base64*. Do not confuse encryption with encoding. Encoding is merely a method of expressing information in plain-text format. It does not prevent unauthorized parties from reading or modifying the data.
+
+**Abstract Syntax Notation One (ASN.1)**
+
+Many cryptographic structures are encoded using *Distinguished Encoding Rules (DER)* which is a serialization format of ASN.1 standardized for cryptography. See the example below which expresses the encoding of a public key from *Public Key Cryptography Standards #8 (PKCS#8)*.
 
 .. code-block:: c
 	
@@ -367,54 +370,70 @@ Abstract Syntax Notation One (ASN.1) is a form of data encoding common to crypto
 		}
 		PublicKey BIT STRING
 	}
+ 
+.. code-block:: c
 
-.. note::
-	Do not confuse encryption with encoding. Encoding is merely a method of expressing information. It does not prevent unauthorized parties from reading or modifying the data.
+  #define RECVBUF_LEN 1024
+  uint8_t recv_buf[RECVBUF_LEN];
+  size_t recv_len;
+  
+  // read incoming to `recv_buf` update `recv_len`
+  network_recv(recv_buf, &recv_len);
+  uint8_t *rsa_pubkey = recv_buf;
+  
+  // ** Decode DER-encoded structure **
+  // decode parent SEQUENCE, tag_data and tag_datalen are pointers to data
+  uint8_t *tag_data;
+  size_t tag_datalen;
+  if(cryptx_asn1_decode(recv_buf, recv_len, 0, NULL, &tag_datalen, &tag_data))
+    return;   // decoding error, do something to handle
+    
+  // `PublicKey` object is actually a BIT STRING-encoded DER structure
+  uint8_t *keydata;
+  size_t keylen;
+  if(cryptx_asn1_decode(tag_data, tag_datalen, 1, NULL, &keylen, &keydata))
+    return;   // decoding error, do something to handle
+    
+  // Decode PKCS#1 Public Key structure
+  uint8_t *keystruct;
+  size_t keystruct_len;
+  if(cryptx_asn1_decode(keydata, keylen, 0, NULL, &keystruct_len, &keystruct))
+    return;   // decoding error, do something to handle
+    
+  // `keyinner` now contains two ASN.1 encoded objects, the modulus and the exponent
+  uint8_t *key_modulus;
+  size_t key_modulus_size;
+  if(cryptx_asn1_decode(keystruct, keystruct_len, 0, NULL, &key_modulus_size, &key_modulus))
+    return;   // decoding error, do something to handle
+    
+  // We only need modulus, library exponent is hardcoded to 65537.
+  // In theory can you can *validate* that the exponent is supported
 	
-.. doxygenenum:: CRYPTX_ASN1_TAGS
-	:project: CryptX
+* :ref:`view ASN.1 documentation <encoding>`
 	
-.. doxygenenum:: CRYPTX_ASN1_CLASSES
-	:project: CryptX
-	
-.. doxygenenum:: CRYPTX_ASN1_FORMS
-	:project: CryptX
-	
-.. doxygendefine:: cryptx_asn1_get_tag
-	:project: CryptX
-	
-.. doxygendefine:: cryptx_asn1_get_class
-	:project: CryptX
-	
-.. doxygendefine:: cryptx_asn1_get_form
-	:project: CryptX
-	
-.. doxygenenum:: asn1_error_t
-	:project: CryptX
-	
-.. doxygenfunction:: cryptx_asn1_decode
-	:project: CryptX
-	
-Base64 Encoding and Decoding
-____________________________
-.. _`Base64 Encoding and Decoding` ::
+**Base64 Encoding and Decoding**
 
-Base64 (sextet-encoding) is the second of two encoding formats common to cryptography, including keyfiles exported by cryptographic libraries. In fact, PEM encoding usually has the key encoded first with ASN.1 and then into base64.
+Base64 (sextet-encoding) is the second of two encoding formats common to cryptography, including keyfiles exported by cryptographic libraries. In fact, PEM-encoding usually has the key encoded first with ASN.1 and then into base64. In base64 a stream of octets (8 bits per byte) is parsed as a bit string in groups of six bits (hence sextet) which is then mapped to one of 64 printable characters.
 
-In base64 a stream of octets (8 bits per byte) is parsed as a bit string in groups of six bits (hence sextet) which is then mapped to one of 64 printable characters.
+.. code-block:: c
 
-.. doxygendefine:: cryptx_base64_get_encoded_len
-	:project: CryptX
-	
-.. doxygendefine:: cryptx_base64_get_decoded_len
-	:project: CryptX
-	
-.. doxygenfunction:: cryptx_base64_encode
-	:project: CryptX
-	
-.. doxygenfunction:: cryptx_base64_decode
-	:project: CryptX
-	
+  #define RECVBUF_LEN 1024
+  uint8_t recv_buf[RECVBUF_LEN];
+  size_t recv_len;
+  
+  // read incoming to `recv_buf` update `recv_len`
+  network_recv(recv_buf, &recv_len);
+  uint8_t *rsa_pubkey = recv_buf;
+  
+  // ** Decode PEM Base64 encoding **
+  size_t octet_len = cryptx_base64_get_decoded_len(recv_len);
+  uint8_t octet_data[octet_len];
+  cryptx_base64_decode(octet_data, recv_buf, recv_len);
+  // If this is PEM, now you have a DER-encoded object.
+  // It's ASN.1 time, boi
+  
+* :ref:`view Base64 documentation <encoding>`
+
 Hazardous Materials
 ___________________
 
