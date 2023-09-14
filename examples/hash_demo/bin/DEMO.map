@@ -9,7 +9,7 @@ Section          Base   Top    High   Length
 .fini            D1AA42 D1AA76            34h
 .text            D1AA76 D1CB85          210Fh
 .data            D1CB85 D1CBCC            47h
-.rodata          D1CBCC D1CD18           14Ch
+.rodata          D1CBCC D1CD98           1CCh
 .init_array      000000 000000             0h
 .ctors           000000 000000             0h
 .dtors           000000 000000             0h
@@ -114,7 +114,7 @@ _main                     = D1C97F
 _str                      = D1CB88
 _.str.3                   = D1CCC6
 _.str.4                   = D1CCD6
-_.str.5                   = D1CCF8
+_.str.5                   = D1CD44
 lib.LibLoad               = D1A9F5
 _#cryptx_hash_init        = D1AA08
 _#cryptx_hash_update      = D1AA0C
