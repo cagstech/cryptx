@@ -437,38 +437,10 @@ Base64 (sextet-encoding) is the second of two encoding formats common to cryptog
 Hazardous Materials
 ___________________
 
-This segment contains lower-level functions that are not part of the standard API. This allows developers who know what they are doing to write their own constructions. Remember that it is generally ill-advised to try to implement your own cryptography.
+Like many other cryptography libraries, CryptX consists of a main API layered over a collection  of primitives whose independent use may pose certain security risks, such as leaking information via side-channel attack or insecure cipher configuration. It is HIGHLY recommended that you stick to the main API but if you know what you are doing, you may enable the **hazardous materials** layer of the API like so:
 
 .. code-block:: c
 
-	#define CRYPTX_ENABLE_HAZMAT	// to enable the hazardous materials
-	
-.. doxygenfunction:: cryptx_hazmat_aes_ecb_encrypt
-	:project: CryptX
-	
-.. doxygenfunction:: cryptx_hazmat_aes_ecb_decrypt
-	:project: CryptX
-	
-.. doxygenfunction:: cryptx_hazmat_rsa_oaep_encode
-	:project: CryptX
+	#define CRYPTX_ENABLE_HAZMAT
 
-.. doxygenfunction:: cryptx_hazmat_rsa_oaep_decode
-	:project: CryptX
-	
-.. doxygenfunction:: cryptx_hazmat_powmod
-	:project: CryptX
-
-.. doxygendefine:: CRYPTX_GF2_INTLEN
-	:project: CryptX
-
-.. doxygenstruct:: cryptx_ecc_point
-	:project: CryptX
-	
-.. doxygenfunction:: cryptx_hazmat_ecc_point_add
-	:project: CryptX
-	
-.. doxygenfunction:: cryptx_hazmat_ecc_point_double
-	:project: CryptX
-	
-.. doxygenfunction:: cryptx_hazmat_ecc_point_mul_scalar
-	:project: CryptX
+Once you do this in your code, you may call any of the hazmat functions just like the functions in the main API. To view what's available in the hazardous layer, :ref:`click here <hazardous>`.

@@ -352,7 +352,7 @@ _.str.4:
 _.str.5:
 	db	"HASHLIB SHA-1 DEMO", 10, "SHA-256: %s", 10, 0
 
-	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 6d9aa7a16db70f3d02ae304b08d4a03011281fef)"
+	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 6c61664110f888c0285ae4c48b150c9a7a4361bb)"
 	extern	_cryptx_digest_tostring
 	extern	__frameset
 	extern	_malloc
