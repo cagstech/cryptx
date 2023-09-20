@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cryptography for the CE &mdash; CryptX  documentation</title>
+  <title>CryptX Library &mdash; CryptX  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/proof.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API Overview" href="api.html" /> 
+    <link rel="next" title="Analysis &amp; Overview" href="static/analysis.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -37,9 +37,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="static/analysis.html">Analysis &amp; Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="static/notes.html">Closing Notes</a></li>
 </ul>
 
         </div>
@@ -56,7 +54,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home"></a> &raquo;</li>
-      <li>Cryptography for the CE</li>
+      <li>CryptX Library</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -65,43 +63,170 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="cryptography-for-the-ce">
-<h1>Cryptography for the CE<a class="headerlink" href="#cryptography-for-the-ce" title="Permalink to this headline"></a></h1>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><strong>Cryptography</strong> is a specialization within the field of information security that deals specifically with preventing data from being read or modified in storage or in transit.</p>
+  <div class="section" id="cryptx-library">
+<h1>CryptX Library<a class="headerlink" href="#cryptx-library" title="Permalink to this headline"></a></h1>
+<p><strong>Industry-Standard Cryptography for the Texas Instruments TI-84+ CE Graphing Calculator</strong></p>
+<p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Cryptography</span> is a specialization within the information security field that deals almost exclusively with protecting data from being read or modified by unauthorized parties. Cryptographic standards are vigorously tested for vulnerabilities and subject to constant analysis and improvement.</p><p><strong>CryptX</strong> is a specialty library designed to provide cryptographic functionality for the TI-84+ CE. It integrates with the <a class="reference external" href="https://github.com/CE-Programming/toolchain">CE C toolchain</a> and allows developers to easily implement cryptography into their projects without needing to worry about low-level implementation details. Distribution as a dynamic library also allows for the library to be updated with new functionality, bug fixes, and vulnerability patches usually without even requiring programs be rebuilt. Just install the new library version on your device and it should be forwards-compatible.</p>
+<p><strong>CryptX</strong> was made possible thanks to the work of a number of individuals from the <a class="reference external" href="https://www.cemetech.net/">Cemetech</a> development community. From code contributions to lengthy discussions about ways and means to analysis of hardware behavior, this project would not have evolved into what it became without their support.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Contributor</p></th>
+<th class="head"><p>Contribution</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Anthony Cagliano</p></td>
+<td><p>lead developer, main algorithm implementation/sourcing</p></td>
+</tr>
+<tr class="row-odd"><td><p>Adam Beckingham</p></td>
+<td><p>porting to ez80 assembly and optimizing many algorithms</p></td>
+</tr>
+<tr class="row-even"><td><p>John Caesarz</p></td>
+<td><p>general code contributions</p></td>
+</tr>
+<tr class="row-odd"><td><p>jacobly</p></td>
+<td><p>general code contributions</p></td>
+</tr>
+<tr class="row-even"><td><p>Zeroko</p></td>
+<td><p>info and analysis for entropic RNG construction</p></td>
+</tr>
+<tr class="row-odd"><td><p>calc84maniac</p></td>
+<td><p>general code contributions</p></td>
+</tr>
+<tr class="row-even"><td><p>MateoConLechuga</p></td>
+<td><p>words of encouragement, incl. “That’s not how RSA works, you idiot”</p></td>
+</tr>
+</tbody>
+</table>
+<hr class="docutils" />
+<div class="section" id="api-documentation">
+<h2>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline"></a></h2>
+<p>CryptX has a number of modules that implement various standards for data obfuscation and integrity verification. The library attempts to evidence this by utilizing the following function naming convention:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">cryptx_</span><span class="p">[</span><span class="n">module</span><span class="p">]</span><span class="n">_</span><span class="p">[</span><span class="n">method</span><span class="p">]</span>
+</pre></div>
 </div>
-<p><strong>CryptX</strong> is a specialty library designed to provide cryptography for the TI-84+ CE graphing calculator. It integrates with the TI-84+ CE toolchain and allows developers to easily implement cryptography into their projects without needing to worry about low-level implementation details. It also allows for bugfixes, feature additions, and changes to be pushed to the library usually without requiring developers to rebuild their projects.</p>
-<p>If this is your first introduction to the CE Toolchain, check out the <a class="reference external" href="https://github.com/CE-Programming/toolchain">toolchain repository</a> and familiarize yourself with how it works.</p>
-<p><strong>CryptX</strong> is not some fever-dream that tinkers with some flags and calls it “encryption” like many of the other programs submitted to such archives as ticalc.org. It was the result of months of tedious work on the part of multiple individuals, analysis on the hardware, testing, and research to create a utility worthy of the name <em>cryptography library</em>. This utility provides:</p>
-<ul class="simple">
-<li><p>Secure Random Number Generation</p></li>
-<li><p>Integrity Verification</p></li>
-<li><p>(Password-Based) Key Derivation</p></li>
-<li><p>Encryption &amp; Key Exchange</p></li>
-<li><p>Cryptographic Encoding (ASN.1, Base64)</p></li>
-</ul>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Module</p></th>
+<th class="head"><p>Implements</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="csrand">csrand</a></p></td>
+<td><p>implements cryptographically-secure random number generation</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="digest">digest</a></p></td>
+<td><p>implements digest manipulation</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="hash">hash</a></p></td>
+<td><p>implements hashing</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="hmac">hmac</a></p></td>
+<td><p>implements hash-based message authentication code (hmac)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="aes">aes</a></p></td>
+<td><p>implements advanced encryption standard (aes)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="rsa">rsa</a></p></td>
+<td><p>implements RSA public key cryptography</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="ecc">ecdh</a></p></td>
+<td><p>implements elliptic curve diffie-hellman (ecdh) key exchange</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="encoding">asn1</a></p></td>
+<td><p>implements decoder for DER/ASN.1 encoding</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="base64">base64</a></p></td>
+<td><p>implements encoder/decoder for PEM/base64 encoding</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Coming Soon</p></th>
+<th class="head"><p>Implements</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="ecc">ecdsa</a></p></td>
+<td><p>implements elliptic curve digital signing algorithm (ecdsa)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="key">key</a></p></td>
+<td><p>implements key generation, export, and import</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="tls">tls</a></p></td>
+<td><p>implements TLS protocol</p></td>
+</tr>
+</tbody>
+</table>
 <p>Last but not least, this library implements platform-specific considerations for side-channel attacks to the best extent possible on the hardware. This includes:</p>
 <ul class="simple">
 <li><p>constant-time implementations where possible</p></li>
 <li><p>stack frame zeroing after cryptographic transformations</p></li>
 <li><p>system interrupts disabled during cryptographic transformations</p></li>
 </ul>
-<p>Planned feature additions include:</p>
-<ul class="simple">
-<li><p>ECDSA (and possibly RSA) signing</p></li>
-<li><p>SSL/TLS protocol to simplify cipher setup and handshakes (this will be done after sockets implemented)</p></li>
-</ul>
 <p>Check out the <a class="reference internal" href="static/analysis.html#analysis"><span class="std std-ref">Analysis &amp; Overview</span></a> for more technical implementation details including platform-specific security considerations.</p>
 <p>Most of this library’s modules have been tested for compatibility with several other cryptographic libraries including <em>openssl</em>, <em>cryptodome/pycryptodome</em>, and <em>cryptography</em>, although in some cases where libraries do not expose their primitives, use of their <em>hazardous materials</em> layer may be required. If you do find an incompatibility with another cryptographic library, please open an issue on the <a class="reference external" href="https://github.com/acagliano/cryptx">CryptX Github</a>.</p>
+<hr class="docutils" />
+<div class="section" id="secure-channel-handshake-process">
+<h3>Secure Channel Handshake Process<a class="headerlink" href="#secure-channel-handshake-process" title="Permalink to this headline"></a></h3>
+<p><strong>Preamble</strong></p>
+<blockquote>
+<div><p>This section is for both end-user and developer alike. Give this section a read if would like a rough understanding of how these modules (in any cryptography library, not just CryptX) come together to ensure your information is protected in transit. It will be a very abbreviated explanation that will barely scratch the surface of the field but should get you pointed in the right direction to understanding how encryption and authentication work. We will use HTTPS as the use-case for explanation.</p>
+</div></blockquote>
+<p><strong>Client Says Hi – Insecure</strong></p>
+<blockquote>
+<div><p>The first step to any communication is to say hi. In the case of HTTPS, this is your web browser telling some website’s server that you wish to view a resource it is hosting. This is sent in the clear, as there’s no real reason to keep it secret.</p>
+</div></blockquote>
+<p><strong>Server Acknowledges – Insecure</strong></p>
+<blockquote>
+<div><p>Upon receiving your hello, the server will reply with an acknowledgement. For a server running HTTPS, a certificate will soon follow. This certificate contains a shitton of information about the endpoint–hostname, identity of the authority that generated it, various signatures that can be verified–as well as a collection of algorithms and public keys the server will use for secure connections.</p>
+</div></blockquote>
+<p><strong>Client Validates Certificate and Selects Algorithms – Insecure</strong></p>
+<blockquote>
+<div><p>The client will load the certificate itself and will verify the signature(s) on the certificate. In some cases it will also follow the chain of trust back to the issuing authority and verify its signature as well. If these signatures are invalid some browsers will display a “bad certificate” or “insecure connection” warning and others will just refuse to load the content.</p>
+<p>If nothing goes wrong however, the client will consider the choices of algorithms for encryption and choose the best ones available. In some cases this may be RSA with AES-GCM-256. In other cases this may be ECDH with AES-CTR-128. Whatever the case may be, this is then communicated back to the server. The server responds with acknowledgement.</p>
+</div></blockquote>
+<p><strong>Go-Go Gadget Public Key Cryptography – Secure</strong></p>
+<blockquote>
+<div><p>This is the point at which the communication upgrades to a secure connection. The chosen public key encryption algorithm is used to encrypt (or generate) the shared secret. The encrypted message is then sent between the two parties. In the case of RSA, the client tells the server what shared secret it wants to use. In the case of ECDH, both parties exchange public keys and compute the shared secret simultaneously. In both cases, you now have all the information you need for the next phase of secure communication.</p>
+</div></blockquote>
+<p><strong>Back and Forth with AES – Secure</strong></p>
+<blockquote>
+<div><p>The major heavy lifting for this is done now and both parties have a shared secret–an AES key, if you will. Both parties open an AES session under that key and begin to talk to each other. This continues until (1) the volume of traffic requires that a new AES key be used [this occurs after about 4.50x10^15 bytes of data have been sent], or (2) one of the parties disconnects. If the first one occurs, we loop back to public key cryptography to agree on a new shared secret.</p>
+</div></blockquote>
+</div>
+<hr class="docutils" />
+<div class="section" id="the-tls-protocol">
+<h3>The TLS Protocol<a class="headerlink" href="#the-tls-protocol" title="Permalink to this headline"></a></h3>
+<p>When computer scientists start throwing out fancy algorithms, they may sound scary but it’s usually just appearances. TLS stands for <strong>Transport Layer Security</strong> and, much like the horror movie villain who becomes a lot less scary when you realize you can probably outrun him, TLS isn’t too scary either. All it does is protocolize the handshake process we have previously discussed. You may see some code that looks similar to this.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">socket_t</span><span class="w"> </span><span class="n">sock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">socket_create</span><span class="p">();</span>
+<span class="n">tls_socket_t</span><span class="w"> </span><span class="n">ssock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tls_wrap_socket</span><span class="p">(</span><span class="n">sock</span><span class="p">);</span>
+<span class="n">ssock</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+<span class="n">ssock</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The code creates a standard socket object, then calls a TLS socket wrapper method. This method not only returns an encrypted socket object but also handles the requisite handshaking on a shared secret. Do you NEED to use TLS? I mean technically, no. You can do the handshake in parts, like you have to with CryptX until TLS is implemented. However, protocols like TLS are recommended (and many times enforced) because cryptography is kind of like that scene from Avengers: Infinity War. There’s 14,000,605 ways to get it wrong and only one way to get it right. To this end I strongly advise that developers using CryptX update their applications to make use of TLS within CryptX instead of manual handshaking as soon as that module is implemented and stable.</p>
 <div class="section" id="additional-resources">
-<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline"></a></h2>
+<h4>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline"></a></h4>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="static/analysis.html">Analysis &amp; Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="static/notes.html">Closing Notes</a></li>
 </ul>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -110,7 +235,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="api.html" class="btn btn-neutral float-right" title="API Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="static/analysis.html" class="btn btn-neutral float-right" title="Analysis &amp; Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
