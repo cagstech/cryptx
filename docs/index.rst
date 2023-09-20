@@ -90,33 +90,37 @@ _________________________________
 
   This section is for both end-user and developer alike. Give this section a read if would like a rough understanding of how these modules (in any cryptography library, not just CryptX) come together to ensure your information is protected in transit. It will be a very abbreviated explanation that will barely scratch the surface of the field but should get you pointed in the right direction to understanding how encryption and authentication work. We will use HTTPS as the use-case for explanation.
 
-**Client Says Hi -- Insecure**
+**Client Says Hi [Insecure]**
 
   The first step to any communication is to say hi. In the case of HTTPS, this is your web browser telling some website's server that you wish to view a resource it is hosting. This is sent in the clear, as there's no real reason to keep it secret.
 
-**Server Acknowledges -- Insecure**
+**Server Acknowledges [Insecure]**
 
   Upon receiving your hello, the server will reply with an acknowledgement. For a server running HTTPS, a certificate will soon follow. This certificate contains a shitton of information about the endpoint--hostname, identity of the authority that generated it, various signatures that can be verified--as well as a collection of algorithms and public keys the server will use for secure connections.
 
-**Client Validates Certificate and Selects Algorithms -- Insecure**
+**Client Validates Certificate and Selects Algorithms [Insecure]**
 
   The client will load the certificate itself and will verify the signature(s) on the certificate. In some cases it will also follow the chain of trust back to the issuing authority and verify its signature as well. If these signatures are invalid some browsers will display a "bad certificate" or "insecure connection" warning and others will just refuse to load the content.
 
   If nothing goes wrong however, the client will consider the choices of algorithms for encryption and choose the best ones available. In some cases this may be RSA with AES-GCM-256. In other cases this may be ECDH with AES-CTR-128. Whatever the case may be, this is then communicated back to the server. The server responds with acknowledgement.
 
-**Go-Go Gadget Public Key Cryptography -- Secure**
+**Go-Go Gadget Public Key Cryptography [Secure]**
 
   This is the point at which the communication upgrades to a secure connection. The chosen public key encryption algorithm is used to encrypt (or generate) the shared secret. The encrypted message is then sent between the two parties. In the case of RSA, the client tells the server what shared secret it wants to use. In the case of ECDH, both parties exchange public keys and compute the shared secret simultaneously. In both cases, you now have all the information you need for the next phase of secure communication.
 
-**Back and Forth with AES -- Secure**
+**Back and Forth with AES [Secure]**
 
-  The major heavy lifting for this is done now and both parties have a shared secret--an AES key, if you will. Both parties open an AES session under that key and begin to talk to each other. This continues until (1) the volume of traffic requires that a new AES key be used [this occurs after about 4.50x10^15 bytes of data have been sent], or (2) one of the parties disconnects. If the first one occurs, we loop back to public key cryptography to agree on a new shared secret.
+  The major heavy lifting for this is done now and both parties have a shared secret--an AES key, if you will. Both parties open an AES session under that key and begin to talk to each other. This continues until:
+  
+    - You hit a stupidly large amount of data encrypted on a single key at which point the encryption algorithm may begin to leak bits of the key. For most AES cipher modes this occurs at about :code:`(2 ^ 64) * 16` bytes of data encrypted. For other cipher modes this can be as low as :code:`(2 ^ 24) * 16` bytes but it is still a number you will never realisticlly hit, especially on a calculator. If for some ridiculous reason you do hit this, you fallback to public key cryptography to negotiate a new AES secret.
+    
+    - One of the parties disconnects.
   
 ----
 
 The TLS Protocol
 _________________
-When computer scientists start throwing out fancy algorithms, they may sound scary but it's usually just appearances. TLS stands for **Transport Layer Security** and, much like the horror movie villain who becomes a lot less scary when you realize you can probably outrun him, TLS isn't too scary either. All it does is protocolize the handshake process we have previously discussed. You may see some code that looks similar to this.
+When computer scientists start throwing out fancy acronyms, they may sound scary but it's usually just appearances. TLS stands for **Transport Layer Security** and, much like the horror movie villain who becomes a lot less scary when you realize you can probably outrun him, TLS gets less scary when we discover what it is. All TLS does is protocolize the handshake process we have previously discussed. You may see some code that looks similar to this.
 
 .. code:: c
 
