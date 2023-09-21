@@ -133,7 +133,24 @@
 </dl>
 </dd></dl>
 
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Hash this string&quot;</span><span class="p">;</span>
+<span class="n">crytx_hash_ctx</span><span class="w"> </span><span class="n">h</span><span class="p">;</span>
+
+<span class="c1">// initialize hash</span>
+<span class="n">cryptx_hash_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">h</span><span class="p">,</span><span class="w"> </span><span class="n">SHA256</span><span class="p">);</span>
+
+<span class="c1">// allocate buffer for digest</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">digest</span><span class="p">[</span><span class="n">h</span><span class="p">.</span><span class="n">digest_len</span><span class="p">];</span>
+
+<span class="c1">// hash the string</span>
+<span class="n">cryptx_hash_update</span><span class="p">(</span><span class="o">&amp;</span><span class="n">h</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="n">msg</span><span class="p">));</span>
+
+<span class="c1">// return the digest</span>
+<span class="n">cryptx_hash_digest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">h</span><span class="p">,</span><span class="w"> </span><span class="n">digest</span><span class="p">);</span>
+</pre></div>
+</div>
 <hr class="docutils" />
+<p><strong>Mask Generation Function One (MGF1)</strong> is a hash function that can return a digest of a variable given length. It is generally not used standalone but is a mask-generating algorithm used within the RSA module. Nonetheless, if you have need of it, feel free to use it.</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv416cryptx_hash_mgf1PKv6size_tPv6size_t7uint8_t">
 <span id="_CPPv316cryptx_hash_mgf1PKv6size_tPv6size_t7uint8_t"></span><span id="_CPPv216cryptx_hash_mgf1PKv6size_tPv6size_t7uint8_t"></span><span id="cryptx_hash_mgf1__voidCP.s.voidP.s.uint8_t"></span><span class="target" id="cryptx_8h_1a661281f90257c5e21dbb53654ba505e7"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hash_mgf1</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">datalen</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">outbuf</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">outlen</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">hash_alg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416cryptx_hash_mgf1PKv6size_tPv6size_t7uint8_t" title="Permalink to this definition"></a><br /></dt>
@@ -151,6 +168,18 @@
 </dl>
 </dd></dl>
 
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Hash this string&quot;</span><span class="p">;</span>
+<span class="cp">#define MASK_LEN  48</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">mask_buf</span><span class="p">[</span><span class="n">MASK_LEN</span><span class="p">];</span>
+
+<span class="n">cryptx_hash_mgf1</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="n">msg</span><span class="p">),</span><span class="w"> </span><span class="n">mask_buf</span><span class="p">,</span><span class="w"> </span><span class="n">MASK_LEN</span><span class="p">,</span><span class="w"> </span><span class="n">SHA256</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Do not use this function to derive a mask for a key from a password. Use <strong>cryptx_hmac_pbkdf2</strong> for this instead. See the <a class="reference internal" href="hmac.html#hmac"><span class="std std-ref">HMAC module</span></a>.</p>
+</div>
+<hr class="docutils" />
 <p><strong>Notes</strong></p>
 <blockquote>
 <div><ol class="arabic simple">

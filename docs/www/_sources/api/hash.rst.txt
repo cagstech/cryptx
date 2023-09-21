@@ -25,12 +25,44 @@ _______________
 	
 .. doxygenfunction:: cryptx_hash_digest
 	:project: CryptX
+ 
+.. code-block:: c
+  
+  char *msg = "Hash this string";
+  crytx_hash_ctx h;
+  
+  // initialize hash
+  cryptx_hash_init(&h, SHA256);
+  
+  // allocate buffer for digest
+  uint8_t digest[h.digest_len];
+  
+  // hash the string
+  cryptx_hash_update(&h, msg, strlen(msg));
+  
+  // return the digest
+  cryptx_hash_digest(&h, digest);
 
 ----
 
+**Mask Generation Function One (MGF1)** is a hash function that can return a digest of a variable given length. It is generally not used standalone but is a mask-generating algorithm used within the RSA module. Nonetheless, if you have need of it, feel free to use it.
+
 .. doxygenfunction:: cryptx_hash_mgf1
 	:project: CryptX
+ 
+.. code-block:: c
 
+  char *msg = "Hash this string";
+  #define MASK_LEN  48
+  uint8_t mask_buf[MASK_LEN];
+  
+  cryptx_hash_mgf1(msg, strlen(msg), mask_buf, MASK_LEN, SHA256);
+  
+.. warning::
+
+  Do not use this function to derive a mask for a key from a password. Use **cryptx_hmac_pbkdf2** for this instead. See the :ref:`HMAC module <hmac>`.
+  
+----
 
 **Notes**
 
