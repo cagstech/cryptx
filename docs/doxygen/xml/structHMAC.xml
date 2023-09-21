@@ -9,7 +9,7 @@
 <title>HASH-BASED MESSAGE AUTHENTICATION CODE (HMAC) – Use to verify data integrity and authenticity.</title>
 </sect3>
     </detaileddescription>
-    <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="150" column="1"/>
+    <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="138" column="1"/>
     <listofallmembers>
     </listofallmembers>
   </compounddef>

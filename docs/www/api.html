@@ -123,7 +123,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><a class="reference internal" href="api/mgf1.html#mgf1"><span class="std std-ref">view mgf1 documentation</span></a></p></li>
+<li><p><span class="xref std std-ref">view mgf1 documentation</span></p></li>
 </ul>
 <p><strong>Comparing two Digests Securely</strong></p>
 <p>A cryptography library needs a safe way to compare two digests to determine if they are the same. The <cite>memcmp</cite> and <cite>strcmp/strncmp</cite> functions in the toolchain are not timing-safe; they return as soon as a mismatch is found. This causes slight variations in execution time that may reveal which character(s) of the digest are correct. This library provides a variant of this function in which the full length provided is parsed regardless of where the first mismatch is leading to no variance in execution time. Such a function is referred to as a <em>constant-time implementation</em>.</p>
@@ -148,7 +148,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><a class="reference internal" href="api/bytes.html#digest-compare"><span class="std std-ref">view digest_compare documentation</span></a></p></li>
+<li><p><span class="xref std std-ref">view digest_compare documentation</span></p></li>
 </ul>
 <p><strong>Converting a Digest to a String</strong></p>
 <p>Lastly, for debugging purposes and occasionally for UI purposes it may be desired to display a digest to the user as a readable string. A function is provided by this library to convert a binary digest into its printable hex-string equivalent.</p>
@@ -159,7 +159,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><a class="reference internal" href="api/bytes.html#digest-tostring"><span class="std std-ref">view digest_tostring documentation</span></a></p></li>
+<li><p><span class="xref std std-ref">view digest_tostring documentation</span></p></li>
 </ul>
 </div>
 <hr class="docutils" />

@@ -100,7 +100,6 @@ enum cryptx_hash_algorithms {
  *	@param context	Pointer to a hash-state context.
  *  @param hash_alg	The numeric ID of the hashing algorithm to use. See @b cryptx_hash_algorithms.
  *  @return @b true if hash initialization succeeded, @b false if failed.
- *  @note Destroys 516 bytes of fastMem starting at 0xE30800.
  */
 bool cryptx_hash_init(struct cryptx_hash_ctx* context, uint8_t hash_alg);
 
@@ -109,9 +108,6 @@ bool cryptx_hash_init(struct cryptx_hash_ctx* context, uint8_t hash_alg);
  *	@param context	Pointer to a hash-state context.
  *	@param data		Pointer to a block of data to hash..
  *	@param len		Size of the @b data to hash.
- *	@note Destroys 516 bytes of fastMem starting at 0xE30800.
- *	@warning Calling this on a context that has not been initialized may have
- *	unpredictable results.
  */
 void cryptx_hash_update(struct cryptx_hash_ctx* context, const void* data, size_t len);
 
@@ -119,12 +115,6 @@ void cryptx_hash_update(struct cryptx_hash_ctx* context, const void* data, size_
  *	@brief Output digest for current hash-state (preserves state).
  *	@param context	Pointer to a hash-state context.
  *	@param	digest	Pointer to a buffer to write digest to.
- *	@note @b digest must be at large enough to hold the hash digest.
- *	You can retrieve the necessary size by accessing the @b digest_len
- *	member of an initialized @b cryptx_hash_ctx.
- *	@note Destroys 516 bytes of fastMem starting at 0xE30800.
- *  @warning Calling this on a context that has not been initialized may have
- *	unpredictable results.
  */
 void cryptx_hash_digest(struct cryptx_hash_ctx* context, void* digest);
 
@@ -135,8 +125,6 @@ void cryptx_hash_digest(struct cryptx_hash_ctx* context, void* digest);
  *	@param outbuf	Pointer to buffer to write digest to.
  *	@param	outlen 	Number of bytes to write to @b outbuf.
  *  @param	hash_alg	The numeric ID of the hashing algorithm to use. See @b cryptx_hash_algorithms.
- *	@note @b outbuf must be at least @b outlen bytes large.
- *	@note Destroys 516 bytes of fastMem starting at 0xE30800.
  */
 void cryptx_hash_mgf1(const void* data,
 					  size_t datalen,
@@ -219,31 +207,40 @@ void cryptx_hmac_pbkdf2(const char* password,
 						uint8_t hash_alg);
 
 /**
- * @brief Convert a digest to its hexstring representation.
- * @param digest	Pointer to a buffer or digest.
+ * @brief Convert a bytearray to its hexstring representation.
+ * @param buf	Pointer to bytearray to convert.
  * @param len		Byte length of @b digest.
  * @param hexstr	Buffer to write the output hex string to.
- * @note @b hexstr must be at least (2 \* len + 1) bytes large.
  */
-bool cryptx_bytes_tostring(const uint8_t* digest, size_t len, char* hexstr);
+bool cryptx_bytes_tostring(const void *buf, size_t len, char *hexstr);
 
 
-bool cryptx_bytes_fromstring(uint8_t* digest, const char* hexstr);
 
-
-bool cryptx_bytes_rcopy(const void* digest, size_t len, uint8_t* hexstr);
-
-bool cryptx_bytes_reverse(const void* digest, size_t len);
+bool cryptx_bytes_fromstring(void *buf, const char *hexstr);
 
 /**
- * @brief Compare two digests or buffers.
- * @param digest1	Pointer to first buffer to compare.
- * @param digest2	Pointer to second buffer to compare.
+ * @brief Copies @b len bytes from @b src to @b dest while reversing the byte order.
+ * @param dest  Pointer to a buffer to write bytes.
+ * @param src   Pointer to a buffer to read bytes from.
+ * @param len   Number of bytes to read.
+ */
+bool cryptx_bytes_rcopy(void *dest, const void *src, size_t len);
+
+/**
+ * @brief Reverses the byte order of a buffer in-place.
+ * @param buf   Pointer to buffer to reverse.
+ * @param len   Length of the buffer.
+ */
+bool cryptx_bytes_reverse(void *buf, size_t len);
+
+/**
+ * @brief Compare two bytearrays using a @b constant-time algorithm.
+ * @param buf1	Pointer to first buffer to compare.
+ * @param buf2	Pointer to second buffer to compare.
  * @param len		Number of bytes to compare.
  * @return @b true if the buffers are equal, @b false if not equal.
- * @note This is a constant-time implementation.
  */
-bool cryptx_bytes_compare(const void* digest1, const void* digest2, size_t len);
+bool cryptx_bytes_compare(const void *buf1, const void *buf2, size_t len);
 
 
 /**

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bytearray operations &mdash; CryptX  documentation</title>
+  <title>Bytearray Operations &mdash; CryptX  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/proof.css" type="text/css" />
@@ -53,7 +53,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>bytearray operations</li>
+      <li>Bytearray Operations</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -63,20 +63,18 @@
            <div itemprop="articleBody">
              
   <div class="section" id="bytearray-operations">
-<span id="bytes"></span><h1>bytearray operations<a class="headerlink" href="#bytearray-operations" title="Permalink to this headline"></a></h1>
-<span class="target" id="digest-compare"></span><dl class="cpp function">
+<span id="bytes"></span><h1>Bytearray Operations<a class="headerlink" href="#bytearray-operations" title="Permalink to this headline"></a></h1>
+<p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides bytearray handling including: conversion between raw bytes and hex-encoded strings, reversing the endianness of a bytearray, and a constant-time method of comparing buffers.</p><div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h2>
+<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv420cryptx_bytes_comparePKvPKv6size_t">
-<span id="_CPPv320cryptx_bytes_comparePKvPKv6size_t"></span><span id="_CPPv220cryptx_bytes_comparePKvPKv6size_t"></span><span id="cryptx_bytes_compare__voidCP.voidCP.s"></span><span class="target" id="cryptx_8h_1a41bc20e6e45f7d8b5b85d994080bb929"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_bytes_compare</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">digest1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">digest2</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420cryptx_bytes_comparePKvPKv6size_t" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Compare two digests or buffers. </p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This is a constant-time implementation. </p>
-</div>
+<span id="_CPPv320cryptx_bytes_comparePKvPKv6size_t"></span><span id="_CPPv220cryptx_bytes_comparePKvPKv6size_t"></span><span id="cryptx_bytes_compare__voidCP.voidCP.s"></span><span class="target" id="cryptx_8h_1ae27b2f138550c6d08a539809f4bc27a1"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_bytes_compare</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">buf1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">buf2</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420cryptx_bytes_comparePKvPKv6size_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Compare two bytearrays using a <strong>constant-time</strong> algorithm. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>digest1</strong> – Pointer to first buffer to compare. </p></li>
-<li><p><strong>digest2</strong> – Pointer to second buffer to compare. </p></li>
+<li><p><strong>buf1</strong> – Pointer to first buffer to compare. </p></li>
+<li><p><strong>buf2</strong> – Pointer to second buffer to compare. </p></li>
 <li><p><strong>len</strong> – Number of bytes to compare. </p></li>
 </ul>
 </dd>
@@ -86,18 +84,18 @@
 </dl>
 </dd></dl>
 
-<span class="target" id="digest-tostring"></span><dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv421cryptx_bytes_tostringPK7uint8_t6size_tPc">
-<span id="_CPPv321cryptx_bytes_tostringPK7uint8_t6size_tPc"></span><span id="_CPPv221cryptx_bytes_tostringPK7uint8_t6size_tPc"></span><span id="cryptx_bytes_tostring__uint8_tCP.s.cP"></span><span class="target" id="cryptx_8h_1a3d3bbcc6f13d3b4d61bf357e9a299e81"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_bytes_tostring</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">digest</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">hexstr</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421cryptx_bytes_tostringPK7uint8_t6size_tPc" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Convert a digest to its hexstring representation. </p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><strong>hexstr</strong> must be at least (2 * len + 1) bytes large. </p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">cryptx_bytes_compare</span><span class="p">(</span><span class="n">buf1</span><span class="p">,</span><span class="w"> </span><span class="n">buf2</span><span class="p">,</span><span class="w"> </span><span class="n">bytes_to_compare</span><span class="p">);</span>
+</pre></div>
 </div>
+<hr class="docutils" />
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv421cryptx_bytes_tostringPKv6size_tPc">
+<span id="_CPPv321cryptx_bytes_tostringPKv6size_tPc"></span><span id="_CPPv221cryptx_bytes_tostringPKv6size_tPc"></span><span id="cryptx_bytes_tostring__voidCP.s.cP"></span><span class="target" id="cryptx_8h_1a2537f98ad431d23589334bf33889ebb0"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_bytes_tostring</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">buf</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">hexstr</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421cryptx_bytes_tostringPKv6size_tPc" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Convert a bytearray to its hexstring representation. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>digest</strong> – Pointer to a buffer or digest. </p></li>
+<li><p><strong>buf</strong> – Pointer to bytearray to convert. </p></li>
 <li><p><strong>len</strong> – Byte length of <strong>digest</strong>. </p></li>
 <li><p><strong>hexstr</strong> – Buffer to write the output hex string to. </p></li>
 </ul>
@@ -105,6 +103,57 @@
 </dl>
 </dd></dl>
 
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// assume `arr` is a bytearray</span>
+
+<span class="c1">// allocate buffer for string twice length of bytearray</span>
+<span class="c1">// plus an addition byte for null termination</span>
+<span class="kt">char</span><span class="w"> </span><span class="n">hexstr</span><span class="p">[</span><span class="k">sizeof</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">];</span>
+
+<span class="n">cryptx_bytes_tostring</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">arr</span><span class="p">),</span><span class="w"> </span><span class="n">hexstr</span><span class="p">);</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418cryptx_bytes_rcopyPvPKv6size_t">
+<span id="_CPPv318cryptx_bytes_rcopyPvPKv6size_t"></span><span id="_CPPv218cryptx_bytes_rcopyPvPKv6size_t"></span><span id="cryptx_bytes_rcopy__voidP.voidCP.s"></span><span class="target" id="cryptx_8h_1a71cc951ac0995a56ea485075235fb3f3"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_bytes_rcopy</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dest</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">src</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_bytes_rcopyPvPKv6size_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Copies <strong>len</strong> bytes from <strong>src</strong> to <strong>dest</strong> while reversing the byte order. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dest</strong> – Pointer to a buffer to write bytes. </p></li>
+<li><p><strong>src</strong> – Pointer to a buffer to read bytes from. </p></li>
+<li><p><strong>len</strong> – Number of bytes to read. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420cryptx_bytes_reversePv6size_t">
+<span id="_CPPv320cryptx_bytes_reversePv6size_t"></span><span id="_CPPv220cryptx_bytes_reversePv6size_t"></span><span id="cryptx_bytes_reverse__voidP.s"></span><span class="target" id="cryptx_8h_1afd0c8d1f7d77d3bd2739561996594ff4"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_bytes_reverse</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">buf</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420cryptx_bytes_reversePv6size_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Reverses the byte order of a buffer in-place. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buf</strong> – Pointer to buffer to reverse. </p></li>
+<li><p><strong>len</strong> – Length of the buffer. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// assume `arr1` is a bytearray</span>
+<span class="c1">// assume `arr2` is another reserved buffer of same length</span>
+
+<span class="c1">// makes a copy of arr2 with byteorder reversed</span>
+<span class="n">cryptx_bytes_rcopy</span><span class="p">(</span><span class="n">arr2</span><span class="p">,</span><span class="w"> </span><span class="n">arr1</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">arr2</span><span class="p">));</span>
+
+<span class="c1">// reverses arr1 in-place</span>
+<span class="n">cryptx_bytes_reverse</span><span class="p">(</span><span class="n">arr1</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">arr1</span><span class="p">));</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+</div>
 </div>
 
 
