@@ -47,7 +47,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="288" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="288" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="289" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="289" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="cryptx_8h_1a0ceacc8bb81e6ef0f60bbe736732e5e0" prot="public" static="no">
         <name>CRYPTX_AES_192_KEYLEN</name>
@@ -57,7 +57,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="289" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="289" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="290" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="290" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="cryptx_8h_1acb2aea7855878c1b9b505ecb9b9583b1" prot="public" static="no">
         <name>CRYPTX_AES_256_KEYLEN</name>
@@ -67,7 +67,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="290" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="290" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="291" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="291" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="cryptx_8h_1a2d638028c68c84297614a1dc7ff318d9" prot="public" static="no">
         <name>CRYPTX_AES_BLOCK_SIZE</name>
@@ -77,7 +77,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="292" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="292" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="293" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="293" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="cryptx_8h_1ac47330f91ba12f7856c0c198bdbf2753" prot="public" static="no">
         <name>CRYPTX_AES_IV_SIZE</name>
@@ -87,7 +87,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="293" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="293" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="294" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="294" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="cryptx_8h_1a89521b82b1be81ea3e5f70c3593bf5a9" prot="public" static="no">
         <name>CRYPTX_AES_AUTHTAG_SIZE</name>
@@ -97,7 +97,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="294" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="294" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="295" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="295" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="cryptx_8h_1af0f7e8aa23de8ecc99b2420efefa4edc" prot="public" static="no">
         <name>CRYPTX_AES_CBC_FLAGS</name>
@@ -109,7 +109,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="297" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="297" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="298" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="298" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="cryptx_8h_1a0ed8d02473b9a003653db30e1d856614" prot="public" static="no">
         <name>CRYPTX_AES_CTR_FLAGS</name>
@@ -122,7 +122,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="301" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="301" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="302" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="302" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="cryptx_8h_1ac0de9d43e9ef5718060b164bf71e3ae0" prot="public" static="no">
         <name>CRYPTX_AES_GCM_FLAGS</name>
@@ -133,7 +133,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="305" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="305" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="306" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="306" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="cryptx_8h_1adf4062c77f37927bc0178872056602ff" prot="public" static="no">
         <name>cryptx_aes_get_ciphertext_len</name>
@@ -145,7 +145,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="308" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="308" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="309" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="309" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="cryptx_8h_1a265dcd336b31e2b95870d864c85cee2a" prot="public" static="no">
         <name>CRYPTX_RSA_MODULUS_MAX</name>
@@ -156,10 +156,10 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="427" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="427" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="428" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="428" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="define" id="cryptx_8h_1ac753c393f9a2f85ebd589ed14823ccd7" prot="public" static="no">
-        <name>CRYPTX_ECDH_PRIVKEY_LEN</name>
+      <memberdef kind="define" id="cryptx_8h_1a26e233163ef752cc08d3f3499007369a" prot="public" static="no">
+        <name>CRYPTX_EC_PRIVKEY_LEN</name>
         <briefdescription>
 <para>Defines the byte length of an ECDH private key supported by this library. </para>
         </briefdescription>
@@ -171,10 +171,10 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="454" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="454" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="455" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="455" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="define" id="cryptx_8h_1ad75ef28855bfeec84da3e324494c3082" prot="public" static="no">
-        <name>CRYPTX_ECDH_PUBKEY_LEN</name>
+      <memberdef kind="define" id="cryptx_8h_1a9fb63bb764b8654fc273535be6c4e3a3" prot="public" static="no">
+        <name>CRYPTX_EC_PUBKEY_LEN</name>
         <briefdescription>
 <para>Defines the byte length of an ECDH public key supported by this library. </para>
         </briefdescription>
@@ -184,29 +184,17 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="457" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="457" bodyend="-1"/>
-      </memberdef>
-      <memberdef kind="define" id="cryptx_8h_1aa95fc648d6050a2e47e08f24176167c6" prot="public" static="no">
-        <name>CRYPTX_ECDH_SECRET_LEN</name>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
         <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="458" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="458" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="define" id="cryptx_8h_1a1bd4fb56d54940c2534049e2a5a73351" prot="public" static="no">
-        <name>cryptx_ecdh_generate_privkey</name>
-        <param><defname>privkey</defname></param>
+      <memberdef kind="define" id="cryptx_8h_1a3afc412d9c56cd1f46407fe280b92156" prot="public" static="no">
+        <name>CRYPTX_EC_SECRET_LEN</name>
         <briefdescription>
-<para>Defines a macro to fill an ECDH private key with random bytes. </para>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="461" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="461" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="459" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="459" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="cryptx_8h_1a13585a6206e220218a8f379327b04433" prot="public" static="no">
         <name>cryptx_asn1_get_tag</name>
@@ -218,7 +206,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="548" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="548" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="545" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="545" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="cryptx_8h_1a5af192045bb48e03f788962f259a2a7e" prot="public" static="no">
         <name>cryptx_asn1_get_class</name>
@@ -230,7 +218,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="550" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="550" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="547" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="547" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="cryptx_8h_1a3c8b39f5fb3ad1d8d138b9791b18f01e" prot="public" static="no">
         <name>cryptx_asn1_get_form</name>
@@ -242,7 +230,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="552" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="552" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="549" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="549" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="cryptx_8h_1a9db7be56d66674980b5540cab9405cc7" prot="public" static="no">
         <name>cryptx_base64_get_encoded_len</name>
@@ -257,7 +245,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="587" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="587" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="584" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="584" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="cryptx_8h_1a5629130707448f8475166398fb18a486" prot="public" static="no">
         <name>cryptx_base64_get_decoded_len</name>
@@ -269,7 +257,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="589" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="589" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="586" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="586" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="cryptx_8h_1ad0e904358b21cab26ad541d594184a89" prot="public" static="no">
         <name>CRYPTX_GF2_INTLEN</name>
@@ -280,7 +268,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="684" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="684" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="681" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="681" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="enum">
@@ -344,7 +332,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="274" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="274" bodyend="278"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="275" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="275" bodyend="279"/>
       </memberdef>
       <memberdef kind="enum" id="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433" prot="public" static="no" strong="no">
         <type></type>
@@ -381,7 +369,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="280" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="280" bodyend="286"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="281" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="281" bodyend="287"/>
       </memberdef>
       <memberdef kind="enum" id="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" prot="public" static="no" strong="no">
         <type></type>
@@ -449,7 +437,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="312" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="312" bodyend="320"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="313" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="313" bodyend="321"/>
       </memberdef>
       <memberdef kind="enum" id="cryptx_8h_1a0486449f609d0e485bad091a671d9294" prot="public" static="no" strong="no">
         <type></type>
@@ -504,34 +492,34 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="418" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="418" bodyend="424"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="419" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="419" bodyend="425"/>
       </memberdef>
-      <memberdef kind="enum" id="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944" prot="public" static="no" strong="no">
+      <memberdef kind="enum" id="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90" prot="public" static="no" strong="no">
         <type></type>
-        <name>ecdh_error_t</name>
-        <enumvalue id="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944a1fc3b5fa5eb8adaa46a9257ee782acbb" prot="public">
-          <name>ECDH_OK</name>
+        <name>ec_error_t</name>
+        <enumvalue id="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90ae92ae69b454b0311041616e4be38d26e" prot="public">
+          <name>EC_OK</name>
           <briefdescription>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
         </enumvalue>
-        <enumvalue id="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944a635480018ca2a67bd5994a91091abc5a" prot="public">
-          <name>ECDH_INVALID_ARG</name>
+        <enumvalue id="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90a51c1b8f170116b8aa0a75c6ad6fd3d0d" prot="public">
+          <name>EC_INVALID_ARG</name>
           <briefdescription>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
         </enumvalue>
-        <enumvalue id="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944a761fc8a34f1342ebe085e06300fb907f" prot="public">
-          <name>ECDH_PRIVKEY_INVALID</name>
+        <enumvalue id="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90a77a3ce6d10fe286a0f7789b15c4ed790" prot="public">
+          <name>EC_PRIVKEY_INVALID</name>
           <briefdescription>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
         </enumvalue>
-        <enumvalue id="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944a6bb841ab7c886611c50ce3e4a8bcdf08" prot="public">
-          <name>ECDH_RPUBKEY_INVALID</name>
+        <enumvalue id="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90ae8066072efe056458722cc53a743966a" prot="public">
+          <name>EC_RPUBKEY_INVALID</name>
           <briefdescription>
           </briefdescription>
           <detaileddescription>
@@ -544,7 +532,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="465" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="465" bodyend="470"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="462" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="462" bodyend="467"/>
       </memberdef>
       <memberdef kind="enum" id="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5" prot="public" static="no" strong="no">
         <type></type>
@@ -775,7 +763,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="503" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="503" bodyend="533"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="500" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="500" bodyend="530"/>
       </memberdef>
       <memberdef kind="enum" id="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900" prot="public" static="no" strong="no">
         <type></type>
@@ -819,7 +807,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="535" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="535" bodyend="540"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="532" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="532" bodyend="537"/>
       </memberdef>
       <memberdef kind="enum" id="cryptx_8h_1af2211fe420abff08488c8f04de017080" prot="public" static="no" strong="no">
         <type></type>
@@ -846,7 +834,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="542" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="542" bodyend="545"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="539" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="539" bodyend="542"/>
       </memberdef>
       <memberdef kind="enum" id="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33" prot="public" static="no" strong="no">
         <type></type>
@@ -892,7 +880,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="555" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="555" bodyend="560"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="552" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="552" bodyend="557"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="var">
@@ -1436,13 +1424,13 @@
         </inbodydescription>
         <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="212" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="212" declcolumn="6"/>
       </memberdef>
-      <memberdef kind="function" id="cryptx_8h_1aa25931fdaf401a4fddf0023e272278f7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="cryptx_8h_1a3d3bbcc6f13d3b4d61bf357e9a299e81" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
-        <definition>bool cryptx_digest_tostring</definition>
-        <argsstring>(const void *digest, size_t len, uint8_t *hexstr)</argsstring>
-        <name>cryptx_digest_tostring</name>
+        <definition>bool cryptx_bytes_tostring</definition>
+        <argsstring>(const uint8_t *digest, size_t len, char *hexstr)</argsstring>
+        <name>cryptx_bytes_tostring</name>
         <param>
-          <type>const void *</type>
+          <type>const uint8_t *</type>
           <declname>digest</declname>
         </param>
         <param>
@@ -1450,7 +1438,7 @@
           <declname>len</declname>
         </param>
         <param>
-          <type>uint8_t *</type>
+          <type>char *</type>
           <declname>hexstr</declname>
         </param>
         <briefdescription>
@@ -1490,11 +1478,78 @@
         </inbodydescription>
         <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="228" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="228" declcolumn="6"/>
       </memberdef>
-      <memberdef kind="function" id="cryptx_8h_1a36bdf1683237ed686ce175fde670ccff" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="cryptx_8h_1ad9b688f1c6f771f2375c9c9625a4c653" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
-        <definition>bool cryptx_digest_compare</definition>
+        <definition>bool cryptx_bytes_fromstring</definition>
+        <argsstring>(uint8_t *digest, const char *hexstr)</argsstring>
+        <name>cryptx_bytes_fromstring</name>
+        <param>
+          <type>uint8_t *</type>
+          <declname>digest</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>hexstr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="231" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="231" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="cryptx_8h_1a4067201bc27436f4db7dbfe4b931c25f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool cryptx_bytes_rcopy</definition>
+        <argsstring>(const void *digest, size_t len, uint8_t *hexstr)</argsstring>
+        <name>cryptx_bytes_rcopy</name>
+        <param>
+          <type>const void *</type>
+          <declname>digest</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>len</declname>
+        </param>
+        <param>
+          <type>uint8_t *</type>
+          <declname>hexstr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="234" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="234" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="cryptx_8h_1ae755dc5c1eade1087352537e9ebeb519" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool cryptx_bytes_reverse</definition>
+        <argsstring>(const void *digest, size_t len)</argsstring>
+        <name>cryptx_bytes_reverse</name>
+        <param>
+          <type>const void *</type>
+          <declname>digest</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>len</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="236" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="236" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="cryptx_8h_1a41bc20e6e45f7d8b5b85d994080bb929" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool cryptx_bytes_compare</definition>
         <argsstring>(const void *digest1, const void *digest2, size_t len)</argsstring>
-        <name>cryptx_digest_compare</name>
+        <name>cryptx_bytes_compare</name>
         <param>
           <type>const void *</type>
           <declname>digest1</declname>
@@ -1544,28 +1599,6 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="238" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="238" declcolumn="6"/>
-      </memberdef>
-      <memberdef kind="function" id="cryptx_8h_1aa4599a28ff439f7a21dbb0ce5772fa78" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
-        <type>bool</type>
-        <definition>bool cryptx_csrand_init</definition>
-        <argsstring>(void)</argsstring>
-        <name>cryptx_csrand_init</name>
-        <param>
-          <type>void</type>
-        </param>
-        <briefdescription>
-<para>Initializes the (HW)RNG. </para>
-        </briefdescription>
-        <detaileddescription>
-<para><simplesect kind="return"><para><bold>true</bold> on success, <bold>false</bold> on failure. </para>
-</simplesect>
-<simplesect kind="note"><para>If you forget to call this function, utilizing the RNG&apos;s other functions will self-initialize the RNG. </para>
-</simplesect>
-</para>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
         <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="246" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="246" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a61b09a810e766ef1d2ff00c85ece63f2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -1586,7 +1619,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="252" column="10" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="252" declcolumn="10"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="253" column="10" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="253" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a8c550bae2fddbf8a04655325ba2c9e8f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -1630,7 +1663,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="261" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="261" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="262" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="262" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1aee9ba52b80ab5bddd81193cdf26389e2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref></type>
@@ -1720,7 +1753,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="333" column="13" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="333" declcolumn="13"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="334" column="13" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="334" declcolumn="13"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a571d4b9eb0fe3d069b10492025e47fe0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref></type>
@@ -1792,7 +1825,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="352" column="13" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="352" declcolumn="13"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="353" column="13" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="353" declcolumn="13"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1ab5cf162f80d83c86c9dbba9aa866b289" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref></type>
@@ -1862,7 +1895,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="367" column="13" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="367" declcolumn="13"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="368" column="13" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="368" declcolumn="13"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a3d55233d4178e3f6c6b96272fda56ae0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref></type>
@@ -1918,7 +1951,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="382" column="13" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="382" declcolumn="13"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="383" column="13" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="383" declcolumn="13"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a7aaae6b33efe97c579d24729680eda79" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref></type>
@@ -1962,7 +1995,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="395" column="13" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="395" declcolumn="13"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="396" column="13" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="396" declcolumn="13"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a69437bd1ca1d4fe40dc50d91da7c1be4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -2054,7 +2087,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="410" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="410" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="411" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="411" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1aa4f5ae1eb3d9636c20dec64503a4896b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294" kindref="member">rsa_error_t</ref></type>
@@ -2148,15 +2181,15 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="442" column="13" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="442" declcolumn="13"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="443" column="13" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="443" declcolumn="13"/>
       </memberdef>
-      <memberdef kind="function" id="cryptx_8h_1a37eb222058408330f49ddccd7fec9f9a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
-        <type><ref refid="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944" kindref="member">ecdh_error_t</ref></type>
-        <definition>ecdh_error_t cryptx_ec_keygen</definition>
-        <argsstring>(const uint8_t *privkey, uint8_t *pubkey)</argsstring>
+      <memberdef kind="function" id="cryptx_8h_1ace17d744e36edae96bea85ccfa7c18f9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90" kindref="member">ec_error_t</ref></type>
+        <definition>ec_error_t cryptx_ec_keygen</definition>
+        <argsstring>(uint8_t *privkey, uint8_t *pubkey)</argsstring>
         <name>cryptx_ec_keygen</name>
         <param>
-          <type>const uint8_t *</type>
+          <type>uint8_t *</type>
           <declname>privkey</declname>
         </param>
         <param>
@@ -2194,13 +2227,13 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="483" column="14" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="483" declcolumn="14"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="480" column="12" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="480" declcolumn="12"/>
       </memberdef>
-      <memberdef kind="function" id="cryptx_8h_1ad975a0ac10f02d9509081ae57f790f50" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
-        <type><ref refid="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944" kindref="member">ecdh_error_t</ref></type>
-        <definition>ecdh_error_t cryptx_ecdh_secret</definition>
+      <memberdef kind="function" id="cryptx_8h_1a4057940333f4f8f56b8ccf1d24db21ea" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90" kindref="member">ec_error_t</ref></type>
+        <definition>ec_error_t cryptx_ec_secret</definition>
         <argsstring>(const uint8_t *privkey, const uint8_t *rpubkey, uint8_t *secret)</argsstring>
-        <name>cryptx_ecdh_secret</name>
+        <name>cryptx_ec_secret</name>
         <param>
           <type>const uint8_t *</type>
           <declname>privkey</declname>
@@ -2252,7 +2285,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="499" column="14" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="499" declcolumn="14"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="496" column="12" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="496" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1afbb965d7c7819b8685a1062d5e21e02c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33" kindref="member">asn1_error_t</ref></type>
@@ -2346,7 +2379,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="575" column="14" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="575" declcolumn="14"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="572" column="14" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="572" declcolumn="14"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a3e216a54646a3f7d04c37102905ef850" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>size_t</type>
@@ -2402,7 +2435,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="599" column="8" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="599" declcolumn="8"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="596" column="8" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="596" declcolumn="8"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a28db41653bf7ba5ef8bfcef425343722" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>size_t</type>
@@ -2458,7 +2491,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="609" column="8" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="609" declcolumn="8"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="606" column="8" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="606" declcolumn="8"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1aa26dcd5f7c0f1f679c91268bc5b69455" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -2512,7 +2545,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="621" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="621" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="618" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="618" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a705b398f84e2020d762a0ce03c90bd90" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -2566,7 +2599,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="632" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="632" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="629" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="629" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a686d9781ff0de6cf06424df197ce6e1e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -2658,7 +2691,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="649" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="649" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="646" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="646" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1ab367fc9a33e00bee5e9a9f8df5f2a697" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -2738,7 +2771,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="667" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="667" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="664" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="664" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a70bc16d6ac300e87e3fc9c9847254bd1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -2804,7 +2837,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="681" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="681" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="678" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="678" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a71ea61142ac4e58af9d8b8c9d2d17685" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>struct <ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref></type>
@@ -2846,7 +2879,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="681" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="681" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="678" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="678" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1ae4b37d491cbd4d5a16e0fb84d87b9270" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -2876,7 +2909,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="705" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="705" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="702" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="702" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1adf9bad66ca13288b71d9306d9c0a55e0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -2930,7 +2963,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="714" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="714" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="711" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="711" declcolumn="6"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -3047,248 +3080,251 @@
 <codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>rounds,</highlight></codeline>
 <codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>hash_alg);</highlight></codeline>
 <codeline lineno="220"><highlight class="normal"></highlight></codeline>
-<codeline lineno="228" refid="cryptx_8h_1aa25931fdaf401a4fddf0023e272278f7" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1aa25931fdaf401a4fddf0023e272278f7" kindref="member">cryptx_digest_tostring</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>digest,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,<sp/>uint8_t*<sp/>hexstr);</highlight></codeline>
+<codeline lineno="228" refid="cryptx_8h_1a3d3bbcc6f13d3b4d61bf357e9a299e81" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a3d3bbcc6f13d3b4d61bf357e9a299e81" kindref="member">cryptx_bytes_tostring</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t*<sp/>digest,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>hexstr);</highlight></codeline>
 <codeline lineno="229"><highlight class="normal"></highlight></codeline>
-<codeline lineno="238" refid="cryptx_8h_1a36bdf1683237ed686ce175fde670ccff" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a36bdf1683237ed686ce175fde670ccff" kindref="member">cryptx_digest_compare</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>digest1,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>digest2,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len);</highlight></codeline>
-<codeline lineno="239"><highlight class="normal"></highlight></codeline>
-<codeline lineno="240"><highlight class="normal"></highlight></codeline>
-<codeline lineno="246" refid="cryptx_8h_1aa4599a28ff439f7a21dbb0ce5772fa78" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1aa4599a28ff439f7a21dbb0ce5772fa78" kindref="member">cryptx_csrand_init</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"></highlight></codeline>
+<codeline lineno="231"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>cryptx_bytes_fromstring(uint8_t*<sp/>digest,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>hexstr);</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"></highlight></codeline>
+<codeline lineno="233"><highlight class="normal"></highlight></codeline>
+<codeline lineno="234"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>cryptx_bytes_rcopy(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>digest,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,<sp/>uint8_t*<sp/>hexstr);</highlight></codeline>
+<codeline lineno="235"><highlight class="normal"></highlight></codeline>
+<codeline lineno="236"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>cryptx_bytes_reverse(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>digest,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len);</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"></highlight></codeline>
+<codeline lineno="246" refid="cryptx_8h_1a41bc20e6e45f7d8b5b85d994080bb929" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a41bc20e6e45f7d8b5b85d994080bb929" kindref="member">cryptx_bytes_compare</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>digest1,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>digest2,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len);</highlight></codeline>
 <codeline lineno="247"><highlight class="normal"></highlight></codeline>
-<codeline lineno="252" refid="cryptx_8h_1a61b09a810e766ef1d2ff00c85ece63f2" refkind="member"><highlight class="normal">uint32_t<sp/><ref refid="cryptx_8h_1a61b09a810e766ef1d2ff00c85ece63f2" kindref="member">cryptx_csrand_get</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="253"><highlight class="normal"></highlight></codeline>
-<codeline lineno="261" refid="cryptx_8h_1a8c550bae2fddbf8a04655325ba2c9e8f" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a8c550bae2fddbf8a04655325ba2c9e8f" kindref="member">cryptx_csrand_fill</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buffer,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>size);</highlight></codeline>
-<codeline lineno="262"><highlight class="normal"></highlight></codeline>
-<codeline lineno="265"><highlight class="keyword">struct<sp/></highlight><highlight class="normal">cryptx_aes_ctx<sp/>{</highlight></codeline>
-<codeline lineno="266"><highlight class="normal"><sp/><sp/><sp/><sp/>uint24_t<sp/>keysize;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="267"><highlight class="normal"><sp/><sp/><sp/><sp/>uint32_t<sp/>round_keys[60];<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="268"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>iv[16];<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="269"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>ciphermode;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="270"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>op_assoc;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="271"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="unioncryptx__aes__private__h" kindref="compound">cryptx_aes_private_h</ref><sp/>metadata;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="272"><highlight class="normal">};</highlight></codeline>
-<codeline lineno="273"><highlight class="normal"></highlight></codeline>
-<codeline lineno="274" refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735" kindref="member">cryptx_aes_cipher_modes</ref><sp/>{</highlight></codeline>
-<codeline lineno="275" refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735ad21a3698b98b7368b14ec3d48314a132" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735ad21a3698b98b7368b14ec3d48314a132" kindref="member">AES_MODE_CBC</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="276" refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735a5ecd63cd0bd97d46f273461b6550cb8e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735a5ecd63cd0bd97d46f273461b6550cb8e" kindref="member">AES_MODE_CTR</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="277"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735aa41ebb36bc19b64d64ff6b7fc0d5e5df" kindref="member">AES_MODE_GCM</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="278" refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735aa41ebb36bc19b64d64ff6b7fc0d5e5df" refkind="member"><highlight class="normal">};</highlight></codeline>
-<codeline lineno="279"><highlight class="normal"></highlight></codeline>
-<codeline lineno="280" refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433" kindref="member">cryptx_aes_padding_schemes</ref><sp/>{</highlight></codeline>
-<codeline lineno="281" refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433a673ae2fee0bfe0a962717b3f673b9b7c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433a673ae2fee0bfe0a962717b3f673b9b7c" kindref="member">PAD_PKCS7</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="282"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433a322c11c9058ef67073a3ff9bdcb9f759" kindref="member">PAD_DEFAULT</ref><sp/>=<sp/><ref refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433a673ae2fee0bfe0a962717b3f673b9b7c" kindref="member">PAD_PKCS7</ref>,<sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="285"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433a7566d9371110a1a24db62b145c901ad8" kindref="member">PAD_ISO2</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="286" refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433a7566d9371110a1a24db62b145c901ad8" refkind="member"><highlight class="normal">};</highlight></codeline>
-<codeline lineno="287"><highlight class="normal"></highlight></codeline>
-<codeline lineno="288"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_AES_128_KEYLEN<sp/><sp/><sp/>16<sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="289"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_AES_192_KEYLEN<sp/><sp/><sp/>24<sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="290"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_AES_256_KEYLEN<sp/><sp/><sp/>32<sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="292"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_AES_BLOCK_SIZE<sp/><sp/><sp/>16<sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="293"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_AES_IV_SIZE<sp/><sp/>CRYPTX_AES_BLOCK_SIZE<sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="294"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_AES_AUTHTAG_SIZE<sp/>CRYPTX_AES_BLOCK_SIZE<sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="297" refid="cryptx_8h_1af0f7e8aa23de8ecc99b2420efefa4edc" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_AES_CBC_FLAGS(padding_mode)<sp/>\</highlight></codeline>
-<codeline lineno="298"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>((padding_mode)&lt;&lt;2)<sp/>|<sp/>AES_MODE_CBC</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="299"><highlight class="normal"></highlight></codeline>
-<codeline lineno="301" refid="cryptx_8h_1a0ed8d02473b9a003653db30e1d856614" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_AES_CTR_FLAGS(nonce_len,<sp/>counter_len)<sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="302"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>((0x0f<sp/>&amp;<sp/>(counter_len))&lt;&lt;8)<sp/>|<sp/>((0x0f<sp/>&amp;<sp/>(nonce_len))&lt;&lt;4)<sp/>|<sp/>AES_MODE_CTR</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="303"><highlight class="normal"></highlight></codeline>
-<codeline lineno="305" refid="cryptx_8h_1ac0de9d43e9ef5718060b164bf71e3ae0" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_AES_GCM_FLAGS<sp/><sp/><sp/><sp/>AES_MODE_GCM</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="306"><highlight class="normal"></highlight></codeline>
-<codeline lineno="308" refid="cryptx_8h_1adf4062c77f37927bc0178872056602ff" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>cryptx_aes_get_ciphertext_len(len)<sp/>\</highlight></codeline>
-<codeline lineno="309"><highlight class="preprocessor">((((len)%CRYPTX_AES_BLOCK_SIZE)==0)<sp/>?<sp/>(len)<sp/>+<sp/>CRYPTX_AES_BLOCK_SIZE<sp/>:<sp/>(((len)&gt;&gt;4)<sp/>+<sp/>1)&lt;&lt;4)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="310"><highlight class="normal"></highlight></codeline>
-<codeline lineno="312" refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" refkind="member"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>{</highlight></codeline>
-<codeline lineno="313" refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdaacf07636102724d2a7913911b0cf74b2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdaacf07636102724d2a7913911b0cf74b2" kindref="member">AES_OK</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="314" refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfda6d39b280aea9d8d62d126eef05d271db" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfda6d39b280aea9d8d62d126eef05d271db" kindref="member">AES_INVALID_ARG</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="315" refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdaae5e9a591aeda666b0e425d9a05834e3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdaae5e9a591aeda666b0e425d9a05834e3" kindref="member">AES_INVALID_MSG</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="316" refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdad2b49ffeabf14aaf47db3d1bad18f84e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdad2b49ffeabf14aaf47db3d1bad18f84e" kindref="member">AES_INVALID_CIPHERMODE</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="317" refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfda47bbd593fc3bdb7758a790bab86b41d9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfda47bbd593fc3bdb7758a790bab86b41d9" kindref="member">AES_INVALID_PADDINGMODE</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="318" refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdaba928751c773ffa0287e47e1f86eae8b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdaba928751c773ffa0287e47e1f86eae8b" kindref="member">AES_INVALID_CIPHERTEXT</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="319"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfda95a9dcbf64347e3c6f2c50d05e8937f5" kindref="member">AES_INVALID_OPERATION</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="320" refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfda95a9dcbf64347e3c6f2c50d05e8937f5" refkind="member"><highlight class="normal">}<sp/><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref>;</highlight></codeline>
-<codeline lineno="321"><highlight class="normal"></highlight></codeline>
-<codeline lineno="333" refid="cryptx_8h_1aee9ba52b80ab5bddd81193cdf26389e2" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1aee9ba52b80ab5bddd81193cdf26389e2" kindref="member">cryptx_aes_init</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>context,</highlight></codeline>
-<codeline lineno="334"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>key,</highlight></codeline>
-<codeline lineno="335"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>keylen,</highlight></codeline>
-<codeline lineno="336"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>iv,</highlight></codeline>
-<codeline lineno="337"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>ivlen,</highlight></codeline>
-<codeline lineno="338"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint24_t<sp/>flags);</highlight></codeline>
-<codeline lineno="339"><highlight class="normal"></highlight></codeline>
-<codeline lineno="352" refid="cryptx_8h_1a571d4b9eb0fe3d069b10492025e47fe0" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1a571d4b9eb0fe3d069b10492025e47fe0" kindref="member">cryptx_aes_encrypt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>context,</highlight></codeline>
-<codeline lineno="353"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>plaintext,</highlight></codeline>
-<codeline lineno="354"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,</highlight></codeline>
-<codeline lineno="355"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ciphertext);</highlight></codeline>
-<codeline lineno="356"><highlight class="normal"></highlight></codeline>
-<codeline lineno="367" refid="cryptx_8h_1ab5cf162f80d83c86c9dbba9aa866b289" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1ab5cf162f80d83c86c9dbba9aa866b289" kindref="member">cryptx_aes_decrypt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>context,</highlight></codeline>
-<codeline lineno="368"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ciphertext,</highlight></codeline>
-<codeline lineno="369"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,</highlight></codeline>
-<codeline lineno="370"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>plaintext);</highlight></codeline>
-<codeline lineno="371"><highlight class="normal"></highlight></codeline>
-<codeline lineno="382" refid="cryptx_8h_1a3d55233d4178e3f6c6b96272fda56ae0" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1a3d55233d4178e3f6c6b96272fda56ae0" kindref="member">cryptx_aes_update_aad</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>context,</highlight></codeline>
-<codeline lineno="383"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>aad,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>aad_len);</highlight></codeline>
-<codeline lineno="384"><highlight class="normal"></highlight></codeline>
-<codeline lineno="395" refid="cryptx_8h_1a7aaae6b33efe97c579d24729680eda79" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1a7aaae6b33efe97c579d24729680eda79" kindref="member">cryptx_aes_digest</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>context,<sp/>uint8_t<sp/>*digest);</highlight></codeline>
-<codeline lineno="396"><highlight class="normal"></highlight></codeline>
-<codeline lineno="410" refid="cryptx_8h_1a69437bd1ca1d4fe40dc50d91da7c1be4" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a69437bd1ca1d4fe40dc50d91da7c1be4" kindref="member">cryptx_aes_verify</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>context,</highlight></codeline>
-<codeline lineno="411"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>aad,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>aad_len,</highlight></codeline>
-<codeline lineno="412"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ciphertext,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>ciphertext_len,</highlight></codeline>
-<codeline lineno="413"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>*tag);</highlight></codeline>
-<codeline lineno="414"><highlight class="normal"></highlight></codeline>
-<codeline lineno="416"></codeline>
-<codeline lineno="418" refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294" refkind="member"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>{</highlight></codeline>
-<codeline lineno="419" refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294a2cafdb683e1870a33bcb821420626cae" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294a2cafdb683e1870a33bcb821420626cae" kindref="member">RSA_OK</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="420" refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294aab9ab38286c4180a1aa9f6e8df42e5db" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294aab9ab38286c4180a1aa9f6e8df42e5db" kindref="member">RSA_INVALID_ARG</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="421" refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294aedeb18a96b96e292369abed5b2f0a271" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294aedeb18a96b96e292369abed5b2f0a271" kindref="member">RSA_INVALID_MSG</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="422" refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294a843ec210de66176ef63e2d2b8ebdeb65" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294a843ec210de66176ef63e2d2b8ebdeb65" kindref="member">RSA_INVALID_MODULUS</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="423"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294a43eadc89540121b902e02afabc7a7eb9" kindref="member">RSA_ENCODING_ERROR</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="424" refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294a43eadc89540121b902e02afabc7a7eb9" refkind="member"><highlight class="normal">}<sp/><ref refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294" kindref="member">rsa_error_t</ref>;</highlight></codeline>
-<codeline lineno="425"><highlight class="normal"></highlight></codeline>
-<codeline lineno="427" refid="cryptx_8h_1a265dcd336b31e2b95870d864c85cee2a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_RSA_MODULUS_MAX<sp/><sp/><sp/><sp/><sp/><sp/>256</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="428"><highlight class="normal"></highlight></codeline>
-<codeline lineno="442" refid="cryptx_8h_1aa4f5ae1eb3d9636c20dec64503a4896b" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294" kindref="member">rsa_error_t</ref><sp/><ref refid="cryptx_8h_1aa4f5ae1eb3d9636c20dec64503a4896b" kindref="member">cryptx_rsa_encrypt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>msg,</highlight></codeline>
-<codeline lineno="443"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>msglen,</highlight></codeline>
-<codeline lineno="444"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>pubkey,</highlight></codeline>
-<codeline lineno="445"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>keylen,</highlight></codeline>
-<codeline lineno="446"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ciphertext,</highlight></codeline>
-<codeline lineno="447"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>oaep_hash_alg);</highlight></codeline>
-<codeline lineno="448"><highlight class="normal"></highlight></codeline>
+<codeline lineno="248"><highlight class="normal"></highlight></codeline>
+<codeline lineno="253" refid="cryptx_8h_1a61b09a810e766ef1d2ff00c85ece63f2" refkind="member"><highlight class="normal">uint32_t<sp/><ref refid="cryptx_8h_1a61b09a810e766ef1d2ff00c85ece63f2" kindref="member">cryptx_csrand_get</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"></highlight></codeline>
+<codeline lineno="262" refid="cryptx_8h_1a8c550bae2fddbf8a04655325ba2c9e8f" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a8c550bae2fddbf8a04655325ba2c9e8f" kindref="member">cryptx_csrand_fill</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buffer,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>size);</highlight></codeline>
+<codeline lineno="263"><highlight class="normal"></highlight></codeline>
+<codeline lineno="266"><highlight class="keyword">struct<sp/></highlight><highlight class="normal">cryptx_aes_ctx<sp/>{</highlight></codeline>
+<codeline lineno="267"><highlight class="normal"><sp/><sp/><sp/><sp/>uint24_t<sp/>keysize;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="268"><highlight class="normal"><sp/><sp/><sp/><sp/>uint32_t<sp/>round_keys[60];<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="269"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>iv[16];<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="270"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>ciphermode;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="271"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>op_assoc;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="272"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="unioncryptx__aes__private__h" kindref="compound">cryptx_aes_private_h</ref><sp/>metadata;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="273"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="274"><highlight class="normal"></highlight></codeline>
+<codeline lineno="275" refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735" kindref="member">cryptx_aes_cipher_modes</ref><sp/>{</highlight></codeline>
+<codeline lineno="276" refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735ad21a3698b98b7368b14ec3d48314a132" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735ad21a3698b98b7368b14ec3d48314a132" kindref="member">AES_MODE_CBC</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="277" refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735a5ecd63cd0bd97d46f273461b6550cb8e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735a5ecd63cd0bd97d46f273461b6550cb8e" kindref="member">AES_MODE_CTR</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="278"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735aa41ebb36bc19b64d64ff6b7fc0d5e5df" kindref="member">AES_MODE_GCM</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="279" refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735aa41ebb36bc19b64d64ff6b7fc0d5e5df" refkind="member"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="280"><highlight class="normal"></highlight></codeline>
+<codeline lineno="281" refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433" kindref="member">cryptx_aes_padding_schemes</ref><sp/>{</highlight></codeline>
+<codeline lineno="282" refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433a673ae2fee0bfe0a962717b3f673b9b7c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433a673ae2fee0bfe0a962717b3f673b9b7c" kindref="member">PAD_PKCS7</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="283"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433a322c11c9058ef67073a3ff9bdcb9f759" kindref="member">PAD_DEFAULT</ref><sp/>=<sp/><ref refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433a673ae2fee0bfe0a962717b3f673b9b7c" kindref="member">PAD_PKCS7</ref>,<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="286"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433a7566d9371110a1a24db62b145c901ad8" kindref="member">PAD_ISO2</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="287" refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433a7566d9371110a1a24db62b145c901ad8" refkind="member"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="288"><highlight class="normal"></highlight></codeline>
+<codeline lineno="289"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_AES_128_KEYLEN<sp/><sp/><sp/>16<sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="290"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_AES_192_KEYLEN<sp/><sp/><sp/>24<sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="291"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_AES_256_KEYLEN<sp/><sp/><sp/>32<sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="293"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_AES_BLOCK_SIZE<sp/><sp/><sp/>16<sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="294"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_AES_IV_SIZE<sp/><sp/>CRYPTX_AES_BLOCK_SIZE<sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="295"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_AES_AUTHTAG_SIZE<sp/>CRYPTX_AES_BLOCK_SIZE<sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="298" refid="cryptx_8h_1af0f7e8aa23de8ecc99b2420efefa4edc" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_AES_CBC_FLAGS(padding_mode)<sp/>\</highlight></codeline>
+<codeline lineno="299"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>((padding_mode)&lt;&lt;2)<sp/>|<sp/>AES_MODE_CBC</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="300"><highlight class="normal"></highlight></codeline>
+<codeline lineno="302" refid="cryptx_8h_1a0ed8d02473b9a003653db30e1d856614" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_AES_CTR_FLAGS(nonce_len,<sp/>counter_len)<sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="303"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>((0x0f<sp/>&amp;<sp/>(counter_len))&lt;&lt;8)<sp/>|<sp/>((0x0f<sp/>&amp;<sp/>(nonce_len))&lt;&lt;4)<sp/>|<sp/>AES_MODE_CTR</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="304"><highlight class="normal"></highlight></codeline>
+<codeline lineno="306" refid="cryptx_8h_1ac0de9d43e9ef5718060b164bf71e3ae0" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_AES_GCM_FLAGS<sp/><sp/><sp/><sp/>AES_MODE_GCM</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="307"><highlight class="normal"></highlight></codeline>
+<codeline lineno="309" refid="cryptx_8h_1adf4062c77f37927bc0178872056602ff" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>cryptx_aes_get_ciphertext_len(len)<sp/>\</highlight></codeline>
+<codeline lineno="310"><highlight class="preprocessor">((((len)%CRYPTX_AES_BLOCK_SIZE)==0)<sp/>?<sp/>(len)<sp/>+<sp/>CRYPTX_AES_BLOCK_SIZE<sp/>:<sp/>(((len)&gt;&gt;4)<sp/>+<sp/>1)&lt;&lt;4)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="311"><highlight class="normal"></highlight></codeline>
+<codeline lineno="313" refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" refkind="member"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="314" refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdaacf07636102724d2a7913911b0cf74b2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdaacf07636102724d2a7913911b0cf74b2" kindref="member">AES_OK</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="315" refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfda6d39b280aea9d8d62d126eef05d271db" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfda6d39b280aea9d8d62d126eef05d271db" kindref="member">AES_INVALID_ARG</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="316" refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdaae5e9a591aeda666b0e425d9a05834e3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdaae5e9a591aeda666b0e425d9a05834e3" kindref="member">AES_INVALID_MSG</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="317" refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdad2b49ffeabf14aaf47db3d1bad18f84e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdad2b49ffeabf14aaf47db3d1bad18f84e" kindref="member">AES_INVALID_CIPHERMODE</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="318" refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfda47bbd593fc3bdb7758a790bab86b41d9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfda47bbd593fc3bdb7758a790bab86b41d9" kindref="member">AES_INVALID_PADDINGMODE</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="319" refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdaba928751c773ffa0287e47e1f86eae8b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdaba928751c773ffa0287e47e1f86eae8b" kindref="member">AES_INVALID_CIPHERTEXT</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="320"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfda95a9dcbf64347e3c6f2c50d05e8937f5" kindref="member">AES_INVALID_OPERATION</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="321" refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfda95a9dcbf64347e3c6f2c50d05e8937f5" refkind="member"><highlight class="normal">}<sp/><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref>;</highlight></codeline>
+<codeline lineno="322"><highlight class="normal"></highlight></codeline>
+<codeline lineno="334" refid="cryptx_8h_1aee9ba52b80ab5bddd81193cdf26389e2" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1aee9ba52b80ab5bddd81193cdf26389e2" kindref="member">cryptx_aes_init</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>context,</highlight></codeline>
+<codeline lineno="335"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>key,</highlight></codeline>
+<codeline lineno="336"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>keylen,</highlight></codeline>
+<codeline lineno="337"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>iv,</highlight></codeline>
+<codeline lineno="338"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>ivlen,</highlight></codeline>
+<codeline lineno="339"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint24_t<sp/>flags);</highlight></codeline>
+<codeline lineno="340"><highlight class="normal"></highlight></codeline>
+<codeline lineno="353" refid="cryptx_8h_1a571d4b9eb0fe3d069b10492025e47fe0" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1a571d4b9eb0fe3d069b10492025e47fe0" kindref="member">cryptx_aes_encrypt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>context,</highlight></codeline>
+<codeline lineno="354"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>plaintext,</highlight></codeline>
+<codeline lineno="355"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,</highlight></codeline>
+<codeline lineno="356"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ciphertext);</highlight></codeline>
+<codeline lineno="357"><highlight class="normal"></highlight></codeline>
+<codeline lineno="368" refid="cryptx_8h_1ab5cf162f80d83c86c9dbba9aa866b289" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1ab5cf162f80d83c86c9dbba9aa866b289" kindref="member">cryptx_aes_decrypt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>context,</highlight></codeline>
+<codeline lineno="369"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ciphertext,</highlight></codeline>
+<codeline lineno="370"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,</highlight></codeline>
+<codeline lineno="371"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>plaintext);</highlight></codeline>
+<codeline lineno="372"><highlight class="normal"></highlight></codeline>
+<codeline lineno="383" refid="cryptx_8h_1a3d55233d4178e3f6c6b96272fda56ae0" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1a3d55233d4178e3f6c6b96272fda56ae0" kindref="member">cryptx_aes_update_aad</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>context,</highlight></codeline>
+<codeline lineno="384"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>aad,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>aad_len);</highlight></codeline>
+<codeline lineno="385"><highlight class="normal"></highlight></codeline>
+<codeline lineno="396" refid="cryptx_8h_1a7aaae6b33efe97c579d24729680eda79" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1a7aaae6b33efe97c579d24729680eda79" kindref="member">cryptx_aes_digest</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>context,<sp/>uint8_t<sp/>*digest);</highlight></codeline>
+<codeline lineno="397"><highlight class="normal"></highlight></codeline>
+<codeline lineno="411" refid="cryptx_8h_1a69437bd1ca1d4fe40dc50d91da7c1be4" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a69437bd1ca1d4fe40dc50d91da7c1be4" kindref="member">cryptx_aes_verify</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>context,</highlight></codeline>
+<codeline lineno="412"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>aad,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>aad_len,</highlight></codeline>
+<codeline lineno="413"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ciphertext,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>ciphertext_len,</highlight></codeline>
+<codeline lineno="414"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>*tag);</highlight></codeline>
+<codeline lineno="415"><highlight class="normal"></highlight></codeline>
+<codeline lineno="417"></codeline>
+<codeline lineno="419" refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294" refkind="member"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="420" refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294a2cafdb683e1870a33bcb821420626cae" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294a2cafdb683e1870a33bcb821420626cae" kindref="member">RSA_OK</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="421" refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294aab9ab38286c4180a1aa9f6e8df42e5db" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294aab9ab38286c4180a1aa9f6e8df42e5db" kindref="member">RSA_INVALID_ARG</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="422" refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294aedeb18a96b96e292369abed5b2f0a271" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294aedeb18a96b96e292369abed5b2f0a271" kindref="member">RSA_INVALID_MSG</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="423" refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294a843ec210de66176ef63e2d2b8ebdeb65" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294a843ec210de66176ef63e2d2b8ebdeb65" kindref="member">RSA_INVALID_MODULUS</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="424"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294a43eadc89540121b902e02afabc7a7eb9" kindref="member">RSA_ENCODING_ERROR</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="425" refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294a43eadc89540121b902e02afabc7a7eb9" refkind="member"><highlight class="normal">}<sp/><ref refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294" kindref="member">rsa_error_t</ref>;</highlight></codeline>
+<codeline lineno="426"><highlight class="normal"></highlight></codeline>
+<codeline lineno="428" refid="cryptx_8h_1a265dcd336b31e2b95870d864c85cee2a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_RSA_MODULUS_MAX<sp/><sp/><sp/><sp/><sp/><sp/>256</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="429"><highlight class="normal"></highlight></codeline>
+<codeline lineno="443" refid="cryptx_8h_1aa4f5ae1eb3d9636c20dec64503a4896b" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294" kindref="member">rsa_error_t</ref><sp/><ref refid="cryptx_8h_1aa4f5ae1eb3d9636c20dec64503a4896b" kindref="member">cryptx_rsa_encrypt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>msg,</highlight></codeline>
+<codeline lineno="444"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>msglen,</highlight></codeline>
+<codeline lineno="445"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>pubkey,</highlight></codeline>
+<codeline lineno="446"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>keylen,</highlight></codeline>
+<codeline lineno="447"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ciphertext,</highlight></codeline>
+<codeline lineno="448"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>oaep_hash_alg);</highlight></codeline>
 <codeline lineno="449"><highlight class="normal"></highlight></codeline>
-<codeline lineno="452"><highlight class="normal"></highlight></codeline>
-<codeline lineno="454" refid="cryptx_8h_1ac753c393f9a2f85ebd589ed14823ccd7" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_ECDH_PRIVKEY_LEN<sp/><sp/><sp/><sp/><sp/>30</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="455"><highlight class="normal"></highlight></codeline>
-<codeline lineno="457" refid="cryptx_8h_1ad75ef28855bfeec84da3e324494c3082" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_ECDH_PUBKEY_LEN<sp/><sp/><sp/><sp/><sp/><sp/>(CRYPTX_ECDH_PRIVKEY_LEN&lt;&lt;1)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="458"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_ECDH_SECRET_LEN<sp/><sp/><sp/><sp/><sp/><sp/>CRYPTX_ECDH_PUBKEY_LEN</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="459"><highlight class="normal"></highlight></codeline>
-<codeline lineno="461" refid="cryptx_8h_1a1bd4fb56d54940c2534049e2a5a73351" refkind="member"><highlight class="preprocessor">#define<sp/>cryptx_ecdh_generate_privkey(privkey)<sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="462"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>cryptx_csrand_fill((privkey),<sp/>(CRYPTX_ECDH_PRIVKEY_LEN))</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="463"><highlight class="normal"></highlight></codeline>
-<codeline lineno="465" refid="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944" refkind="member"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>_ecdh_error<sp/>{</highlight></codeline>
-<codeline lineno="466"><highlight class="normal"><sp/><sp/><sp/><sp/>ECDH_OK,</highlight></codeline>
-<codeline lineno="467"><highlight class="normal"><sp/><sp/><sp/><sp/>ECDH_INVALID_ARG,</highlight></codeline>
-<codeline lineno="468"><highlight class="normal"><sp/><sp/><sp/><sp/>ECDH_PRIVKEY_INVALID,</highlight></codeline>
-<codeline lineno="469"><highlight class="normal"><sp/><sp/><sp/><sp/>ECDH_RPUBKEY_INVALID</highlight></codeline>
-<codeline lineno="470"><highlight class="normal">}<sp/><ref refid="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944" kindref="member">ecdh_error_t</ref>;</highlight></codeline>
-<codeline lineno="471"><highlight class="normal"></highlight></codeline>
-<codeline lineno="483" refid="cryptx_8h_1a37eb222058408330f49ddccd7fec9f9a" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944" kindref="member">ecdh_error_t</ref><sp/><ref refid="cryptx_8h_1a37eb222058408330f49ddccd7fec9f9a" kindref="member">cryptx_ec_keygen</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>*privkey,<sp/>uint8_t<sp/>*pubkey);</highlight></codeline>
-<codeline lineno="484"><highlight class="normal"></highlight></codeline>
-<codeline lineno="499" refid="cryptx_8h_1ad975a0ac10f02d9509081ae57f790f50" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944" kindref="member">ecdh_error_t</ref><sp/><ref refid="cryptx_8h_1ad975a0ac10f02d9509081ae57f790f50" kindref="member">cryptx_ecdh_secret</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>*privkey,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>*rpubkey,<sp/>uint8_t<sp/>*secret);</highlight></codeline>
-<codeline lineno="500"><highlight class="normal"></highlight></codeline>
-<codeline lineno="502"><highlight class="normal"></highlight></codeline>
-<codeline lineno="503" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5" kindref="member">CRYPTX_ASN1_TAGS</ref><sp/>{</highlight></codeline>
-<codeline lineno="504" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a0b4ee1817dddda0e7bb95f8c9c5262cc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a0b4ee1817dddda0e7bb95f8c9c5262cc" kindref="member">ASN1_RESVD</ref><sp/>=<sp/>0,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="505" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5afcacc079274ffffd6f8f30005a478309" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5afcacc079274ffffd6f8f30005a478309" kindref="member">ASN1_BOOLEAN</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="506" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ace678073d12a09bd35a9d14ee843f4f6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ace678073d12a09bd35a9d14ee843f4f6" kindref="member">ASN1_INTEGER</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="507" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a80cce3c21b5cf2a46abcf2d6559f16a2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a80cce3c21b5cf2a46abcf2d6559f16a2" kindref="member">ASN1_BITSTRING</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="508" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ad652362316e1126ce1f372ee9f42fdf7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ad652362316e1126ce1f372ee9f42fdf7" kindref="member">ASN1_OCTETSTRING</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="509" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ab9aa4736a7a0bec12fda19d770381ade" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ab9aa4736a7a0bec12fda19d770381ade" kindref="member">ASN1_NULL</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="510" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ab4e5697bbcfa96959f724b475deb438d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ab4e5697bbcfa96959f724b475deb438d" kindref="member">ASN1_OBJECTID</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="511" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5afa75f14a7646b0ee90575da2299c9303" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5afa75f14a7646b0ee90575da2299c9303" kindref="member">ASN1_OBJECTDESC</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="512" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a2169eaf366165cd4dfe1aca66659935c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a2169eaf366165cd4dfe1aca66659935c" kindref="member">ASN1_INSTANCE</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="513" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ade199cbdfbec356bae58bc468797580a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ade199cbdfbec356bae58bc468797580a" kindref="member">ASN1_REAL</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="514"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_ENUMERATED,</highlight></codeline>
-<codeline lineno="515"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_EMBEDDEDPDV,</highlight></codeline>
-<codeline lineno="516"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_UTF8STRING,</highlight></codeline>
-<codeline lineno="517"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_RELATIVEOID,</highlight></codeline>
-<codeline lineno="518" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a472ab1907cf28338eff639b8b5ab667c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a472ab1907cf28338eff639b8b5ab667c" kindref="member">ASN1_SEQUENCE</ref><sp/>=<sp/>16,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="519" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5aefff306acd391300face0a8080ad415e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5aefff306acd391300face0a8080ad415e" kindref="member">ASN1_SET</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="520"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_NUMERICSTRING,</highlight></codeline>
-<codeline lineno="521"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_PRINTABLESTRING,</highlight></codeline>
-<codeline lineno="522"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_TELETEXSTRING,</highlight></codeline>
-<codeline lineno="523"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_VIDEOTEXSTRING,</highlight></codeline>
-<codeline lineno="524"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_IA5STRING,</highlight></codeline>
-<codeline lineno="525"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_UTCTIME,</highlight></codeline>
-<codeline lineno="526"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_GENERALIZEDTIME,</highlight></codeline>
-<codeline lineno="527"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_GRAPHICSTRING,</highlight></codeline>
-<codeline lineno="528"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_VISIBLESTRING,</highlight></codeline>
-<codeline lineno="529"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_GENERALSTRING,</highlight></codeline>
-<codeline lineno="530"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_UNIVERSALSTRING,</highlight></codeline>
-<codeline lineno="531"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_CHARSTRING,</highlight></codeline>
-<codeline lineno="532"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_BMPSTRING</highlight></codeline>
-<codeline lineno="533"><highlight class="normal">};</highlight></codeline>
-<codeline lineno="534"><highlight class="normal"></highlight></codeline>
-<codeline lineno="535" refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900" kindref="member">CRYPTX_ASN1_CLASSES</ref><sp/>{</highlight></codeline>
-<codeline lineno="536" refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a36845401ba730128d3078d9cd0730fe8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a36845401ba730128d3078d9cd0730fe8" kindref="member">ASN1_UNIVERSAL</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="537" refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a1c873115fb577a391d1af735307abc45" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a1c873115fb577a391d1af735307abc45" kindref="member">ASN1_APPLICATION</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="538" refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a0e4e8c83e4929fe69855de5c8c7a34d3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a0e4e8c83e4929fe69855de5c8c7a34d3" kindref="member">ASN1_CONTEXTSPEC</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="539"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900ac51c7440728bfe2d94426d0ca4f3d895" kindref="member">ASN1_PRIVATE</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="540" refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900ac51c7440728bfe2d94426d0ca4f3d895" refkind="member"><highlight class="normal">};</highlight></codeline>
-<codeline lineno="541"><highlight class="normal"></highlight></codeline>
-<codeline lineno="542" refid="cryptx_8h_1af2211fe420abff08488c8f04de017080" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1af2211fe420abff08488c8f04de017080" kindref="member">CRYPTX_ASN1_FORMS</ref><sp/>{</highlight></codeline>
-<codeline lineno="543" refid="cryptx_8h_1af2211fe420abff08488c8f04de017080a916350d579d4895b1f843289b60b4572" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1af2211fe420abff08488c8f04de017080a916350d579d4895b1f843289b60b4572" kindref="member">ASN1_PRIMITIVE</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="544" refid="cryptx_8h_1af2211fe420abff08488c8f04de017080ad03b2b41a6f3417a981a78ca887332e6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1af2211fe420abff08488c8f04de017080ad03b2b41a6f3417a981a78ca887332e6" kindref="member">ASN1_CONSTRUCTED</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="545"><highlight class="normal">};</highlight></codeline>
-<codeline lineno="546"><highlight class="normal"></highlight></codeline>
-<codeline lineno="548" refid="cryptx_8h_1a13585a6206e220218a8f379327b04433" refkind="member"><highlight class="preprocessor">#define<sp/>cryptx_asn1_get_tag(tag)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((tag)<sp/>&amp;<sp/>0b111111)</highlight></codeline>
-<codeline lineno="550" refid="cryptx_8h_1a5af192045bb48e03f788962f259a2a7e" refkind="member"><highlight class="preprocessor">#define<sp/>cryptx_asn1_get_class(tag)<sp/><sp/><sp/><sp/><sp/><sp/>(((tag)&gt;&gt;6)<sp/>&amp;<sp/>0b11)</highlight></codeline>
-<codeline lineno="552" refid="cryptx_8h_1a3c8b39f5fb3ad1d8d138b9791b18f01e" refkind="member"><highlight class="preprocessor">#define<sp/>cryptx_asn1_get_form(tag)<sp/><sp/><sp/><sp/><sp/><sp/><sp/>(((tag)&gt;&gt;5)<sp/>&amp;<sp/>1)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="553"><highlight class="normal"></highlight></codeline>
-<codeline lineno="555" refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33" refkind="member"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>{</highlight></codeline>
-<codeline lineno="556" refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33ae8a5623b62dab851b0dc76048afc0b4a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33ae8a5623b62dab851b0dc76048afc0b4a" kindref="member">ASN1_OK</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="557" refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a434628c70562f3ab468d94e8eae7784d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a434628c70562f3ab468d94e8eae7784d" kindref="member">ASN1_END_OF_FILE</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="558" refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33aa13d20ad819d43693d26c77b80fb4952" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33aa13d20ad819d43693d26c77b80fb4952" kindref="member">ASN1_INVALID_ARG</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="559" refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a0101185f2109f1ba75ea2c4833664474" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a0101185f2109f1ba75ea2c4833664474" kindref="member">ASN1_LEN_OVERFLOW</ref>,<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="560"><highlight class="normal">}<sp/><ref refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33" kindref="member">asn1_error_t</ref>;</highlight></codeline>
-<codeline lineno="561"><highlight class="normal"></highlight></codeline>
-<codeline lineno="575" refid="cryptx_8h_1afbb965d7c7819b8685a1062d5e21e02c" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33" kindref="member">asn1_error_t</ref><sp/><ref refid="cryptx_8h_1afbb965d7c7819b8685a1062d5e21e02c" kindref="member">cryptx_asn1_decode</ref>(</highlight></codeline>
-<codeline lineno="576"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*data_start,</highlight></codeline>
-<codeline lineno="577"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>data_len,</highlight></codeline>
-<codeline lineno="578"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>seek_to,</highlight></codeline>
-<codeline lineno="579"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>*element_tag,</highlight></codeline>
-<codeline lineno="580"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>*element_len,</highlight></codeline>
-<codeline lineno="581"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>**element_data);</highlight></codeline>
-<codeline lineno="582"><highlight class="normal"></highlight></codeline>
-<codeline lineno="583"><highlight class="normal"></highlight></codeline>
-<codeline lineno="585"></codeline>
-<codeline lineno="587" refid="cryptx_8h_1a9db7be56d66674980b5540cab9405cc7" refkind="member"><highlight class="preprocessor">#define<sp/>cryptx_base64_get_encoded_len(len)<sp/><sp/><sp/><sp/><sp/><sp/>((len)<sp/>*<sp/>4<sp/>/<sp/>3)</highlight></codeline>
-<codeline lineno="589" refid="cryptx_8h_1a5629130707448f8475166398fb18a486" refkind="member"><highlight class="preprocessor">#define<sp/>cryptx_base64_get_decoded_len(len)<sp/><sp/><sp/><sp/><sp/><sp/>((len)<sp/>*<sp/>3<sp/>/<sp/>4)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="590"><highlight class="normal"></highlight></codeline>
-<codeline lineno="599" refid="cryptx_8h_1a3e216a54646a3f7d04c37102905ef850" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a3e216a54646a3f7d04c37102905ef850" kindref="member">cryptx_base64_encode</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*dest,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*src,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len);</highlight></codeline>
-<codeline lineno="600"><highlight class="normal"></highlight></codeline>
-<codeline lineno="609" refid="cryptx_8h_1a28db41653bf7ba5ef8bfcef425343722" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a28db41653bf7ba5ef8bfcef425343722" kindref="member">cryptx_base64_decode</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*dest,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*src,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len);</highlight></codeline>
+<codeline lineno="450"><highlight class="normal"></highlight></codeline>
+<codeline lineno="453"><highlight class="normal"></highlight></codeline>
+<codeline lineno="455" refid="cryptx_8h_1a26e233163ef752cc08d3f3499007369a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_EC_PRIVKEY_LEN<sp/><sp/><sp/><sp/><sp/><sp/><sp/>30</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="456"><highlight class="normal"></highlight></codeline>
+<codeline lineno="458" refid="cryptx_8h_1a9fb63bb764b8654fc273535be6c4e3a3" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_EC_PUBKEY_LEN<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(CRYPTX_ECDH_PRIVKEY_LEN&lt;&lt;1)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="459"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_EC_SECRET_LEN<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>CRYPTX_ECDH_PUBKEY_LEN</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="460"><highlight class="normal"></highlight></codeline>
+<codeline lineno="462" refid="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90" refkind="member"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>_ec_error<sp/>{</highlight></codeline>
+<codeline lineno="463"><highlight class="normal"><sp/><sp/><sp/><sp/>EC_OK,</highlight></codeline>
+<codeline lineno="464"><highlight class="normal"><sp/><sp/><sp/><sp/>EC_INVALID_ARG,</highlight></codeline>
+<codeline lineno="465"><highlight class="normal"><sp/><sp/><sp/><sp/>EC_PRIVKEY_INVALID,</highlight></codeline>
+<codeline lineno="466"><highlight class="normal"><sp/><sp/><sp/><sp/>EC_RPUBKEY_INVALID</highlight></codeline>
+<codeline lineno="467"><highlight class="normal">}<sp/><ref refid="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90" kindref="member">ec_error_t</ref>;</highlight></codeline>
+<codeline lineno="468"><highlight class="normal"></highlight></codeline>
+<codeline lineno="480" refid="cryptx_8h_1ace17d744e36edae96bea85ccfa7c18f9" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90" kindref="member">ec_error_t</ref><sp/><ref refid="cryptx_8h_1ace17d744e36edae96bea85ccfa7c18f9" kindref="member">cryptx_ec_keygen</ref>(uint8_t<sp/>*privkey,<sp/>uint8_t<sp/>*pubkey);</highlight></codeline>
+<codeline lineno="481"><highlight class="normal"></highlight></codeline>
+<codeline lineno="496" refid="cryptx_8h_1a4057940333f4f8f56b8ccf1d24db21ea" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90" kindref="member">ec_error_t</ref><sp/><ref refid="cryptx_8h_1a4057940333f4f8f56b8ccf1d24db21ea" kindref="member">cryptx_ec_secret</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>*privkey,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>*rpubkey,<sp/>uint8_t<sp/>*secret);</highlight></codeline>
+<codeline lineno="497"><highlight class="normal"></highlight></codeline>
+<codeline lineno="499"><highlight class="normal"></highlight></codeline>
+<codeline lineno="500" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5" kindref="member">CRYPTX_ASN1_TAGS</ref><sp/>{</highlight></codeline>
+<codeline lineno="501" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a0b4ee1817dddda0e7bb95f8c9c5262cc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a0b4ee1817dddda0e7bb95f8c9c5262cc" kindref="member">ASN1_RESVD</ref><sp/>=<sp/>0,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="502" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5afcacc079274ffffd6f8f30005a478309" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5afcacc079274ffffd6f8f30005a478309" kindref="member">ASN1_BOOLEAN</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="503" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ace678073d12a09bd35a9d14ee843f4f6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ace678073d12a09bd35a9d14ee843f4f6" kindref="member">ASN1_INTEGER</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="504" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a80cce3c21b5cf2a46abcf2d6559f16a2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a80cce3c21b5cf2a46abcf2d6559f16a2" kindref="member">ASN1_BITSTRING</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="505" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ad652362316e1126ce1f372ee9f42fdf7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ad652362316e1126ce1f372ee9f42fdf7" kindref="member">ASN1_OCTETSTRING</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="506" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ab9aa4736a7a0bec12fda19d770381ade" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ab9aa4736a7a0bec12fda19d770381ade" kindref="member">ASN1_NULL</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="507" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ab4e5697bbcfa96959f724b475deb438d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ab4e5697bbcfa96959f724b475deb438d" kindref="member">ASN1_OBJECTID</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="508" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5afa75f14a7646b0ee90575da2299c9303" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5afa75f14a7646b0ee90575da2299c9303" kindref="member">ASN1_OBJECTDESC</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="509" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a2169eaf366165cd4dfe1aca66659935c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a2169eaf366165cd4dfe1aca66659935c" kindref="member">ASN1_INSTANCE</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="510" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ade199cbdfbec356bae58bc468797580a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ade199cbdfbec356bae58bc468797580a" kindref="member">ASN1_REAL</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="511"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_ENUMERATED,</highlight></codeline>
+<codeline lineno="512"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_EMBEDDEDPDV,</highlight></codeline>
+<codeline lineno="513"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_UTF8STRING,</highlight></codeline>
+<codeline lineno="514"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_RELATIVEOID,</highlight></codeline>
+<codeline lineno="515" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a472ab1907cf28338eff639b8b5ab667c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a472ab1907cf28338eff639b8b5ab667c" kindref="member">ASN1_SEQUENCE</ref><sp/>=<sp/>16,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="516" refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5aefff306acd391300face0a8080ad415e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5aefff306acd391300face0a8080ad415e" kindref="member">ASN1_SET</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="517"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_NUMERICSTRING,</highlight></codeline>
+<codeline lineno="518"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_PRINTABLESTRING,</highlight></codeline>
+<codeline lineno="519"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_TELETEXSTRING,</highlight></codeline>
+<codeline lineno="520"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_VIDEOTEXSTRING,</highlight></codeline>
+<codeline lineno="521"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_IA5STRING,</highlight></codeline>
+<codeline lineno="522"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_UTCTIME,</highlight></codeline>
+<codeline lineno="523"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_GENERALIZEDTIME,</highlight></codeline>
+<codeline lineno="524"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_GRAPHICSTRING,</highlight></codeline>
+<codeline lineno="525"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_VISIBLESTRING,</highlight></codeline>
+<codeline lineno="526"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_GENERALSTRING,</highlight></codeline>
+<codeline lineno="527"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_UNIVERSALSTRING,</highlight></codeline>
+<codeline lineno="528"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_CHARSTRING,</highlight></codeline>
+<codeline lineno="529"><highlight class="normal"><sp/><sp/><sp/><sp/>ASN1_BMPSTRING</highlight></codeline>
+<codeline lineno="530"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="531"><highlight class="normal"></highlight></codeline>
+<codeline lineno="532" refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900" kindref="member">CRYPTX_ASN1_CLASSES</ref><sp/>{</highlight></codeline>
+<codeline lineno="533" refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a36845401ba730128d3078d9cd0730fe8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a36845401ba730128d3078d9cd0730fe8" kindref="member">ASN1_UNIVERSAL</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="534" refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a1c873115fb577a391d1af735307abc45" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a1c873115fb577a391d1af735307abc45" kindref="member">ASN1_APPLICATION</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="535" refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a0e4e8c83e4929fe69855de5c8c7a34d3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a0e4e8c83e4929fe69855de5c8c7a34d3" kindref="member">ASN1_CONTEXTSPEC</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="536"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900ac51c7440728bfe2d94426d0ca4f3d895" kindref="member">ASN1_PRIVATE</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="537" refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900ac51c7440728bfe2d94426d0ca4f3d895" refkind="member"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="538"><highlight class="normal"></highlight></codeline>
+<codeline lineno="539" refid="cryptx_8h_1af2211fe420abff08488c8f04de017080" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1af2211fe420abff08488c8f04de017080" kindref="member">CRYPTX_ASN1_FORMS</ref><sp/>{</highlight></codeline>
+<codeline lineno="540" refid="cryptx_8h_1af2211fe420abff08488c8f04de017080a916350d579d4895b1f843289b60b4572" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1af2211fe420abff08488c8f04de017080a916350d579d4895b1f843289b60b4572" kindref="member">ASN1_PRIMITIVE</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="541" refid="cryptx_8h_1af2211fe420abff08488c8f04de017080ad03b2b41a6f3417a981a78ca887332e6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1af2211fe420abff08488c8f04de017080ad03b2b41a6f3417a981a78ca887332e6" kindref="member">ASN1_CONSTRUCTED</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="542"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="543"><highlight class="normal"></highlight></codeline>
+<codeline lineno="545" refid="cryptx_8h_1a13585a6206e220218a8f379327b04433" refkind="member"><highlight class="preprocessor">#define<sp/>cryptx_asn1_get_tag(tag)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((tag)<sp/>&amp;<sp/>0b111111)</highlight></codeline>
+<codeline lineno="547" refid="cryptx_8h_1a5af192045bb48e03f788962f259a2a7e" refkind="member"><highlight class="preprocessor">#define<sp/>cryptx_asn1_get_class(tag)<sp/><sp/><sp/><sp/><sp/><sp/>(((tag)&gt;&gt;6)<sp/>&amp;<sp/>0b11)</highlight></codeline>
+<codeline lineno="549" refid="cryptx_8h_1a3c8b39f5fb3ad1d8d138b9791b18f01e" refkind="member"><highlight class="preprocessor">#define<sp/>cryptx_asn1_get_form(tag)<sp/><sp/><sp/><sp/><sp/><sp/><sp/>(((tag)&gt;&gt;5)<sp/>&amp;<sp/>1)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="550"><highlight class="normal"></highlight></codeline>
+<codeline lineno="552" refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33" refkind="member"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="553" refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33ae8a5623b62dab851b0dc76048afc0b4a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33ae8a5623b62dab851b0dc76048afc0b4a" kindref="member">ASN1_OK</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="554" refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a434628c70562f3ab468d94e8eae7784d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a434628c70562f3ab468d94e8eae7784d" kindref="member">ASN1_END_OF_FILE</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="555" refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33aa13d20ad819d43693d26c77b80fb4952" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33aa13d20ad819d43693d26c77b80fb4952" kindref="member">ASN1_INVALID_ARG</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="556" refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a0101185f2109f1ba75ea2c4833664474" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a0101185f2109f1ba75ea2c4833664474" kindref="member">ASN1_LEN_OVERFLOW</ref>,<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="557"><highlight class="normal">}<sp/><ref refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33" kindref="member">asn1_error_t</ref>;</highlight></codeline>
+<codeline lineno="558"><highlight class="normal"></highlight></codeline>
+<codeline lineno="572" refid="cryptx_8h_1afbb965d7c7819b8685a1062d5e21e02c" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33" kindref="member">asn1_error_t</ref><sp/><ref refid="cryptx_8h_1afbb965d7c7819b8685a1062d5e21e02c" kindref="member">cryptx_asn1_decode</ref>(</highlight></codeline>
+<codeline lineno="573"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*data_start,</highlight></codeline>
+<codeline lineno="574"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>data_len,</highlight></codeline>
+<codeline lineno="575"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>seek_to,</highlight></codeline>
+<codeline lineno="576"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>*element_tag,</highlight></codeline>
+<codeline lineno="577"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>*element_len,</highlight></codeline>
+<codeline lineno="578"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>**element_data);</highlight></codeline>
+<codeline lineno="579"><highlight class="normal"></highlight></codeline>
+<codeline lineno="580"><highlight class="normal"></highlight></codeline>
+<codeline lineno="582"></codeline>
+<codeline lineno="584" refid="cryptx_8h_1a9db7be56d66674980b5540cab9405cc7" refkind="member"><highlight class="preprocessor">#define<sp/>cryptx_base64_get_encoded_len(len)<sp/><sp/><sp/><sp/><sp/><sp/>((len)<sp/>*<sp/>4<sp/>/<sp/>3)</highlight></codeline>
+<codeline lineno="586" refid="cryptx_8h_1a5629130707448f8475166398fb18a486" refkind="member"><highlight class="preprocessor">#define<sp/>cryptx_base64_get_decoded_len(len)<sp/><sp/><sp/><sp/><sp/><sp/>((len)<sp/>*<sp/>3<sp/>/<sp/>4)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="587"><highlight class="normal"></highlight></codeline>
+<codeline lineno="596" refid="cryptx_8h_1a3e216a54646a3f7d04c37102905ef850" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a3e216a54646a3f7d04c37102905ef850" kindref="member">cryptx_base64_encode</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*dest,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*src,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len);</highlight></codeline>
+<codeline lineno="597"><highlight class="normal"></highlight></codeline>
+<codeline lineno="606" refid="cryptx_8h_1a28db41653bf7ba5ef8bfcef425343722" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a28db41653bf7ba5ef8bfcef425343722" kindref="member">cryptx_base64_decode</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*dest,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*src,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len);</highlight></codeline>
+<codeline lineno="607"><highlight class="normal"></highlight></codeline>
+<codeline lineno="608"><highlight class="normal"></highlight></codeline>
+<codeline lineno="609"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>CRYPTX_ENABLE_HAZMAT</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="610"><highlight class="normal"></highlight></codeline>
-<codeline lineno="611"><highlight class="normal"></highlight></codeline>
-<codeline lineno="612"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>CRYPTX_ENABLE_HAZMAT</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="613"><highlight class="normal"></highlight></codeline>
-<codeline lineno="621" refid="cryptx_8h_1aa26dcd5f7c0f1f679c91268bc5b69455" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1aa26dcd5f7c0f1f679c91268bc5b69455" kindref="member">cryptx_hazmat_aes_ecb_encrypt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*block_in,</highlight></codeline>
-<codeline lineno="622"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*block_out,</highlight></codeline>
-<codeline lineno="623"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>ks);</highlight></codeline>
-<codeline lineno="624"><highlight class="normal"></highlight></codeline>
-<codeline lineno="632" refid="cryptx_8h_1a705b398f84e2020d762a0ce03c90bd90" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a705b398f84e2020d762a0ce03c90bd90" kindref="member">cryptx_hazmat_aes_ecb_decrypt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*block_in,</highlight></codeline>
-<codeline lineno="633"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*block_out,</highlight></codeline>
-<codeline lineno="634"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>ks);</highlight></codeline>
-<codeline lineno="635"><highlight class="normal"></highlight></codeline>
-<codeline lineno="649" refid="cryptx_8h_1a686d9781ff0de6cf06424df197ce6e1e" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a686d9781ff0de6cf06424df197ce6e1e" kindref="member">cryptx_hazmat_rsa_oaep_encode</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*plaintext,</highlight></codeline>
-<codeline lineno="650"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,</highlight></codeline>
-<codeline lineno="651"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*encoded,</highlight></codeline>
-<codeline lineno="652"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>modulus_len,</highlight></codeline>
-<codeline lineno="653"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>*auth,</highlight></codeline>
-<codeline lineno="654"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>hash_alg);</highlight></codeline>
-<codeline lineno="655"><highlight class="normal"></highlight></codeline>
-<codeline lineno="667" refid="cryptx_8h_1ab367fc9a33e00bee5e9a9f8df5f2a697" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1ab367fc9a33e00bee5e9a9f8df5f2a697" kindref="member">cryptx_hazmat_rsa_oaep_decode</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*encoded,</highlight></codeline>
-<codeline lineno="668"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,</highlight></codeline>
-<codeline lineno="669"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*plaintext,</highlight></codeline>
-<codeline lineno="670"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>*auth,</highlight></codeline>
-<codeline lineno="671"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>hash_alg);</highlight></codeline>
-<codeline lineno="672"><highlight class="normal"></highlight></codeline>
-<codeline lineno="681" refid="cryptx_8h_1a71ea61142ac4e58af9d8b8c9d2d17685" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a70bc16d6ac300e87e3fc9c9847254bd1" kindref="member">cryptx_hazmat_powmod</ref>(uint8_t<sp/>size,<sp/>uint8_t<sp/>*restrict<sp/>base,<sp/>uint24_t<sp/>exp,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>*restrict<sp/>mod);</highlight></codeline>
+<codeline lineno="618" refid="cryptx_8h_1aa26dcd5f7c0f1f679c91268bc5b69455" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1aa26dcd5f7c0f1f679c91268bc5b69455" kindref="member">cryptx_hazmat_aes_ecb_encrypt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*block_in,</highlight></codeline>
+<codeline lineno="619"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*block_out,</highlight></codeline>
+<codeline lineno="620"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>ks);</highlight></codeline>
+<codeline lineno="621"><highlight class="normal"></highlight></codeline>
+<codeline lineno="629" refid="cryptx_8h_1a705b398f84e2020d762a0ce03c90bd90" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a705b398f84e2020d762a0ce03c90bd90" kindref="member">cryptx_hazmat_aes_ecb_decrypt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*block_in,</highlight></codeline>
+<codeline lineno="630"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*block_out,</highlight></codeline>
+<codeline lineno="631"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>ks);</highlight></codeline>
+<codeline lineno="632"><highlight class="normal"></highlight></codeline>
+<codeline lineno="646" refid="cryptx_8h_1a686d9781ff0de6cf06424df197ce6e1e" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a686d9781ff0de6cf06424df197ce6e1e" kindref="member">cryptx_hazmat_rsa_oaep_encode</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*plaintext,</highlight></codeline>
+<codeline lineno="647"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,</highlight></codeline>
+<codeline lineno="648"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*encoded,</highlight></codeline>
+<codeline lineno="649"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>modulus_len,</highlight></codeline>
+<codeline lineno="650"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>*auth,</highlight></codeline>
+<codeline lineno="651"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>hash_alg);</highlight></codeline>
+<codeline lineno="652"><highlight class="normal"></highlight></codeline>
+<codeline lineno="664" refid="cryptx_8h_1ab367fc9a33e00bee5e9a9f8df5f2a697" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1ab367fc9a33e00bee5e9a9f8df5f2a697" kindref="member">cryptx_hazmat_rsa_oaep_decode</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*encoded,</highlight></codeline>
+<codeline lineno="665"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,</highlight></codeline>
+<codeline lineno="666"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*plaintext,</highlight></codeline>
+<codeline lineno="667"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>*auth,</highlight></codeline>
+<codeline lineno="668"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>hash_alg);</highlight></codeline>
+<codeline lineno="669"><highlight class="normal"></highlight></codeline>
+<codeline lineno="678" refid="cryptx_8h_1a71ea61142ac4e58af9d8b8c9d2d17685" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a70bc16d6ac300e87e3fc9c9847254bd1" kindref="member">cryptx_hazmat_powmod</ref>(uint8_t<sp/>size,<sp/>uint8_t<sp/>*restrict<sp/>base,<sp/>uint24_t<sp/>exp,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>*restrict<sp/>mod);</highlight></codeline>
+<codeline lineno="679"><highlight class="normal"></highlight></codeline>
+<codeline lineno="681" refid="cryptx_8h_1ad0e904358b21cab26ad541d594184a89" refkind="member"><highlight class="preprocessor">#define<sp/>CRYPTX_GF2_INTLEN<sp/>30</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="682"><highlight class="normal"></highlight></codeline>
-<codeline lineno="684" refid="cryptx_8h_1ad0e904358b21cab26ad541d594184a89" refkind="member"><highlight class="preprocessor">#define<sp/>CRYPTX_GF2_INTLEN<sp/>30</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="685"><highlight class="normal"></highlight></codeline>
-<codeline lineno="687" refid="structcryptx__ecc__point" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref><sp/>{</highlight></codeline>
-<codeline lineno="688"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>x[<ref refid="cryptx_8h_1ad0e904358b21cab26ad541d594184a89" kindref="member">CRYPTX_GF2_INTLEN</ref>];</highlight></codeline>
-<codeline lineno="689"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>y[<ref refid="cryptx_8h_1ad0e904358b21cab26ad541d594184a89" kindref="member">CRYPTX_GF2_INTLEN</ref>];</highlight></codeline>
-<codeline lineno="690"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="691"><highlight class="normal"></highlight></codeline>
-<codeline lineno="698"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a71ea61142ac4e58af9d8b8c9d2d17685" kindref="member">cryptx_hazmat_ecc_point_add</ref>(<ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref>*<sp/>p,<sp/><ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref>*<sp/>q);</highlight></codeline>
-<codeline lineno="699"><highlight class="normal"></highlight></codeline>
-<codeline lineno="705" refid="cryptx_8h_1ae4b37d491cbd4d5a16e0fb84d87b9270" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1ae4b37d491cbd4d5a16e0fb84d87b9270" kindref="member">cryptx_hazmat_ecc_point_double</ref>(<ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref>*<sp/>p);</highlight></codeline>
-<codeline lineno="706"><highlight class="normal"></highlight></codeline>
-<codeline lineno="714" refid="cryptx_8h_1adf9bad66ca13288b71d9306d9c0a55e0" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1adf9bad66ca13288b71d9306d9c0a55e0" kindref="member">cryptx_hazmat_ecc_point_mul_scalar</ref>(<ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref>*<sp/>p,</highlight></codeline>
-<codeline lineno="715"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t*<sp/>scalar,</highlight></codeline>
-<codeline lineno="716"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>scalar_bit_width);</highlight></codeline>
-<codeline lineno="717"><highlight class="normal"></highlight></codeline>
-<codeline lineno="718"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="719"><highlight class="normal"></highlight></codeline>
-<codeline lineno="720"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+<codeline lineno="684" refid="structcryptx__ecc__point" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref><sp/>{</highlight></codeline>
+<codeline lineno="685"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>x[<ref refid="cryptx_8h_1ad0e904358b21cab26ad541d594184a89" kindref="member">CRYPTX_GF2_INTLEN</ref>];</highlight></codeline>
+<codeline lineno="686"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>y[<ref refid="cryptx_8h_1ad0e904358b21cab26ad541d594184a89" kindref="member">CRYPTX_GF2_INTLEN</ref>];</highlight></codeline>
+<codeline lineno="687"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="688"><highlight class="normal"></highlight></codeline>
+<codeline lineno="695"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a71ea61142ac4e58af9d8b8c9d2d17685" kindref="member">cryptx_hazmat_ecc_point_add</ref>(<ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref>*<sp/>p,<sp/><ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref>*<sp/>q);</highlight></codeline>
+<codeline lineno="696"><highlight class="normal"></highlight></codeline>
+<codeline lineno="702" refid="cryptx_8h_1ae4b37d491cbd4d5a16e0fb84d87b9270" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1ae4b37d491cbd4d5a16e0fb84d87b9270" kindref="member">cryptx_hazmat_ecc_point_double</ref>(<ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref>*<sp/>p);</highlight></codeline>
+<codeline lineno="703"><highlight class="normal"></highlight></codeline>
+<codeline lineno="711" refid="cryptx_8h_1adf9bad66ca13288b71d9306d9c0a55e0" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1adf9bad66ca13288b71d9306d9c0a55e0" kindref="member">cryptx_hazmat_ecc_point_mul_scalar</ref>(<ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref>*<sp/>p,</highlight></codeline>
+<codeline lineno="712"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t*<sp/>scalar,</highlight></codeline>
+<codeline lineno="713"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>scalar_bit_width);</highlight></codeline>
+<codeline lineno="714"><highlight class="normal"></highlight></codeline>
+<codeline lineno="715"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="716"><highlight class="normal"></highlight></codeline>
+<codeline lineno="717"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
     </programlisting>
     <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h"/>
   </compounddef>

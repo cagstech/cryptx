@@ -6,34 +6,48 @@ library CRYPTX, 13
 
 ;------------------------------------------
 
-; hashing functions
-	export cryptx_hash_init
+; hash module
+  export cryptx_hash_init
 	export cryptx_hash_update
 	export cryptx_hash_digest
-	export cryptx_hash_mgf1
+  export cryptx_hash_mgf1
+ 
+; hmac module
 	export cryptx_hmac_init
 	export cryptx_hmac_update
 	export cryptx_hmac_digest
 	export cryptx_hmac_pbkdf2
-	export cryptx_digest_compare
-	export cryptx_digest_tostring
+ 
+; bytes module
+	export cryptx_bytes_compare
+	export cryptx_bytes_tostring
+  export cryptx_bytes_fromstring
+  export cryptx_bytes_rcopy
+  export cryptx_bytes_reverse
 	
-; encryption functions
-	export cryptx_csrand_init
+; csrand module
 	export cryptx_csrand_get
 	export cryptx_csrand_fill
+ 
+; aes module
 	export cryptx_aes_init
 	export cryptx_aes_encrypt
 	export cryptx_aes_decrypt
 	export cryptx_aes_update_aad
 	export cryptx_aes_digest
 	export cryptx_aes_verify
+ 
+; rsa module
 	export cryptx_rsa_encrypt
+ 
+; ec module
 	export cryptx_ec_keygen
-	export cryptx_ecdh_secret
+	export cryptx_ec_secret
 	
-; encoding functions
+; asn1 module
 	export cryptx_asn1_decode
+ 
+; base64 module
 	export cryptx_base64_encode
 	export cryptx_base64_decode
 	
@@ -59,8 +73,9 @@ cryptx_hmac_init	= hmac_init
 cryptx_hmac_update	= hmac_update
 cryptx_hmac_digest	= hmac_final
 cryptx_hmac_pbkdf2	= hmac_pbkdf2
-cryptx_digest_compare	= digest_compare
-cryptx_digest_tostring	= digest_tostring
+cryptx_bytes_compare	= digest_compare
+cryptx_bytes_tostring	= digest_tostring
+cryptx_bytes_rcopy = _rmemcpy
 cryptx_csrand_init		= csrand_init
 cryptx_csrand_get		= csrand_get
 cryptx_csrand_fill		= csrand_fill
@@ -69,7 +84,7 @@ cryptx_aes_encrypt		= aes_encrypt
 cryptx_aes_decrypt		= aes_decrypt
 cryptx_rsa_encrypt		= rsa_encrypt
 cryptx_ec_keygen	= ec_keygen
-cryptx_ecdh_secret		= ecdh_secret
+cryptx_ec_secret		= ecdh_secret
 cryptx_hazmat_aes_ecb_encrypt		= aes_ecb_unsafe_encrypt
 cryptx_hazmat_aes_ecb_decrypt		= aes_ecb_unsafe_decrypt
 cryptx_hazmat_rsa_oaep_encode		= oaep_encode
@@ -88,6 +103,8 @@ cryptx_internal_gf2_invert			= _bigint_invert
 cryptx_asn1_decode		= _asn1_decode
 cryptx_base64_encode	= base64_encode
 cryptx_base64_decode	= base64_decode
+cryptx_bytes_rcopy = _rmemcpy
+cryptx_bytes_reverse = _memrev
 	
 	
 	

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>byte operations &mdash; CryptX  documentation</title>
+  <title>bytearray operations &mdash; CryptX  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/proof.css" type="text/css" />
@@ -17,9 +17,7 @@
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="function documentation: hash" href="hash.html" />
-    <link rel="prev" title="secure random number generator" href="csrand.html" /> 
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -37,15 +35,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="csrand.html">secure random number generator</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">byte operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hash.html">function documentation: hash</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hmac.html">function documentation: hmac</a></li>
-<li class="toctree-l1"><a class="reference internal" href="aes.html">function documentation: AES</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rsa.html">function documentation: RSA</a></li>
-</ul>
-<ul>
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../static/analysis.html">Analysis &amp; Overview</a></li>
 </ul>
 
@@ -63,7 +53,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>byte operations</li>
+      <li>bytearray operations</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -72,11 +62,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="byte-operations">
-<span id="digest"></span><h1>byte operations<a class="headerlink" href="#byte-operations" title="Permalink to this headline"></a></h1>
+  <div class="section" id="bytearray-operations">
+<span id="bytes"></span><h1>bytearray operations<a class="headerlink" href="#bytearray-operations" title="Permalink to this headline"></a></h1>
 <span class="target" id="digest-compare"></span><dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv421cryptx_digest_comparePKvPKv6size_t">
-<span id="_CPPv321cryptx_digest_comparePKvPKv6size_t"></span><span id="_CPPv221cryptx_digest_comparePKvPKv6size_t"></span><span id="cryptx_digest_compare__voidCP.voidCP.s"></span><span class="target" id="cryptx_8h_1a36bdf1683237ed686ce175fde670ccff"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_digest_compare</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">digest1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">digest2</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421cryptx_digest_comparePKvPKv6size_t" title="Permalink to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv420cryptx_bytes_comparePKvPKv6size_t">
+<span id="_CPPv320cryptx_bytes_comparePKvPKv6size_t"></span><span id="_CPPv220cryptx_bytes_comparePKvPKv6size_t"></span><span id="cryptx_bytes_compare__voidCP.voidCP.s"></span><span class="target" id="cryptx_8h_1a41bc20e6e45f7d8b5b85d994080bb929"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_bytes_compare</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">digest1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">digest2</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420cryptx_bytes_comparePKvPKv6size_t" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Compare two digests or buffers. </p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -97,8 +87,8 @@
 </dd></dl>
 
 <span class="target" id="digest-tostring"></span><dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv422cryptx_digest_tostringPKv6size_tP7uint8_t">
-<span id="_CPPv322cryptx_digest_tostringPKv6size_tP7uint8_t"></span><span id="_CPPv222cryptx_digest_tostringPKv6size_tP7uint8_t"></span><span id="cryptx_digest_tostring__voidCP.s.uint8_tP"></span><span class="target" id="cryptx_8h_1aa25931fdaf401a4fddf0023e272278f7"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_digest_tostring</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">digest</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">hexstr</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422cryptx_digest_tostringPKv6size_tP7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv421cryptx_bytes_tostringPK7uint8_t6size_tPc">
+<span id="_CPPv321cryptx_bytes_tostringPK7uint8_t6size_tPc"></span><span id="_CPPv221cryptx_bytes_tostringPK7uint8_t6size_tPc"></span><span id="cryptx_bytes_tostring__uint8_tCP.s.cP"></span><span class="target" id="cryptx_8h_1a3d3bbcc6f13d3b4d61bf357e9a299e81"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_bytes_tostring</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">digest</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">hexstr</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421cryptx_bytes_tostringPK7uint8_t6size_tPc" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Convert a digest to its hexstring representation. </p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -120,10 +110,7 @@
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="csrand.html" class="btn btn-neutral float-left" title="secure random number generator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="hash.html" class="btn btn-neutral float-right" title="function documentation: hash" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

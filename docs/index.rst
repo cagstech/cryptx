@@ -40,38 +40,38 @@ CryptX has a number of modules that implement various standards for data obfusca
 .. code:: c
   
   cryptx_[module]_[method]
-  
-+-------------------+--------------------------------------------------------------------------+
-| Module            | Implements                                                               |
-+===================+==========================================================================+
-|`csrand <csrand>`_ | implements cryptographically-secure random number generation             |
-+-------------------+--------------------------------------------------------------------------+
-|`digest <digest>`_ | implements digest manipulation                                           |
-+-------------------+--------------------------------------------------------------------------+
-|`hash <hash>`_     | implements hashing                                                       |
-+-------------------+--------------------------------------------------------------------------+
-|`hmac <hmac>`_     | implements hash-based message authentication code (hmac)                 |
-+-------------------+--------------------------------------------------------------------------+
-|`aes <aes>`_       | implements advanced encryption standard (aes)                            |
-+-------------------+--------------------------------------------------------------------------+
-|`rsa <rsa>`_       | implements RSA public key cryptography                                   |
-+-------------------+--------------------------------------------------------------------------+
-|`ecdh <ecc>`_      | implements elliptic curve diffie-hellman (ecdh) key exchange             |
-+-------------------+--------------------------------------------------------------------------+
-|`asn1 <encoding>`_ | implements decoder for DER/ASN.1 encoding                                |
-+-------------------+--------------------------------------------------------------------------+
-|`base64 <base64>`_ | implements encoder/decoder for PEM/base64 encoding                       |
-+-------------------+--------------------------------------------------------------------------+
+ 
++----------------------+----------------------------------------------------------------+
+| Module               | Implements                                                     |
++======================+================================================================+
+|:ref:`csrand <csrand>`| cryptographically-secure random number generator               |
++----------------------+----------------------------------------------------------------+
+|:ref:`bytes <bytes>`  | bytearray comparison, string conversion, endianness reversal   |
++----------------------+----------------------------------------------------------------+
+|:ref:`hash <hash>`    | secure hashing: SHA256, SHA1                                   |
++----------------------+----------------------------------------------------------------+
+|:ref:`hmac <hmac>`    | hash-based message authentication code: SHA256, SHA1           |
++----------------------+----------------------------------------------------------------+
+|:ref:`aes <aes>`      | advanced encryption standard (AES)                             |
++----------------------+----------------------------------------------------------------+
+|:ref:`rsa <rsa>`      | rivest-shamir-adleman (RSA) public key encryption              |
++----------------------+----------------------------------------------------------------+
+|:ref:`ec <ec>`        | elliptic curves: Diffie-Helman kex, Digitial Signing Algorithm |
++----------------------+----------------------------------------------------------------+
+|:ref:`asn1 <asn1>`    | DER/ASN.1 codex                                                |
++----------------------+----------------------------------------------------------------+
+|:ref:`base64 <base64>`| PEM/Base64 codex                                               |
++----------------------+----------------------------------------------------------------+
+|:ref:`hazmat <hazmat>`| hazardous materials/compatibility/custom construction layer    |
++----------------------+----------------------------------------------------------------+
 
-+-------------------+--------------------------------------------------------------------------+
-| Coming Soon       | Implements                                                               |
-+===================+==========================================================================+
-|`ecdsa <ecc>`_     | implements elliptic curve digital signing algorithm (ecdsa)              |
-+-------------------+--------------------------------------------------------------------------+
-|`key <key>`_       | implements importing and exporting keys for various formats              |
-+-------------------+--------------------------------------------------------------------------+
-|`tls <tls>`_       | implements TLS protocol                                                  |
-+-------------------+--------------------------------------------------------------------------+
++-------------+-----------------------------------------------------------+
+| Coming Soon | Implements                                                |
++=============+===========================================================+
+| pkcs        | implements pkcs key object format                         |
++-------------+-----------------------------------------------------------+
+| tls         | implements TLS protocol                                   |
++-------------+-----------------------------------------------------------+
 
 To avoid text overload, the entire library documentation will not be dumped onto a single page. You may click on the links in the table above if you wish to view more detailed documentation for a particular module.
 

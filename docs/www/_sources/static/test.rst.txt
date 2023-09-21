@@ -1,3 +1,0 @@
-
-.. math::
-	\(kP=\sum _{i=0}^{\ell -1} u_i\tau

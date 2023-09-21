@@ -64,53 +64,25 @@
              
   <div class="section" id="function-documentation-elliptic-curve-cryptography">
 <span id="ec"></span><h1>function documentation: Elliptic Curve Cryptography<a class="headerlink" href="#function-documentation-elliptic-curve-cryptography" title="Permalink to this headline"></a></h1>
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.CRYPTX_ECDH_PRIVKEY_LEN">
-<span class="target" id="cryptx_8h_1ac753c393f9a2f85ebd589ed14823ccd7"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_ECDH_PRIVKEY_LEN</span></span></span><a class="headerlink" href="#c.CRYPTX_ECDH_PRIVKEY_LEN" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Defines the byte length of an ECDH private key supported by this library. </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.CRYPTX_ECDH_PUBKEY_LEN">
-<span class="target" id="cryptx_8h_1ad75ef28855bfeec84da3e324494c3082"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_ECDH_PUBKEY_LEN</span></span></span><a class="headerlink" href="#c.CRYPTX_ECDH_PUBKEY_LEN" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Defines the byte length of an ECDH public key supported by this library. </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.CRYPTX_ECDH_SECRET_LEN">
-<span class="target" id="cryptx_8h_1aa95fc648d6050a2e47e08f24176167c6"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_ECDH_SECRET_LEN</span></span></span><a class="headerlink" href="#c.CRYPTX_ECDH_SECRET_LEN" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enum">
-<dt class="sig sig-object cpp" id="_CPPv412ecdh_error_t">
-<span id="_CPPv312ecdh_error_t"></span><span id="_CPPv212ecdh_error_t"></span><span class="target" id="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ecdh_error_t</span></span></span><a class="headerlink" href="#_CPPv412ecdh_error_t" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Defines possible response codes from calls to the ECDH API. </p>
-<p><em>Values:</em></p>
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N12ecdh_error_t7ECDH_OKE">
-<span id="_CPPv3N12ecdh_error_t7ECDH_OKE"></span><span id="_CPPv2N12ecdh_error_t7ECDH_OKE"></span><span class="target" id="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944a1fc3b5fa5eb8adaa46a9257ee782acbb"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ECDH_OK</span></span></span><a class="headerlink" href="#_CPPv4N12ecdh_error_t7ECDH_OKE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N12ecdh_error_t16ECDH_INVALID_ARGE">
-<span id="_CPPv3N12ecdh_error_t16ECDH_INVALID_ARGE"></span><span id="_CPPv2N12ecdh_error_t16ECDH_INVALID_ARGE"></span><span class="target" id="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944a635480018ca2a67bd5994a91091abc5a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ECDH_INVALID_ARG</span></span></span><a class="headerlink" href="#_CPPv4N12ecdh_error_t16ECDH_INVALID_ARGE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N12ecdh_error_t20ECDH_PRIVKEY_INVALIDE">
-<span id="_CPPv3N12ecdh_error_t20ECDH_PRIVKEY_INVALIDE"></span><span id="_CPPv2N12ecdh_error_t20ECDH_PRIVKEY_INVALIDE"></span><span class="target" id="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944a761fc8a34f1342ebe085e06300fb907f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ECDH_PRIVKEY_INVALID</span></span></span><a class="headerlink" href="#_CPPv4N12ecdh_error_t20ECDH_PRIVKEY_INVALIDE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N12ecdh_error_t20ECDH_RPUBKEY_INVALIDE">
-<span id="_CPPv3N12ecdh_error_t20ECDH_RPUBKEY_INVALIDE"></span><span id="_CPPv2N12ecdh_error_t20ECDH_RPUBKEY_INVALIDE"></span><span class="target" id="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944a6bb841ab7c886611c50ce3e4a8bcdf08"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ECDH_RPUBKEY_INVALID</span></span></span><a class="headerlink" href="#_CPPv4N12ecdh_error_t20ECDH_RPUBKEY_INVALIDE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygendefine: Cannot find define “CRYPTX_ECDH_PRIVKEY_LEN” in doxygen xml output for project “CryptX” from directory: doxygen/xml</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygendefine: Cannot find define “CRYPTX_ECDH_PUBKEY_LEN” in doxygen xml output for project “CryptX” from directory: doxygen/xml</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygendefine: Cannot find define “CRYPTX_ECDH_SECRET_LEN” in doxygen xml output for project “CryptX” from directory: doxygen/xml</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygenenum: Cannot find enum “ecdh_error_t” in doxygen xml output for project “CryptX” from directory: doxygen/xml</p>
+</div>
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv416cryptx_ec_keygenPK7uint8_tP7uint8_t">
-<span id="_CPPv316cryptx_ec_keygenPK7uint8_tP7uint8_t"></span><span id="_CPPv216cryptx_ec_keygenPK7uint8_tP7uint8_t"></span><span id="cryptx_ec_keygen__uint8_tCP.uint8_tP"></span><span class="target" id="cryptx_8h_1a37eb222058408330f49ddccd7fec9f9a"></span><a class="reference internal" href="#_CPPv412ecdh_error_t" title="ecdh_error_t"><span class="n"><span class="pre">ecdh_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_ec_keygen</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">privkey</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pubkey</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416cryptx_ec_keygenPK7uint8_tP7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv416cryptx_ec_keygenP7uint8_tP7uint8_t">
+<span id="_CPPv316cryptx_ec_keygenP7uint8_tP7uint8_t"></span><span id="_CPPv216cryptx_ec_keygenP7uint8_tP7uint8_t"></span><span id="cryptx_ec_keygen__uint8_tP.uint8_tP"></span><span class="target" id="cryptx_8h_1ace17d744e36edae96bea85ccfa7c18f9"></span><span class="n"><span class="pre">ec_error_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_ec_keygen</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">privkey</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pubkey</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416cryptx_ec_keygenP7uint8_tP7uint8_t" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Generates a pair of public/private keys for ECC over SECT233k1. </p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -133,33 +105,10 @@
 </dl>
 </dd></dl>
 
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv418cryptx_ecdh_secretPK7uint8_tPK7uint8_tP7uint8_t">
-<span id="_CPPv318cryptx_ecdh_secretPK7uint8_tPK7uint8_tP7uint8_t"></span><span id="_CPPv218cryptx_ecdh_secretPK7uint8_tPK7uint8_tP7uint8_t"></span><span id="cryptx_ecdh_secret__uint8_tCP.uint8_tCP.uint8_tP"></span><span class="target" id="cryptx_8h_1ad975a0ac10f02d9509081ae57f790f50"></span><a class="reference internal" href="#_CPPv412ecdh_error_t" title="ecdh_error_t"><span class="n"><span class="pre">ecdh_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_ecdh_secret</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">privkey</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">rpubkey</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">secret</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_ecdh_secretPK7uint8_tPK7uint8_tP7uint8_t" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Computes a secret from the private key and the remote public key. </p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><strong>secret</strong> must be at least <strong>CRYPTX_ECDH_SECRET_LEN</strong> bytes large. </p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygenfunction: Cannot find function “cryptx_ecdh_secret” in doxygen xml output for project “CryptX” from directory: doxygen/xml</p>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Output secret is a point on the curve expressed as two 30-byte coordinates encoded in little endian byte order and padded with zeros if needed. You may have to deserialize the secret and then serialize it into a different format for compatibility with other encryption libraries. </p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>It is generally not recommended to use the computed secret as an encryption key as is. It is preferred to pass the secret to a KDF or a cryptographic primitive such as a hash function and use that output as your symmetric key. </p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>privkey</strong> – Pointer to local private key. </p></li>
-<li><p><strong>rpubkey</strong> – Pointer to remote public key. </p></li>
-<li><p><strong>secret</strong> – Pointer to buffer to write shared secret to. </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
 </div>
 
 

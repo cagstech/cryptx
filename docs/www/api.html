@@ -17,9 +17,7 @@
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Analysis &amp; Overview" href="static/analysis.html" />
-    <link rel="prev" title="Cryptography for the CE" href="index.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -37,19 +35,8 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API Overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#secure-random-number-generation">Secure Random Number Generation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#integrity-verification">Integrity Verification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#key-derivation-management">Key Derivation &amp; Management</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#symmetric-encryption">Symmetric Encryption</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#public-key-cryptography-key-exchange-protocols">Public Key Cryptography &amp; Key Exchange Protocols</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#cryptographic-encoding-formats">Cryptographic Encoding Formats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#hazardous-materials">Hazardous Materials</a></li>
-</ul>
-</li>
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="static/analysis.html">Analysis &amp; Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="static/notes.html">Closing Notes</a></li>
 </ul>
 
         </div>
@@ -82,27 +69,6 @@
 <p>You must include the library’s header in any file within your project where a function from the library is used.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cryptx.h&gt;</span>
 </pre></div>
-</div>
-<div class="section" id="secure-random-number-generation">
-<h2>Secure Random Number Generation<a class="headerlink" href="#secure-random-number-generation" title="Permalink to this headline"></a></h2>
-<p>Randomness is essential to proper encryption. Without a secure means of generating randomness, encryption has no guarantee of being secure. We’ll talk more about what this means in the section on <span class="xref std std-ref">Encryption</span>. Generic random number generators, like the one provided in the CE C toolchain, are not sufficient for cryptography because they are <strong>deterministic</strong> (def: a single input maps to a single output). Generally these generators are seeded with insecure information such as system time. If an attacker recovers the seed the output of the generator is compromised.</p>
-<p>Generators intended for use with cryptography need to address these shortcomings. Their output must be indistinguishable from truly random (giving an attacker negligibly better odds than that of predicting any bit of a truly random sequence). Additionally, compromise of the generator’s state (i.e. seed or other state information) should not compromise the effective security of the generator. The generator provided by this library meets those constraints. For details, see the <a class="reference internal" href="static/analysis.html#analysis"><span class="std std-ref">Analysis &amp; Overview</span></a> page.</p>
-<p><strong>Using the Secure RNG</strong></p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// cryptx_csrand_init() is now called automatically when any</span>
-<span class="c1">// random get or fill function is called</span>
-
-<span class="c1">// returning a single u_rand_int</span>
-<span class="kt">uint32_t</span><span class="w"> </span><span class="n">rand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cryptx_csrand_get</span><span class="p">();</span>
-
-<span class="c1">// filling a buffer with random bytes</span>
-<span class="cp">#define BUFLEN  16</span>
-<span class="kt">uint8_t</span><span class="w"> </span><span class="n">rand</span><span class="p">[</span><span class="n">BUFLEN</span><span class="p">];</span>
-<span class="n">cryptx_csrand_fill</span><span class="p">(</span><span class="n">rand</span><span class="p">,</span><span class="w"> </span><span class="n">BUFLEN</span><span class="p">);</span>
-</pre></div>
-</div>
-<ul class="simple">
-<li><p><a class="reference internal" href="api/csrand.html#csrand"><span class="std std-ref">view csrand documentation</span></a></p></li>
-</ul>
 </div>
 <hr class="docutils" />
 <div class="section" id="integrity-verification">
@@ -182,7 +148,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><a class="reference internal" href="api/digest.html#digest-compare"><span class="std std-ref">view digest_compare documentation</span></a></p></li>
+<li><p><a class="reference internal" href="api/bytes.html#digest-compare"><span class="std std-ref">view digest_compare documentation</span></a></p></li>
 </ul>
 <p><strong>Converting a Digest to a String</strong></p>
 <p>Lastly, for debugging purposes and occasionally for UI purposes it may be desired to display a digest to the user as a readable string. A function is provided by this library to convert a binary digest into its printable hex-string equivalent.</p>
@@ -193,7 +159,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><a class="reference internal" href="api/digest.html#digest-tostring"><span class="std std-ref">view digest_tostring documentation</span></a></p></li>
+<li><p><a class="reference internal" href="api/bytes.html#digest-tostring"><span class="std std-ref">view digest_tostring documentation</span></a></p></li>
 </ul>
 </div>
 <hr class="docutils" />
@@ -480,10 +446,7 @@
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Cryptography for the CE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="static/analysis.html" class="btn btn-neutral float-right" title="Analysis &amp; Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

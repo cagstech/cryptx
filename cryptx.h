@@ -225,7 +225,15 @@ void cryptx_hmac_pbkdf2(const char* password,
  * @param hexstr	Buffer to write the output hex string to.
  * @note @b hexstr must be at least (2 \* len + 1) bytes large.
  */
-bool cryptx_digest_tostring(const void* digest, size_t len, uint8_t* hexstr);
+bool cryptx_bytes_tostring(const uint8_t* digest, size_t len, char* hexstr);
+
+
+bool cryptx_bytes_fromstring(uint8_t* digest, const char* hexstr);
+
+
+bool cryptx_bytes_rcopy(const void* digest, size_t len, uint8_t* hexstr);
+
+bool cryptx_bytes_reverse(const void* digest, size_t len);
 
 /**
  * @brief Compare two digests or buffers.
@@ -235,15 +243,8 @@ bool cryptx_digest_tostring(const void* digest, size_t len, uint8_t* hexstr);
  * @return @b true if the buffers are equal, @b false if not equal.
  * @note This is a constant-time implementation.
  */
-bool cryptx_digest_compare(const void* digest1, const void* digest2, size_t len);
+bool cryptx_bytes_compare(const void* digest1, const void* digest2, size_t len);
 
-
-/**
- * @brief Initializes the (HW)RNG.
- * @returns @b true on success, @b false on failure.
- * @note If you forget to call this function, utilizing the RNG's other functions will self-initialize the RNG.
- */
-bool cryptx_csrand_init(void);
 
 /**
  * @brief Returns a securely psuedo-random 32-bit integer
@@ -451,23 +452,19 @@ rsa_error_t cryptx_rsa_encrypt(const void* msg,
 /// Using curve SECT233k1
 
 /** Defines the byte length of an ECDH private key supported by this library. */
-#define CRYPTX_ECDH_PRIVKEY_LEN		30
+#define CRYPTX_EC_PRIVKEY_LEN		30
 
 /** Defines the byte length of an ECDH public key supported by this library.  */
-#define CRYPTX_ECDH_PUBKEY_LEN		(CRYPTX_ECDH_PRIVKEY_LEN<<1)
-#define CRYPTX_ECDH_SECRET_LEN		CRYPTX_ECDH_PUBKEY_LEN
-
-/// Defines a macro to fill an ECDH private key with random bytes.
-#define	cryptx_ecdh_generate_privkey(privkey)	\
-	cryptx_csrand_fill((privkey), (CRYPTX_ECDH_PRIVKEY_LEN))
+#define CRYPTX_EC_PUBKEY_LEN		(CRYPTX_ECDH_PRIVKEY_LEN<<1)
+#define CRYPTX_EC_SECRET_LEN		CRYPTX_ECDH_PUBKEY_LEN
 
 /// Defines possible response codes from calls to the ECDH API.
-typedef enum _ecdh_error {
-	ECDH_OK,
-	ECDH_INVALID_ARG,
-	ECDH_PRIVKEY_INVALID,
-	ECDH_RPUBKEY_INVALID
-} ecdh_error_t;
+typedef enum _ec_error {
+	EC_OK,
+	EC_INVALID_ARG,
+	EC_PRIVKEY_INVALID,
+	EC_RPUBKEY_INVALID
+} ec_error_t;
 
 /**
  * @brief Generates a pair of public/private keys for ECC over SECT233k1
@@ -480,7 +477,7 @@ typedef enum _ecdh_error {
  * some encryption libraries.
  * @note
  */
-ecdh_error_t cryptx_ec_keygen(const uint8_t *privkey, uint8_t *pubkey);
+ec_error_t cryptx_ec_keygen(uint8_t *privkey, uint8_t *pubkey);
 
 /**
  * @brief Computes a secret from the private key and the remote public key.
@@ -496,7 +493,7 @@ ecdh_error_t cryptx_ec_keygen(const uint8_t *privkey, uint8_t *pubkey);
  * It is preferred to pass the secret to a KDF or a cryptographic primitive such as a hash function and use
  * that output as your symmetric key.
  */
-ecdh_error_t cryptx_ecdh_secret(const uint8_t *privkey, const uint8_t *rpubkey, uint8_t *secret);
+ec_error_t cryptx_ec_secret(const uint8_t *privkey, const uint8_t *rpubkey, uint8_t *secret);
 
 /// ### ABSTRACT SYNTAX NOTATION ONE (ASN.1) ###
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>function documentation: csrand &mdash; CryptX  documentation</title>
+  <title>secure random number generator &mdash; CryptX  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/proof.css" type="text/css" />
@@ -53,7 +53,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>function documentation: csrand</li>
+      <li>secure random number generator</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -62,8 +62,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="function-documentation-csrand">
-<span id="csrand"></span><h1>function documentation: csrand<a class="headerlink" href="#function-documentation-csrand" title="Permalink to this headline"></a></h1>
+  <div class="section" id="secure-random-number-generator">
+<span id="csrand"></span><h1>secure random number generator<a class="headerlink" href="#secure-random-number-generator" title="Permalink to this headline"></a></h1>
+<p>Encryption requires the ability to generate random artifacts <a class="footnote-reference brackets" href="#d1" id="id1">1</a> for use as keys, nonces, and salts. The non-intractibility <a class="footnote-reference brackets" href="#d2" id="id2">2</a> of modern encryption depends almost entirely on the ability to generate secure randomness within your cryptosystem. Many random number generators, such as the <code class="code docutils literal notranslate"><span class="pre">rand()</span></code> function in the toolchain, are statistically-random and deterministic <a class="footnote-reference brackets" href="#d3" id="id3">3</a>. This suffices for your Solitare app’s card stack but not for generating an encryption key.</p>
+<p>Generators intended for use with cryptography need to operate within additional constraints centered around unpredictability. Their output must be indistinguishable from truly random (giving an attacker negligibly better odds than that of predicting any bit of a truly random sequence). Additionally, compromise of the generator’s state (i.e. seed or other state information) should not compromise the effective security of the generator. The generator provided by this library meets those constraints. For details, see the <a class="reference internal" href="../static/analysis.html#analysis"><span class="std std-ref">Analysis &amp; Overview</span></a> page.</p>
+<p><strong>Terms Defined</strong></p>
+<dl class="footnote brackets">
+<dt class="label" id="d1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p><strong>random artifact</strong>: another term for a bytearray containing random bytes.</p>
+</dd>
+<dt class="label" id="d2"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p><strong>non-intractibility</strong>: difficulty in solving or reversing.</p>
+</dd>
+<dt class="label" id="d3"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dd><p><strong>statistically-random</strong>: random data appears to have a uniform distribution over all possible values; <strong>deterministic</strong>: a single input maps to a single output that can be easily computed, meaning this not suitable for anything needing secrecy.</p>
+</dd>
+</dl>
+<hr class="docutils" />
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h2>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv417cryptx_csrand_getv">
 <span id="_CPPv317cryptx_csrand_getv"></span><span id="_CPPv217cryptx_csrand_getv"></span><span id="cryptx_csrand_get__void"></span><span class="target" id="cryptx_8h_1a61b09a810e766ef1d2ff00c85ece63f2"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_csrand_get</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417cryptx_csrand_getv" title="Permalink to this definition"></a><br /></dt>
@@ -75,6 +92,10 @@
 </dl>
 </dd></dl>
 
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// returning a single 32-bit random integer</span>
+<span class="kt">uint32_t</span><span class="w"> </span><span class="n">rand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cryptx_csrand_get</span><span class="p">();</span>
+</pre></div>
+</div>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv418cryptx_csrand_fillPv6size_t">
 <span id="_CPPv318cryptx_csrand_fillPv6size_t"></span><span id="_CPPv218cryptx_csrand_fillPv6size_t"></span><span id="cryptx_csrand_fill__voidP.s"></span><span class="target" id="cryptx_8h_1a8c550bae2fddbf8a04655325ba2c9e8f"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_csrand_fill</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">buffer</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">size</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_csrand_fillPv6size_t" title="Permalink to this definition"></a><br /></dt>
@@ -95,6 +116,13 @@
 </dl>
 </dd></dl>
 
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// filling a buffer with random bytes</span>
+<span class="cp">#define BUFLEN  16</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">rand</span><span class="p">[</span><span class="n">BUFLEN</span><span class="p">];</span>
+<span class="n">cryptx_csrand_fill</span><span class="p">(</span><span class="n">rand</span><span class="p">,</span><span class="w"> </span><span class="n">BUFLEN</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 

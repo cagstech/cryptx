@@ -90,10 +90,9 @@
     <member refid="cryptx_8h_1ac0de9d43e9ef5718060b164bf71e3ae0" kind="define"><name>CRYPTX_AES_GCM_FLAGS</name></member>
     <member refid="cryptx_8h_1adf4062c77f37927bc0178872056602ff" kind="define"><name>cryptx_aes_get_ciphertext_len</name></member>
     <member refid="cryptx_8h_1a265dcd336b31e2b95870d864c85cee2a" kind="define"><name>CRYPTX_RSA_MODULUS_MAX</name></member>
-    <member refid="cryptx_8h_1ac753c393f9a2f85ebd589ed14823ccd7" kind="define"><name>CRYPTX_ECDH_PRIVKEY_LEN</name></member>
-    <member refid="cryptx_8h_1ad75ef28855bfeec84da3e324494c3082" kind="define"><name>CRYPTX_ECDH_PUBKEY_LEN</name></member>
-    <member refid="cryptx_8h_1aa95fc648d6050a2e47e08f24176167c6" kind="define"><name>CRYPTX_ECDH_SECRET_LEN</name></member>
-    <member refid="cryptx_8h_1a1bd4fb56d54940c2534049e2a5a73351" kind="define"><name>cryptx_ecdh_generate_privkey</name></member>
+    <member refid="cryptx_8h_1a26e233163ef752cc08d3f3499007369a" kind="define"><name>CRYPTX_EC_PRIVKEY_LEN</name></member>
+    <member refid="cryptx_8h_1a9fb63bb764b8654fc273535be6c4e3a3" kind="define"><name>CRYPTX_EC_PUBKEY_LEN</name></member>
+    <member refid="cryptx_8h_1a3afc412d9c56cd1f46407fe280b92156" kind="define"><name>CRYPTX_EC_SECRET_LEN</name></member>
     <member refid="cryptx_8h_1a13585a6206e220218a8f379327b04433" kind="define"><name>cryptx_asn1_get_tag</name></member>
     <member refid="cryptx_8h_1a5af192045bb48e03f788962f259a2a7e" kind="define"><name>cryptx_asn1_get_class</name></member>
     <member refid="cryptx_8h_1a3c8b39f5fb3ad1d8d138b9791b18f01e" kind="define"><name>cryptx_asn1_get_form</name></member>
@@ -125,11 +124,11 @@
     <member refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294aedeb18a96b96e292369abed5b2f0a271" kind="enumvalue"><name>RSA_INVALID_MSG</name></member>
     <member refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294a843ec210de66176ef63e2d2b8ebdeb65" kind="enumvalue"><name>RSA_INVALID_MODULUS</name></member>
     <member refid="cryptx_8h_1a0486449f609d0e485bad091a671d9294a43eadc89540121b902e02afabc7a7eb9" kind="enumvalue"><name>RSA_ENCODING_ERROR</name></member>
-    <member refid="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944" kind="enum"><name>ecdh_error_t</name></member>
-    <member refid="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944a1fc3b5fa5eb8adaa46a9257ee782acbb" kind="enumvalue"><name>ECDH_OK</name></member>
-    <member refid="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944a635480018ca2a67bd5994a91091abc5a" kind="enumvalue"><name>ECDH_INVALID_ARG</name></member>
-    <member refid="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944a761fc8a34f1342ebe085e06300fb907f" kind="enumvalue"><name>ECDH_PRIVKEY_INVALID</name></member>
-    <member refid="cryptx_8h_1a0aa0891afd8596f5fc0624b07a939944a6bb841ab7c886611c50ce3e4a8bcdf08" kind="enumvalue"><name>ECDH_RPUBKEY_INVALID</name></member>
+    <member refid="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90" kind="enum"><name>ec_error_t</name></member>
+    <member refid="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90ae92ae69b454b0311041616e4be38d26e" kind="enumvalue"><name>EC_OK</name></member>
+    <member refid="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90a51c1b8f170116b8aa0a75c6ad6fd3d0d" kind="enumvalue"><name>EC_INVALID_ARG</name></member>
+    <member refid="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90a77a3ce6d10fe286a0f7789b15c4ed790" kind="enumvalue"><name>EC_PRIVKEY_INVALID</name></member>
+    <member refid="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90ae8066072efe056458722cc53a743966a" kind="enumvalue"><name>EC_RPUBKEY_INVALID</name></member>
     <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5" kind="enum"><name>CRYPTX_ASN1_TAGS</name></member>
     <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a0b4ee1817dddda0e7bb95f8c9c5262cc" kind="enumvalue"><name>ASN1_RESVD</name></member>
     <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5afcacc079274ffffd6f8f30005a478309" kind="enumvalue"><name>ASN1_BOOLEAN</name></member>
@@ -183,9 +182,11 @@
     <member refid="cryptx_8h_1a1ab7dcd49b5df0f9e697a5e14939d186" kind="function"><name>cryptx_hmac_update</name></member>
     <member refid="cryptx_8h_1a710f6c433fa3e6d07c602a0fca5952d7" kind="function"><name>cryptx_hmac_digest</name></member>
     <member refid="cryptx_8h_1a428a5da208ae3b55b73f4e05242148e8" kind="function"><name>cryptx_hmac_pbkdf2</name></member>
-    <member refid="cryptx_8h_1aa25931fdaf401a4fddf0023e272278f7" kind="function"><name>cryptx_digest_tostring</name></member>
-    <member refid="cryptx_8h_1a36bdf1683237ed686ce175fde670ccff" kind="function"><name>cryptx_digest_compare</name></member>
-    <member refid="cryptx_8h_1aa4599a28ff439f7a21dbb0ce5772fa78" kind="function"><name>cryptx_csrand_init</name></member>
+    <member refid="cryptx_8h_1a3d3bbcc6f13d3b4d61bf357e9a299e81" kind="function"><name>cryptx_bytes_tostring</name></member>
+    <member refid="cryptx_8h_1ad9b688f1c6f771f2375c9c9625a4c653" kind="function"><name>cryptx_bytes_fromstring</name></member>
+    <member refid="cryptx_8h_1a4067201bc27436f4db7dbfe4b931c25f" kind="function"><name>cryptx_bytes_rcopy</name></member>
+    <member refid="cryptx_8h_1ae755dc5c1eade1087352537e9ebeb519" kind="function"><name>cryptx_bytes_reverse</name></member>
+    <member refid="cryptx_8h_1a41bc20e6e45f7d8b5b85d994080bb929" kind="function"><name>cryptx_bytes_compare</name></member>
     <member refid="cryptx_8h_1a61b09a810e766ef1d2ff00c85ece63f2" kind="function"><name>cryptx_csrand_get</name></member>
     <member refid="cryptx_8h_1a8c550bae2fddbf8a04655325ba2c9e8f" kind="function"><name>cryptx_csrand_fill</name></member>
     <member refid="cryptx_8h_1aee9ba52b80ab5bddd81193cdf26389e2" kind="function"><name>cryptx_aes_init</name></member>
@@ -195,8 +196,8 @@
     <member refid="cryptx_8h_1a7aaae6b33efe97c579d24729680eda79" kind="function"><name>cryptx_aes_digest</name></member>
     <member refid="cryptx_8h_1a69437bd1ca1d4fe40dc50d91da7c1be4" kind="function"><name>cryptx_aes_verify</name></member>
     <member refid="cryptx_8h_1aa4f5ae1eb3d9636c20dec64503a4896b" kind="function"><name>cryptx_rsa_encrypt</name></member>
-    <member refid="cryptx_8h_1a37eb222058408330f49ddccd7fec9f9a" kind="function"><name>cryptx_ec_keygen</name></member>
-    <member refid="cryptx_8h_1ad975a0ac10f02d9509081ae57f790f50" kind="function"><name>cryptx_ecdh_secret</name></member>
+    <member refid="cryptx_8h_1ace17d744e36edae96bea85ccfa7c18f9" kind="function"><name>cryptx_ec_keygen</name></member>
+    <member refid="cryptx_8h_1a4057940333f4f8f56b8ccf1d24db21ea" kind="function"><name>cryptx_ec_secret</name></member>
     <member refid="cryptx_8h_1afbb965d7c7819b8685a1062d5e21e02c" kind="function"><name>cryptx_asn1_decode</name></member>
     <member refid="cryptx_8h_1a3e216a54646a3f7d04c37102905ef850" kind="function"><name>cryptx_base64_encode</name></member>
     <member refid="cryptx_8h_1a28db41653bf7ba5ef8bfcef425343722" kind="function"><name>cryptx_base64_decode</name></member>

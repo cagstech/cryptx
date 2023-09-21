@@ -14,30 +14,6 @@ You must include the library's header in any file within your project where a fu
 	#include <cryptx.h>
    
 
-Secure Random Number Generation
-___________________________________
-
-Randomness is essential to proper encryption. Without a secure means of generating randomness, encryption has no guarantee of being secure. We'll talk more about what this means in the section on :ref:`Encryption <l_encrypt>`. Generic random number generators, like the one provided in the CE C toolchain, are not sufficient for cryptography because they are **deterministic** (def: a single input maps to a single output). Generally these generators are seeded with insecure information such as system time. If an attacker recovers the seed the output of the generator is compromised.
-
-Generators intended for use with cryptography need to address these shortcomings. Their output must be indistinguishable from truly random (giving an attacker negligibly better odds than that of predicting any bit of a truly random sequence). Additionally, compromise of the generator's state (i.e. seed or other state information) should not compromise the effective security of the generator. The generator provided by this library meets those constraints. For details, see the :ref:`Analysis & Overview <analysis>` page.
-
-**Using the Secure RNG**
-
-.. code-block:: c
-  
-  // cryptx_csrand_init() is now called automatically when any
-  // random get or fill function is called
-  
-  // returning a single u_rand_int
-  uint32_t rand = cryptx_csrand_get();
-  
-  // filling a buffer with random bytes
-  #define BUFLEN  16
-  uint8_t rand[BUFLEN];
-  cryptx_csrand_fill(rand, BUFLEN);
-  
-* :ref:`view csrand documentation <csrand>`
-
 ----
 
 Integrity Verification

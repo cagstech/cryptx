@@ -1,7 +1,7 @@
 .. _hash:
 
-function documentation: hash
-=============================
+hash
+=====
 
 .. doxygenenum:: cryptx_hash_algorithms
 	:project: CryptX

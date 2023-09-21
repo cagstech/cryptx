@@ -1,7 +1,7 @@
 .. _digest:
 
-function documentation: digest
-===============================
+byte operations
+==================
 
 .. _digest_compare:
 .. doxygenfunction:: cryptx_digest_compare
