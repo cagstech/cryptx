@@ -26,7 +26,7 @@ char *secondmsg = "The dog got angry and barked";
 uint8_t key[KEYSIZE] = {
 	0xEE,0x89,0x19,0xC3,0x8D,0x53,0x7A,0xD6,0x04,0x19,0x9E,0x77,0x0B,0xE0,0xE0,0x4C,0x4C,0x70,0xDB,0xE1,0x22,0x79,0xE1,0x90,0x06,0x1B,0xAF,0x99,0x49,0x8E,0x66,0x73
 };
-uint8_t iv[CRYPTX_AES_IV_SIZE] = {
+uint8_t iv[CRYPTX_BLOCKSIZE_AES] = {
 	0x79,0xA6,0xDE,0xDF,0xF0,0xA2,0x7C,0x7F,0xEE,0x0B,0x8E,0xF5,0x12,0x63,0xA4,0x8A
 };
 aes_error_t error;
@@ -37,7 +37,7 @@ void hexdump(uint8_t *addr, size_t len, char *label){
     else sprintf(CEMU_CONSOLE, "\n");
     for(size_t rem_len = len, ct=1; rem_len>0; rem_len--, addr++, ct++){
         sprintf(CEMU_CONSOLE, "\\x%02X", *addr);
-        if(!(ct%CRYPTX_AES_BLOCK_SIZE)) sprintf(CEMU_CONSOLE, "\n");
+        if(!(ct%CRYPTX_BLOCKSIZE_AES)) sprintf(CEMU_CONSOLE, "\n");
     }
     sprintf(CEMU_CONSOLE, "\n");
 }
@@ -46,7 +46,7 @@ void hexdump(uint8_t *addr, size_t len, char *label){
 void demo_aes_cbc(void){
 	
 	// declare buffers
-	size_t ctlen = CRYPTX_AES_CIPHERTEXT_LEN(strlen(msg));
+	size_t ctlen = cryptx_aes_get_ciphertext_len(strlen(msg));
 	sprintf(CEMU_CONSOLE, "String len: %u\nAllocated size: %u", strlen(msg), ctlen);
 	uint8_t ebuf[ctlen];
 	uint8_t dbuf[ctlen];
@@ -56,7 +56,7 @@ void demo_aes_cbc(void){
 	sprintf(CEMU_CONSOLE, "\n-----------------------------------\nCyclic Block Chain (CBC) mode\n\n");
 	
 	// init AES context and echo status
-	error = cryptx_aes_init(&ctx, key, KEYSIZE, iv, CRYPTX_AES_IV_SIZE, CRYPTX_AES_CBC_FLAGS(0));
+	error = cryptx_aes_init(&ctx, key, KEYSIZE, iv, CRYPTX_BLOCKSIZE_AES, CRYPTX_AES_CBC, CRYPTX_AES_CBC_DEFAULTS);
 	sprintf(CEMU_CONSOLE, "cbc init complete, exit code %u\n", error);
 	
 	// encrypt string and echo status
@@ -66,7 +66,7 @@ void demo_aes_cbc(void){
 	hexdump(ebuf, ctlen, "-- encrypted msg --");
 	
 	// reset context for decryption and echo status
-	error = cryptx_aes_init(&ctx, key, KEYSIZE, iv, CRYPTX_AES_IV_SIZE, CRYPTX_AES_CBC_FLAGS(0));
+	error = cryptx_aes_init(&ctx, key, KEYSIZE, iv, CRYPTX_BLOCKSIZE_AES, CRYPTX_AES_CBC, CRYPTX_AES_CBC_DEFAULTS);
 	sprintf(CEMU_CONSOLE, "cbc init complete, exit code %u\n", error);
 	
 	// encrypt string and echo status
@@ -86,7 +86,7 @@ void demo_aes_ctr(void){
 	sprintf(CEMU_CONSOLE, "\n-----------------------------------\nCounter (CTR) mode\n\n");
 	
 	// init AES context and echo status
-	error = cryptx_aes_init(&ctx, key, KEYSIZE, iv, CRYPTX_AES_IV_SIZE, CRYPTX_AES_CTR_FLAGS(8,8));
+	error = cryptx_aes_init(&ctx, key, KEYSIZE, iv, CRYPTX_BLOCKSIZE_AES, CRYPTX_AES_CTR, CRYPTX_AES_CTR_DEFAULTS);
 	sprintf(CEMU_CONSOLE, "ctr init complete, exit code %u\n", error);
 	
 	// encrypt string and echo status
@@ -96,7 +96,7 @@ void demo_aes_ctr(void){
 	hexdump(ebuf, ctlen, "-- encrypted msg --");
 	
 	// reset context for decryption and echo status
-	error = cryptx_aes_init(&ctx, key, KEYSIZE, iv, CRYPTX_AES_IV_SIZE, CRYPTX_AES_CTR_FLAGS(8,8));
+	error = cryptx_aes_init(&ctx, key, KEYSIZE, iv, CRYPTX_BLOCKSIZE_AES, CRYPTX_AES_CTR, CRYPTX_AES_CTR_DEFAULTS);
 	sprintf(CEMU_CONSOLE, "ctr init complete, exit code %u\n", error);
 	
 	// encrypt string and echo status
@@ -115,12 +115,12 @@ void demo_aes_gcm(void){
 	char *associated = "Some random header";
 	uint8_t *ebuf = malloc(ctlen);
 	uint8_t *dbuf = malloc(ctlen);
-	uint8_t odigest[CRYPTX_AES_BLOCK_SIZE], vdigest[CRYPTX_AES_BLOCK_SIZE];
+	uint8_t odigest[CRYPTX_BLOCKSIZE_AES], vdigest[CRYPTX_BLOCKSIZE_AES];
 	
 	sprintf(CEMU_CONSOLE, "\n-----------------------------------\nGalois Counter (GCM) mode\n\n");
 	
 	// init AES context and echo status
-	error = cryptx_aes_init(&ctx, key, KEYSIZE, iv, 13, CRYPTX_AES_GCM_FLAGS);
+	error = cryptx_aes_init(&ctx, key, KEYSIZE, iv, 16, CRYPTX_AES_GCM, 0);
 	sprintf(CEMU_CONSOLE, "gcm init complete, exit code %u\n", error);
 	
 	// update context for associated data
@@ -135,10 +135,10 @@ void demo_aes_gcm(void){
 	// now echo digest/auth tag
 	error = cryptx_aes_digest(&ctx, odigest);
 	sprintf(CEMU_CONSOLE, "gcm digest return done, exit code %u\n", error);
-	hexdump(odigest, CRYPTX_AES_BLOCK_SIZE, "-- digest of aad + ciphertext --");
+	hexdump(odigest, CRYPTX_BLOCKSIZE_AES, "-- digest of aad + ciphertext --");
 	
 	// reset context for decryption and echo status
-	error = cryptx_aes_init(&ctx, key, KEYSIZE, iv, 13, CRYPTX_AES_GCM_FLAGS);
+	error = cryptx_aes_init(&ctx, key, KEYSIZE, iv, 16, CRYPTX_AES_GCM, 0);
 	sprintf(CEMU_CONSOLE, "gcm init complete, exit code %u\n", error);
 	
 	// #######################################################
@@ -167,7 +167,7 @@ void demo_aes_gcm(void){
 	// now echo digest/auth tag
 	error = cryptx_aes_digest(&ctx, vdigest);
 	sprintf(CEMU_CONSOLE, "gcm digest return done, exit code %u\n", error);
-	hexdump(vdigest, CRYPTX_AES_BLOCK_SIZE, "-- digest of aad + ciphertext --");
+	hexdump(vdigest, CRYPTX_BLOCKSIZE_AES, "-- digest of aad + ciphertext --");
 	free(ebuf);
 	free(dbuf);
 }
@@ -180,16 +180,10 @@ int main(void)
    
    // sprintf(CEMU_CONSOLE, "\n----- CTR Mode -----\n");
     
-    // generate random key and IV
-    if(!cryptx_csrand_init()) return 1;          // <<<----- DONT FORGET THIS
-    // !!!! NEVER PROCEED WITH ANYTHING CRYPTOGRAPHIC !!!!
-    // !!!! IF THE CSRNG FAILS TO INIT !!!!
-
-    
     // show the IV and key for testing purposes
 	sprintf(CEMU_CONSOLE, "\n-----------------------------------\nSecrets for Testing\n\n");
     hexdump(key, KEYSIZE, "-- aes key --");
-    hexdump(iv, CRYPTX_AES_IV_SIZE, "-- initialization vector --");
+    hexdump(iv, CRYPTX_BLOCKSIZE_AES, "-- initialization vector --");
     
 	demo_aes_cbc();
 	demo_aes_ctr();

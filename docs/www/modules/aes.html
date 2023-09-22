@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>function documentation: AES &mdash; CryptX  documentation</title>
+  <title>Advanced Encryption Standard &mdash; CryptX  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/proof.css" type="text/css" />
@@ -18,7 +18,9 @@
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Analysis &amp; Overview" href="../static/analysis.html" />
+    <link rel="prev" title="Hash-Based MAC" href="hmac.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -36,7 +38,20 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="csrand.html">Secure Random Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bytes.html">Bytearray Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hash.html">Secure Hashing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hmac.html">Hash-Based MAC</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced Encryption Standard</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cipher-modes">Cipher Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cipher-flags">Cipher Flags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#macros">Macros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#response-codes">Response Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#additional-notes">Additional Notes</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../static/analysis.html">Analysis &amp; Overview</a></li>
 </ul>
 
@@ -54,7 +69,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>function documentation: AES</li>
+      <li>Advanced Encryption Standard</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -63,38 +78,37 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <span class="target" id="aes"></span><div class="section" id="function-documentation-aes">
-<h1>function documentation: AES<a class="headerlink" href="#function-documentation-aes" title="Permalink to this headline"></a></h1>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>AES contexts are directional and stateful. If you need to process both encryption and decryption, initialize seperate contexts for encryption and decryption. Both contexts will use the same key, but different initialization vectors.</p>
-<p>To prevent misuse, a context locks to the first operation it is used with and will return an error if used incorrectly.</p>
-</div>
-<p>Here are some enumerations defining cipher modes and padding schemes for CBC mode.</p>
+  <div class="section" id="advanced-encryption-standard">
+<span id="aes"></span><h1>Advanced Encryption Standard<a class="headerlink" href="#advanced-encryption-standard" title="Permalink to this headline"></a></h1>
+<p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides a fast, secure algorithm for two parties to exchange information privately using a single key for encryption and decryption. Advanced Encryption Standard is currently the gold standard for encryption and is used all over the place.</p><div class="section" id="cipher-modes">
+<h2>Cipher Modes<a class="headerlink" href="#cipher-modes" title="Permalink to this headline"></a></h2>
 <dl class="cpp enum">
 <dt class="sig sig-object cpp" id="_CPPv423cryptx_aes_cipher_modes">
 <span id="_CPPv323cryptx_aes_cipher_modes"></span><span id="_CPPv223cryptx_aes_cipher_modes"></span><span class="target" id="cryptx_8h_1a59334db45c5435de6ded4492dec34735"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_cipher_modes</span></span></span><a class="headerlink" href="#_CPPv423cryptx_aes_cipher_modes" title="Permalink to this definition"></a><br /></dt>
 <dd><p><em>Values:</em></p>
 <dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N23cryptx_aes_cipher_modes12AES_MODE_CBCE">
-<span id="_CPPv3N23cryptx_aes_cipher_modes12AES_MODE_CBCE"></span><span id="_CPPv2N23cryptx_aes_cipher_modes12AES_MODE_CBCE"></span><span class="target" id="cryptx_8h_1a59334db45c5435de6ded4492dec34735ad21a3698b98b7368b14ec3d48314a132"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AES_MODE_CBC</span></span></span><a class="headerlink" href="#_CPPv4N23cryptx_aes_cipher_modes12AES_MODE_CBCE" title="Permalink to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N23cryptx_aes_cipher_modes14CRYPTX_AES_CBCE">
+<span id="_CPPv3N23cryptx_aes_cipher_modes14CRYPTX_AES_CBCE"></span><span id="_CPPv2N23cryptx_aes_cipher_modes14CRYPTX_AES_CBCE"></span><span class="target" id="cryptx_8h_1a59334db45c5435de6ded4492dec34735a6d022763befad1bcebcda6aa597c5e55"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_CBC</span></span></span><a class="headerlink" href="#_CPPv4N23cryptx_aes_cipher_modes14CRYPTX_AES_CBCE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>selects Cyclic Block Chain (CBC) mode </p>
 </dd></dl>
 
 <dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N23cryptx_aes_cipher_modes12AES_MODE_CTRE">
-<span id="_CPPv3N23cryptx_aes_cipher_modes12AES_MODE_CTRE"></span><span id="_CPPv2N23cryptx_aes_cipher_modes12AES_MODE_CTRE"></span><span class="target" id="cryptx_8h_1a59334db45c5435de6ded4492dec34735a5ecd63cd0bd97d46f273461b6550cb8e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AES_MODE_CTR</span></span></span><a class="headerlink" href="#_CPPv4N23cryptx_aes_cipher_modes12AES_MODE_CTRE" title="Permalink to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N23cryptx_aes_cipher_modes14CRYPTX_AES_CTRE">
+<span id="_CPPv3N23cryptx_aes_cipher_modes14CRYPTX_AES_CTRE"></span><span id="_CPPv2N23cryptx_aes_cipher_modes14CRYPTX_AES_CTRE"></span><span class="target" id="cryptx_8h_1a59334db45c5435de6ded4492dec34735a11d9f7cd52007c22ac9adbc45bf0442d"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_CTR</span></span></span><a class="headerlink" href="#_CPPv4N23cryptx_aes_cipher_modes14CRYPTX_AES_CTRE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>selects Counter (CTR) mode </p>
 </dd></dl>
 
 <dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N23cryptx_aes_cipher_modes12AES_MODE_GCME">
-<span id="_CPPv3N23cryptx_aes_cipher_modes12AES_MODE_GCME"></span><span id="_CPPv2N23cryptx_aes_cipher_modes12AES_MODE_GCME"></span><span class="target" id="cryptx_8h_1a59334db45c5435de6ded4492dec34735aa41ebb36bc19b64d64ff6b7fc0d5e5df"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AES_MODE_GCM</span></span></span><a class="headerlink" href="#_CPPv4N23cryptx_aes_cipher_modes12AES_MODE_GCME" title="Permalink to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N23cryptx_aes_cipher_modes14CRYPTX_AES_GCME">
+<span id="_CPPv3N23cryptx_aes_cipher_modes14CRYPTX_AES_GCME"></span><span id="_CPPv2N23cryptx_aes_cipher_modes14CRYPTX_AES_GCME"></span><span class="target" id="cryptx_8h_1a59334db45c5435de6ded4492dec34735a0b6b05da37ef303c018bedd8cdbd4b6f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_GCM</span></span></span><a class="headerlink" href="#_CPPv4N23cryptx_aes_cipher_modes14CRYPTX_AES_GCME" title="Permalink to this definition"></a><br /></dt>
 <dd><p>selects Galois Counter (GCM) mode </p>
 </dd></dl>
 
 </dd></dl>
 
+</div>
+<div class="section" id="cipher-flags">
+<h2>Cipher Flags<a class="headerlink" href="#cipher-flags" title="Permalink to this headline"></a></h2>
 <dl class="cpp enum">
 <dt class="sig sig-object cpp" id="_CPPv426cryptx_aes_padding_schemes">
 <span id="_CPPv326cryptx_aes_padding_schemes"></span><span id="_CPPv226cryptx_aes_padding_schemes"></span><span class="target" id="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_padding_schemes</span></span></span><a class="headerlink" href="#_CPPv426cryptx_aes_padding_schemes" title="Permalink to this definition"></a><br /></dt>
@@ -120,65 +134,78 @@
 
 </dd></dl>
 
-<p>Here are some macros to assist with defining buffers for keys of supported length.</p>
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.CRYPTX_AES_128_KEYLEN">
-<span class="target" id="cryptx_8h_1aa08392858444e1cc894d5f98432411c9"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_128_KEYLEN</span></span></span><a class="headerlink" href="#c.CRYPTX_AES_128_KEYLEN" title="Permalink to this definition"></a><br /></dt>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv424cryptx_aes_default_flags">
+<span id="_CPPv324cryptx_aes_default_flags"></span><span id="_CPPv224cryptx_aes_default_flags"></span><span class="target" id="cryptx_8h_1a747439e5980be6f5f9fa0c8fbb84655a"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_default_flags</span></span></span><a class="headerlink" href="#_CPPv424cryptx_aes_default_flags" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines defaults for various cipher modes. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N24cryptx_aes_default_flags23CRYPTX_AES_CBC_DEFAULTSE">
+<span id="_CPPv3N24cryptx_aes_default_flags23CRYPTX_AES_CBC_DEFAULTSE"></span><span id="_CPPv2N24cryptx_aes_default_flags23CRYPTX_AES_CBC_DEFAULTSE"></span><span class="target" id="cryptx_8h_1a747439e5980be6f5f9fa0c8fbb84655aaf6ef52028db1d536e3c076574a44ee96"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_CBC_DEFAULTS</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">PAD_DEFAULT</span></span><span class="w"> </span><span class="o"><span class="pre">|</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N24cryptx_aes_default_flags23CRYPTX_AES_CBC_DEFAULTSE" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.CRYPTX_AES_192_KEYLEN">
-<span class="target" id="cryptx_8h_1a0ceacc8bb81e6ef0f60bbe736732e5e0"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_192_KEYLEN</span></span></span><a class="headerlink" href="#c.CRYPTX_AES_192_KEYLEN" title="Permalink to this definition"></a><br /></dt>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N24cryptx_aes_default_flags23CRYPTX_AES_CTR_DEFAULTSE">
+<span id="_CPPv3N24cryptx_aes_default_flags23CRYPTX_AES_CTR_DEFAULTSE"></span><span id="_CPPv2N24cryptx_aes_default_flags23CRYPTX_AES_CTR_DEFAULTSE"></span><span class="target" id="cryptx_8h_1a747439e5980be6f5f9fa0c8fbb84655aaca82ad0c28139f15dfe3145b77271361"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_CTR_DEFAULTS</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">(</span></span><span class="m"><span class="pre">0x0f</span></span><span class="w"> </span><span class="o"><span class="pre">&amp;</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="m"><span class="pre">8</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">)</span></span><span class="w"> </span><span class="o"><span class="pre">&lt;&lt;</span></span><span class="w"> </span><span class="m"><span class="pre">6</span></span><span class="p"><span class="pre">)</span></span><span class="w"> </span><span class="o"><span class="pre">|</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">(</span></span><span class="m"><span class="pre">0x0f</span></span><span class="w"> </span><span class="o"><span class="pre">&amp;</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="m"><span class="pre">8</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">)</span></span><span class="w"> </span><span class="o"><span class="pre">&lt;&lt;</span></span><span class="w"> </span><span class="m"><span class="pre">2</span></span><span class="p"><span class="pre">)</span></span><span class="w"> </span><span class="o"><span class="pre">|</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N24cryptx_aes_default_flags23CRYPTX_AES_CTR_DEFAULTSE" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.CRYPTX_AES_256_KEYLEN">
-<span class="target" id="cryptx_8h_1acb2aea7855878c1b9b505ecb9b9583b1"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_256_KEYLEN</span></span></span><a class="headerlink" href="#c.CRYPTX_AES_256_KEYLEN" title="Permalink to this definition"></a><br /></dt>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N24cryptx_aes_default_flags23CRYPTX_AES_GCM_DEFAULTSE">
+<span id="_CPPv3N24cryptx_aes_default_flags23CRYPTX_AES_GCM_DEFAULTSE"></span><span id="_CPPv2N24cryptx_aes_default_flags23CRYPTX_AES_GCM_DEFAULTSE"></span><span class="target" id="cryptx_8h_1a747439e5980be6f5f9fa0c8fbb84655aa9488d8d057bdfcd2b6d399a15bb8dabd"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_GCM_DEFAULTS</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N24cryptx_aes_default_flags23CRYPTX_AES_GCM_DEFAULTSE" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
-<p>And here are some macros defining properties of the cipher.</p>
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.CRYPTX_AES_BLOCK_SIZE">
-<span class="target" id="cryptx_8h_1a2d638028c68c84297614a1dc7ff318d9"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_BLOCK_SIZE</span></span></span><a class="headerlink" href="#c.CRYPTX_AES_BLOCK_SIZE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.CRYPTX_AES_IV_SIZE">
-<span class="target" id="cryptx_8h_1ac47330f91ba12f7856c0c198bdbf2753"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_IV_SIZE</span></span></span><a class="headerlink" href="#c.CRYPTX_AES_IV_SIZE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.CRYPTX_AES_AUTHTAG_SIZE">
-<span class="target" id="cryptx_8h_1a89521b82b1be81ea3e5f70c3593bf5a9"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_AUTHTAG_SIZE</span></span></span><a class="headerlink" href="#c.CRYPTX_AES_AUTHTAG_SIZE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<p>Some macros for passing cipher configuration options to <em>cryptx_aes_init</em>.</p>
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.CRYPTX_AES_CBC_FLAGS">
-<span class="target" id="cryptx_8h_1af0f7e8aa23de8ecc99b2420efefa4edc"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_CBC_FLAGS</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">padding_mode</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.CRYPTX_AES_CBC_FLAGS" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Defines a macro to enable AES CBC cipher mode and pass relevant configuration options. </p>
 </dd></dl>
 
 <dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.CRYPTX_AES_CTR_FLAGS">
-<span class="target" id="cryptx_8h_1a0ed8d02473b9a003653db30e1d856614"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_CTR_FLAGS</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">nonce_len</span></span>, <span class="n"><span class="pre">counter_len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.CRYPTX_AES_CTR_FLAGS" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Defines a macro to enable AES CTR cipher mode and pass relevant configuration options. </p>
+<dt class="sig sig-object cpp" id="c.cryptx_aes_cbc_flagset">
+<span class="target" id="cryptx_8h_1a743d804a517a2e38d7f1224fdc8429f1"></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_cbc_flagset</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">padding_mode</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.cryptx_aes_cbc_flagset" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines a macro to set flags for AES CBC mode. </p>
 </dd></dl>
 
 <dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.CRYPTX_AES_GCM_FLAGS">
-<span class="target" id="cryptx_8h_1ac0de9d43e9ef5718060b164bf71e3ae0"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_AES_GCM_FLAGS</span></span></span><a class="headerlink" href="#c.CRYPTX_AES_GCM_FLAGS" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Defines a macro to enable AES GCM cipher mode. </p>
+<dt class="sig sig-object cpp" id="c.cryptx_aes_ctr_flagset">
+<span class="target" id="cryptx_8h_1ab58fc147ecd3f0103486a14cf8254973"></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_ctr_flagset</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">nonce_len</span></span>, <span class="n"><span class="pre">counter_len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.cryptx_aes_ctr_flagset" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines a macro to set flags for AES CTR mode. </p>
 </dd></dl>
 
-<p>This macro returns the full size required by the ciphertext. This really only applies to CBC mode. CTR and GCM modes have the same ciphertext and plaintext length.</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.cryptx_aes_gcm_flagset">
+<span class="target" id="cryptx_8h_1a7bffe1d673fd05c8e538d6169b12509f"></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_gcm_flagset</span></span></span><a class="headerlink" href="#c.cryptx_aes_gcm_flagset" title="Permalink to this definition"></a><br /></dt>
+<dd><p>GCM has no flags, pass 0 . </p>
+</dd></dl>
+
+</div>
+<div class="section" id="macros">
+<h2>Macros<a class="headerlink" href="#macros" title="Permalink to this headline"></a></h2>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_KEYLEN_AES128">
+<span class="target" id="cryptx_8h_1aa9fde36ec3becdc849fcb37c14899544"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_KEYLEN_AES128</span></span></span><a class="headerlink" href="#c.CRYPTX_KEYLEN_AES128" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_KEYLEN_AES192">
+<span class="target" id="cryptx_8h_1a4aa7074b0e57cf7d3f3eea983fc2547f"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_KEYLEN_AES192</span></span></span><a class="headerlink" href="#c.CRYPTX_KEYLEN_AES192" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_KEYLEN_AES256">
+<span class="target" id="cryptx_8h_1a11632b2d2dcc8cc16684d896c140fb15"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_KEYLEN_AES256</span></span></span><a class="headerlink" href="#c.CRYPTX_KEYLEN_AES256" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_BLOCKSIZE_AES">
+<span class="target" id="cryptx_8h_1ab571a7efb0b2dcb981d2876ab6e64d65"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_BLOCKSIZE_AES</span></span></span><a class="headerlink" href="#c.CRYPTX_BLOCKSIZE_AES" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
 <dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.cryptx_aes_get_ciphertext_len">
 <span class="target" id="cryptx_8h_1adf4062c77f37927bc0178872056602ff"></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_get_ciphertext_len</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.cryptx_aes_get_ciphertext_len" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Defines a macro to return the byte length of an AES ciphertext given a plaintext length. </p>
 </dd></dl>
 
-<p>This enum defines possible response codes from calls to the AES API.</p>
+</div>
+<div class="section" id="response-codes">
+<h2>Response Codes<a class="headerlink" href="#response-codes" title="Permalink to this headline"></a></h2>
 <dl class="cpp enum">
 <dt class="sig sig-object cpp" id="_CPPv411aes_error_t">
 <span id="_CPPv311aes_error_t"></span><span id="_CPPv211aes_error_t"></span><span class="target" id="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">aes_error_t</span></span></span><a class="headerlink" href="#_CPPv411aes_error_t" title="Permalink to this definition"></a><br /></dt>
@@ -228,9 +255,12 @@
 
 </dd></dl>
 
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h2>
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv415cryptx_aes_initP14cryptx_aes_ctxPKv6size_tPKv6size_t8uint24_t">
-<span id="_CPPv315cryptx_aes_initP14cryptx_aes_ctxPKv6size_tPKv6size_t8uint24_t"></span><span id="_CPPv215cryptx_aes_initP14cryptx_aes_ctxPKv6size_tPKv6size_t8uint24_t"></span><span id="cryptx_aes_init__cryptx_aes_ctxP.voidCP.s.voidCP.s.uint24_t"></span><span class="target" id="cryptx_8h_1aee9ba52b80ab5bddd81193cdf26389e2"></span><a class="reference internal" href="#_CPPv411aes_error_t" title="aes_error_t"><span class="n"><span class="pre">aes_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_init</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_aes_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">key</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">keylen</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iv</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">ivlen</span></span>, <span class="n"><span class="pre">uint24_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">flags</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415cryptx_aes_initP14cryptx_aes_ctxPKv6size_tPKv6size_t8uint24_t" title="Permalink to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv415cryptx_aes_initP14cryptx_aes_ctxPKv6size_tPKv6size_t7uint8_t8uint24_t">
+<span id="_CPPv315cryptx_aes_initP14cryptx_aes_ctxPKv6size_tPKv6size_t7uint8_t8uint24_t"></span><span id="_CPPv215cryptx_aes_initP14cryptx_aes_ctxPKv6size_tPKv6size_t7uint8_t8uint24_t"></span><span id="cryptx_aes_init__cryptx_aes_ctxP.voidCP.s.voidCP.s.uint8_t.uint24_t"></span><span class="target" id="cryptx_8h_1ab96be7c9efe78883e6b81bb7d66c7e45"></span><a class="reference internal" href="#_CPPv411aes_error_t" title="aes_error_t"><span class="n"><span class="pre">aes_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_init</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_aes_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">key</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">keylen</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iv</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">ivlen</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cipher_mode</span></span>, <span class="n"><span class="pre">uint24_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">flags</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415cryptx_aes_initP14cryptx_aes_ctxPKv6size_tPKv6size_t7uint8_t8uint24_t" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Initializes a stateful AES cipher context to be used for encryption or decryption. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -240,7 +270,8 @@
 <li><p><strong>keylen</strong> – The size, in bytes, of the <strong>key</strong> to load. </p></li>
 <li><p><strong>iv</strong> – Pointer to Initialization vector, a buffer equal to the block size filled with random bytes. </p></li>
 <li><p><strong>ivlen</strong> – Length of the initalization vector. Capped at 16 bytes. Certain cipher modes have different recommendations. </p></li>
-<li><p><strong>flags</strong> – A series of flags to configure the AES context with. Use the provided <strong>CRYPTX_AES_CTR_FLAGS</strong>, <strong>CRYPTX_AES_CBC_FLAGS</strong>, or <strong>CRYPTX_AES_GCM_FLAGS</strong> to pass flags. </p></li>
+<li><p><strong>cipher_mode</strong> – Operational mode of the cipher to initialize. </p></li>
+<li><p><strong>flags</strong> – A series of flags to configure the AES context with. Use the provided <strong>defaults</strong> enumeration or the <strong>flagset</strong> macros above. </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -307,6 +338,7 @@
 </dl>
 </dd></dl>
 
+<hr class="docutils" />
 <p>The following functions are only valid for Galois Counter Mode (GCM). Attempting to use them for any other cipher mode will return <strong>AES_INVALID_CIPHERMODE</strong>.</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv421cryptx_aes_update_aadP14cryptx_aes_ctxPKv6size_t">
@@ -377,6 +409,7 @@
 </dl>
 </dd></dl>
 
+</div>
 <div class="section" id="additional-notes">
 <h2>Additional Notes<a class="headerlink" href="#additional-notes" title="Permalink to this headline"></a></h2>
 <div class="admonition warning">
@@ -402,7 +435,10 @@
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="hmac.html" class="btn btn-neutral float-left" title="Hash-Based MAC" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../static/analysis.html" class="btn btn-neutral float-right" title="Analysis &amp; Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

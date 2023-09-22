@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hash-Based MAC &mdash; CryptX  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/proof.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Advanced Encryption Standard" href="aes.html" />
+    <link rel="prev" title="Secure Hashing" href="hash.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> CryptX
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="csrand.html">Secure Random Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bytes.html">Bytearray Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hash.html">Secure Hashing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Hash-Based MAC</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#enumerations">Enumerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#macros">Macros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#password-based-key-derivation">Password-Based Key Derivation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="aes.html">Advanced Encryption Standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../static/analysis.html">Analysis &amp; Overview</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CryptX</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Hash-Based MAC</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="hash-based-mac">
+<span id="hmac"></span><h1>Hash-Based MAC<a class="headerlink" href="#hash-based-mac" title="Permalink to this headline"></a></h1>
+<p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides hashed-based message authentication code (HMAC) functionality. HMAC is essentially a hash with its state transformed using a key before and after the data is hashed. Standard hashes verify that data has not changed. HMAC also ensures that only an entity with the key can sign and verify the message.</p><div class="section" id="enumerations">
+<h2>Enumerations<a class="headerlink" href="#enumerations" title="Permalink to this headline"></a></h2>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv422cryptx_hash_algorithms">
+<span id="_CPPv322cryptx_hash_algorithms"></span><span id="_CPPv222cryptx_hash_algorithms"></span><span class="target" id="cryptx_8h_1a57f2f69b5ad395749c8604ca9f43f93b"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hash_algorithms</span></span></span><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N22cryptx_hash_algorithms6SHA256E">
+<span id="_CPPv3N22cryptx_hash_algorithms6SHA256E"></span><span id="_CPPv2N22cryptx_hash_algorithms6SHA256E"></span><span class="target" id="cryptx_8h_1a57f2f69b5ad395749c8604ca9f43f93bac7716785728694693ec29eccd5ffa0e1"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SHA256</span></span></span><br /></dt>
+<dd><p>algorithm type identifier for SHA-256 </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N22cryptx_hash_algorithms4SHA1E">
+<span id="_CPPv3N22cryptx_hash_algorithms4SHA1E"></span><span id="_CPPv2N22cryptx_hash_algorithms4SHA1E"></span><span class="target" id="cryptx_8h_1a57f2f69b5ad395749c8604ca9f43f93ba27028cc8b5d6f0a1cb3030c180019abc"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SHA1</span></span></span><br /></dt>
+<dd><p>algorithm type identifier for SHA-1 </p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="macros">
+<h2>Macros<a class="headerlink" href="#macros" title="Permalink to this headline"></a></h2>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_DIGESTLEN_SHA1">
+<span class="target" id="cryptx_8h_1a4f1536bc045d8c6c6b1fd7502922c85a"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_DIGESTLEN_SHA1</span></span></span><br /></dt>
+<dd><p>digest length for SHA-1 hash </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_DIGESTLEN_SHA256">
+<span class="target" id="cryptx_8h_1a36616e8d1ed1e6270deadd0f8a4f096d"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_DIGESTLEN_SHA256</span></span></span><br /></dt>
+<dd><p>digest length for SHA-256 hash </p>
+</dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h2>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416cryptx_hmac_initP15cryptx_hmac_ctxPKv6size_t7uint8_t">
+<span id="_CPPv316cryptx_hmac_initP15cryptx_hmac_ctxPKv6size_t7uint8_t"></span><span id="_CPPv216cryptx_hmac_initP15cryptx_hmac_ctxPKv6size_t7uint8_t"></span><span id="cryptx_hmac_init__cryptx_hmac_ctxP.voidCP.s.uint8_t"></span><span class="target" id="cryptx_8h_1a21c854c0bcb6f7497516847e080c27c3"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hmac_init</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_hmac_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">key</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">keylen</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">hash_alg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416cryptx_hmac_initP15cryptx_hmac_ctxPKv6size_t7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Initializes an HMAC-state context for a specific hash algorithm. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> – Pointer to an HMAC-state context. </p></li>
+<li><p><strong>key</strong> – Pointer to a key used to initialize the HMAC state. </p></li>
+<li><p><strong>keylen</strong> – Length of the <strong>key</strong>. </p></li>
+<li><p><strong>hash_alg</strong> – The numeric ID of the hashing algorithm to use. See <strong>cryptx_hash_algorithms</strong>. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>true</strong> if initialized succeeded, <strong>false</strong> if failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418cryptx_hmac_updateP15cryptx_hmac_ctxPKv6size_t">
+<span id="_CPPv318cryptx_hmac_updateP15cryptx_hmac_ctxPKv6size_t"></span><span id="_CPPv218cryptx_hmac_updateP15cryptx_hmac_ctxPKv6size_t"></span><span id="cryptx_hmac_update__cryptx_hmac_ctxP.voidCP.s"></span><span class="target" id="cryptx_8h_1a1ab7dcd49b5df0f9e697a5e14939d186"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hmac_update</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_hmac_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_hmac_updateP15cryptx_hmac_ctxPKv6size_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Updates the hash-state for a given block of data. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> – Pointer to an HMAC-state context. </p></li>
+<li><p><strong>data</strong> – Pointer to a block of data to hash.. </p></li>
+<li><p><strong>len</strong> – Size of the <strong>data</strong> to hash. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418cryptx_hmac_digestP15cryptx_hmac_ctxPv">
+<span id="_CPPv318cryptx_hmac_digestP15cryptx_hmac_ctxPv"></span><span id="_CPPv218cryptx_hmac_digestP15cryptx_hmac_ctxPv"></span><span id="cryptx_hmac_digest__cryptx_hmac_ctxP.voidP"></span><span class="target" id="cryptx_8h_1a710f6c433fa3e6d07c602a0fca5952d7"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hmac_digest</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_hmac_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">digest</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_hmac_digestP15cryptx_hmac_ctxPv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Output digest for current HMAC-state (preserves state). </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>digest</strong> must be at large enough to hold the hash digest. You can retrieve the necessary size by accessing the <strong>digest_len</strong> member of an initialized <strong>cryptx_hmac_ctx</strong>. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> – Pointer to an HMAC-state context. </p></li>
+<li><p><strong>digest</strong> – Pointer to a buffer to write digest to. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Hash this string&quot;</span><span class="p">;</span>
+<span class="n">crytx_hmac_ctx</span><span class="w"> </span><span class="n">h</span><span class="p">;</span>
+<span class="cp">#define HMAC_KLEN 16</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">hmac_key</span><span class="p">[</span><span class="n">HMAC_KLEN</span><span class="p">];</span>
+<span class="n">cryptx_csrand_fill</span><span class="p">(</span><span class="n">hmac_key</span><span class="p">,</span><span class="w"> </span><span class="n">HMAC_KLEN</span><span class="p">);</span>
+
+<span class="c1">// initialize hash</span>
+<span class="n">cryptx_hmac_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">h</span><span class="p">,</span><span class="w"> </span><span class="n">hmac_key</span><span class="p">,</span><span class="w"> </span><span class="n">HMAC_KEN</span><span class="p">,</span><span class="w"> </span><span class="n">SHA256</span><span class="p">);</span>
+
+<span class="c1">// allocate buffer for digest</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">digest</span><span class="p">[</span><span class="n">h</span><span class="p">.</span><span class="n">digest_len</span><span class="p">];</span>
+
+<span class="c1">// hash the string</span>
+<span class="n">cryptx_hmac_update</span><span class="p">(</span><span class="o">&amp;</span><span class="n">h</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="n">msg</span><span class="p">));</span>
+
+<span class="c1">// return the digest</span>
+<span class="n">cryptx_hmac_digest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">h</span><span class="p">,</span><span class="w"> </span><span class="n">digest</span><span class="p">);</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+</div>
+<div class="section" id="password-based-key-derivation">
+<span id="pbkdf2"></span><h2>Password-Based Key Derivation<a class="headerlink" href="#password-based-key-derivation" title="Permalink to this headline"></a></h2>
+<p><strong>Password-Based Key Derivation Function Two (PBKDF2)</strong> is a function that uses an HMAC algorithm to generate a key from a password. This is normally used to generate encryption keys. You can also probably get away with using to encrypt passwords for storage on your calculator. It’s certainly not the most secure password hashing algorithm, but for most on-calculator uses, it’s probably fine.</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418cryptx_hmac_pbkdf2PKc6size_tPKv6size_tP7uint8_t6size_t6size_t7uint8_t">
+<span id="_CPPv318cryptx_hmac_pbkdf2PKc6size_tPKv6size_tP7uint8_t6size_t6size_t7uint8_t"></span><span id="_CPPv218cryptx_hmac_pbkdf2PKc6size_tPKv6size_tP7uint8_t6size_t6size_t7uint8_t"></span><span id="cryptx_hmac_pbkdf2__cCP.s.voidCP.s.uint8_tP.s.s.uint8_t"></span><span class="target" id="cryptx_8h_1a428a5da208ae3b55b73f4e05242148e8"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hmac_pbkdf2</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">password</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">passlen</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">salt</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">saltlen</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">key</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">keylen</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">rounds</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">hash_alg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_hmac_pbkdf2PKc6size_tPKv6size_tP7uint8_t6size_t6size_t7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Derives a key from a password, salt, and round count. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>password</strong> – Pointer to a string containing the password. </p></li>
+<li><p><strong>passlen</strong> – Byte length of the password. </p></li>
+<li><p><strong>salt</strong> – A psuedo-random string to use in each round of key derivation. </p></li>
+<li><p><strong>saltlen</strong> – Byte length of the salt. </p></li>
+<li><p><strong>rounds</strong> – The number of times to iterate the HMAC function per block of <strong>keylen</strong>. </p></li>
+<li><p><strong>key</strong> – Pointer to buffer to write key to. </p></li>
+<li><p><strong>keylen</strong> – Length of <strong>key</strong> to generate. </p></li>
+<li><p><strong>hash_alg</strong> – The numeric ID of the hashing algorithm to use. See <strong>cryptx_hash_algorithms</strong>. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// user inputs a password</span>
+<span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">passwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io_GetUserInput</span><span class="p">();</span>
+
+<span class="c1">// define salt of length equal to SHA256 digest for max security</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">salt</span><span class="p">[</span><span class="n">SHA256_DIGESTLEN</span><span class="p">];</span>
+<span class="n">cryptx_csrand_fill</span><span class="p">(</span><span class="n">salt</span><span class="p">,</span><span class="w"> </span><span class="n">SHA256_DIGESTLEN</span><span class="p">);</span>
+
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">hpasswd</span><span class="p">[</span><span class="n">SHA256_DIGESTLEN</span><span class="p">];</span>
+
+<span class="c1">// hash the password using pbkdf2_hmac</span>
+<span class="n">cryptx_hmac_pbkdf2</span><span class="p">(</span><span class="n">passwd</span><span class="p">,</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="n">passwd</span><span class="p">),</span>
+<span class="w">                  </span><span class="n">salt</span><span class="p">,</span><span class="w"> </span><span class="n">SHA256_DIGESTLEN</span><span class="p">,</span>
+<span class="w">                  </span><span class="n">hpasswd</span><span class="p">,</span><span class="w"> </span><span class="n">SHA256_DIGESTLEN</span><span class="p">,</span>
+<span class="w">                  </span><span class="n">SHA256</span><span class="p">);</span>
+
+<span class="c1">// the contents of `hpasswd` can be used as an encryption key for AES</span>
+<span class="c1">// or can be dumped along with `salt` as an encrypted password</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For maximum security/entropy your salt should be the same length as the digest of the hash algorithm selected. This isn’t enforced; you can use a smaller salt if you don’t care but be aware that the absolute minimum recommended is 16 bytes/128 bits. This is a NIST <a class="footnote-reference brackets" href="#f1" id="id1">1</a> recommendation.</p>
+</div>
+<hr class="docutils" />
+<p><strong>Notes</strong></p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>After initialization the hmac context holds the digest length for the selected algorithm. You can read it by accessing <code class="code docutils literal notranslate"><span class="pre">context.digest_len</span></code>. <strong>This is the only reason you should be accessing a member of the hmac context.</strong></p></li>
+<li><p>This API uses 516 bytes of <em>fastMem</em> starting at <code class="code docutils literal notranslate"><span class="pre">0xE30800</span></code> for scratch memory. Do not use it for anything else if you are using this module.</p></li>
+</ol>
+</div></blockquote>
+<hr class="docutils" />
+<dl class="footnote brackets">
+<dt class="label" id="f1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p><a class="reference external" href="https://www.nist.gov/">National Institute of Standards and Technology</a></p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="hash.html" class="btn btn-neutral float-left" title="Secure Hashing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="aes.html" class="btn btn-neutral float-right" title="Advanced Encryption Standard" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

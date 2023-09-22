@@ -17,7 +17,9 @@
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Hash-Based MAC" href="hmac.html" />
+    <link rel="prev" title="Bytearray Operations" href="bytes.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -35,7 +37,17 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="csrand.html">Secure Random Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bytes.html">Bytearray Operations</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Secure Hashing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#enumerations">Enumerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#macros">Macros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hmac.html">Hash-Based MAC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aes.html">Advanced Encryption Standard</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../static/analysis.html">Analysis &amp; Overview</a></li>
 </ul>
 
@@ -64,7 +76,7 @@
              
   <div class="section" id="secure-hashing">
 <span id="hash"></span><h1>Secure Hashing<a class="headerlink" href="#secure-hashing" title="Permalink to this headline"></a></h1>
-<p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides secure hashing functionality. Hashes are non-reversible cryptographic algorithms that take a stream of bytes as input and return a bytearray of fixed length called a digest. Hashes are also deterministic &mdash; a single input maps to a single output &mdash; meaning that if the input changes, even slightly, the digest also changes. A hash can detect if the content of something &mdash; like a file or an Internet packet &mdash; changes and reveal tampering if the change was not authorized.</p><div class="section" id="enumerations">
+<p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides secure hashing functionality. Hashes are non-reversible cryptographic algorithms that take a stream of bytes as input and return a bytearray of fixed length called a digest. Hashes are also deterministic &mdash; a single input maps to a single output &mdash; meaning that if the input changes, even slightly, the digest also changes. A hash can detect if the content of something &mdash; like a file or an Internet packet &mdash; changes and reveal tampering if the change was not authorized. Hashes can also be used as a form of digital signature.</p><div class="section" id="enumerations">
 <h2>Enumerations<a class="headerlink" href="#enumerations" title="Permalink to this headline"></a></h2>
 <dl class="cpp enum">
 <dt class="sig sig-object cpp" id="_CPPv422cryptx_hash_algorithms">
@@ -82,6 +94,21 @@
 <dd><p>algorithm type identifier for SHA-1 </p>
 </dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="macros">
+<h2>Macros<a class="headerlink" href="#macros" title="Permalink to this headline"></a></h2>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_DIGESTLEN_SHA1">
+<span class="target" id="cryptx_8h_1a4f1536bc045d8c6c6b1fd7502922c85a"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_DIGESTLEN_SHA1</span></span></span><a class="headerlink" href="#c.CRYPTX_DIGESTLEN_SHA1" title="Permalink to this definition"></a><br /></dt>
+<dd><p>digest length for SHA-1 hash </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_DIGESTLEN_SHA256">
+<span class="target" id="cryptx_8h_1a36616e8d1ed1e6270deadd0f8a4f096d"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_DIGESTLEN_SHA256</span></span></span><a class="headerlink" href="#c.CRYPTX_DIGESTLEN_SHA256" title="Permalink to this definition"></a><br /></dt>
+<dd><p>digest length for SHA-256 hash </p>
 </dd></dl>
 
 </div>
@@ -177,14 +204,14 @@
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Do not use this function to derive a mask for a key from a password. Use <strong>cryptx_hmac_pbkdf2</strong> for this instead. See the <a class="reference internal" href="hmac.html#hmac"><span class="std std-ref">HMAC module</span></a>.</p>
+<p>Do not use this function to derive a mask for a key by hashing a password. Use <a class="reference internal" href="hmac.html#pbkdf2"><span class="std std-ref">cryptx_hmac_pbkdf2</span></a> for this instead.</p>
 </div>
 <hr class="docutils" />
 <p><strong>Notes</strong></p>
 <blockquote>
 <div><ol class="arabic simple">
 <li><p>After initialization the hash context holds the digest length for the selected algorithm. You can read it by accessing <code class="code docutils literal notranslate"><span class="pre">context.digest_len</span></code>. <strong>This is the only reason you should be accessing a member of the hash context.</strong></p></li>
-<li><p>This API uses 516 bytes of <em>fastMem</em> starting at <code class="code docutils literal notranslate"><span class="pre">0xE30800</span></code> for scratch memory. Do not use it for anything else if you are using this API.</p></li>
+<li><p>This API uses 516 bytes of <em>fastMem</em> starting at <code class="code docutils literal notranslate"><span class="pre">0xE30800</span></code> for scratch memory. Do not use it for anything else if you are using this module.</p></li>
 </ol>
 </div></blockquote>
 </div>
@@ -193,7 +220,10 @@
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="bytes.html" class="btn btn-neutral float-left" title="Bytearray Operations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hmac.html" class="btn btn-neutral float-right" title="Hash-Based MAC" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

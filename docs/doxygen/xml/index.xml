@@ -79,15 +79,15 @@
   <compound refid="structHMAC" kind="struct"><name>HMAC</name>
   </compound>
   <compound refid="cryptx_8h" kind="file"><name>cryptx.h</name>
-    <member refid="cryptx_8h_1aa08392858444e1cc894d5f98432411c9" kind="define"><name>CRYPTX_AES_128_KEYLEN</name></member>
-    <member refid="cryptx_8h_1a0ceacc8bb81e6ef0f60bbe736732e5e0" kind="define"><name>CRYPTX_AES_192_KEYLEN</name></member>
-    <member refid="cryptx_8h_1acb2aea7855878c1b9b505ecb9b9583b1" kind="define"><name>CRYPTX_AES_256_KEYLEN</name></member>
-    <member refid="cryptx_8h_1a2d638028c68c84297614a1dc7ff318d9" kind="define"><name>CRYPTX_AES_BLOCK_SIZE</name></member>
-    <member refid="cryptx_8h_1ac47330f91ba12f7856c0c198bdbf2753" kind="define"><name>CRYPTX_AES_IV_SIZE</name></member>
-    <member refid="cryptx_8h_1a89521b82b1be81ea3e5f70c3593bf5a9" kind="define"><name>CRYPTX_AES_AUTHTAG_SIZE</name></member>
-    <member refid="cryptx_8h_1af0f7e8aa23de8ecc99b2420efefa4edc" kind="define"><name>CRYPTX_AES_CBC_FLAGS</name></member>
-    <member refid="cryptx_8h_1a0ed8d02473b9a003653db30e1d856614" kind="define"><name>CRYPTX_AES_CTR_FLAGS</name></member>
-    <member refid="cryptx_8h_1ac0de9d43e9ef5718060b164bf71e3ae0" kind="define"><name>CRYPTX_AES_GCM_FLAGS</name></member>
+    <member refid="cryptx_8h_1a4f1536bc045d8c6c6b1fd7502922c85a" kind="define"><name>CRYPTX_DIGESTLEN_SHA1</name></member>
+    <member refid="cryptx_8h_1a36616e8d1ed1e6270deadd0f8a4f096d" kind="define"><name>CRYPTX_DIGESTLEN_SHA256</name></member>
+    <member refid="cryptx_8h_1aa9fde36ec3becdc849fcb37c14899544" kind="define"><name>CRYPTX_KEYLEN_AES128</name></member>
+    <member refid="cryptx_8h_1a4aa7074b0e57cf7d3f3eea983fc2547f" kind="define"><name>CRYPTX_KEYLEN_AES192</name></member>
+    <member refid="cryptx_8h_1a11632b2d2dcc8cc16684d896c140fb15" kind="define"><name>CRYPTX_KEYLEN_AES256</name></member>
+    <member refid="cryptx_8h_1ab571a7efb0b2dcb981d2876ab6e64d65" kind="define"><name>CRYPTX_BLOCKSIZE_AES</name></member>
+    <member refid="cryptx_8h_1a743d804a517a2e38d7f1224fdc8429f1" kind="define"><name>cryptx_aes_cbc_flagset</name></member>
+    <member refid="cryptx_8h_1ab58fc147ecd3f0103486a14cf8254973" kind="define"><name>cryptx_aes_ctr_flagset</name></member>
+    <member refid="cryptx_8h_1a7bffe1d673fd05c8e538d6169b12509f" kind="define"><name>cryptx_aes_gcm_flagset</name></member>
     <member refid="cryptx_8h_1adf4062c77f37927bc0178872056602ff" kind="define"><name>cryptx_aes_get_ciphertext_len</name></member>
     <member refid="cryptx_8h_1a265dcd336b31e2b95870d864c85cee2a" kind="define"><name>CRYPTX_RSA_MODULUS_MAX</name></member>
     <member refid="cryptx_8h_1a26e233163ef752cc08d3f3499007369a" kind="define"><name>CRYPTX_EC_PRIVKEY_LEN</name></member>
@@ -103,13 +103,17 @@
     <member refid="cryptx_8h_1a57f2f69b5ad395749c8604ca9f43f93bac7716785728694693ec29eccd5ffa0e1" kind="enumvalue"><name>SHA256</name></member>
     <member refid="cryptx_8h_1a57f2f69b5ad395749c8604ca9f43f93ba27028cc8b5d6f0a1cb3030c180019abc" kind="enumvalue"><name>SHA1</name></member>
     <member refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735" kind="enum"><name>cryptx_aes_cipher_modes</name></member>
-    <member refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735ad21a3698b98b7368b14ec3d48314a132" kind="enumvalue"><name>AES_MODE_CBC</name></member>
-    <member refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735a5ecd63cd0bd97d46f273461b6550cb8e" kind="enumvalue"><name>AES_MODE_CTR</name></member>
-    <member refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735aa41ebb36bc19b64d64ff6b7fc0d5e5df" kind="enumvalue"><name>AES_MODE_GCM</name></member>
+    <member refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735a6d022763befad1bcebcda6aa597c5e55" kind="enumvalue"><name>CRYPTX_AES_CBC</name></member>
+    <member refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735a11d9f7cd52007c22ac9adbc45bf0442d" kind="enumvalue"><name>CRYPTX_AES_CTR</name></member>
+    <member refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735a0b6b05da37ef303c018bedd8cdbd4b6f" kind="enumvalue"><name>CRYPTX_AES_GCM</name></member>
     <member refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433" kind="enum"><name>cryptx_aes_padding_schemes</name></member>
     <member refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433a673ae2fee0bfe0a962717b3f673b9b7c" kind="enumvalue"><name>PAD_PKCS7</name></member>
     <member refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433a322c11c9058ef67073a3ff9bdcb9f759" kind="enumvalue"><name>PAD_DEFAULT</name></member>
     <member refid="cryptx_8h_1a66b61f98ab7705ff93bde98685ff3433a7566d9371110a1a24db62b145c901ad8" kind="enumvalue"><name>PAD_ISO2</name></member>
+    <member refid="cryptx_8h_1a747439e5980be6f5f9fa0c8fbb84655a" kind="enum"><name>cryptx_aes_default_flags</name></member>
+    <member refid="cryptx_8h_1a747439e5980be6f5f9fa0c8fbb84655aaf6ef52028db1d536e3c076574a44ee96" kind="enumvalue"><name>CRYPTX_AES_CBC_DEFAULTS</name></member>
+    <member refid="cryptx_8h_1a747439e5980be6f5f9fa0c8fbb84655aaca82ad0c28139f15dfe3145b77271361" kind="enumvalue"><name>CRYPTX_AES_CTR_DEFAULTS</name></member>
+    <member refid="cryptx_8h_1a747439e5980be6f5f9fa0c8fbb84655aa9488d8d057bdfcd2b6d399a15bb8dabd" kind="enumvalue"><name>CRYPTX_AES_GCM_DEFAULTS</name></member>
     <member refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kind="enum"><name>aes_error_t</name></member>
     <member refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfdaacf07636102724d2a7913911b0cf74b2" kind="enumvalue"><name>AES_OK</name></member>
     <member refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfda6d39b280aea9d8d62d126eef05d271db" kind="enumvalue"><name>AES_INVALID_ARG</name></member>
@@ -189,7 +193,7 @@
     <member refid="cryptx_8h_1ae27b2f138550c6d08a539809f4bc27a1" kind="function"><name>cryptx_bytes_compare</name></member>
     <member refid="cryptx_8h_1a61b09a810e766ef1d2ff00c85ece63f2" kind="function"><name>cryptx_csrand_get</name></member>
     <member refid="cryptx_8h_1a8c550bae2fddbf8a04655325ba2c9e8f" kind="function"><name>cryptx_csrand_fill</name></member>
-    <member refid="cryptx_8h_1aee9ba52b80ab5bddd81193cdf26389e2" kind="function"><name>cryptx_aes_init</name></member>
+    <member refid="cryptx_8h_1ab96be7c9efe78883e6b81bb7d66c7e45" kind="function"><name>cryptx_aes_init</name></member>
     <member refid="cryptx_8h_1a571d4b9eb0fe3d069b10492025e47fe0" kind="function"><name>cryptx_aes_encrypt</name></member>
     <member refid="cryptx_8h_1ab5cf162f80d83c86c9dbba9aa866b289" kind="function"><name>cryptx_aes_decrypt</name></member>
     <member refid="cryptx_8h_1a3d55233d4178e3f6c6b96272fda56ae0" kind="function"><name>cryptx_aes_update_aad</name></member>

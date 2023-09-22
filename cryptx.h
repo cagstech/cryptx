@@ -95,6 +95,10 @@ enum cryptx_hash_algorithms {
 	SHA1,               /**< algorithm type identifier for SHA-1 */
 };
 
+
+#define CRYPTX_DIGESTLEN_SHA1    20    /**< digest length for SHA-1 hash */
+#define CRYPTX_DIGESTLEN_SHA256  32    /**< digest length for SHA-256 hash */
+
 /**
  *	@brief Initializes a hash-state context for a specific hash algorithm.
  *	@param context	Pointer to a hash-state context.
@@ -151,7 +155,6 @@ struct cryptx_hmac_ctx {
  *	@param keylen	Length of the @b key.
  *  @param hash_alg	The numeric ID of the hashing algorithm to use. See @b cryptx_hash_algorithms.
  *  @return @b true if initialized succeeded, @b false if failed.
- *  @note Destroys 516 bytes of fastMem starting at 0xE30800.
  */
 bool cryptx_hmac_init(struct cryptx_hmac_ctx* context,
 					  const void* key, size_t keylen,
@@ -162,9 +165,6 @@ bool cryptx_hmac_init(struct cryptx_hmac_ctx* context,
  *	@param context	Pointer to an HMAC-state context.
  *	@param data		Pointer to a block of data to hash..
  *	@param len		Size of the @b data to hash.
- *	@note Destroys 516 bytes of fastMem starting at 0xE30800.
- *	@warning Calling this on a context that has not been initialized may have
- *	unpredictable results.
  */
 void cryptx_hmac_update(struct cryptx_hmac_ctx* context, const void* data, size_t len);
 
@@ -175,9 +175,6 @@ void cryptx_hmac_update(struct cryptx_hmac_ctx* context, const void* data, size_
  *	@note @b digest must be at large enough to hold the hash digest.
  *	You can retrieve the necessary size by accessing the @b digest_len
  *	member of an initialized @b cryptx_hmac_ctx.
- *	@note Destroys 516 bytes of fastMem starting at 0xE30800.
- *  @warning Calling this on a context that has not been initialized may have
- *	unpredictable results.
  */
 void cryptx_hmac_digest(struct cryptx_hmac_ctx* context, void* digest);
 
@@ -191,11 +188,6 @@ void cryptx_hmac_digest(struct cryptx_hmac_ctx* context, void* digest);
  * @param key		Pointer to buffer to write key to.
  * @param keylen	Length of @b key to generate.
  * @param hash_alg 	The numeric ID of the hashing algorithm to use. See @b cryptx_hash_algorithms.
- * @note NIST recommends a salt of at least 128 bits (16 bytes).
- * @note @b rounds is used to increase the cost (computational time) of generating a key. What makes a password-hashing
- * algorithm secure is the time needed to generate a rainbow table attack against it. More rounds means
- * a more secure key, but more time spent generating it. Current cryptography standards recommend thousands of
- * rounds but that may not be feasible on the CE.
  */
 void cryptx_hmac_pbkdf2(const char* password,
 						size_t passlen,
@@ -270,9 +262,9 @@ struct cryptx_aes_ctx {
 };
 
 enum cryptx_aes_cipher_modes {
-	AES_MODE_CBC,       /**< selects Cyclic Block Chain (CBC) mode */
-	AES_MODE_CTR,       /**< selects Counter (CTR) mode */
-	AES_MODE_GCM		/**< selects Galois Counter (GCM) mode */
+	CRYPTX_AES_CBC,       /**< selects Cyclic Block Chain (CBC) mode */
+	CRYPTX_AES_CTR,       /**< selects Counter (CTR) mode */
+	CRYPTX_AES_GCM		/**< selects Galois Counter (GCM) mode */
 };
 
 enum cryptx_aes_padding_schemes {
@@ -283,28 +275,33 @@ enum cryptx_aes_padding_schemes {
 	PAD_ISO2					/**< ISO-9797 M2 padding */
 };
 
-#define CRYPTX_AES_128_KEYLEN	16		/** Defines the byte length of an AES-128 key. */
-#define CRYPTX_AES_192_KEYLEN	24		/** Defines the byte length of an AES-192 key. */
-#define CRYPTX_AES_256_KEYLEN	32		/** Defines the byte length of an AES-256 key. */
+#define CRYPTX_KEYLEN_AES128  16		/** Defines the byte length of an AES-128 key. */
+#define CRYPTX_KEYLEN_AES192	24		/** Defines the byte length of an AES-192 key. */
+#define CRYPTX_KEYLEN_AES256	32		/** Defines the byte length of an AES-256 key. */
 
-#define CRYPTX_AES_BLOCK_SIZE	16		/** Defines the block size of the AES block, in bytes. */
-#define CRYPTX_AES_IV_SIZE	CRYPTX_AES_BLOCK_SIZE	/** Defines the length of the AES initialization vector. */
-#define CRYPTX_AES_AUTHTAG_SIZE	CRYPTX_AES_BLOCK_SIZE	/** Defines the length of the AES-GCM auth tag. */
+#define CRYPTX_BLOCKSIZE_AES	16		/** Defines the AES block size, in bytes. Also the IV size and Auth Tag size. */
 
-/** Defines a macro to enable AES CBC cipher mode and pass relevant configuration options.*/
-#define CRYPTX_AES_CBC_FLAGS(padding_mode) \
-	((padding_mode)<<2) | AES_MODE_CBC
+/** Defines defaults for various cipher modes */
+enum cryptx_aes_default_flags {
+  CRYPTX_AES_CBC_DEFAULTS = (PAD_DEFAULT | 0),
+  CRYPTX_AES_CTR_DEFAULTS = (((0x0f & (8))<<6) | ((0x0f & (8))<<2) | 0),
+  CRYPTX_AES_GCM_DEFAULTS = (0)
+};
 
-/** Defines a macro to enable AES CTR cipher mode and pass relevant configuration options.*/
-#define CRYPTX_AES_CTR_FLAGS(nonce_len, counter_len)	\
-	((0x0f & (counter_len))<<8) | ((0x0f & (nonce_len))<<4) | AES_MODE_CTR
+/** Defines a macro to set flags for AES CBC mode. */
+#define cryptx_aes_cbc_flagset(padding_mode) \
+  (padding_mode) | 0
 
-/** Defines a macro to enable AES GCM cipher mode.*/
-#define CRYPTX_AES_GCM_FLAGS	AES_MODE_GCM
+/** Defines a macro to set flags for AES CTR mode. */
+#define cryptx_aes_ctr_flagset(nonce_len, counter_len) \
+  ((0x0f & (counter_len))<<6) | ((0x0f & (nonce_len))<<2) | 0
+
+/** GCM has no flags, pass 0 .*/
+#define cryptx_aes_gcm_flagset  0
 
 /** Defines a macro to return the byte length of an AES ciphertext given a plaintext length.*/
 #define cryptx_aes_get_ciphertext_len(len) \
-((((len)%CRYPTX_AES_BLOCK_SIZE)==0) ? (len) + CRYPTX_AES_BLOCK_SIZE : (((len)>>4) + 1)<<4)
+((((len)%CRYPTX_BLOCKSIZE_AES)==0) ? (len) + CRYPTX_BLOCKSIZE_AES : (((len)>>4) + 1)<<4)
 
 /// Defines response codes returned by the AES API.
 typedef enum {
@@ -324,8 +321,9 @@ typedef enum {
  * @param keylen	The size, in bytes, of the @b key to load.
  * @param iv	Pointer to  Initialization vector, a buffer equal to the block size filled with random bytes.
  * @param ivlen	Length of the initalization vector. Capped at 16 bytes. Certain cipher modes have different recommendations.
- * @param flags	A series of flags to configure the AES context with.
- * 				Use the provided @b CRYPTX_AES_CTR_FLAGS, @b CRYPTX_AES_CBC_FLAGS, or @b CRYPTX_AES_GCM_FLAGS to pass flags.
+ * @param cipher_mode Operational mode of the cipher to initialize.
+ * @param flags	A series of flags to configure the AES context with. Use the provided @b defaults enumeration or the
+ *              @b flagset macros above.
  * @returns An @b aes_error_t indicating the status of the AES operation.
  */
 aes_error_t cryptx_aes_init(struct cryptx_aes_ctx* context,
@@ -333,6 +331,7 @@ aes_error_t cryptx_aes_init(struct cryptx_aes_ctx* context,
 							size_t keylen,
 							const void* iv,
 							size_t ivlen,
+              uint8_t cipher_mode,
 							uint24_t flags);
 
 /**

@@ -36,6 +36,14 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="modules/aes.html">function documentation: AES</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/bytes.html">Bytearray Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/csrand.html">Secure Random Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/ecc.html">function documentation: Elliptic Curve Cryptography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/encoding.html">function documentation: Encoding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/hash.html">Secure Hashing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/hmac.html">hmac</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/rsa.html">function documentation: RSA</a></li>
 <li class="toctree-l1"><a class="reference internal" href="static/analysis.html">Analysis &amp; Overview</a></li>
 </ul>
 
@@ -89,7 +97,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><a class="reference internal" href="api/hash.html#hash"><span class="std std-ref">view hash documentation</span></a></p></li>
+<li><p><a class="reference internal" href="modules/hash.html#hash"><span class="std std-ref">view hash documentation</span></a></p></li>
 </ul>
 <p><strong>Using the HMAC API</strong></p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Hello World!&quot;</span><span class="w">   </span><span class="c1">// String to hash</span>
@@ -110,7 +118,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><a class="reference internal" href="api/hmac.html#hmac"><span class="std std-ref">view hmac documentation</span></a></p></li>
+<li><p><a class="reference internal" href="modules/hmac.html#hmac"><span class="std std-ref">view hmac documentation</span></a></p></li>
 </ul>
 <p><strong>Using the MGF1 API</strong></p>
 <p><strong>MGF1</strong> (Mask-Generation Function v1) is a hash-derived function that allows for a digest of arbitrary length to be returned from a data stream of given size. Its usage is similar to the hash API above.</p>
@@ -248,7 +256,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><a class="reference internal" href="api/aes.html#aes"><span class="std std-ref">view AES documentation</span></a></p></li>
+<li><p><a class="reference internal" href="modules/aes.html#aes"><span class="std std-ref">view AES documentation</span></a></p></li>
 </ul>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// ** As Receiver **</span>
 
@@ -286,7 +294,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><a class="reference internal" href="api/aes.html#aes"><span class="std std-ref">view AES documentation</span></a></p></li>
+<li><p><a class="reference internal" href="modules/aes.html#aes"><span class="std std-ref">view AES documentation</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="public-key-cryptography-key-exchange-protocols">
@@ -319,7 +327,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><a class="reference internal" href="api/rsa.html#rsa"><span class="std std-ref">view RSA documentation</span></a></p></li>
+<li><p><a class="reference internal" href="modules/rsa.html#rsa"><span class="std std-ref">view RSA documentation</span></a></p></li>
 </ul>
 <p><strong>Elliptic Curve Diffie-Hellman (ECDH) Key Exchange</strong></p>
 <p>The second option supported within CryptX is perhaps not as widely used (and fairly new) but arguably more secure. It is an encryption system based upon the less secure Diffie-Hellman key exchange protocol, but using elliptic curve arithmetic instead of standard modular arithmetic. The behavior of an elliptic curve over a Galois field lends to a cryptosystem that is much harder to crack.</p>
@@ -354,7 +362,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><a class="reference internal" href="api/ecc.html#ec"><span class="std std-ref">view elliptic curve documentation</span></a></p></li>
+<li><p><a class="reference internal" href="modules/ecc.html#ec"><span class="std std-ref">view elliptic curve documentation</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="cryptographic-encoding-formats">
@@ -409,7 +417,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><a class="reference internal" href="api/encoding.html#encoding"><span class="std std-ref">view ASN.1 documentation</span></a></p></li>
+<li><p><a class="reference internal" href="modules/encoding.html#encoding"><span class="std std-ref">view ASN.1 documentation</span></a></p></li>
 </ul>
 <p><strong>Base64 Encoding and Decoding</strong></p>
 <p>Base64 (sextet-encoding) is the second of two encoding formats common to cryptography, including keyfiles exported by cryptographic libraries. In fact, PEM-encoding usually has the key encoded first with ASN.1 and then into base64. In base64 a stream of octets (8 bits per byte) is parsed as a bit string in groups of six bits (hence sextet) which is then mapped to one of 64 printable characters.</p>
@@ -430,7 +438,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><a class="reference internal" href="api/encoding.html#encoding"><span class="std std-ref">view Base64 documentation</span></a></p></li>
+<li><p><a class="reference internal" href="modules/encoding.html#encoding"><span class="std std-ref">view Base64 documentation</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="hazardous-materials">

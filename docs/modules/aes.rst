@@ -1,63 +1,63 @@
 
 .. _aes:
-.. |br| raw:: html
 
-    <br />
-
-
-function documentation: AES
+Advanced Encryption Standard
 ===============================
 
-.. note::
+.. raw:: html
 
-	AES contexts are directional and stateful. If you need to process both encryption and decryption, initialize seperate contexts for encryption and decryption. Both contexts will use the same key, but different initialization vectors.
-	
-	To prevent misuse, a context locks to the first operation it is used with and will return an error if used incorrectly.
-
-Here are some enumerations defining cipher modes and padding schemes for CBC mode.
+  <p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides a fast, secure algorithm for two parties to exchange information privately using a single key for encryption and decryption. Advanced Encryption Standard is currently the gold standard for encryption and is used all over the place.</p>
+  
+Cipher Modes
+________________
 
 .. doxygenenum:: cryptx_aes_cipher_modes
 	:project: CryptX
+ 
+Cipher Flags
+______________
 	
 .. doxygenenum:: cryptx_aes_padding_schemes
 	:project: CryptX
-
-Here are some macros to assist with defining buffers for keys of supported length.
-
-.. doxygendefine:: CRYPTX_AES_128_KEYLEN
-	:project: CryptX
-.. doxygendefine:: CRYPTX_AES_192_KEYLEN
-	:project: CryptX
-.. doxygendefine:: CRYPTX_AES_256_KEYLEN
-	:project: CryptX
-	
-And here are some macros defining properties of the cipher.
-
-.. doxygendefine:: CRYPTX_AES_BLOCK_SIZE
-	:project: CryptX
-.. doxygendefine:: CRYPTX_AES_IV_SIZE
-	:project: CryptX
-.. doxygendefine:: CRYPTX_AES_AUTHTAG_SIZE
-	:project: CryptX
-	
-Some macros for passing cipher configuration options to *cryptx_aes_init*.
-
-.. doxygendefine:: CRYPTX_AES_CBC_FLAGS
-	:project: CryptX
-.. doxygendefine:: CRYPTX_AES_CTR_FLAGS
-	:project: CryptX
-.. doxygendefine:: CRYPTX_AES_GCM_FLAGS
-	:project: CryptX
-
-This macro returns the full size required by the ciphertext. This really only applies to CBC mode. CTR and GCM modes have the same ciphertext and plaintext length.
-
-.. doxygendefine:: cryptx_aes_get_ciphertext_len
-	:project: CryptX
-	
-This enum defines possible response codes from calls to the AES API.
  
+.. doxygenenum:: cryptx_aes_default_flags
+	:project: CryptX
+ 
+.. doxygendefine:: cryptx_aes_cbc_flagset
+  :project: CryptX
+  
+.. doxygendefine:: cryptx_aes_ctr_flagset
+  :project: CryptX
+  
+.. doxygendefine:: cryptx_aes_gcm_flagset
+  :project: CryptX
+ 
+Macros
+________
+
+.. doxygendefine:: CRYPTX_KEYLEN_AES128
+  :project: CryptX
+
+.. doxygendefine:: CRYPTX_KEYLEN_AES192
+  :project: CryptX
+  
+.. doxygendefine:: CRYPTX_KEYLEN_AES256
+  :project: CryptX
+  
+.. doxygendefine:: CRYPTX_BLOCKSIZE_AES
+  :project: CryptX
+  
+.. doxygendefine:: cryptx_aes_get_ciphertext_len
+  :project: CryptX
+  
+Response Codes
+_______________
+
 .. doxygenenum:: aes_error_t
 	:project: CryptX
+
+Functions
+____________
 
 .. doxygenfunction:: cryptx_aes_init
 	:project: CryptX
@@ -67,6 +67,8 @@ This enum defines possible response codes from calls to the AES API.
 	
 .. doxygenfunction:: cryptx_aes_decrypt
 	:project: CryptX
+ 
+----
 	
 The following functions are only valid for Galois Counter Mode (GCM). Attempting to use them for any other cipher mode will return **AES_INVALID_CIPHERMODE**.
 

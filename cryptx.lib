@@ -8,9 +8,10 @@
 	export	cryptx_hmac_update
 	export	cryptx_hmac_digest
 	export	cryptx_hmac_pbkdf2
-	export	cryptx_digest_compare
-	export	cryptx_digest_tostring
-	export	cryptx_csrand_init
+	export	cryptx_bytes_compare
+	export	cryptx_bytes_tostring
+	export	cryptx_bytes_rcopy
+	export	cryptx_bytes_reverse
 	export	cryptx_csrand_get
 	export	cryptx_csrand_fill
 	export	cryptx_aes_init
@@ -21,7 +22,7 @@
 	export	cryptx_aes_verify
 	export	cryptx_rsa_encrypt
 	export	cryptx_ec_keygen
-	export	cryptx_ecdh_secret
+	export	cryptx_ec_secret
 	export	cryptx_asn1_decode
 	export	cryptx_base64_encode
 	export	cryptx_base64_decode

@@ -90,10 +90,15 @@ Check out the :ref:`analysis` for more technical implementation details includin
 
 ----
 
-
-Additional Resources
----------------------
 .. toctree::
-    :maxdepth: 1
-
-    static/analysis
+  :maxdepth: 1
+  :hidden:
+  
+  modules/csrand
+  modules/bytes
+  modules/hash
+  modules/hmac
+  modules/aes
+  
+  static/analysis
+  static/references
