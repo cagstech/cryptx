@@ -104,16 +104,16 @@ ______________________________________
 
 - **CBC Mode**
  
-  | Requirement: Initialization vector must be securely-random.
-  | Non-Compliance Effect: Vulnerability to chosen plaintext attack [#f2]_.
-  | Assurance: Generate a random IV with :code:`cryptx_csrand_fill` for use with this mode.
+  | **Requirement**: Initialization vector must be securely-random.
+  | **Non-Compliance Effect**: Vulnerability to chosen plaintext attack [#f2]_.
+  | **Assurance**: Generate a random IV with :code:`cryptx_csrand_fill` for use with this mode.
   
 - **CTR & GCM Modes**
 
-  | Requirement: Counter portion of initialization vector must be unique (not re-used).
-  | Non-Compliance Effect: Vulnerability to many-time pad [#f3]_.
-  | Additional Options: A fixed nonce may preceed the counter portion of the IV. This should be securely random. Default configuration for CTR mode is an 8 byte nonce followed by an 8 byte counter, though this can be configured during cipher initialization.
-  | Assurance: Fill the nonce portion of your IV like you would with CBC mode. This may be repeated for the counter portion or counter may start at 0.
+  | **Requirement**: Initialization vector must be unique (not re-used) over the same key.
+  | **Non-Compliance Effect**: Vulnerability to many-time pad [#f3]_.
+  | **Additional Options**: A fixed nonce may preceed the counter portion of the IV. This should be securely random. Default configuration for CTR mode is an 8 byte nonce followed by an 8 byte counter, though this can be configured during cipher initialization.
+  | **Assurance**: For counter block of length *N* bits, after processing :code:`2 ^ N` blocks of plaintext data: (1) generate new nonce/counter blocks and prepend to ciphertext, or (2) generate and negotiate new key.
 
 
 Notes

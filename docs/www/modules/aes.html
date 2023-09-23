@@ -423,17 +423,17 @@
 <ul>
 <li><p><strong>CBC Mode</strong></p>
 <div class="line-block">
-<div class="line">Requirement: Initialization vector must be securely-random.</div>
-<div class="line">Non-Compliance Effect: Vulnerability to chosen plaintext attack <a class="footnote-reference brackets" href="#f2" id="id2">2</a>.</div>
-<div class="line">Assurance: Generate a random IV with <code class="code docutils literal notranslate"><span class="pre">cryptx_csrand_fill</span></code> for use with this mode.</div>
+<div class="line"><strong>Requirement</strong>: Initialization vector must be securely-random.</div>
+<div class="line"><strong>Non-Compliance Effect</strong>: Vulnerability to chosen plaintext attack <a class="footnote-reference brackets" href="#f2" id="id2">2</a>.</div>
+<div class="line"><strong>Assurance</strong>: Generate a random IV with <code class="code docutils literal notranslate"><span class="pre">cryptx_csrand_fill</span></code> for use with this mode.</div>
 </div>
 </li>
 <li><p><strong>CTR &amp; GCM Modes</strong></p>
 <div class="line-block">
-<div class="line">Requirement: Counter portion of initialization vector must be unique (not re-used).</div>
-<div class="line">Non-Compliance Effect: Vulnerability to many-time pad <a class="footnote-reference brackets" href="#f3" id="id3">3</a>.</div>
-<div class="line">Additional Options: A fixed nonce may preceed the counter portion of the IV. This should be securely random. Default configuration for CTR mode is an 8 byte nonce followed by an 8 byte counter, though this can be configured during cipher initialization.</div>
-<div class="line">Assurance: Fill the nonce portion of your IV like you would with CBC mode. This may be repeated for the counter portion or counter may start at 0.</div>
+<div class="line"><strong>Requirement</strong>: Initialization vector must be unique (not re-used) over the same key.</div>
+<div class="line"><strong>Non-Compliance Effect</strong>: Vulnerability to many-time pad <a class="footnote-reference brackets" href="#f3" id="id3">3</a>.</div>
+<div class="line"><strong>Additional Options</strong>: A fixed nonce may preceed the counter portion of the IV. This should be securely random. Default configuration for CTR mode is an 8 byte nonce followed by an 8 byte counter, though this can be configured during cipher initialization.</div>
+<div class="line"><strong>Assurance</strong>: For counter block of length <em>N</em> bits, after processing <code class="code docutils literal notranslate"><span class="pre">2</span> <span class="pre">^</span> <span class="pre">N</span></code> blocks of plaintext data: (1) generate new nonce/counter blocks and prepend to ciphertext, or (2) generate and negotiate new key.</div>
 </div>
 </li>
 </ul>
