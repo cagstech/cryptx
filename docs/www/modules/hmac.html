@@ -153,10 +153,6 @@
 <dt class="sig sig-object cpp" id="_CPPv418cryptx_hmac_digestP15cryptx_hmac_ctxPv">
 <span id="_CPPv318cryptx_hmac_digestP15cryptx_hmac_ctxPv"></span><span id="_CPPv218cryptx_hmac_digestP15cryptx_hmac_ctxPv"></span><span id="cryptx_hmac_digest__cryptx_hmac_ctxP.voidP"></span><span class="target" id="cryptx_8h_1a710f6c433fa3e6d07c602a0fca5952d7"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hmac_digest</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_hmac_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">digest</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_hmac_digestP15cryptx_hmac_ctxPv" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Output digest for current HMAC-state (preserves state). </p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><strong>digest</strong> must be at large enough to hold the hash digest. You can retrieve the necessary size by accessing the <strong>digest_len</strong> member of an initialized <strong>cryptx_hmac_ctx</strong>. </p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

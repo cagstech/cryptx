@@ -172,9 +172,6 @@ void cryptx_hmac_update(struct cryptx_hmac_ctx* context, const void* data, size_
  *	@brief Output digest for current HMAC-state (preserves state).
  *	@param context	Pointer to an HMAC-state context.
  *	@param digest	Pointer to a buffer to write digest to.
- *	@note @b digest must be at large enough to hold the hash digest.
- *	You can retrieve the necessary size by accessing the @b digest_len
- *	member of an initialized @b cryptx_hmac_ctx.
  */
 void cryptx_hmac_digest(struct cryptx_hmac_ctx* context, void* digest);
 
@@ -341,10 +338,6 @@ aes_error_t cryptx_aes_init(struct cryptx_aes_ctx* context,
  * @param len		Length of data at @b plaintext to encrypt.
  * @param ciphertext	Pointer to buffer to write encrypted data to.
  * @returns An @b aes_error_t indicating the status of the AES operation.
- * @note @b ciphertext should large enough to hold the encrypted message.
- *          See the @b cryptx_aes_get_ciphertext_len macro for CBC mode.
- * @note @b plaintext and @b ciphertext are aliasable.
- * @note Encrypt is streamable, such that \f$ encrypt(msg1) + encrypt(msg2) \f$ is functionally identical to \f$ encrypt(msg1+msg2) \f$ with the exception of intervening padding in CBC mode.
  */
 aes_error_t cryptx_aes_encrypt(const struct cryptx_aes_ctx* context,
 							   const void* plaintext,
@@ -358,8 +351,6 @@ aes_error_t cryptx_aes_encrypt(const struct cryptx_aes_ctx* context,
  * @param len		Length of data at @b ciphertext to decrypt.
  * @param plaintext	Pointer to buffer to write decryped data to.
  * @returns An @b aes_error_t indicating the status of the AES operation.
- * @note @b plaintext and @b ciphertext are aliasable.
- * @note Decrypt is streamable, such that \f$ decrypt(msg1) + decrypt(msg2) \f$ is functionally identical to \f$ decrypt(msg1+msg2) \f$ with the exception of intervening padding in CBC mode.
  */
 aes_error_t cryptx_aes_decrypt(const struct cryptx_aes_ctx* context,
 							   const void* ciphertext,
@@ -373,8 +364,6 @@ aes_error_t cryptx_aes_decrypt(const struct cryptx_aes_ctx* context,
  * @param aad		Pointer to additional authenticated data segment.
  * @param aad_len	Length of additional data segment.
  * @returns An @b aes_error_t indicating the status of the AES operation.
- * @note This function can only be called between cipher initialization and encryption/decryption. Attempting to
- * call this function at any other time will return @b AES_INVALID_OPERATION.
  */
 aes_error_t cryptx_aes_update_aad(struct cryptx_aes_ctx* context,
 								  const void* aad, size_t aad_len);
@@ -384,10 +373,6 @@ aes_error_t cryptx_aes_update_aad(struct cryptx_aes_ctx* context,
  * @param context	Pointer to an AES context
  * @param digest	Pointer to a buffer to output digest to. Must be at least 16 bytes large.
  * @returns An @b aes_error_t indicating the status of the AES operation.
- * @warning <b>Nonce-misuse vulnerability/forbidden attack</b>: GCM is vulnerable to key discovery
- * if the same nonce is reused to encrypt or decrypt multiple messages. Once you generate a digest for data processed
- * by the cipher, cycle the nonce by generating a new one and calling @b cryptx_aes_init again with the new nonce.
- * To ensure this is done properly, the context is marked invalid once this function is called.
  */
 aes_error_t cryptx_aes_digest(struct cryptx_aes_ctx* context, uint8_t *digest);
 
@@ -401,7 +386,6 @@ aes_error_t cryptx_aes_digest(struct cryptx_aes_ctx* context, uint8_t *digest);
  * @param ciphertext_len	Length of ciphertext to authenticate.
  * @param tag		Pointer to expected auth tag to validate against.
  * @returns TRUE if authentication  tag matches expected, FALSE otherwise.
- * @note If this function returns FALSE, do not decrypt the message.
  */
 
 bool cryptx_aes_verify(const struct cryptx_aes_ctx* context,

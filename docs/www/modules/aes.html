@@ -15,7 +15,6 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -49,7 +48,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#macros">Macros</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#response-codes">Response Codes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#additional-notes">Additional Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#initialization-vector-requirements">Initialization Vector Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#notes">Notes</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../static/analysis.html">Analysis &amp; Overview</a></li>
@@ -80,7 +80,7 @@
              
   <div class="section" id="advanced-encryption-standard">
 <span id="aes"></span><h1>Advanced Encryption Standard<a class="headerlink" href="#advanced-encryption-standard" title="Permalink to this headline"></a></h1>
-<p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides a fast, secure algorithm for two parties to exchange information privately using a single key for encryption and decryption. Advanced Encryption Standard is currently the gold standard for encryption and is used all over the place.</p><div class="section" id="cipher-modes">
+<p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides a fast, secure algorithm for two parties to exchange information privately using a single key for encryption and decryption. Advanced Encryption Standard is currently the gold standard for encryption and is one of the most widely-used encryption algorithms.</p><div class="section" id="cipher-modes">
 <h2>Cipher Modes<a class="headerlink" href="#cipher-modes" title="Permalink to this headline"></a></h2>
 <dl class="cpp enum">
 <dt class="sig sig-object cpp" id="_CPPv423cryptx_aes_cipher_modes">
@@ -284,18 +284,6 @@
 <dt class="sig sig-object cpp" id="_CPPv418cryptx_aes_encryptPK14cryptx_aes_ctxPKv6size_tPv">
 <span id="_CPPv318cryptx_aes_encryptPK14cryptx_aes_ctxPKv6size_tPv"></span><span id="_CPPv218cryptx_aes_encryptPK14cryptx_aes_ctxPKv6size_tPv"></span><span id="cryptx_aes_encrypt__cryptx_aes_ctxCP.voidCP.s.voidP"></span><span class="target" id="cryptx_8h_1a571d4b9eb0fe3d069b10492025e47fe0"></span><a class="reference internal" href="#_CPPv411aes_error_t" title="aes_error_t"><span class="n"><span class="pre">aes_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_encrypt</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_aes_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">plaintext</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ciphertext</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_aes_encryptPK14cryptx_aes_ctxPKv6size_tPv" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Performs a stateful AES encryption of an arbitrary length of data. </p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><strong>ciphertext</strong> should large enough to hold the encrypted message. See the <strong>cryptx_aes_get_ciphertext_len</strong> macro for CBC mode. </p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><strong>plaintext</strong> and <strong>ciphertext</strong> are aliasable. </p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Encrypt is streamable, such that <span class="math notranslate nohighlight">\( encrypt(msg1) + encrypt(msg2) \)</span> is functionally identical to <span class="math notranslate nohighlight">\( encrypt(msg1+msg2) \)</span> with the exception of intervening padding in CBC mode. </p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -315,14 +303,6 @@
 <dt class="sig sig-object cpp" id="_CPPv418cryptx_aes_decryptPK14cryptx_aes_ctxPKv6size_tPv">
 <span id="_CPPv318cryptx_aes_decryptPK14cryptx_aes_ctxPKv6size_tPv"></span><span id="_CPPv218cryptx_aes_decryptPK14cryptx_aes_ctxPKv6size_tPv"></span><span id="cryptx_aes_decrypt__cryptx_aes_ctxCP.voidCP.s.voidP"></span><span class="target" id="cryptx_8h_1ab5cf162f80d83c86c9dbba9aa866b289"></span><a class="reference internal" href="#_CPPv411aes_error_t" title="aes_error_t"><span class="n"><span class="pre">aes_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_decrypt</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_aes_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ciphertext</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">plaintext</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_aes_decryptPK14cryptx_aes_ctxPKv6size_tPv" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Performs a stateful AES decryption of an arbitrary length of data. </p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><strong>plaintext</strong> and <strong>ciphertext</strong> are aliasable. </p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Decrypt is streamable, such that <span class="math notranslate nohighlight">\( decrypt(msg1) + decrypt(msg2) \)</span> is functionally identical to <span class="math notranslate nohighlight">\( decrypt(msg1+msg2) \)</span> with the exception of intervening padding in CBC mode. </p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -345,10 +325,6 @@
 <span id="_CPPv321cryptx_aes_update_aadP14cryptx_aes_ctxPKv6size_t"></span><span id="_CPPv221cryptx_aes_update_aadP14cryptx_aes_ctxPKv6size_t"></span><span id="cryptx_aes_update_aad__cryptx_aes_ctxP.voidCP.s"></span><span class="target" id="cryptx_8h_1a3d55233d4178e3f6c6b96272fda56ae0"></span><a class="reference internal" href="#_CPPv411aes_error_t" title="aes_error_t"><span class="n"><span class="pre">aes_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_update_aad</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_aes_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">aad</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">aad_len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421cryptx_aes_update_aadP14cryptx_aes_ctxPKv6size_t" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Updates the cipher context for given AAD (Additional Authenticated Data). </p>
 <p>AAD is data that is only authenticated, not encrypted. </p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This function can only be called between cipher initialization and encryption/decryption. Attempting to call this function at any other time will return <strong>AES_INVALID_OPERATION</strong>. </p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -367,10 +343,6 @@
 <dt class="sig sig-object cpp" id="_CPPv417cryptx_aes_digestP14cryptx_aes_ctxP7uint8_t">
 <span id="_CPPv317cryptx_aes_digestP14cryptx_aes_ctxP7uint8_t"></span><span id="_CPPv217cryptx_aes_digestP14cryptx_aes_ctxP7uint8_t"></span><span id="cryptx_aes_digest__cryptx_aes_ctxP.uint8_tP"></span><span class="target" id="cryptx_8h_1a7aaae6b33efe97c579d24729680eda79"></span><a class="reference internal" href="#_CPPv411aes_error_t" title="aes_error_t"><span class="n"><span class="pre">aes_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_digest</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_aes_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">digest</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417cryptx_aes_digestP14cryptx_aes_ctxP7uint8_t" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Returns the current authentication tag for data parsed so far. </p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p><strong>Nonce-misuse vulnerability/forbidden attack</strong>: GCM is vulnerable to key discovery if the same nonce is reused to encrypt or decrypt multiple messages. Once you generate a digest for data processed by the cipher, cycle the nonce by generating a new one and calling <strong>cryptx_aes_init</strong> again with the new nonce. To ensure this is done properly, the context is marked invalid once this function is called. </p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -388,10 +360,6 @@
 <dt class="sig sig-object cpp" id="_CPPv417cryptx_aes_verifyPK14cryptx_aes_ctxPKv6size_tPKv6size_tP7uint8_t">
 <span id="_CPPv317cryptx_aes_verifyPK14cryptx_aes_ctxPKv6size_tPKv6size_tP7uint8_t"></span><span id="_CPPv217cryptx_aes_verifyPK14cryptx_aes_ctxPKv6size_tPKv6size_tP7uint8_t"></span><span id="cryptx_aes_verify__cryptx_aes_ctxCP.voidCP.s.voidCP.s.uint8_tP"></span><span class="target" id="cryptx_8h_1a69437bd1ca1d4fe40dc50d91da7c1be4"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_aes_verify</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_aes_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">aad</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">aad_len</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ciphertext</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">ciphertext_len</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">tag</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417cryptx_aes_verifyPK14cryptx_aes_ctxPKv6size_tPKv6size_tP7uint8_t" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Parses the specified AAD and ciphertext and then compares the output auth tag to an expected auth tag. </p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If this function returns FALSE, do not decrypt the message. </p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -409,24 +377,84 @@
 </dl>
 </dd></dl>
 
+<p>There are also some enforced constraints on when these functions can be called, intended to prevent undefined behavior as well as to close a particularly nasty tag-forgery vulnerability <a class="footnote-reference brackets" href="#f1" id="id1">1</a> in GCM.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 27%" />
+<col style="width: 24%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head" colspan="4"><p>GCM FUNCTION VALIDITY CONTROL FLOW</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>After Function Call</p></th>
+<th class="head"><p>cryptx_aes_update_aad</p></th>
+<th class="head"><p>cryptx_aes_encrypt</p></th>
+<th class="head"><p>cryptx_aes_digest</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p>cryptx_aes_init</p></td>
+<td><p>VALID</p></td>
+<td><p>VALID</p></td>
+<td><p>VALID</p></td>
+</tr>
+<tr class="row-even"><td><p>cryptx_aes_update_aad</p></td>
+<td><p>VALID</p></td>
+<td><p>VALID</p></td>
+<td><p>VALID</p></td>
+</tr>
+<tr class="row-odd"><td><p>cryptx_aes_encrypt</p></td>
+<td><p>INVALID</p></td>
+<td><p>VALID</p></td>
+<td><p>VALID</p></td>
+</tr>
+<tr class="row-even"><td><p>cryptx_aes_digest</p></td>
+<td><p>INVALID</p></td>
+<td><p>INVALID</p></td>
+<td><p>INVALID</p></td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="section" id="additional-notes">
-<h2>Additional Notes<a class="headerlink" href="#additional-notes" title="Permalink to this headline"></a></h2>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<ul class="simple">
-<li><p>Cycle your AES key after encrypting 2^64 blocks of data with the same key. If you ever reach this on a freaking calculator I will literally send you some kind of metal.</p></li>
+<div class="section" id="initialization-vector-requirements">
+<span id="aes-iv-req"></span><h2>Initialization Vector Requirements<a class="headerlink" href="#initialization-vector-requirements" title="Permalink to this headline"></a></h2>
+<ul>
+<li><p><strong>CBC Mode</strong></p>
+<div class="line-block">
+<div class="line">Requirement: Initialization vector must be securely-random.</div>
+<div class="line">Non-Compliance Effect: Vulnerability to chosen plaintext attack <a class="footnote-reference brackets" href="#f2" id="id2">2</a>.</div>
+<div class="line">Assurance: Generate a random IV with <code class="code docutils literal notranslate"><span class="pre">cryptx_csrand_fill</span></code> for use with this mode.</div>
+</div>
+</li>
+<li><p><strong>CTR &amp; GCM Modes</strong></p>
+<div class="line-block">
+<div class="line">Requirement: Counter portion of initialization vector must be unique (not re-used).</div>
+<div class="line">Non-Compliance Effect: Vulnerability to many-time pad <a class="footnote-reference brackets" href="#f3" id="id3">3</a>.</div>
+<div class="line">Additional Options: A fixed nonce may preceed the counter portion of the IV. This should be securely random. Default configuration for CTR mode is an 8 byte nonce followed by an 8 byte counter, though this can be configured during cipher initialization.</div>
+<div class="line">Assurance: Fill the nonce portion of your IV like you would with CBC mode. This may be repeated for the counter portion or counter may start at 0.</div>
+</div>
+</li>
 </ul>
-<ul class="simple">
+</div>
+<div class="section" id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this headline"></a></h2>
+<ol class="arabic simple">
+<li><p>The initialization vector used for the cipher state (or message for GCM mode) may be communicated to the other party as the first block of the ciphertext.</p></li>
+<li><p>The AES cipher begins to leak information after a certain number of blocks have been encrypted under a single key. This number differs by cipher mode but can range anywhere from <code class="code docutils literal notranslate"><span class="pre">2</span> <span class="pre">^</span> <span class="pre">48</span></code> to <code class="code docutils literal notranslate"><span class="pre">2^64</span></code> blocks of data. This is a stupidly large amount of data that you will never realistically reach.</p></li>
 <li><p>CBC and CTR modes by themselves ensure confidentiality but do not provide any assurances of message integrity or authenticity. If you need a truly secure construction, use GCM mode or append a keyed hash (HMAC) to the encrypted message.</p></li>
-</ul>
-<ul class="simple">
-<li><p><strong>GCM-Specific</strong>: The context maintains flags to determine what functions are valid to call for the current state. When the context is first initialized any of the other AES functions are valid. This can be <em>cryptx_aes_update_aad</em> or <em>cryptx_aes_encrypt</em>. However, once the first call to encrypt occurs, you can no longer call update_aad. Once you call <em>cryptx_aes_digest</em> to return an authentication tag for the message, the context can no longer be used, period. This is an implementation detail meant to prevent the <em>GCM nonce-misuse/forbidden attack</em> vulnerability <a class="reference internal" href="#cit1" id="id1"><span>[CIT1]</span></a>. You will need to initialize the context (you can reuse the existing context) again with the same key but use a different IV.</p></li>
-</ul>
-</div>
-<dl class="citation">
-<dt class="label" id="cit1"><span class="brackets"><a class="fn-backref" href="#id1">CIT1</a></span></dt>
-<dd><p><a class="reference external" href="https://csrc.nist.gov/csrc/media/Projects/crypto-publication-review-project/documents/initial-comments/sp800-38d-initial-public-comments-2021.pdf">https://csrc.nist.gov/csrc/media/Projects/crypto-publication-review-project/documents/initial-comments/sp800-38d-initial-public-comments-2021.pdf</a>, Page 2</p>
+</ol>
+<hr class="docutils" />
+<dl class="footnote brackets">
+<dt class="label" id="f1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p><strong>GCM Nonce-Misuse/Forbidden Attack Vulnerability</strong>. It involves the leaking of bits of the hash subkey used to generate the authentication tag if the same initialization vector is used to authenticate multiple messages. This allows an attacker to embed a valid signature for an altered message. To resolve this vulnerability within this GCM implementation call <code class="code docutils literal notranslate"><span class="pre">cryptx_aes_init</span></code> again with a new initialization vector after you return a digest for a data stream. For more details on this vulnerability <a class="reference external" href="https://csrc.nist.gov/csrc/media/Projects/crypto-publication-review-project/documents/initial-comments/sp800-38d-initial-public-comments-2021.pdf">click here</a>.</p>
+</dd>
+<dt class="label" id="f2"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p><strong>Chosen Plaintext Attack</strong>. An attack against a cryptosystem involving requesting multiple encryptions while controlling bits of the input plaintext. This allows an attacker to reveal bits of the encryption secret. To resolve this vulnerability the output of an encryption algorithm needs to be securely random. See <a class="reference internal" href="#aes-iv-req"><span class="std std-ref">Initialization Vector Requirements</span></a>.</p>
+</dd>
+<dt class="label" id="f3"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dd><p><strong>Many-Time Pad</strong>. This vulnerability derived from the <strong>One-Time Pad</strong> algorithm which was one of the first encryption algorithms developed. It involved XOR’ing a message with a key of equal length and had perfect secrecy. Issues arose with this algorithm if the key began to repeat, which would reveal the plaintext given only a few ciphertexts. AES CTR and GCM modes use the counter block within the IV to generate a one-time pad and therefore are subject to this vulnerability. To resolve this vulnerability ensure that you do not allow your counter block to repeat under the same key.</p>
 </dd>
 </dl>
 </div>
