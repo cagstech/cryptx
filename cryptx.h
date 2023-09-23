@@ -451,6 +451,7 @@ typedef enum _ec_error {
  * @param privkey	Pointer to EC private key buffer.
  * @param pubkey	Pointer to EC public key buffer.
  * @returns A random 29-byte EC private key and associated public key.
+ * @returns A response code indicating the return status of this function.
  */
 ec_error_t cryptx_ec_keygen(uint8_t *privkey, uint8_t *pubkey);
 
@@ -459,6 +460,8 @@ ec_error_t cryptx_ec_keygen(uint8_t *privkey, uint8_t *pubkey);
  * @param privkey	Pointer to local private key.
  * @param rpubkey	Pointer to remote public key.
  * @param secret	Pointer to buffer to write shared secret to.
+ * @returns An @b ECDH secret for use with a symmetric encryption algorithm.
+ * @returns A response code indicating the return status of this function.
  */
 ec_error_t cryptx_ec_secret(const uint8_t *privkey, const uint8_t *rpubkey, uint8_t *secret);
 
