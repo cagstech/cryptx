@@ -90,9 +90,9 @@
     <member refid="cryptx_8h_1a7bffe1d673fd05c8e538d6169b12509f" kind="define"><name>cryptx_aes_gcm_flagset</name></member>
     <member refid="cryptx_8h_1adf4062c77f37927bc0178872056602ff" kind="define"><name>cryptx_aes_get_ciphertext_len</name></member>
     <member refid="cryptx_8h_1a265dcd336b31e2b95870d864c85cee2a" kind="define"><name>CRYPTX_RSA_MODULUS_MAX</name></member>
-    <member refid="cryptx_8h_1a26e233163ef752cc08d3f3499007369a" kind="define"><name>CRYPTX_EC_PRIVKEY_LEN</name></member>
-    <member refid="cryptx_8h_1a9fb63bb764b8654fc273535be6c4e3a3" kind="define"><name>CRYPTX_EC_PUBKEY_LEN</name></member>
-    <member refid="cryptx_8h_1a3afc412d9c56cd1f46407fe280b92156" kind="define"><name>CRYPTX_EC_SECRET_LEN</name></member>
+    <member refid="cryptx_8h_1aba6c506b34f4d5e1ab991512f4368b8e" kind="define"><name>CRYPTX_KEYLEN_EC_PRIVKEY</name></member>
+    <member refid="cryptx_8h_1a46079c346c2ba0f2145e084a78c2cdab" kind="define"><name>CRYPTX_KEYLEN_EC_PUBKEY</name></member>
+    <member refid="cryptx_8h_1afdb20067c07b76dac6331ed30d6cd1d6" kind="define"><name>CRYPTX_KEYLEN_EC_SECRET</name></member>
     <member refid="cryptx_8h_1a13585a6206e220218a8f379327b04433" kind="define"><name>cryptx_asn1_get_tag</name></member>
     <member refid="cryptx_8h_1a5af192045bb48e03f788962f259a2a7e" kind="define"><name>cryptx_asn1_get_class</name></member>
     <member refid="cryptx_8h_1a3c8b39f5fb3ad1d8d138b9791b18f01e" kind="define"><name>cryptx_asn1_get_form</name></member>

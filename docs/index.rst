@@ -99,6 +99,8 @@ Check out the :ref:`analysis` for more technical implementation details includin
   modules/hash
   modules/hmac
   modules/aes
+  modules/rsa
+  modules/ec
   
   static/analysis
   static/references

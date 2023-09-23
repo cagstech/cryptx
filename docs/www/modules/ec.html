@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elliptic Curves &mdash; CryptX  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/proof.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Analysis &amp; Overview" href="../static/analysis.html" />
+    <link rel="prev" title="RSA" href="rsa.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> CryptX
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="csrand.html">Secure Random Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bytes.html">Bytearray Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hash.html">Secure Hashing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hmac.html">Hash-Based MAC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aes.html">Advanced Encryption Standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rsa.html">RSA</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Elliptic Curves</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#macros">Macros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#response-codes">Response Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../static/analysis.html">Analysis &amp; Overview</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CryptX</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Elliptic Curves</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="elliptic-curves">
+<span id="ec"></span><h1>Elliptic Curves<a class="headerlink" href="#elliptic-curves" title="Permalink to this headline"></a></h1>
+<p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides elliptic curve cryptography&mdash;generation of public/private keypairs, the diffie-hellman key exchange protocol, and digital signature algorithm.</p><div class="section" id="macros">
+<h2>Macros<a class="headerlink" href="#macros" title="Permalink to this headline"></a></h2>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_KEYLEN_EC_PRIVKEY">
+<span class="target" id="cryptx_8h_1aba6c506b34f4d5e1ab991512f4368b8e"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_KEYLEN_EC_PRIVKEY</span></span></span><a class="headerlink" href="#c.CRYPTX_KEYLEN_EC_PRIVKEY" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines the byte length of a private key used by this module. </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_KEYLEN_EC_PUBKEY">
+<span class="target" id="cryptx_8h_1a46079c346c2ba0f2145e084a78c2cdab"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_KEYLEN_EC_PUBKEY</span></span></span><a class="headerlink" href="#c.CRYPTX_KEYLEN_EC_PUBKEY" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines the byte length of a public key used by this module. </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_KEYLEN_EC_SECRET">
+<span class="target" id="cryptx_8h_1afdb20067c07b76dac6331ed30d6cd1d6"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_KEYLEN_EC_SECRET</span></span></span><a class="headerlink" href="#c.CRYPTX_KEYLEN_EC_SECRET" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines the byte length of a secret generated by this module. </p>
+</dd></dl>
+
+</div>
+<div class="section" id="response-codes">
+<h2>Response Codes<a class="headerlink" href="#response-codes" title="Permalink to this headline"></a></h2>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv410ec_error_t">
+<span id="_CPPv310ec_error_t"></span><span id="_CPPv210ec_error_t"></span><span class="target" id="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ec_error_t</span></span></span><a class="headerlink" href="#_CPPv410ec_error_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines possible response codes from calls to the ECDH API. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10ec_error_t5EC_OKE">
+<span id="_CPPv3N10ec_error_t5EC_OKE"></span><span id="_CPPv2N10ec_error_t5EC_OKE"></span><span class="target" id="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90ae92ae69b454b0311041616e4be38d26e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">EC_OK</span></span></span><a class="headerlink" href="#_CPPv4N10ec_error_t5EC_OKE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10ec_error_t14EC_INVALID_ARGE">
+<span id="_CPPv3N10ec_error_t14EC_INVALID_ARGE"></span><span id="_CPPv2N10ec_error_t14EC_INVALID_ARGE"></span><span class="target" id="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90a51c1b8f170116b8aa0a75c6ad6fd3d0d"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">EC_INVALID_ARG</span></span></span><a class="headerlink" href="#_CPPv4N10ec_error_t14EC_INVALID_ARGE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10ec_error_t18EC_PRIVKEY_INVALIDE">
+<span id="_CPPv3N10ec_error_t18EC_PRIVKEY_INVALIDE"></span><span id="_CPPv2N10ec_error_t18EC_PRIVKEY_INVALIDE"></span><span class="target" id="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90a77a3ce6d10fe286a0f7789b15c4ed790"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">EC_PRIVKEY_INVALID</span></span></span><a class="headerlink" href="#_CPPv4N10ec_error_t18EC_PRIVKEY_INVALIDE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10ec_error_t18EC_RPUBKEY_INVALIDE">
+<span id="_CPPv3N10ec_error_t18EC_RPUBKEY_INVALIDE"></span><span id="_CPPv2N10ec_error_t18EC_RPUBKEY_INVALIDE"></span><span class="target" id="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90ae8066072efe056458722cc53a743966a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">EC_RPUBKEY_INVALID</span></span></span><a class="headerlink" href="#_CPPv4N10ec_error_t18EC_RPUBKEY_INVALIDE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h2>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416cryptx_ec_keygenP7uint8_tP7uint8_t">
+<span id="_CPPv316cryptx_ec_keygenP7uint8_tP7uint8_t"></span><span id="_CPPv216cryptx_ec_keygenP7uint8_tP7uint8_t"></span><span id="cryptx_ec_keygen__uint8_tP.uint8_tP"></span><span class="target" id="cryptx_8h_1ace17d744e36edae96bea85ccfa7c18f9"></span><a class="reference internal" href="#_CPPv410ec_error_t" title="ec_error_t"><span class="n"><span class="pre">ec_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_ec_keygen</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">privkey</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pubkey</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416cryptx_ec_keygenP7uint8_tP7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Generates a pair of public/private keys over SECT233k1. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>privkey</strong> – Pointer to EC private key buffer. </p></li>
+<li><p><strong>pubkey</strong> – Pointer to EC public key buffer. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A random 29-byte EC private key and associated public key. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416cryptx_ec_secretPK7uint8_tPK7uint8_tP7uint8_t">
+<span id="_CPPv316cryptx_ec_secretPK7uint8_tPK7uint8_tP7uint8_t"></span><span id="_CPPv216cryptx_ec_secretPK7uint8_tPK7uint8_tP7uint8_t"></span><span id="cryptx_ec_secret__uint8_tCP.uint8_tCP.uint8_tP"></span><span class="target" id="cryptx_8h_1a4057940333f4f8f56b8ccf1d24db21ea"></span><a class="reference internal" href="#_CPPv410ec_error_t" title="ec_error_t"><span class="n"><span class="pre">ec_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_ec_secret</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">privkey</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">rpubkey</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">secret</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416cryptx_ec_secretPK7uint8_tPK7uint8_tP7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Computes a secret given a private key and remote public key using the elliptic curve variant of the <strong>diffie-hellman</strong> algorithm. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>privkey</strong> – Pointer to local private key. </p></li>
+<li><p><strong>rpubkey</strong> – Pointer to remote public key. </p></li>
+<li><p><strong>secret</strong> – Pointer to buffer to write shared secret to. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="rsa.html" class="btn btn-neutral float-left" title="RSA" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../static/analysis.html" class="btn btn-neutral float-right" title="Analysis &amp; Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

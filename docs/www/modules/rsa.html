@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>function documentation: RSA &mdash; CryptX  documentation</title>
+  <title>RSA &mdash; CryptX  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/proof.css" type="text/css" />
@@ -17,7 +17,9 @@
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Elliptic Curves" href="ec.html" />
+    <link rel="prev" title="Advanced Encryption Standard" href="aes.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -35,12 +37,20 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="csrand.html">Secure Random Number Generator</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bytes.html">Bytearray Operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hash.html">Secure Hashing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hmac.html">Hash-Based MAC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="aes.html">Advanced Encryption Standard</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">RSA</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#macros">Macros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#response-codes">Response Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ec.html">Elliptic Curves</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../static/analysis.html">Analysis &amp; Overview</a></li>
 </ul>
 
@@ -58,7 +68,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>function documentation: RSA</li>
+      <li>RSA</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -67,14 +77,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="function-documentation-rsa">
-<span id="rsa"></span><h1>function documentation: RSA<a class="headerlink" href="#function-documentation-rsa" title="Permalink to this headline"></a></h1>
+  <div class="section" id="rsa">
+<span id="id1"></span><h1>RSA<a class="headerlink" href="#rsa" title="Permalink to this headline"></a></h1>
+<p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides an encryption-only implemention of the Rivest-Shamir Adleman (RSA) public key encrytion system. RSA is still widely used at the start of an encrypted connection to negotiate a secret for a faster encryption algorithm like AES.</p><div class="section" id="macros">
+<h2>Macros<a class="headerlink" href="#macros" title="Permalink to this headline"></a></h2>
 <dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.CRYPTX_RSA_MODULUS_MAX">
 <span class="target" id="cryptx_8h_1a265dcd336b31e2b95870d864c85cee2a"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_RSA_MODULUS_MAX</span></span></span><a class="headerlink" href="#c.CRYPTX_RSA_MODULUS_MAX" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Defines the maximum byte length of an RSA public modulus supported by this library. </p>
 </dd></dl>
 
+</div>
+<div class="section" id="response-codes">
+<h2>Response Codes<a class="headerlink" href="#response-codes" title="Permalink to this headline"></a></h2>
 <dl class="cpp enum">
 <dt class="sig sig-object cpp" id="_CPPv411rsa_error_t">
 <span id="_CPPv311rsa_error_t"></span><span id="_CPPv211rsa_error_t"></span><span class="target" id="cryptx_8h_1a0486449f609d0e485bad091a671d9294"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rsa_error_t</span></span></span><a class="headerlink" href="#_CPPv411rsa_error_t" title="Permalink to this definition"></a><br /></dt>
@@ -112,18 +127,13 @@
 
 </dd></dl>
 
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h2>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv418cryptx_rsa_encryptPKv6size_tPKv6size_tPv7uint8_t">
 <span id="_CPPv318cryptx_rsa_encryptPKv6size_tPKv6size_tPv7uint8_t"></span><span id="_CPPv218cryptx_rsa_encryptPKv6size_tPKv6size_tPv7uint8_t"></span><span id="cryptx_rsa_encrypt__voidCP.s.voidCP.s.voidP.uint8_t"></span><span class="target" id="cryptx_8h_1aa4f5ae1eb3d9636c20dec64503a4896b"></span><a class="reference internal" href="#_CPPv411rsa_error_t" title="rsa_error_t"><span class="n"><span class="pre">rsa_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_rsa_encrypt</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">msg</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">msglen</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pubkey</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">keylen</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ciphertext</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">oaep_hash_alg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_rsa_encryptPKv6size_tPKv6size_tPv7uint8_t" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Encrypts a message using the given RSA public key. </p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><strong>ciphertext</strong> should be at least <strong>msglen</strong> bytes large. </p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>OAEP encoding is applied to the message as part of the encryption. </p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -142,11 +152,22 @@
 </dd></dl>
 
 </div>
+<div class="section" id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this headline"></a></h2>
+<ol class="arabic simple">
+<li><p>This implementation automatically applies Optimal Asymmetric Encryption Padding (OAEP) v2.2 encoding to the message. The length of the plaintext message to encrypt cannot exceed <code class="code docutils literal notranslate"><span class="pre">len(public_modulus)</span> <span class="pre">-</span> <span class="pre">(2</span> <span class="pre">*</span> <span class="pre">chosen_hash_digestlen)</span> <span class="pre">-</span> <span class="pre">2</span></code>.</p></li>
+<li><p>The length of the ciphertext returned is the same length as the public modulus used for encryption. This means you can allocate/reserve a buffer of that size, or just use the macro defined above for the maximum length.</p></li>
+</ol>
+</div>
+</div>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="aes.html" class="btn btn-neutral float-left" title="Advanced Encryption Standard" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ec.html" class="btn btn-neutral float-right" title="Elliptic Curves" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

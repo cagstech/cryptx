@@ -41,6 +41,8 @@
 <li class="toctree-l1"><a class="reference internal" href="modules/hash.html">Secure Hashing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/hmac.html">Hash-Based MAC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/aes.html">Advanced Encryption Standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/rsa.html">RSA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/ec.html">Elliptic Curves</a></li>
 <li class="toctree-l1"><a class="reference internal" href="static/analysis.html">Analysis &amp; Overview</a></li>
 </ul>
 
@@ -73,6 +75,7 @@
 <div class="genindex-jumpbox">
  <a href="#A"><strong>A</strong></a>
  | <a href="#C"><strong>C</strong></a>
+ | <a href="#E"><strong>E</strong></a>
  | <a href="#R"><strong>R</strong></a>
  
 </div>
@@ -215,12 +218,12 @@
 </li>
       <li><a href="modules/encoding.html#_CPPv4N16CRYPTX_ASN1_TAGS13ASN1_OBJECTIDE">CRYPTX_ASN1_TAGS::ASN1_OBJECTID (C++ enumerator)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/encoding.html#_CPPv4N16CRYPTX_ASN1_TAGS16ASN1_OCTETSTRINGE">CRYPTX_ASN1_TAGS::ASN1_OCTETSTRING (C++ enumerator)</a>
 </li>
       <li><a href="modules/encoding.html#_CPPv4N16CRYPTX_ASN1_TAGS20ASN1_PRINTABLESTRINGE">CRYPTX_ASN1_TAGS::ASN1_PRINTABLESTRING (C++ enumerator)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/encoding.html#_CPPv4N16CRYPTX_ASN1_TAGS9ASN1_REALE">CRYPTX_ASN1_TAGS::ASN1_REAL (C++ enumerator)</a>
 </li>
       <li><a href="modules/encoding.html#_CPPv4N16CRYPTX_ASN1_TAGS16ASN1_RELATIVEOIDE">CRYPTX_ASN1_TAGS::ASN1_RELATIVEOID (C++ enumerator)</a>
@@ -269,7 +272,9 @@
 </li>
       <li><a href="modules/hash.html#c.CRYPTX_DIGESTLEN_SHA256">CRYPTX_DIGESTLEN_SHA256 (C macro)</a>, <a href="modules/hmac.html#c.CRYPTX_DIGESTLEN_SHA256">[1]</a>
 </li>
-      <li><a href="modules/ecc.html#_CPPv416cryptx_ec_keygenP7uint8_tP7uint8_t">cryptx_ec_keygen (C++ function)</a>
+      <li><a href="modules/ec.html#_CPPv416cryptx_ec_keygenP7uint8_tP7uint8_t">cryptx_ec_keygen (C++ function)</a>
+</li>
+      <li><a href="modules/ec.html#_CPPv416cryptx_ec_secretPK7uint8_tPK7uint8_tP7uint8_t">cryptx_ec_secret (C++ function)</a>
 </li>
       <li><a href="modules/hazardous.html#_CPPv416cryptx_ecc_point">cryptx_ecc_point (C++ struct)</a>
 </li>
@@ -317,9 +322,33 @@
 </li>
       <li><a href="modules/aes.html#c.CRYPTX_KEYLEN_AES256">CRYPTX_KEYLEN_AES256 (C macro)</a>
 </li>
+      <li><a href="modules/ec.html#c.CRYPTX_KEYLEN_EC_PRIVKEY">CRYPTX_KEYLEN_EC_PRIVKEY (C macro)</a>
+</li>
+      <li><a href="modules/ec.html#c.CRYPTX_KEYLEN_EC_PUBKEY">CRYPTX_KEYLEN_EC_PUBKEY (C macro)</a>
+</li>
+      <li><a href="modules/ec.html#c.CRYPTX_KEYLEN_EC_SECRET">CRYPTX_KEYLEN_EC_SECRET (C macro)</a>
+</li>
       <li><a href="modules/rsa.html#_CPPv418cryptx_rsa_encryptPKv6size_tPKv6size_tPv7uint8_t">cryptx_rsa_encrypt (C++ function)</a>
 </li>
       <li><a href="modules/rsa.html#c.CRYPTX_RSA_MODULUS_MAX">CRYPTX_RSA_MODULUS_MAX (C macro)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/ec.html#_CPPv410ec_error_t">ec_error_t (C++ enum)</a>
+</li>
+      <li><a href="modules/ec.html#_CPPv4N10ec_error_t14EC_INVALID_ARGE">ec_error_t::EC_INVALID_ARG (C++ enumerator)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/ec.html#_CPPv4N10ec_error_t5EC_OKE">ec_error_t::EC_OK (C++ enumerator)</a>
+</li>
+      <li><a href="modules/ec.html#_CPPv4N10ec_error_t18EC_PRIVKEY_INVALIDE">ec_error_t::EC_PRIVKEY_INVALID (C++ enumerator)</a>
+</li>
+      <li><a href="modules/ec.html#_CPPv4N10ec_error_t18EC_RPUBKEY_INVALIDE">ec_error_t::EC_RPUBKEY_INVALID (C++ enumerator)</a>
 </li>
   </ul></td>
 </tr></table>
