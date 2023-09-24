@@ -104,7 +104,7 @@
 <dl class="cpp enum">
 <dt class="sig sig-object cpp" id="_CPPv410ec_error_t">
 <span id="_CPPv310ec_error_t"></span><span id="_CPPv210ec_error_t"></span><span class="target" id="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ec_error_t</span></span></span><a class="headerlink" href="#_CPPv410ec_error_t" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Defines possible response codes from calls to the ECDH API. </p>
+<dd><p>Defines possible response codes from calls to the EC API. </p>
 <p><em>Values:</em></p>
 <dl class="cpp enumerator">
 <dt class="sig sig-object cpp" id="_CPPv4N10ec_error_t5EC_OKE">
@@ -135,6 +135,7 @@
 <dt class="sig sig-object cpp" id="_CPPv416cryptx_ec_keygenP7uint8_tP7uint8_t">
 <span id="_CPPv316cryptx_ec_keygenP7uint8_tP7uint8_t"></span><span id="_CPPv216cryptx_ec_keygenP7uint8_tP7uint8_t"></span><span id="cryptx_ec_keygen__uint8_tP.uint8_tP"></span><span class="target" id="cryptx_8h_1ace17d744e36edae96bea85ccfa7c18f9"></span><a class="reference internal" href="#_CPPv410ec_error_t" title="ec_error_t"><span class="n"><span class="pre">ec_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_ec_keygen</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">privkey</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pubkey</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416cryptx_ec_keygenP7uint8_tP7uint8_t" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Generates a pair of public/private keys over SECT233k1. </p>
+<p>These keys are valid for ECDH and ECDSA. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -154,7 +155,7 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv416cryptx_ec_secretPK7uint8_tPK7uint8_tP7uint8_t">
 <span id="_CPPv316cryptx_ec_secretPK7uint8_tPK7uint8_tP7uint8_t"></span><span id="_CPPv216cryptx_ec_secretPK7uint8_tPK7uint8_tP7uint8_t"></span><span id="cryptx_ec_secret__uint8_tCP.uint8_tCP.uint8_tP"></span><span class="target" id="cryptx_8h_1a4057940333f4f8f56b8ccf1d24db21ea"></span><a class="reference internal" href="#_CPPv410ec_error_t" title="ec_error_t"><span class="n"><span class="pre">ec_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_ec_secret</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">privkey</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">rpubkey</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">secret</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416cryptx_ec_secretPK7uint8_tPK7uint8_tP7uint8_t" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Computes a secret given a private key and remote public key using the elliptic curve variant of the <strong>diffie-hellman</strong> algorithm. </p>
+<dd><p>Computes a secret given a private key and remote public key using the elliptic curve variant of the <strong>diffie-hellman</strong> key exchange algorithm (ECDH). </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -172,6 +173,25 @@
 </dl>
 </dd></dl>
 
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">_ec_keys</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">privkey</span><span class="p">[</span><span class="n">CRYPTX_KEYLEN_EC_PRIVKEY</span><span class="p">];</span>
+<span class="w">  </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">pubkey</span><span class="p">[</span><span class="n">CRYPTX_KEYLEN_EC_PUBKEY</span><span class="p">];</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">_ec_keys</span><span class="w"> </span><span class="n">ec_keys</span><span class="p">;</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">secret</span><span class="p">[</span><span class="n">CRYPTX_KEYLEN_EC_SECRET</span><span class="p">],</span>
+<span class="w">        </span><span class="n">rpubkey</span><span class="p">[</span><span class="n">CRYPTX_KEYLEN_EC_PUBKEY</span><span class="p">];</span>
+
+<span class="k">if</span><span class="p">(</span><span class="n">cryptx_ec_keygen</span><span class="p">(</span><span class="n">ec_keys</span><span class="p">.</span><span class="n">privkey</span><span class="p">,</span><span class="w"> </span><span class="n">ec_keys</span><span class="p">.</span><span class="n">pubkey</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">EC_OK</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="n">network_send</span><span class="p">(</span><span class="n">ec_keys</span><span class="p">.</span><span class="n">pubkey</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">ec_keys</span><span class="p">.</span><span class="n">pubkey</span><span class="p">));</span>
+
+<span class="c1">// await remote public key</span>
+<span class="n">network_recv</span><span class="p">(</span><span class="n">rpubkey</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+
+<span class="k">if</span><span class="p">(</span><span class="n">cryptx_ec_secret</span><span class="p">(</span><span class="n">ec_keys</span><span class="p">.</span><span class="n">privkey</span><span class="p">,</span><span class="w"> </span><span class="n">rpubkey</span><span class="p">,</span><span class="w"> </span><span class="n">secret</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">EC_OK</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="c1">// secret should now be the same for both parties</span>
+</pre></div>
+</div>
 </div>
 </div>
 

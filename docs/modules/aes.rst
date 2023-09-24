@@ -68,6 +68,29 @@ ____________
 .. doxygenfunction:: cryptx_aes_decrypt
 	:project: CryptX
  
+.. code-block:: c
+
+  cryptx_aes_ctx aes;
+  char* msg = "The fox jumped over the dog!";
+  uint8_t aes_key[CRYPTX_KEYLEN_AES256],
+          aes_iv[CRYPTX_BLOCKSIZE_AES];
+          
+  // generate random key
+  if(!cryptx_csrand_fill(aes_key, sizeof(aes_key))) return;
+  // generate random iv
+  if(!cryptx_csrand_fill(aes_iv, sizeof(aes_iv))) return;
+  
+  if(cryptx_aes_init(&aes, aes_key, sizeof(aes_key),
+                  aes_iv, sizeof(aes_iv),
+                  CRYPTX_AES_GCM, CRYPTX_AES_GCM_DEFAULTS) != AES_OK)
+    return;
+    
+  size_t encr_len = strlen(msg)+1
+  cryptx_aes_encrypt(&aes, msg, encr_len, msg);
+  
+  network_send(aes_iv, CRYPTX_BLOCKSIZE_AES);
+  network_send(msg, encr_len);
+
 ----
 	
 The following functions are only valid for Galois Counter Mode (GCM). Attempting to use them for any other cipher mode will return **AES_INVALID_CIPHERMODE**.
@@ -80,6 +103,34 @@ The following functions are only valid for Galois Counter Mode (GCM). Attempting
 
 .. doxygenfunction:: cryptx_aes_verify
 	:project: CryptX
+ 
+.. code-block:: c
+
+  cryptx_aes_ctx aes;
+  char* msg = "The fox jumped over the dog!";
+  char* header = "A header string.";
+  uint8_t aes_key[CRYPTX_KEYLEN_AES256],
+          aes_iv[CRYPTX_BLOCKSIZE_AES],
+          auth_tag[CRYPTX_BLOCKSIZE_AES];
+          
+  // generate random key
+  if(!cryptx_csrand_fill(aes_key, sizeof(aes_key))) return;
+  // generate random iv
+  if(!cryptx_csrand_fill(aes_iv, sizeof(aes_iv))) return;
+  
+  if(cryptx_aes_init(&aes, aes_key, sizeof(aes_key),
+                  aes_iv, sizeof(aes_iv),
+                  CRYPTX_AES_GCM, CRYPTX_AES_GCM_DEFAULTS) != AES_OK)
+    return;
+    
+  size_t encr_len = strlen(msg)+1
+  cryptx_aes_update_aad(&aes, header, strlen(header));
+  cryptx_aes_encrypt(&aes, msg, encr_len, msg);
+  cryptx_aes_digest(&aes, auth_tag);
+  
+  network_send(aes_iv, CRYPTX_BLOCKSIZE_AES);
+  network_send(msg, encr_len);
+  network_send(auth_tag, CRYPTX_BLOCKSIZE_AES);
 
 There are also some enforced constraints on when these functions can be called, intended to prevent undefined behavior as well as to close a particularly nasty tag-forgery vulnerability [#f1]_ in GCM.
 

@@ -151,6 +151,24 @@
 </dl>
 </dd></dl>
 
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// client awaits RSA key from server</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">rsa_pubkey</span><span class="p">[</span><span class="n">CRYPTX_RSA_MODULUS_MAX</span><span class="p">];</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="n">rsa_len</span><span class="p">;</span>
+<span class="n">network_recv</span><span class="p">(</span><span class="n">rsa_pubkey</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rsa_len</span><span class="p">);</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">rsa_ciphertext</span><span class="p">[</span><span class="n">rsa_len</span><span class="p">];</span>
+
+<span class="c1">// use RSA for secret encryption</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">aes_key</span><span class="p">[</span><span class="n">CRYPTX_KEYLEN_AES256</span><span class="p">];</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">cryptx_csrand_fill</span><span class="p">(</span><span class="n">aes_key</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">aes_key</span><span class="p">))))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+
+<span class="k">if</span><span class="p">(</span><span class="n">cryptx_rsa_encrypt</span><span class="p">(</span><span class="n">aes_key</span><span class="p">,</span><span class="w"> </span><span class="n">CRYPTX_KEYLEN_AES256</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">rsa_pubkey</span><span class="p">,</span><span class="w"> </span><span class="n">rsa_len</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">rsa_ciphertext</span><span class="p">,</span><span class="w"> </span><span class="n">SHA256</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">AES_OK</span><span class="p">)</span>
+<span class="w">  </span><span class="k">return</span><span class="p">;</span>
+
+<span class="n">network_send</span><span class="p">(</span><span class="n">rsa_ciphertext</span><span class="p">,</span><span class="w"> </span><span class="n">rsa_len</span><span class="p">);</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="notes">
 <h2>Notes<a class="headerlink" href="#notes" title="Permalink to this headline"></a></h2>

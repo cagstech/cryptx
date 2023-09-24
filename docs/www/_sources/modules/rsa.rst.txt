@@ -24,6 +24,25 @@ ____________
 
 .. doxygenfunction:: cryptx_rsa_encrypt
 	:project: CryptX
+ 
+.. code-block:: c
+
+  // client awaits RSA key from server
+  uint8_t rsa_pubkey[CRYPTX_RSA_MODULUS_MAX];
+  size_t rsa_len;
+  network_recv(rsa_pubkey, &rsa_len);
+  uint8_t rsa_ciphertext[rsa_len];
+  
+  // use RSA for secret encryption
+  uint8_t aes_key[CRYPTX_KEYLEN_AES256];
+  if(!cryptx_csrand_fill(aes_key, sizeof(aes_key)))) return;
+  
+  if(cryptx_rsa_encrypt(aes_key, CRYPTX_KEYLEN_AES256,
+                        rsa_pubkey, rsa_len,
+                        rsa_ciphertext, SHA256) != AES_OK)
+    return;
+    
+  network_send(rsa_ciphertext, rsa_len);
 
 Notes
 ______

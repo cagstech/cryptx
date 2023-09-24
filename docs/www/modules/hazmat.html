@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hazardous Materials &mdash; CryptX  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/proof.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> CryptX
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="csrand.html">Secure Random Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bytes.html">Bytearray Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hash.html">Secure Hashing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hmac.html">Hash-Based MAC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aes.html">Advanced Encryption Standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rsa.html">RSA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ec.html">Elliptic Curves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../static/analysis.html">Analysis &amp; Overview</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CryptX</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Hazardous Materials</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="hazardous-materials">
+<span id="hazmat"></span><h1>Hazardous Materials<a class="headerlink" href="#hazardous-materials" title="Permalink to this headline"></a></h1>
+<p>This segment contains lower-level functions that are not part of the standard API. This allows developers who know what they are doing to write their own constructions. Remember that it is generally ill-advised to try to implement your own cryptography.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define CRYPTX_ENABLE_HAZMAT    </span><span class="c1">// to enable the hazardous materials</span>
+</pre></div>
+</div>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv429cryptx_hazmat_aes_ecb_encryptPKvPvP14cryptx_aes_ctx">
+<span id="_CPPv329cryptx_hazmat_aes_ecb_encryptPKvPvP14cryptx_aes_ctx"></span><span id="_CPPv229cryptx_hazmat_aes_ecb_encryptPKvPvP14cryptx_aes_ctx"></span><span id="cryptx_hazmat_aes_ecb_encrypt__voidCP.voidP.cryptx_aes_ctxP"></span><span class="target" id="cryptx_8h_1aa26dcd5f7c0f1f679c91268bc5b69455"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hazmat_aes_ecb_encrypt</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">block_in</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">block_out</span></span>, <span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_aes_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ks</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429cryptx_hazmat_aes_ecb_encryptPKvPvP14cryptx_aes_ctx" title="Permalink to this definition"></a><br /></dt>
+<dd><p>AES-ECB mode single block encryption. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>ECB mode is insecure. Use this function as a constructor for other cipher modes, not standalone. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_in</strong> – Pointer to block of data to encrypt. </p></li>
+<li><p><strong>block_out</strong> – Pointer to buffer to write block of encrypted data. </p></li>
+<li><p><strong>ks</strong> – Pointer to AES key schedule. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv429cryptx_hazmat_aes_ecb_decryptPKvPvP14cryptx_aes_ctx">
+<span id="_CPPv329cryptx_hazmat_aes_ecb_decryptPKvPvP14cryptx_aes_ctx"></span><span id="_CPPv229cryptx_hazmat_aes_ecb_decryptPKvPvP14cryptx_aes_ctx"></span><span id="cryptx_hazmat_aes_ecb_decrypt__voidCP.voidP.cryptx_aes_ctxP"></span><span class="target" id="cryptx_8h_1a705b398f84e2020d762a0ce03c90bd90"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hazmat_aes_ecb_decrypt</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">block_in</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">block_out</span></span>, <span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_aes_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ks</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429cryptx_hazmat_aes_ecb_decryptPKvPvP14cryptx_aes_ctx" title="Permalink to this definition"></a><br /></dt>
+<dd><p>AES-ECB mode single block decryption. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>ECB mode is insecure. Use this function as a constructor for other cipher modes, not standalone. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_in</strong> – Pointer to block of data to decrypt. </p></li>
+<li><p><strong>block_out</strong> – Pointer to buffer to write block of decrypted data. </p></li>
+<li><p><strong>ks</strong> – Pointer to AES key schedule. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv429cryptx_hazmat_rsa_oaep_encodePKv6size_tPv6size_tPK7uint8_t7uint8_t">
+<span id="_CPPv329cryptx_hazmat_rsa_oaep_encodePKv6size_tPv6size_tPK7uint8_t7uint8_t"></span><span id="_CPPv229cryptx_hazmat_rsa_oaep_encodePKv6size_tPv6size_tPK7uint8_t7uint8_t"></span><span id="cryptx_hazmat_rsa_oaep_encode__voidCP.s.voidP.s.uint8_tCP.uint8_t"></span><span class="target" id="cryptx_8h_1a686d9781ff0de6cf06424df197ce6e1e"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hazmat_rsa_oaep_encode</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">plaintext</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">encoded</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">modulus_len</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">auth</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">hash_alg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429cryptx_hazmat_rsa_oaep_encodePKv6size_tPv6size_tPK7uint8_t7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Optimal Asymmetric Encryption Padding v2.2 Encoder. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>An error returned from the encoder usually is related to the size of plaintext. Maximum plaintext length for encoding is the length of the modulus minus twice the length of the selected hash digest minus two more padding bytes. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plaintext</strong> – Pointer to block of data to encode. </p></li>
+<li><p><strong>len</strong> – Length of plaintext to encode. </p></li>
+<li><p><strong>encoded</strong> – Pointer to buffer to write encoded output. </p></li>
+<li><p><strong>modulus_len</strong> – Length of modulus to encode for (ex: length of RSA public modulus). </p></li>
+<li><p><strong>auth</strong> – An optional string to include in the encoding (NULL to omit). </p></li>
+<li><p><strong>hash_alg</strong> – Algorithm ID of the hash to use. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True on successful encoding, False on error. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv429cryptx_hazmat_rsa_oaep_decodePKv6size_tPvPK7uint8_t7uint8_t">
+<span id="_CPPv329cryptx_hazmat_rsa_oaep_decodePKv6size_tPvPK7uint8_t7uint8_t"></span><span id="_CPPv229cryptx_hazmat_rsa_oaep_decodePKv6size_tPvPK7uint8_t7uint8_t"></span><span id="cryptx_hazmat_rsa_oaep_decode__voidCP.s.voidP.uint8_tCP.uint8_t"></span><span class="target" id="cryptx_8h_1ab367fc9a33e00bee5e9a9f8df5f2a697"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hazmat_rsa_oaep_decode</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">encoded</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">plaintext</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">auth</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">hash_alg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429cryptx_hazmat_rsa_oaep_decodePKv6size_tPvPK7uint8_t7uint8_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Optimal Asymmetric Encryption Padding v2.2 Decoder. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>An error returned from the decoder usually means the input did not appear to be valid OAEP-encoded data. OAEP 2.2-encoded data starts with the byte <em>0x00</em>. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>encoded</strong> – Pointer to block of data to decode. </p></li>
+<li><p><strong>len</strong> – Length of plaintext to encode. </p></li>
+<li><p><strong>plaintext</strong> – Pointer to buffer to write decoded output. </p></li>
+<li><p><strong>auth</strong> – String included in the encoding (NULL to omit). </p></li>
+<li><p><strong>hash_alg</strong> – Algorithm ID of the hash to use. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True on successful decoding, False on error. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygenfunction: Unable to resolve function “cryptx_hazmat_powmod” with arguments “None”.
+Candidate function could not be parsed. Parsing error is
+Error when parsing function declaration.
+If the function has no return type:
+  Error in declarator or parameters-and-qualifiers
+  Invalid C++ declaration: Expected identifier in nested name, got keyword: void [error at 4]
+    void cryptx_hazmat_powmod (uint8_t size, uint8_t *restrict base, uint24_t exp, const uint8_t *restrict mod)
+    —-^
+If the function has a return type:
+  Error in declarator or parameters-and-qualifiers
+  If pointer to member declarator:
+    Invalid C++ declaration: Expected ‘::’ in pointer to member (function). [error at 26]
+      void cryptx_hazmat_powmod (uint8_t size, uint8_t *restrict base, uint24_t exp, const uint8_t *restrict mod)
+      ————————–^
+  If declarator-id:
+    Invalid C++ declaration: Expecting “,” or “)” in parameters-and-qualifiers, got “b”. [error at 59]
+      void cryptx_hazmat_powmod (uint8_t size, uint8_t *restrict base, uint24_t exp, const uint8_t *restrict mod)
+      ———————————————————–^
+</p>
+</div>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CRYPTX_GF2_INTLEN">
+<span class="target" id="cryptx_8h_1ad0e904358b21cab26ad541d594184a89"></span><span class="sig-name descname"><span class="n"><span class="pre">CRYPTX_GF2_INTLEN</span></span></span><a class="headerlink" href="#c.CRYPTX_GF2_INTLEN" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines the length of a galois field for a curve of degree 233. </p>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv416cryptx_ecc_point">
+<span id="_CPPv316cryptx_ecc_point"></span><span id="_CPPv216cryptx_ecc_point"></span><span id="cryptx_ecc_point"></span><span class="target" id="structcryptx__ecc__point"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_ecc_point</span></span></span><a class="headerlink" href="#_CPPv416cryptx_ecc_point" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines a point for use with elliptic curve arithmetic. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv427cryptx_hazmat_ecc_point_addP16cryptx_ecc_pointP16cryptx_ecc_point">
+<span id="_CPPv327cryptx_hazmat_ecc_point_addP16cryptx_ecc_pointP16cryptx_ecc_point"></span><span id="_CPPv227cryptx_hazmat_ecc_point_addP16cryptx_ecc_pointP16cryptx_ecc_point"></span><span id="cryptx_hazmat_ecc_point_add__cryptx_ecc_pointP.cryptx_ecc_pointP"></span><span class="target" id="cryptx_8h_1a71ea61142ac4e58af9d8b8c9d2d17685"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv416cryptx_ecc_point" title="cryptx_ecc_point"><span class="n"><span class="pre">cryptx_ecc_point</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hazmat_ecc_point_add</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv416cryptx_ecc_point" title="cryptx_ecc_point"><span class="n"><span class="pre">cryptx_ecc_point</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">p</span></span>, <a class="reference internal" href="#_CPPv416cryptx_ecc_point" title="cryptx_ecc_point"><span class="n"><span class="pre">cryptx_ecc_point</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">q</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv427cryptx_hazmat_ecc_point_addP16cryptx_ecc_pointP16cryptx_ecc_point" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Elliptic Curve Point Addition over SECT233k1. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Outputs in <strong>p</strong>. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> – Pointer to first point to add. </p></li>
+<li><p><strong>q</strong> – Pointer to second point to add. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv430cryptx_hazmat_ecc_point_doubleP16cryptx_ecc_point">
+<span id="_CPPv330cryptx_hazmat_ecc_point_doubleP16cryptx_ecc_point"></span><span id="_CPPv230cryptx_hazmat_ecc_point_doubleP16cryptx_ecc_point"></span><span id="cryptx_hazmat_ecc_point_double__cryptx_ecc_pointP"></span><span class="target" id="cryptx_8h_1ae4b37d491cbd4d5a16e0fb84d87b9270"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hazmat_ecc_point_double</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv416cryptx_ecc_point" title="cryptx_ecc_point"><span class="n"><span class="pre">cryptx_ecc_point</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">p</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv430cryptx_hazmat_ecc_point_doubleP16cryptx_ecc_point" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Elliptic Curve Point Doubling over SECT233k1. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Outputs in <strong>p</strong>. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>p</strong> – Pointer to point to double. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv434cryptx_hazmat_ecc_point_mul_scalarP16cryptx_ecc_pointPK7uint8_t6size_t">
+<span id="_CPPv334cryptx_hazmat_ecc_point_mul_scalarP16cryptx_ecc_pointPK7uint8_t6size_t"></span><span id="_CPPv234cryptx_hazmat_ecc_point_mul_scalarP16cryptx_ecc_pointPK7uint8_t6size_t"></span><span id="cryptx_hazmat_ecc_point_mul_scalar__cryptx_ecc_pointP.uint8_tCP.s"></span><span class="target" id="cryptx_8h_1adf9bad66ca13288b71d9306d9c0a55e0"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hazmat_ecc_point_mul_scalar</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv416cryptx_ecc_point" title="cryptx_ecc_point"><span class="n"><span class="pre">cryptx_ecc_point</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">p</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">scalar</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">scalar_bit_width</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv434cryptx_hazmat_ecc_point_mul_scalarP16cryptx_ecc_pointPK7uint8_t6size_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Elliptic Curve Scalar Multiplication over SECT233k1. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Outputs in <strong>p</strong>. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> – Pointer to point to multiply. </p></li>
+<li><p><strong>scalar</strong> – Pointer to scalar. </p></li>
+<li><p><strong>scalar_bit_width</strong> – Length, in bits, of the scalar. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

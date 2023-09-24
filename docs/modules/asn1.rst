@@ -1,7 +1,7 @@
-.. _encoding:
+.. _asn1:
 
-function documentation: Encoding
-=================================
+Abstract Syntax Notation One (ASN.1)
+=====================================
 
 .. doxygenenum:: CRYPTX_ASN1_TAGS
 	:project: CryptX

@@ -1,3 +1,8 @@
+.. _hazmat:
+
+Hazardous Materials
+====================
+
 This segment contains lower-level functions that are not part of the standard API. This allows developers who know what they are doing to write their own constructions. Remember that it is generally ill-advised to try to implement your own cryptography.
 
 .. code-block:: c

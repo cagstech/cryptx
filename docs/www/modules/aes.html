@@ -320,6 +320,28 @@
 </dl>
 </dd></dl>
 
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">cryptx_aes_ctx</span><span class="w"> </span><span class="n">aes</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;The fox jumped over the dog!&quot;</span><span class="p">;</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">aes_key</span><span class="p">[</span><span class="n">CRYPTX_KEYLEN_AES256</span><span class="p">],</span>
+<span class="w">        </span><span class="n">aes_iv</span><span class="p">[</span><span class="n">CRYPTX_BLOCKSIZE_AES</span><span class="p">];</span>
+
+<span class="c1">// generate random key</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">cryptx_csrand_fill</span><span class="p">(</span><span class="n">aes_key</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">aes_key</span><span class="p">)))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="c1">// generate random iv</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">cryptx_csrand_fill</span><span class="p">(</span><span class="n">aes_iv</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">aes_iv</span><span class="p">)))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+
+<span class="k">if</span><span class="p">(</span><span class="n">cryptx_aes_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">aes</span><span class="p">,</span><span class="w"> </span><span class="n">aes_key</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">aes_key</span><span class="p">),</span>
+<span class="w">                </span><span class="n">aes_iv</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">aes_iv</span><span class="p">),</span>
+<span class="w">                </span><span class="n">CRYPTX_AES_GCM</span><span class="p">,</span><span class="w"> </span><span class="n">CRYPTX_AES_GCM_DEFAULTS</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">AES_OK</span><span class="p">)</span>
+<span class="w">  </span><span class="k">return</span><span class="p">;</span>
+
+<span class="kt">size_t</span><span class="w"> </span><span class="n">encr_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span>
+<span class="n">cryptx_aes_encrypt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">aes</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="n">encr_len</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">);</span>
+
+<span class="n">network_send</span><span class="p">(</span><span class="n">aes_iv</span><span class="p">,</span><span class="w"> </span><span class="n">CRYPTX_BLOCKSIZE_AES</span><span class="p">);</span>
+<span class="n">network_send</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="n">encr_len</span><span class="p">);</span>
+</pre></div>
+</div>
 <hr class="docutils" />
 <p>The following functions are only valid for Galois Counter Mode (GCM). Attempting to use them for any other cipher mode will return <strong>AES_INVALID_CIPHERMODE</strong>.</p>
 <dl class="cpp function">
@@ -379,6 +401,33 @@
 </dl>
 </dd></dl>
 
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">cryptx_aes_ctx</span><span class="w"> </span><span class="n">aes</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;The fox jumped over the dog!&quot;</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;A header string.&quot;</span><span class="p">;</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">aes_key</span><span class="p">[</span><span class="n">CRYPTX_KEYLEN_AES256</span><span class="p">],</span>
+<span class="w">        </span><span class="n">aes_iv</span><span class="p">[</span><span class="n">CRYPTX_BLOCKSIZE_AES</span><span class="p">],</span>
+<span class="w">        </span><span class="n">auth_tag</span><span class="p">[</span><span class="n">CRYPTX_BLOCKSIZE_AES</span><span class="p">];</span>
+
+<span class="c1">// generate random key</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">cryptx_csrand_fill</span><span class="p">(</span><span class="n">aes_key</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">aes_key</span><span class="p">)))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="c1">// generate random iv</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">cryptx_csrand_fill</span><span class="p">(</span><span class="n">aes_iv</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">aes_iv</span><span class="p">)))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+
+<span class="k">if</span><span class="p">(</span><span class="n">cryptx_aes_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">aes</span><span class="p">,</span><span class="w"> </span><span class="n">aes_key</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">aes_key</span><span class="p">),</span>
+<span class="w">                </span><span class="n">aes_iv</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">aes_iv</span><span class="p">),</span>
+<span class="w">                </span><span class="n">CRYPTX_AES_GCM</span><span class="p">,</span><span class="w"> </span><span class="n">CRYPTX_AES_GCM_DEFAULTS</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">AES_OK</span><span class="p">)</span>
+<span class="w">  </span><span class="k">return</span><span class="p">;</span>
+
+<span class="kt">size_t</span><span class="w"> </span><span class="n">encr_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span>
+<span class="n">cryptx_aes_update_aad</span><span class="p">(</span><span class="o">&amp;</span><span class="n">aes</span><span class="p">,</span><span class="w"> </span><span class="n">header</span><span class="p">,</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="n">header</span><span class="p">));</span>
+<span class="n">cryptx_aes_encrypt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">aes</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="n">encr_len</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">);</span>
+<span class="n">cryptx_aes_digest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">aes</span><span class="p">,</span><span class="w"> </span><span class="n">auth_tag</span><span class="p">);</span>
+
+<span class="n">network_send</span><span class="p">(</span><span class="n">aes_iv</span><span class="p">,</span><span class="w"> </span><span class="n">CRYPTX_BLOCKSIZE_AES</span><span class="p">);</span>
+<span class="n">network_send</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="n">encr_len</span><span class="p">);</span>
+<span class="n">network_send</span><span class="p">(</span><span class="n">auth_tag</span><span class="p">,</span><span class="w"> </span><span class="n">CRYPTX_BLOCKSIZE_AES</span><span class="p">);</span>
+</pre></div>
+</div>
 <p>There are also some enforced constraints on when these functions can be called, intended to prevent undefined behavior as well as to close a particularly nasty tag-forgery vulnerability <a class="footnote-reference brackets" href="#f1" id="id1">1</a> in GCM.</p>
 <table class="docutils align-default">
 <colgroup>
