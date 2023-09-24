@@ -101,6 +101,9 @@ Check out the :ref:`analysis` for more technical implementation details includin
   modules/aes
   modules/rsa
   modules/ec
+  modules/asn1
+  modules/base64
+  modules/hazmat
   
   static/analysis
   static/references
