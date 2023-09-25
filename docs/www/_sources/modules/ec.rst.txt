@@ -5,7 +5,7 @@ Elliptic Curves
 
 .. raw:: html
 
-  <p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides elliptic curve cryptography&mdash;generation of public/private keypairs, the diffie-hellman key exchange protocol, and digital signature algorithm.</p>
+  <p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides elliptic curve cryptography&mdash;generation of public/private keypairs, the diffie-hellman key exchange protocol, and digital signature algorithm. The behavior of an elliptic curve over a finite field lends to a cryptosystem that is harder to crack than traditional public key encryption methods such as RSA.</p>
 
 Macros
 _______

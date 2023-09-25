@@ -93,9 +93,9 @@
     <member refid="cryptx_8h_1aba6c506b34f4d5e1ab991512f4368b8e" kind="define"><name>CRYPTX_KEYLEN_EC_PRIVKEY</name></member>
     <member refid="cryptx_8h_1a46079c346c2ba0f2145e084a78c2cdab" kind="define"><name>CRYPTX_KEYLEN_EC_PUBKEY</name></member>
     <member refid="cryptx_8h_1afdb20067c07b76dac6331ed30d6cd1d6" kind="define"><name>CRYPTX_KEYLEN_EC_SECRET</name></member>
-    <member refid="cryptx_8h_1a13585a6206e220218a8f379327b04433" kind="define"><name>cryptx_asn1_get_tag</name></member>
-    <member refid="cryptx_8h_1a5af192045bb48e03f788962f259a2a7e" kind="define"><name>cryptx_asn1_get_class</name></member>
-    <member refid="cryptx_8h_1a3c8b39f5fb3ad1d8d138b9791b18f01e" kind="define"><name>cryptx_asn1_get_form</name></member>
+    <member refid="cryptx_8h_1ae3c158bb1a0ff9721c09573f085b8b5a" kind="define"><name>cryptx_asn1_gettag</name></member>
+    <member refid="cryptx_8h_1a770550928a870169fd4358b427cdcb95" kind="define"><name>cryptx_asn1_getclass</name></member>
+    <member refid="cryptx_8h_1ab45e9d12f4f83f53441e72757c0717ea" kind="define"><name>cryptx_asn1_getform</name></member>
     <member refid="cryptx_8h_1a9db7be56d66674980b5540cab9405cc7" kind="define"><name>cryptx_base64_get_encoded_len</name></member>
     <member refid="cryptx_8h_1a5629130707448f8475166398fb18a486" kind="define"><name>cryptx_base64_get_decoded_len</name></member>
     <member refid="cryptx_8h_1ad0e904358b21cab26ad541d594184a89" kind="define"><name>CRYPTX_GF2_INTLEN</name></member>
@@ -133,44 +133,44 @@
     <member refid="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90a51c1b8f170116b8aa0a75c6ad6fd3d0d" kind="enumvalue"><name>EC_INVALID_ARG</name></member>
     <member refid="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90a77a3ce6d10fe286a0f7789b15c4ed790" kind="enumvalue"><name>EC_PRIVKEY_INVALID</name></member>
     <member refid="cryptx_8h_1a062440922f5fdc1f25c36f1116e8fc90ae8066072efe056458722cc53a743966a" kind="enumvalue"><name>EC_RPUBKEY_INVALID</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5" kind="enum"><name>CRYPTX_ASN1_TAGS</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a0b4ee1817dddda0e7bb95f8c9c5262cc" kind="enumvalue"><name>ASN1_RESVD</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5afcacc079274ffffd6f8f30005a478309" kind="enumvalue"><name>ASN1_BOOLEAN</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ace678073d12a09bd35a9d14ee843f4f6" kind="enumvalue"><name>ASN1_INTEGER</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a80cce3c21b5cf2a46abcf2d6559f16a2" kind="enumvalue"><name>ASN1_BITSTRING</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ad652362316e1126ce1f372ee9f42fdf7" kind="enumvalue"><name>ASN1_OCTETSTRING</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ab9aa4736a7a0bec12fda19d770381ade" kind="enumvalue"><name>ASN1_NULL</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ab4e5697bbcfa96959f724b475deb438d" kind="enumvalue"><name>ASN1_OBJECTID</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5afa75f14a7646b0ee90575da2299c9303" kind="enumvalue"><name>ASN1_OBJECTDESC</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a2169eaf366165cd4dfe1aca66659935c" kind="enumvalue"><name>ASN1_INSTANCE</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ade199cbdfbec356bae58bc468797580a" kind="enumvalue"><name>ASN1_REAL</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a5bb35c428781f325e40ea36ab317bc42" kind="enumvalue"><name>ASN1_ENUMERATED</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a7c167c8e276b910d748db386f78383af" kind="enumvalue"><name>ASN1_EMBEDDEDPDV</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a64811d53c5db0139556f07ec23185f08" kind="enumvalue"><name>ASN1_UTF8STRING</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a5234ef0948bc0487ae9474e21ce0df3f" kind="enumvalue"><name>ASN1_RELATIVEOID</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a472ab1907cf28338eff639b8b5ab667c" kind="enumvalue"><name>ASN1_SEQUENCE</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5aefff306acd391300face0a8080ad415e" kind="enumvalue"><name>ASN1_SET</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5af1b09bf2be320630525edcbbffe0424e" kind="enumvalue"><name>ASN1_NUMERICSTRING</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a336e057dd223cc6f701304f0461a2ddf" kind="enumvalue"><name>ASN1_PRINTABLESTRING</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a9bf70ad3dd4bf8c417d2df3a0567b7a4" kind="enumvalue"><name>ASN1_TELETEXSTRING</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a74f77040fbd3853dd952425441fe5768" kind="enumvalue"><name>ASN1_VIDEOTEXSTRING</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5ae00956dc4ea6da4a6f5b052e35ad4b75" kind="enumvalue"><name>ASN1_IA5STRING</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a11abbe84d583fe76922cb89fe1220567" kind="enumvalue"><name>ASN1_UTCTIME</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a6b3d1c40aa79f25a72a9165a4cd691d4" kind="enumvalue"><name>ASN1_GENERALIZEDTIME</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a7866c130d61ad33372bb0cacdcc50e71" kind="enumvalue"><name>ASN1_GRAPHICSTRING</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5acb9714785116f8951d2cdfb45bcfaf6c" kind="enumvalue"><name>ASN1_VISIBLESTRING</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5aaecdda4440eb96bc770733f950eab4dd" kind="enumvalue"><name>ASN1_GENERALSTRING</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5a1e1d7c1dcf076d12776c085e5f534d58" kind="enumvalue"><name>ASN1_UNIVERSALSTRING</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5af46947fb8b9acd84edae67bb08dabb28" kind="enumvalue"><name>ASN1_CHARSTRING</name></member>
-    <member refid="cryptx_8h_1a689d38f1bafe5364a5f7737df5b304f5af68d6904a260c69ee964445f81bfbbc4" kind="enumvalue"><name>ASN1_BMPSTRING</name></member>
-    <member refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900" kind="enum"><name>CRYPTX_ASN1_CLASSES</name></member>
-    <member refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a36845401ba730128d3078d9cd0730fe8" kind="enumvalue"><name>ASN1_UNIVERSAL</name></member>
-    <member refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a1c873115fb577a391d1af735307abc45" kind="enumvalue"><name>ASN1_APPLICATION</name></member>
-    <member refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900a0e4e8c83e4929fe69855de5c8c7a34d3" kind="enumvalue"><name>ASN1_CONTEXTSPEC</name></member>
-    <member refid="cryptx_8h_1a1450446b0fdb10702d0a1a792ac2c900ac51c7440728bfe2d94426d0ca4f3d895" kind="enumvalue"><name>ASN1_PRIVATE</name></member>
-    <member refid="cryptx_8h_1af2211fe420abff08488c8f04de017080" kind="enum"><name>CRYPTX_ASN1_FORMS</name></member>
-    <member refid="cryptx_8h_1af2211fe420abff08488c8f04de017080a916350d579d4895b1f843289b60b4572" kind="enumvalue"><name>ASN1_PRIMITIVE</name></member>
-    <member refid="cryptx_8h_1af2211fe420abff08488c8f04de017080ad03b2b41a6f3417a981a78ca887332e6" kind="enumvalue"><name>ASN1_CONSTRUCTED</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518" kind="enum"><name>cryptx_asn1_tags</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518a0b4ee1817dddda0e7bb95f8c9c5262cc" kind="enumvalue"><name>ASN1_RESVD</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518afcacc079274ffffd6f8f30005a478309" kind="enumvalue"><name>ASN1_BOOLEAN</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518ace678073d12a09bd35a9d14ee843f4f6" kind="enumvalue"><name>ASN1_INTEGER</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518a80cce3c21b5cf2a46abcf2d6559f16a2" kind="enumvalue"><name>ASN1_BITSTRING</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518ad652362316e1126ce1f372ee9f42fdf7" kind="enumvalue"><name>ASN1_OCTETSTRING</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518ab9aa4736a7a0bec12fda19d770381ade" kind="enumvalue"><name>ASN1_NULL</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518ab4e5697bbcfa96959f724b475deb438d" kind="enumvalue"><name>ASN1_OBJECTID</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518afa75f14a7646b0ee90575da2299c9303" kind="enumvalue"><name>ASN1_OBJECTDESC</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518a2169eaf366165cd4dfe1aca66659935c" kind="enumvalue"><name>ASN1_INSTANCE</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518ade199cbdfbec356bae58bc468797580a" kind="enumvalue"><name>ASN1_REAL</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518a5bb35c428781f325e40ea36ab317bc42" kind="enumvalue"><name>ASN1_ENUMERATED</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518a7c167c8e276b910d748db386f78383af" kind="enumvalue"><name>ASN1_EMBEDDEDPDV</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518a64811d53c5db0139556f07ec23185f08" kind="enumvalue"><name>ASN1_UTF8STRING</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518a5234ef0948bc0487ae9474e21ce0df3f" kind="enumvalue"><name>ASN1_RELATIVEOID</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518a472ab1907cf28338eff639b8b5ab667c" kind="enumvalue"><name>ASN1_SEQUENCE</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518aefff306acd391300face0a8080ad415e" kind="enumvalue"><name>ASN1_SET</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518af1b09bf2be320630525edcbbffe0424e" kind="enumvalue"><name>ASN1_NUMERICSTRING</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518a336e057dd223cc6f701304f0461a2ddf" kind="enumvalue"><name>ASN1_PRINTABLESTRING</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518a9bf70ad3dd4bf8c417d2df3a0567b7a4" kind="enumvalue"><name>ASN1_TELETEXSTRING</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518a74f77040fbd3853dd952425441fe5768" kind="enumvalue"><name>ASN1_VIDEOTEXSTRING</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518ae00956dc4ea6da4a6f5b052e35ad4b75" kind="enumvalue"><name>ASN1_IA5STRING</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518a11abbe84d583fe76922cb89fe1220567" kind="enumvalue"><name>ASN1_UTCTIME</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518a6b3d1c40aa79f25a72a9165a4cd691d4" kind="enumvalue"><name>ASN1_GENERALIZEDTIME</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518a7866c130d61ad33372bb0cacdcc50e71" kind="enumvalue"><name>ASN1_GRAPHICSTRING</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518acb9714785116f8951d2cdfb45bcfaf6c" kind="enumvalue"><name>ASN1_VISIBLESTRING</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518aaecdda4440eb96bc770733f950eab4dd" kind="enumvalue"><name>ASN1_GENERALSTRING</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518a1e1d7c1dcf076d12776c085e5f534d58" kind="enumvalue"><name>ASN1_UNIVERSALSTRING</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518af46947fb8b9acd84edae67bb08dabb28" kind="enumvalue"><name>ASN1_CHARSTRING</name></member>
+    <member refid="cryptx_8h_1a33270e9043784e6dcfdc9bf85ac05518af68d6904a260c69ee964445f81bfbbc4" kind="enumvalue"><name>ASN1_BMPSTRING</name></member>
+    <member refid="cryptx_8h_1aba4305b9b1c62a999dd90fde584cd150" kind="enum"><name>cryptx_asn1_classes</name></member>
+    <member refid="cryptx_8h_1aba4305b9b1c62a999dd90fde584cd150a36845401ba730128d3078d9cd0730fe8" kind="enumvalue"><name>ASN1_UNIVERSAL</name></member>
+    <member refid="cryptx_8h_1aba4305b9b1c62a999dd90fde584cd150a1c873115fb577a391d1af735307abc45" kind="enumvalue"><name>ASN1_APPLICATION</name></member>
+    <member refid="cryptx_8h_1aba4305b9b1c62a999dd90fde584cd150a0e4e8c83e4929fe69855de5c8c7a34d3" kind="enumvalue"><name>ASN1_CONTEXTSPEC</name></member>
+    <member refid="cryptx_8h_1aba4305b9b1c62a999dd90fde584cd150ac51c7440728bfe2d94426d0ca4f3d895" kind="enumvalue"><name>ASN1_PRIVATE</name></member>
+    <member refid="cryptx_8h_1a19e2a0db96f6eed3d0d22fdf98e67b0c" kind="enum"><name>cryptx_asn1_forms</name></member>
+    <member refid="cryptx_8h_1a19e2a0db96f6eed3d0d22fdf98e67b0ca916350d579d4895b1f843289b60b4572" kind="enumvalue"><name>ASN1_PRIMITIVE</name></member>
+    <member refid="cryptx_8h_1a19e2a0db96f6eed3d0d22fdf98e67b0cad03b2b41a6f3417a981a78ca887332e6" kind="enumvalue"><name>ASN1_CONSTRUCTED</name></member>
     <member refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33" kind="enum"><name>asn1_error_t</name></member>
     <member refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33ae8a5623b62dab851b0dc76048afc0b4a" kind="enumvalue"><name>ASN1_OK</name></member>
     <member refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a434628c70562f3ab468d94e8eae7784d" kind="enumvalue"><name>ASN1_END_OF_FILE</name></member>
@@ -202,7 +202,7 @@
     <member refid="cryptx_8h_1aa4f5ae1eb3d9636c20dec64503a4896b" kind="function"><name>cryptx_rsa_encrypt</name></member>
     <member refid="cryptx_8h_1ace17d744e36edae96bea85ccfa7c18f9" kind="function"><name>cryptx_ec_keygen</name></member>
     <member refid="cryptx_8h_1a4057940333f4f8f56b8ccf1d24db21ea" kind="function"><name>cryptx_ec_secret</name></member>
-    <member refid="cryptx_8h_1afbb965d7c7819b8685a1062d5e21e02c" kind="function"><name>cryptx_asn1_decode</name></member>
+    <member refid="cryptx_8h_1a8e0feaf7624d174b3fa952cac3eccd0d" kind="function"><name>cryptx_asn1_decode</name></member>
     <member refid="cryptx_8h_1a3e216a54646a3f7d04c37102905ef850" kind="function"><name>cryptx_base64_encode</name></member>
     <member refid="cryptx_8h_1a28db41653bf7ba5ef8bfcef425343722" kind="function"><name>cryptx_base64_decode</name></member>
     <member refid="cryptx_8h_1aa26dcd5f7c0f1f679c91268bc5b69455" kind="function"><name>cryptx_hazmat_aes_ecb_encrypt</name></member>

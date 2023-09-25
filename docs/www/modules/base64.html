@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Base64/PEM &mdash; CryptX  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/proof.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Hazardous Materials" href="hazmat.html" />
+    <link rel="prev" title="ASN.1/DER" href="asn1.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> CryptX
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="csrand.html">Secure Random Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bytes.html">Bytearray Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hash.html">Secure Hashing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hmac.html">Hash-Based MAC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aes.html">Advanced Encryption Standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rsa.html">RSA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ec.html">Elliptic Curves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="asn1.html">ASN.1/DER</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Base64/PEM</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#macros">Macros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hazmat.html">Hazardous Materials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../static/analysis.html">Analysis &amp; Overview</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CryptX</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Base64/PEM</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="base64-pem">
+<span id="base64"></span><h1>Base64/PEM<a class="headerlink" href="#base64-pem" title="Permalink to this headline"></a></h1>
+<p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides an encoder and decoder for Base64 (sextet) encoding. PEM is simply a Base64 encoding of DER-encoded data wrapped with banners indicating the type of object that is being encoded. PEM is another encoding format common to cryptography.</p><p><strong>Sextet</strong> encoding means that single byte of data encodes six (6) bits of information. Conversion involves parsing an <em>octet-encoded</em> (a single byte of data encodes eight (8) bytes of information) stream of data 6 bits at a time, then mapping the resulting value to one of 64 (hence base64) printable characters or the padding character <em>=</em>. Reversing this is done by doing these steps in reverse.</p>
+<p>You may recognize the following in some files or data dumps you may have seen before. This is PEM.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="o">======</span><span class="n">BEGIN</span><span class="w"> </span><span class="n">RSA</span><span class="w"> </span><span class="n">PUBLIC</span><span class="w"> </span><span class="n">KEY</span><span class="o">======</span>
+<span class="n">A</span><span class="w"> </span><span class="n">couple</span><span class="w"> </span><span class="n">lines</span><span class="w"> </span><span class="n">of</span>
+<span class="n">Base64</span><span class="o">-</span><span class="n">encoded</span><span class="w"> </span><span class="n">data</span>
+<span class="n">that</span><span class="w"> </span><span class="n">contain</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">RSA</span>
+<span class="n">public</span><span class="w"> </span><span class="n">key</span>
+<span class="o">======</span><span class="n">END</span><span class="w"> </span><span class="n">RSA</span><span class="w"> </span><span class="n">PUBLIC</span><span class="w"> </span><span class="n">KEY</span><span class="o">======</span>
+</pre></div>
+</div>
+<div class="section" id="macros">
+<h2>Macros<a class="headerlink" href="#macros" title="Permalink to this headline"></a></h2>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.cryptx_base64_get_encoded_len">
+<span class="target" id="cryptx_8h_1a9db7be56d66674980b5540cab9405cc7"></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_base64_get_encoded_len</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.cryptx_base64_get_encoded_len" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines a macro to return the expected base64-encoded data length, given octet-encoded <strong>len</strong>. </p>
+<p>This should be len * 8 / 6. </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.cryptx_base64_get_decoded_len">
+<span class="target" id="cryptx_8h_1a5629130707448f8475166398fb18a486"></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_base64_get_decoded_len</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.cryptx_base64_get_decoded_len" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines a macro to return the expected octet-encoded data length, given base64-encoded <strong>len</strong>. </p>
+<p>This should be len * 6 / 8. </p>
+</dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h2>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420cryptx_base64_encodePvPKv6size_t">
+<span id="_CPPv320cryptx_base64_encodePvPKv6size_t"></span><span id="_CPPv220cryptx_base64_encodePvPKv6size_t"></span><span id="cryptx_base64_encode__voidP.voidCP.s"></span><span class="target" id="cryptx_8h_1a3e216a54646a3f7d04c37102905ef850"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_base64_encode</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dest</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">src</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420cryptx_base64_encodePvPKv6size_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Converts an octet-encoded byte stream into a sextet-encoded byte stream. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dest</strong> – Pointer to output sextet-encoded data stream. </p></li>
+<li><p><strong>src</strong> – Pointer to input octet-encoded data stream. </p></li>
+<li><p><strong>len</strong> – Length of octet-encoded data stream. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Length of output sextet. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420cryptx_base64_decodePvPKv6size_t">
+<span id="_CPPv320cryptx_base64_decodePvPKv6size_t"></span><span id="_CPPv220cryptx_base64_decodePvPKv6size_t"></span><span id="cryptx_base64_decode__voidP.voidCP.s"></span><span class="target" id="cryptx_8h_1a28db41653bf7ba5ef8bfcef425343722"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_base64_decode</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dest</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">src</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420cryptx_base64_decodePvPKv6size_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Converts a sextet-encoded byte stream into a octet-encoded byte stream. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dest</strong> – Pointer to output octet-encoded data stream. </p></li>
+<li><p><strong>src</strong> – Pointer to input sextet-encoded data stream. </p></li>
+<li><p><strong>len</strong> – Length of sextet-encoded data stream. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Length of output octet. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="asn1.html" class="btn btn-neutral float-left" title="ASN.1/DER" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hazmat.html" class="btn btn-neutral float-right" title="Hazardous Materials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -469,7 +469,7 @@ ec_error_t cryptx_ec_secret(const uint8_t *privkey, const uint8_t *rpubkey, uint
 
 /// ### ABSTRACT SYNTAX NOTATION ONE (ASN.1) ###
 
-enum CRYPTX_ASN1_TAGS {
+enum cryptx_asn1_tags {
 	ASN1_RESVD = 0,				/**< RESERVED */
 	ASN1_BOOLEAN,				/**< defines a BOOLEAN object */
 	ASN1_INTEGER,				/**< defines an INTEGER object */
@@ -501,29 +501,29 @@ enum CRYPTX_ASN1_TAGS {
 	ASN1_BMPSTRING
 };
 
-enum CRYPTX_ASN1_CLASSES {
+enum cryptx_asn1_classes {
 	ASN1_UNIVERSAL,			/**< tags defined in the ASN.1 standard. Most use cases on calc will be this. */
 	ASN1_APPLICATION,		/**< tags unique to a particular application. */
 	ASN1_CONTEXTSPEC,		/**< tags that need to be identified within a particular, well-definded context. */
 	ASN1_PRIVATE			/**< reserved for use by a specific entity for their applications. */
 };
 
-enum CRYPTX_ASN1_FORMS {
+enum cryptx_asn1_forms {
 	ASN1_PRIMITIVE,			/**< this element should contain no nested elements. */
 	ASN1_CONSTRUCTED,		/**< this element contains nested elements. */
 };
 
-/// Returns the unmasked tag. See @b CRYPTX_ASN1_TAGS above.
-#define cryptx_asn1_get_tag(tag)		((tag) & 0b111111)
-/// Returns the 2-bit tag class flag. See @b CRYPTX_ASN1_CLASSES above.
-#define cryptx_asn1_get_class(tag)		(((tag)>>6) & 0b11)
-/// Returns the 1-bit tag form (1 = constructed, 0 = primitive). See @b CRYPTX_ASN1_FORMS above.
-#define cryptx_asn1_get_form(tag)		(((tag)>>5) & 1)
+/// Returns the unmasked tag. See @b cryptx_asn1_tags above.
+#define cryptx_asn1_gettag(tag)		((tag) & 0b111111)
+/// Returns the 2-bit tag class flag. See @b cryptx_asn1_classes above.
+#define cryptx_asn1_getclass(tag)		(((tag)>>6) & 0b11)
+/// Returns the 1-bit tag form (1 = constructed, 0 = primitive). See @b cryptx_asn1_forms above.
+#define cryptx_asn1_getform(tag)		(((tag)>>5) & 1)
 
 /// Defines error codes returned from calls to the ASN.1 API.
 typedef enum {
 	ASN1_OK,				/**< No errors occured. */
-	ASN1_END_OF_FILE,		/**< End of ASN.1 data stream reached. Not an error. */
+	ASN1_END_OF_FILE,		/**< End of ASN.1 data stream reached. Technically not an error. */
 	ASN1_INVALID_ARG,		/**< One or more arguments invalid. */
 	ASN1_LEN_OVERFLOW,		/**< Length of an element overflowed arch size\_t allowance. Remainder of data stream unparsable. */
 } asn1_error_t;
@@ -532,29 +532,26 @@ typedef enum {
  * @brief Decodes the ASN.1 data at the given address. Seeks to an element from the front of the data.
  * @param data_start	Pointer to a block of ASN.1-encoded data.
  * @param data_len		Length of ASN.1-encoded block.
- * @param seek_to		Number of ASN.1 elements to skip before returning one.
- * @param element_tag	Masked tag value of the returned element.
- * @param element_len	Length of the returned element.
- * @param element_data	Pointer to the data of the returned element.
+ * @param index               Number of ASN.1 elements to skip before returning one.
+ * @param element_tag	Full element tag octet, or NULL if not needed.
+ * @param element_len	Length of the returned element or NULL if not needed.
+ * @param element_data	Pointer to the data of the returned element or NULL if not needed.
  * @returns				An @b asn1_error_t indicating the status of the operation.
- * @note @b ASN1_END_OF_FILE will be returned if @b seek_to is invalid.
- * @note NULL may be passed for @b element_tag, @b element_len, and/or @b element_data if you do not
- * need to return that particular bit of information.
+ *                If @b index is past the end of the data, @b ASN1_END_OF_FILE is returned.
  */
 asn1_error_t cryptx_asn1_decode(
 					void *data_start,
 					size_t data_len,
-					uint8_t seek_to,
+					uint8_t index,
 					uint8_t *element_tag,
 					size_t *element_len,
 					uint8_t **element_data);
 
 
-/// ### BASE 64 ENCODE/DECODE ###
-
-/// Defines a macro to return the expected size of base64-encoded data, given octet-encoded length.
+/** Defines a macro to return the expected base64-encoded data length, given octet-encoded @b len. This should be len \* 8 / 6. */
 #define	cryptx_base64_get_encoded_len(len)		((len) * 4 / 3)
-/// Defines a macro to return the expected size of octet-encoded data, given base64-encoded length.
+
+/** Defines a macro to return the expected octet-encoded data length, given base64-encoded @b len. This should be len \* 6 / 8. */
 #define	cryptx_base64_get_decoded_len(len)		((len) * 3 / 4)
 
 /**
@@ -562,7 +559,6 @@ asn1_error_t cryptx_asn1_decode(
  * @param dest Pointer to output sextet-encoded data stream.
  * @param src Pointer to input octet-encoded data stream.
  * @param len Length of octet-encoded data stream.
- * @note @b dest should be at least  @b len \* 4 / 3 bytes large.
  * @returns Length of output sextet.
  */
 size_t cryptx_base64_encode(void *dest, const void *src, size_t len);
@@ -572,7 +568,6 @@ size_t cryptx_base64_encode(void *dest, const void *src, size_t len);
  * @param dest Pointer to output octet-encoded data stream.
  * @param src Pointer to input sextet-encoded data stream.
  * @param len Length of sextet-encoded data stream.
- * @note @b dest should be at least @b len \* 3 / 4 bytes large.
  * @returns Length of output octet.
  */
 size_t cryptx_base64_decode(void *dest, const void *src, size_t len);
