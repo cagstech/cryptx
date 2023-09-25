@@ -13,12 +13,12 @@ You may recognize the following in some files or data dumps you may have seen be
   
 .. code-block:: c
   
-    ======BEGIN RSA PUBLIC KEY======
+    -----BEGIN RSA PUBLIC KEY-----
     A couple lines of
     Base64-encoded data
     that contain the RSA
     public key
-    ======END RSA PUBLIC KEY======
+    -----END RSA PUBLIC KEY-----
   
 Macros
 _______

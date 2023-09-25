@@ -82,12 +82,12 @@
 <span id="base64"></span><h1>Base64/PEM<a class="headerlink" href="#base64-pem" title="Permalink to this headline"></a></h1>
 <p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides an encoder and decoder for Base64 (sextet) encoding. PEM is simply a Base64 encoding of DER-encoded data wrapped with banners indicating the type of object that is being encoded. PEM is another encoding format common to cryptography.</p><p><strong>Sextet</strong> encoding means that single byte of data encodes six (6) bits of information. Conversion involves parsing an <em>octet-encoded</em> (a single byte of data encodes eight (8) bytes of information) stream of data 6 bits at a time, then mapping the resulting value to one of 64 (hence base64) printable characters or the padding character <em>=</em>. Reversing this is done by doing these steps in reverse.</p>
 <p>You may recognize the following in some files or data dumps you may have seen before. This is PEM.</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="o">======</span><span class="n">BEGIN</span><span class="w"> </span><span class="n">RSA</span><span class="w"> </span><span class="n">PUBLIC</span><span class="w"> </span><span class="n">KEY</span><span class="o">======</span>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="o">-----</span><span class="n">BEGIN</span><span class="w"> </span><span class="n">RSA</span><span class="w"> </span><span class="n">PUBLIC</span><span class="w"> </span><span class="n">KEY</span><span class="o">-----</span>
 <span class="n">A</span><span class="w"> </span><span class="n">couple</span><span class="w"> </span><span class="n">lines</span><span class="w"> </span><span class="n">of</span>
 <span class="n">Base64</span><span class="o">-</span><span class="n">encoded</span><span class="w"> </span><span class="n">data</span>
 <span class="n">that</span><span class="w"> </span><span class="n">contain</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">RSA</span>
 <span class="n">public</span><span class="w"> </span><span class="n">key</span>
-<span class="o">======</span><span class="n">END</span><span class="w"> </span><span class="n">RSA</span><span class="w"> </span><span class="n">PUBLIC</span><span class="w"> </span><span class="n">KEY</span><span class="o">======</span>
+<span class="o">-----</span><span class="n">END</span><span class="w"> </span><span class="n">RSA</span><span class="w"> </span><span class="n">PUBLIC</span><span class="w"> </span><span class="n">KEY</span><span class="o">-----</span>
 </pre></div>
 </div>
 <div class="section" id="macros">
