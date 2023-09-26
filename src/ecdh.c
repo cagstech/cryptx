@@ -214,34 +214,29 @@ void hexdump(uint8_t *addr, size_t len, uint8_t *label){
 ### Elliptic Curve Diffie-Hellman Main Functions ###
  */
 #define BASE_ORDER_BYTES	29
-ecdh_error_t ecdh_init(ecdh_ctx *ctx){
-	if(ctx==NULL)
-		return ECDH_INVALID_ARG;
+bool ec_keygen(uint8_t *privkey, uint8_t *pubkey){
+	if((privkey==NULL) || (pubkey==NULL))
+		return false;
 	
 	// privkey is alice 'a'
-	// if rand is supplied, assume we need to generate the key
-	// if rand is null, assume it's already done
-	// if you use this api wrong, its your own fault
-	// it will be well documented
-	
-	cryptx_csrand_fill(ctx->privkey, BASE_ORDER_BYTES);
+  cryptx_csrand_fill(privkey, ECC_PRV_KEY_SIZE-1);
 	
 	// copy G from curve parameters to pkey
 	// convert to a Point
 	// reverse endianness for computational efficiency
-	struct Point *pkey = (struct Point*)ctx->pubkey;
+	struct Point *pkey = (struct Point*)pubkey;
 	rmemcpy(pkey->x, sect233k1.G.x, sizeof sect233k1.G.x);
 	rmemcpy(pkey->y, sect233k1.G.y, sizeof sect233k1.G.y);
 	
 	// Q = a * G
 	// privkey is big-endian encoded
-	point_mul_scalar(pkey, (uint8_t*)ctx->privkey, (sizeof ctx->privkey)<<3);
+	point_mul_scalar(pkey, privkey, (ECC_PRV_KEY_SIZE)<<3);
 	
-	return ECDH_OK;
+	return true;
 }
 
-ecdh_error_t ecdh_secret(const ecdh_ctx *ctx, const uint8_t *rpubkey, uint8_t *secret){
-	if((ctx==NULL) || (rpubkey==NULL) || (secret==NULL))
+ecdh_error_t ecdh_secret(uint8_t *privkey, const uint8_t *rpubkey, uint8_t *secret){
+	if((privkey==NULL) || (rpubkey==NULL) || (secret==NULL))
 		return ECDH_INVALID_ARG;
 	
 	// rpubkey = a big-endian encoded bytearray
@@ -255,15 +250,11 @@ ecdh_error_t ecdh_secret(const ecdh_ctx *ctx, const uint8_t *rpubkey, uint8_t *s
 	
 	// s = a * Q
 	// privkey is big-endian encoded
-	point_mul_scalar(pkey, (uint8_t*)ctx->privkey, (sizeof ctx->privkey)<<3);
+	point_mul_scalar(pkey, privkey, (ECC_PRV_KEY_SIZE)<<3);
 	
 	// apply cofactor
 	for(; cofactor > 1; cofactor>>=1) point_double(pkey);
 	
 	return ECDH_OK;
 }
-
-
-
-
 

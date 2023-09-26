@@ -12,7 +12,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <hashlib.h>
 
 /* Standard headers - it's recommended to leave them included */
 
@@ -1224,18 +1223,21 @@ void aes_gcm_prepare_iv(aes_ctx *ctx, const uint8_t *iv, size_t iv_len)
 	}
 }
 
+
+
 // flag definition  [unused][ 0000 counter len ][ 0000 counter start pos ][ 00 padding mode][ 00 cipher mode ]
 
 // Performs the action of generating the keys that will be used in every round of
 // encryption. "key" is the user-supplied input key, "w" is the output key schedule,
 // "keysize" is the length in bits of "key", must be 128, 192, or 256.
-aes_error_t hashlib_AESLoadKey(aes_ctx* ctx, const BYTE key[], size_t keysize, uint8_t* iv, size_t iv_len, uint24_t cipher_flags)
+aes_error_t hashlib_AESLoadKey(aes_ctx* ctx, const BYTE key[], size_t keysize, uint8_t* iv, size_t iv_len, uint8_t cipher_mode, uint24_t cipher_flags)
 {
 	int Nb=4,Nr,Nk,idx;
 	WORD temp,Rcon[]={0x01000000,0x02000000,0x04000000,0x08000000,0x10000000,0x20000000,
 		0x40000000,0x80000000,0x1b000000,0x36000000,0x6c000000,0xd8000000,
 		0xab000000,0x4d000000,0x9a000000};
-	uint8_t mode = (cipher_flags & 3);
+  uint8_t mode = cipher_mode;
+
 	if(mode>AES_GCM) return AES_INVALID_CIPHERMODE;
 	if(iv_len>AES_BLOCK_SIZE) return AES_INVALID_ARG;
 	memset(ctx, 0, sizeof(aes_ctx));
@@ -1265,10 +1267,10 @@ aes_error_t hashlib_AESLoadKey(aes_ctx* ctx, const BYTE key[], size_t keysize, u
 		ctx->round_keys[idx] = ctx->round_keys[idx-Nk] ^ temp;
 	}
 	
-	if(mode == AES_CBC) ctx->mode.cbc.padding_mode = ((uint8_t)(cipher_flags>>2) & FLAGS_GET_LSB2);
+	if(mode == AES_CBC) ctx->mode.cbc.padding_mode = ((uint8_t)(cipher_flags & FLAGS_GET_LSB2));
 	if(mode == AES_CTR) {
-		uint8_t ctr_pos = ((uint8_t)(cipher_flags>>4) & FLAGS_GET_LSB4);
-		uint8_t ctr_len = ((uint8_t)(cipher_flags>>8) & FLAGS_GET_LSB4);
+		uint8_t ctr_pos = ((uint8_t)(cipher_flags>>2) & FLAGS_GET_LSB4);
+		uint8_t ctr_len = ((uint8_t)(cipher_flags>>6) & FLAGS_GET_LSB4);
 		if((!ctr_len) && (!ctr_pos)) {ctr_pos = 8; ctr_len = 8;}
 		else if(ctr_len && (!ctr_pos)) ctr_pos = AES_BLOCK_SIZE - ctr_len;
 		else if(ctr_pos && (!ctr_len)) ctr_len = AES_BLOCK_SIZE - ctr_pos;
@@ -1341,7 +1343,7 @@ bool cryptx_aes_verify(aes_ctx *ctx, uint8_t *aad, size_t aad_len, uint8_t *ciph
 	// do this work on a copy of ctx
 	memcpy(&tmp, ctx, sizeof(tmp));
 	
-	cryptx_aes_update_aad(&tmp, aad, aad_len);
+	if(aad != NULL) cryptx_aes_update_aad(&tmp, aad, aad_len);
 	hashlib_AESDecrypt(&tmp, ciphertext, ciphertext_len, NULL);
 	cryptx_aes_digest(&tmp, digest);
 	
@@ -1765,7 +1767,7 @@ int main(void){
 typedef struct _asn1_obj_t {
 	uint8_t tag;
 	uint8_t f_class;
-	bool f_constr;
+	uint8_t f_constr;
 	size_t len;
 	uint8_t *data;
 } asn1_obj_t;
@@ -1802,57 +1804,57 @@ enum ASN1_TYPES {
 	ASN1_BMPSTRING
 };
 
-
 typedef enum {
 	ASN1_OK,
-	ASN1_ARCH_BAD_LEN,
-	ASN1_SPEC_MISMATCH
+	ASN1_END_OF_FILE,
+	ASN1_INVALID_ARG,
+	ASN1_LEN_OVERFLOW
 } asn1_error_t;
 
-asn1_error_t asn1_decode(uint8_t *asn1_data, size_t asn1_len, asn1_obj_t *objs, size_t *objs_ret, uint8_t *spec){
-	uint8_t *asn1_current = asn1_data;			// set current to start of data to decode
-	uint8_t *asn1_end = asn1_current + asn1_len;
-	if(*asn1_current == 0) asn1_current++;
-	size_t i;
+
+asn1_error_t asn1_decode(void* data_start, size_t data_len, uint8_t index, uint8_t *element_tag, size_t *element_len, uint8_t **element_data){
 	
-	for(i = 0; asn1_current < asn1_end; i++){		// loop until iter count hit. Break manually if done.
-		asn1_obj_t *node_o = &objs[i];
-		uint8_t tag_override = (spec == NULL) ? 0 : spec[i];
-		uint8_t tag = *asn1_current++;
-		//node_o->tag = (*asn1_current++) & 0b11111;		// get numeric tag id
-		uint8_t byte_2nd = *asn1_current++;	// get byte 2. Can be size or can be size of size
-		node_o->len = 0;
-		if((byte_2nd>>7) & 1){			// if bit 7 of byte is set, this is a size word length
+	if((data_start == NULL) ||
+	   (data_len == 0)) return ASN1_INVALID_ARG;
+	
+	uint8_t *asn1_current = data_start;
+	uint8_t *asn1_end = data_start + data_len;
+	uint8_t tag = 0;
+	size_t len = 0;
+	void* data = NULL;
+	
+	   
+	for(int i = 0; i <= index; i++){
+		// pass any preceeding null bytes
+		asn1_current += len;
+		
+		if(*asn1_current == 0) asn1_current++;
+		// if we have hit the end of the data, return end-of-file
+		if(asn1_current >= asn1_end) return ASN1_END_OF_FILE;
+		
+		// get tag of element
+		tag = *asn1_current++;
+		uint8_t byte_2nd = *asn1_current++;	// get byte 2, size or size of size
+		len = 0;
+		if((byte_2nd>>7) & 1){
 			uint8_t size_len = byte_2nd & 0x7f;
-			if(size_len > 3) return ASN1_ARCH_BAD_LEN;			// due to device limits, seq len limited to u24.
-			rmemcpy((uint8_t*)&node_o->len, asn1_current, size_len);
+			if(size_len > 3) return ASN1_LEN_OVERFLOW;
+			rmemcpy((uint8_t*)&len, asn1_current, size_len);
 			asn1_current += size_len;
 		}
-		else									// else, this is a size byte
-			node_o->len = byte_2nd;
+		else
+			len = byte_2nd;
 		
-		// pull out tag with associated flags
-		node_o->tag = tag & 0b11111;
-		node_o->f_constr = (tag>>5 & 1);
-		node_o->f_class = (tag>>6 & 0b11);
-		
-		// retrieve data addr and length
-		node_o->data = asn1_current;
-		asn1_current += node_o->len;
-		
-		// if the constructed flag is set, this element may contain other encoded types
-		if((node_o->f_constr) || tag_override){
-			size_t node_interior_len;
-			if(asn1_decode(node_o->data, node_o->len, node_o, &node_interior_len, NULL) == ASN1_OK){
-				i--;
-				i += node_interior_len;
-			}
-		}
+		data = asn1_current;
 		
 	}
-	*objs_ret = i;
+	
+	if(element_tag) *element_tag = tag;
+	if(element_len) *element_len = len;
+	if(element_data) *element_data = data;
 	return ASN1_OK;
 }
+
 
 //#define MIN(a,b) (((a)<(b))?(a):(b))
 char b64_charset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";

@@ -26,12 +26,6 @@ struct Curve {
 	uint8_t cofactor;
 };
 
-// Define ECDH key context
-typedef struct _ecdh_ctx {
-	uint8_t privkey[ECC_PRV_KEY_SIZE];
-	uint8_t pubkey[ECC_PUB_KEY_SIZE];
-} ecdh_ctx;
-
 // Define ECDH response codes
 typedef enum _ecdh_errors {
 	ECDH_OK,
