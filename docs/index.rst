@@ -68,7 +68,7 @@ CryptX has a number of modules that implement various standards for data obfusca
 +-------------+-----------------------------------------------------------+
 | Coming Soon | Implements                                                |
 +=============+===========================================================+
-| pkcs        | implements pkcs key object format                         |
+| pkcs8       | implements PKCS#8 key serialization standard              |
 +-------------+-----------------------------------------------------------+
 | tls         | implements TLS protocol                                   |
 +-------------+-----------------------------------------------------------+
