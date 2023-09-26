@@ -62,13 +62,15 @@ CryptX has a number of modules that implement various standards for data obfusca
 +----------------------+----------------------------------------------------------------+
 |:ref:`base64 <base64>`| PEM/Base64 codex                                               |
 +----------------------+----------------------------------------------------------------+
+|:ref:`pkcs8 <pkcs8>`  | public key cryptographic standards #8                          |
++----------------------+----------------------------------------------------------------+
 |:ref:`hazmat <hazmat>`| hazardous materials/compatibility/custom construction layer    |
 +----------------------+----------------------------------------------------------------+
 
 +-------------+-----------------------------------------------------------+
 | Coming Soon | Implements                                                |
 +=============+===========================================================+
-| pkcs8       | implements PKCS#8 key serialization standard              |
+| ecdsa       | implements elliptic curve digital signing algoritm        |
 +-------------+-----------------------------------------------------------+
 | tls         | implements TLS protocol                                   |
 +-------------+-----------------------------------------------------------+
@@ -103,6 +105,7 @@ Check out the :ref:`analysis` for more technical implementation details includin
   modules/ec
   modules/asn1
   modules/base64
+  modules/pkcs8
   modules/hazmat
   
   static/analysis

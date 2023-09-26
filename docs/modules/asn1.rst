@@ -76,7 +76,7 @@ _____________
 Macros
 _______
 	
-The ASN.1 tag is an octet consisting of three (3) parts, (1) A 5-bit tag value which is one of the items in the *cryptx_asn1_tags* enum above, (2) A 2-bit class value wich is one of the items in the *cryptx_asn1_classes* enum, and (3) a 1-bit form indicating if the item is constructed [encapsulates other encoded elements] or primitive [contains no encapsulated data].
+The ASN.1 tag is an octet consisting of three (3) parts, (1) A 5-bit tag value which is one of the items in the *cryptx_asn1_tags* enum above, (2) A 2-bit class value which is one of the items in the *cryptx_asn1_classes* enum, and (3) a 1-bit form indicating if the item is constructed [encapsulates other encoded elements] or primitive [contains no encapsulated data].
 
 .. doxygendefine:: cryptx_asn1_gettag
 	:project: CryptX

@@ -1,5 +1,14 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.9.7" xml:lang="en-US">
+  <compound refid="structcryptx__pkcs8__pubkeyinfo_1_1__objectid" kind="struct"><name>cryptx_pkcs8_pubkeyinfo::_objectid</name>
+    <member refid="structcryptx__pkcs8__pubkeyinfo_1_1__objectid_1aafb48ae19e57ac56110b923ed82e655f" kind="variable"><name>data</name></member>
+    <member refid="structcryptx__pkcs8__pubkeyinfo_1_1__objectid_1abb2e9c6eae04f3ee985af1ff83d5455c" kind="variable"><name>len</name></member>
+  </compound>
+  <compound refid="structcryptx__pkcs8__pubkeyinfo_1_1__publickey" kind="struct"><name>cryptx_pkcs8_pubkeyinfo::_publickey</name>
+    <member refid="structcryptx__pkcs8__pubkeyinfo_1_1__publickey_1ab063e3e50ab4d8738a0a0dedfe1ceb3b" kind="variable"><name>data</name></member>
+    <member refid="structcryptx__pkcs8__pubkeyinfo_1_1__publickey_1a38564efc77984c28226fe6e269106437" kind="variable"><name>len</name></member>
+    <member refid="structcryptx__pkcs8__pubkeyinfo_1_1__publickey_1a9d747359d62ae394b946892f68e8f832" kind="variable"><name>exponent</name></member>
+  </compound>
   <compound refid="structCipher" kind="struct"><name>Cipher</name>
   </compound>
   <compound refid="structcryptx__aes__cbc__state" kind="struct"><name>cryptx_aes_cbc_state</name>
@@ -59,6 +68,10 @@
   </compound>
   <compound refid="unioncryptx__hmac__private__h" kind="union"><name>cryptx_hmac_private_h</name>
     <member refid="unioncryptx__hmac__private__h_1affa5ba199a186161ee892222e5e63331" kind="variable"><name>sha256</name></member>
+  </compound>
+  <compound refid="structcryptx__pkcs8__pubkeyinfo" kind="struct"><name>cryptx_pkcs8_pubkeyinfo</name>
+    <member refid="structcryptx__pkcs8__pubkeyinfo_1af21d3c8cda1d420ef3106571cdc9c701" kind="variable"><name>objectid</name></member>
+    <member refid="structcryptx__pkcs8__pubkeyinfo_1ab38e9748d27cd47033be177bbda43997" kind="variable"><name>publickey</name></member>
   </compound>
   <compound refid="structcryptx__priv__hash__sha256__state" kind="struct"><name>cryptx_priv_hash_sha256_state</name>
     <member refid="structcryptx__priv__hash__sha256__state_1ace8bc5d62baf6635d34d334d676f70dc" kind="variable"><name>data</name></member>
@@ -176,6 +189,12 @@
     <member refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a434628c70562f3ab468d94e8eae7784d" kind="enumvalue"><name>ASN1_END_OF_FILE</name></member>
     <member refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33aa13d20ad819d43693d26c77b80fb4952" kind="enumvalue"><name>ASN1_INVALID_ARG</name></member>
     <member refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a0101185f2109f1ba75ea2c4833664474" kind="enumvalue"><name>ASN1_LEN_OVERFLOW</name></member>
+    <member refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4" kind="enum"><name>pkcs_error_t</name></member>
+    <member refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4ae3e1b5568f600f599b65921673580a3b" kind="enumvalue"><name>PKCS_OK</name></member>
+    <member refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4ad51855979f8e263227e0fba2132d462f" kind="enumvalue"><name>PKCS_INVALID_ARG</name></member>
+    <member refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4a11d48b098df8071ab0bfd7c3c8f38a6a" kind="enumvalue"><name>PKCS_INVALID_STRUCT</name></member>
+    <member refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4ad98753e06ce91e41e842d85a5c7b139b" kind="enumvalue"><name>PKCS_INVALID_DATA</name></member>
+    <member refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4a31909947f498b908e7709718c2ddf96f" kind="enumvalue"><name>PKCS_UNSUPPORTED</name></member>
     <member refid="cryptx_8h_1a791c9616d63340d5f3d55673abefd768" kind="variable"><name>x</name></member>
     <member refid="cryptx_8h_1a9671c45fbc76e3760ed5b891992cf94a" kind="variable"><name>y</name></member>
     <member refid="cryptx_8h_1a70b79d7bbba52b64700123ab77ab5a28" kind="function"><name>cryptx_hash_init</name></member>
@@ -205,6 +224,7 @@
     <member refid="cryptx_8h_1a8e0feaf7624d174b3fa952cac3eccd0d" kind="function"><name>cryptx_asn1_decode</name></member>
     <member refid="cryptx_8h_1a3e216a54646a3f7d04c37102905ef850" kind="function"><name>cryptx_base64_encode</name></member>
     <member refid="cryptx_8h_1a28db41653bf7ba5ef8bfcef425343722" kind="function"><name>cryptx_base64_decode</name></member>
+    <member refid="cryptx_8h_1aaeb83227ffd725be2451cdf0a7748462" kind="function"><name>cryptx_pkcs8_import_publickey</name></member>
     <member refid="cryptx_8h_1aa26dcd5f7c0f1f679c91268bc5b69455" kind="function"><name>cryptx_hazmat_aes_ecb_encrypt</name></member>
     <member refid="cryptx_8h_1a705b398f84e2020d762a0ce03c90bd90" kind="function"><name>cryptx_hazmat_aes_ecb_decrypt</name></member>
     <member refid="cryptx_8h_1a686d9781ff0de6cf06424df197ce6e1e" kind="function"><name>cryptx_hazmat_rsa_oaep_encode</name></member>

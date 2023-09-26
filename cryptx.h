@@ -572,6 +572,42 @@ size_t cryptx_base64_encode(void *dest, const void *src, size_t len);
  */
 size_t cryptx_base64_decode(void *dest, const void *src, size_t len);
 
+/// Defines a structure for holding imported RSA or ECC public key data.
+struct cryptx_pkcs8_pubkeyinfo {
+  /** Stores root OBJECT IDENTIFIER. This will likely be the type of public key.  */
+  struct _objectid {
+    uint8_t data[32];     /** OBJECT IDENTIFIER bytes.  */
+    size_t len;           /** OBJECT IDENTIFIER length. */
+  } objectid;
+  /** Stores public key raw data.  */
+  struct _publickey {
+    uint8_t data[257];    /** Stores key data (public modulus for RSA or public key for ECC. */
+    size_t len;           /** Length of public modulus or public key. */
+    uint24_t exponent;    /** Public exponent for RSA. Unused for ECC. */
+  } publickey;
+};
+
+/// Defines response codes returned by the PKCS8 API.
+typedef enum {
+  PKCS_OK,
+  PKCS_INVALID_ARG,
+  PKCS_INVALID_STRUCT,
+  PKCS_INVALID_DATA,
+  PKCS_UNSUPPORTED
+} pkcs_error_t;
+
+/**
+ * @brief Attempts to import a PKCS#8-encoded public key for RSA or ECC.
+ * @param data Pointer to PKCS#8-encoded key data.
+ * @param len   Length of key data to import.
+ * @param keyinfo     Pointer to a @b cryptx_pkcs8_pubkeyinfo context to deserialize keydata into.
+ * @returns @b keyinfo populated with appropriate data from the keyfile.
+ * @returns A @b pkcs_error_t indicating the return status of the operation.
+ */
+pkcs_error_t cryptx_pkcs8_import_publickey(const void *data, size_t len,
+                                           struct cryptx_pkcs8_pubkeyinfo *keyinfo);
+
+
 
 #ifdef CRYPTX_ENABLE_HAZMAT
 

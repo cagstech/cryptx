@@ -50,6 +50,10 @@ library CRYPTX, 13
 ; base64 module
 	export cryptx_base64_encode
 	export cryptx_base64_decode
+ 
+; pkcs
+  export cryptx_pkcs8_import_publickey
+  export cryptx_pkcs8_import_privatekey
 	
 
 ; hazardous materials
@@ -11361,7 +11365,676 @@ base64_decode:
 	pop	ix
 	ret
 
+cryptx_pkcs8_import_publickey:
+	ld	hl, -39
+	call	ti._frameset
+	ld	hl, (ix + 6)
+	ld	de, 1
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	z, BB0_13
+	ld	hl, (ix + 9)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	z, BB0_13
+	ld	hl, (ix + 12)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	z, BB0_13
+	ld	(hl), 0
+	push	hl
+	pop	iy
+	inc	iy
+	ld	bc, 297
+	lea	de, iy
+	ldir
+	ld	hl, 26
+	push	hl
+	ld	hl, __pkcs_str1
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	call	ti._strncmp
+	pop	de
+	pop	de
+	pop	de
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	nz, BB0_12
+	lea	hl, ix - 6
+	ld	(ix - 33), hl
+	lea	hl, ix - 9
+	ld	(ix - 27), hl
+	lea	hl, ix - 15
+	ld	(ix - 36), hl
+	lea	bc, ix - 18
+	ld	de, (ix + 9)
+	ld	iy, (ix + 6)
+BB0_5:
+	dec	de
+	ld	a, (iy)
+	inc	iy
+	cp	a, 10
+	jr	nz, BB0_5
+	ld	(ix - 30), bc
+	ld	hl, (ix + 6)
+	ld	bc, (ix + 9)
+	add	hl, bc
+	dec	hl
+BB0_7:
+	dec	de
+	ld	a, (hl)
+	dec	hl
+	cp	a, 10
+	jr	nz, BB0_7
+	push	de
+	push	iy
+	ld	hl, -1898496
+	push	hl
+	call	cryptx_base64_decode
+	pop	de
+	pop	de
+	pop	de
+	pea	ix - 3
+	pea	ix - 12
+	ld	de, 0
+	push	de
+	push	de
+	push	hl
+	ld	hl, -1898496
+	push	hl
+	call	cryptx_asn1_decode
+	ld	(ix - 39), hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 3)
+	ld	de, (ix - 12)
+	ld	bc, (ix - 33)
+	push	bc
+	ld	bc, (ix - 36)
+	push	bc
+	ld	bc, 0
+	push	bc
+	push	bc
+	push	de
+	push	hl
+	call	cryptx_asn1_decode
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	ld	bc, (ix - 39)
+	call	ti._ior
+	ld	(ix - 39), hl
+	ld	hl, (ix - 6)
+	ld	de, (ix - 15)
+	ld	bc, (ix - 27)
+	push	bc
+	ld	bc, (ix - 30)
+	push	bc
+	ld	bc, 0
+	push	bc
+	push	bc
+	push	de
+	push	hl
+	call	cryptx_asn1_decode
+	push	hl
+	pop	bc
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 39)
+	call	ti._ior
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	nz, BB0_12
+	ld	hl, (ix - 9)
+	ld	de, (ix - 18)
+	ld	(ix - 39), de
+	push	de
+	push	hl
+	ld	hl, (ix + 12)
+	push	hl
+	call	ti._memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	iy, (ix + 12)
+	ld	hl, (ix - 39)
+	ld	(iy + 32), hl
+	push	hl
+	ld	hl, __pkcs_rsa_oid
+	push	hl
+	push	iy
+	call	ti._strncmp
+	pop	de
+	pop	de
+	pop	de
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	nz, BB0_14
+	ld	hl, (ix - 3)
+	ld	de, (ix - 12)
+	ld	bc, (ix - 33)
+	push	bc
+	ld	bc, (ix - 36)
+	push	bc
+	ld	bc, 0
+	push	bc
+	inc	bc
+	push	bc
+	push	de
+	push	hl
+	call	cryptx_asn1_decode
+	ld	(ix - 33), hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 6)
+	ld	de, (ix - 15)
+	pea	ix - 21
+	pea	ix - 24
+	ld	bc, 0
+	push	bc
+	push	bc
+	push	de
+	push	hl
+	call	cryptx_asn1_decode
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	ld	bc, (ix - 33)
+	call	ti._ior
+	ld	(ix - 33), hl
+	ld	hl, (ix - 21)
+	ld	de, (ix - 24)
+	ld	bc, (ix - 27)
+	push	bc
+	ld	bc, (ix - 30)
+	push	bc
+	ld	bc, 0
+	push	bc
+	inc	bc
+	push	bc
+	push	de
+	push	hl
+	call	cryptx_asn1_decode
+	push	hl
+	pop	bc
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 33)
+	call	ti._ior
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	nz, BB0_12
+	ld	de, 295
+	ld	iy, (ix + 12)
+	add	iy, de
+	ld	hl, (ix - 9)
+	ld	de, (ix - 18)
+	push	de
+	push	hl
+	push	iy
+	call	_rmemcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 21)
+	ld	de, (ix - 24)
+	ld	bc, (ix - 27)
+	push	bc
+	ld	bc, (ix - 30)
+	push	bc
+	ld	bc, 0
+	push	bc
+	jr	BB0_15
+BB0_12:
+	ld	de, 3
+BB0_13:
+	ex	de, hl
+	ld	sp, ix
+	pop	ix
+	ret
+BB0_14:
+	ld	hl, (ix - 3)
+	ld	de, (ix - 12)
+	ld	bc, (ix - 27)
+	push	bc
+	ld	bc, (ix - 30)
+	push	bc
+	ld	bc, 0
+	push	bc
+	inc	bc
+BB0_15:
+	push	bc
+	push	de
+	push	hl
+	call	cryptx_asn1_decode
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	de, 3
+	jr	nz, BB0_13
+	ld	hl, (ix - 9)
+	ld	de, (ix - 18)
+	ld	(ix - 27), de
+	push	de
+	push	hl
+	ld	hl, (ix + 12)
+	push	hl
+	pop	iy
+	pea	iy + 35
+	call	ti._memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	de, 292
+	ld	iy, (ix + 12)
+	add	iy, de
+	ld	hl, (ix - 27)
+	ld	(iy), hl
+	ld	de, 0
+	jr	BB0_13
  
+ 
+ __pkcs_rsa_oid: db	$2A,$86,$48,$86,$F7,$0D,$01,$01,$01,0
+  
+	
+cryptx_pkcs8_import_privatekey:
+	ld	hl, -49
+	call	ti._frameset
+	ld	hl, (ix + 6)
+	ld	de, 1
+	ld	iyl, d
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	z, BB1_29
+	ld	bc, (ix + 9)
+	push	bc
+	pop	hl
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	z, BB1_29
+	ld	hl, (ix + 12)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	z, BB1_29
+	ld	de, 4
+	or	a, a
+	sbc	hl, de
+	jr	c, BB1_5
+	ld	de, 2
+	jp	BB1_29
+BB1_5:
+	ld	(ix - 25), iy
+	ld	hl, __pkcs_str2
+	ld	de, 27
+	push	de
+	push	hl
+	push	bc
+	call	ti._strncmp
+	pop	de
+	pop	de
+	pop	de
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	nz, BB1_17
+	ld	l, 1
+	ld	(ix - 46), hl
+	lea	hl, ix - 1
+	ld	(ix - 22), hl
+	lea	hl, ix - 10
+	ld	(ix - 40), hl
+	lea	hl, ix - 19
+	ld	(ix - 43), hl
+	ld	c, 3
+	ld	de, (ix + 12)
+	push	de
+	pop	hl
+	call	ti._ishl
+	ld	iy, (ix + 9)
+	ld	bc, -8
+BB1_7:
+	dec	de
+	add	hl, bc
+	ld	a, (iy)
+	inc	iy
+	cp	a, 10
+	jr	nz, BB1_7
+	ld	(ix - 28), iy
+	ld	iy, (ix + 9)
+	ld	bc, (ix + 12)
+	add	iy, bc
+	ld	bc, -8
+BB1_9:
+	add	hl, bc
+	dec	de
+	ld	a, (iy)
+	dec	iy
+	cp	a, 10
+	jr	nz, BB1_9
+	ld	bc, 6
+	call	ti._idivu
+	push	hl
+	pop	bc
+	ld	(ix - 31), bc
+	ld	hl, 0
+	add	hl, sp
+	ld	(ix - 37), hl
+	ld	hl, 0
+	add	hl, sp
+	or	a, a
+	sbc	hl, bc
+	push	hl
+	pop	iy
+	ld	(ix - 34), iy
+	ld	sp, iy
+	push	de
+	ld	hl, (ix - 28)
+	push	hl
+	push	iy
+	call	cryptx_base64_decode
+	pop	hl
+	pop	hl
+	pop	hl
+	pea	ix - 13
+	pea	ix - 4
+	ld	hl, (ix - 22)
+	push	hl
+	or	a, a
+	sbc	hl, hl
+	push	hl
+	ld	hl, (ix - 31)
+	push	hl
+	ld	hl, (ix - 34)
+	push	hl
+	call	cryptx_asn1_decode
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	nz, BB1_27
+	ld	a, (ix - 1)
+	and	a, 63
+	cp	a, 16
+	jp	nz, BB1_27
+	ld	hl, (ix + 6)
+	ld	(ix - 31), hl
+	or	a, a
+	sbc	hl, hl
+	ld	(ix - 34), hl
+BB1_13:
+	ld	iy, (ix - 4)
+	ld	bc, (ix - 13)
+	ld	(ix - 28), hl
+	ld	de, 2
+	or	a, a
+	sbc	hl, de
+	jp	z, BB1_20
+	ld	hl, (ix - 40)
+	push	hl
+	ld	hl, (ix - 43)
+	push	hl
+	ld	hl, (ix - 22)
+	push	hl
+	ld	hl, (ix - 25)
+	push	hl
+	push	bc
+	push	iy
+	call	cryptx_asn1_decode
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	nz, BB1_27
+	ld	a, (ix - 1)
+	and	a, 63
+	ld	hl, __pkcs_validator_keyinfo
+	ld	de, (ix - 28)
+	add	hl, de
+	ld	l, (hl)
+	cp	a, l
+	jp	nz, BB1_27
+	ld	iy, (ix + 6)
+	ld	bc, (ix - 34)
+	add	iy, bc
+	lea	hl, iy + 72
+	ld	iy, (ix - 31)
+	ld	(iy), hl
+	ld	bc, (ix - 19)
+	ld	(ix - 49), bc
+	ld	(iy + 3), bc
+	ld	de, (ix - 10)
+	push	bc
+	push	de
+	push	hl
+	call	ti._memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	de, (ix - 34)
+	ld	hl, (ix - 49)
+	add	hl, de
+	push	hl
+	pop	bc
+	ld	de, (ix - 28)
+	inc	de
+	ld	iy, (ix - 31)
+	lea	iy, iy + 6
+	ld	(ix - 31), iy
+	ld	hl, (ix - 25)
+	inc	l
+	ld	(ix - 25), hl
+	ld	(ix - 34), bc
+	ex	de, hl
+	jp	BB1_13
+BB1_17:
+	ld	hl, __pkcs_str3
+	ld	de, 37
+	push	de
+	push	hl
+	ld	hl, (ix + 9)
+	push	hl
+	call	ti._strncmp
+	pop	de
+	pop	de
+	pop	de
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	z, BB1_19
+	ld	de, 3
+	jp	BB1_29
+BB1_19:
+	ld	de, 4
+	jp	BB1_29
+BB1_20:
+	pea	ix - 7
+	pea	ix - 16
+	ld	hl, (ix - 22)
+	push	hl
+	ld	hl, 2
+	push	hl
+	push	bc
+	push	iy
+	call	cryptx_asn1_decode
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	nz, BB1_27
+	ld	a, (ix - 1)
+	and	a, 63
+	cp	a, 16
+	ld	de, 3
+	jp	nz, BB1_28
+	ld	iy, (ix + 6)
+	lea	iy, iy + 21
+	ld	bc, 8
+	ld	de, 0
+	push	de
+	pop	hl
+BB1_23:
+	ld	(ix - 25), hl
+	or	a, a
+	sbc	hl, bc
+	jp	z, BB1_28
+	ld	(ix - 28), iy
+	ld	hl, (ix - 7)
+	ld	de, (ix - 16)
+	ld	bc, (ix - 40)
+	push	bc
+	ld	bc, (ix - 43)
+	push	bc
+	ld	bc, (ix - 22)
+	push	bc
+	ld	bc, (ix - 46)
+	push	bc
+	push	de
+	push	hl
+	call	cryptx_asn1_decode
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	nz, BB1_27
+	ld	a, (ix - 1)
+	and	a, 63
+	ld	hl, __pkcs_validator_privatekey+1
+	ld	de, (ix - 25)
+	add	hl, de
+	ld	l, (hl)
+	cp	a, l
+	jr	nz, BB1_27
+	ld	iy, (ix + 6)
+	ld	bc, (ix - 34)
+	add	iy, bc
+	lea	hl, iy + 72
+	ld	iy, (ix - 28)
+	ld	(iy - 3), hl
+	ld	bc, (ix - 19)
+	ld	(ix - 31), bc
+	ld	(iy), bc
+	ld	de, (ix - 10)
+	push	bc
+	push	de
+	push	hl
+	call	ti._memcpy
+	ld	iy, (ix - 28)
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	de, (ix - 34)
+	ld	hl, (ix - 31)
+	add	hl, de
+	push	hl
+	pop	bc
+	ld	de, (ix - 25)
+	inc	de
+	lea	iy, iy + 6
+	ld	hl, (ix - 46)
+	inc	l
+	ld	(ix - 46), hl
+	ex	de, hl
+	ld	(ix - 34), bc
+	ld	de, 0
+	ld	bc, 8
+	jp	BB1_23
+BB1_27:
+	ld	de, 3
+BB1_28:
+	ld	hl, (ix - 37)
+	ld	sp, hl
+BB1_29:
+	ex	de, hl
+	ld	sp, ix
+	pop	ix
+	ret
+ 
+cryptx_pkcs8_destroy:
+	call	ti._frameset0
+	ld	iy, (ix + 6)
+	ld	(iy), 0
+	ld	(iy + 1), 0
+	ld	(iy + 2), 0
+	pop	ix
+	ret
+ 
+__pkcs_validator_keyinfo:
+	db	6, 5
+
+__pkcs_validator_publickey:
+	db	2 dup 3
+
+__pkcs_validator_privatekey:
+	db	8 dup 3
+ 
+__pkcs_str1:
+	db	"-----BEGIN PUBLIC KEY-----", 0
+
+__pkcs_str2:
+	db	"-----BEGIN PRIVATE KEY-----", 0
+
+__pkcs_str3:
+	db	"-----BEGIN ENCRYPTED PRIVATE KEY-----", 0
+
  _hexc:     db	"0123456789ABCDEF"
  _hash_out_lens:    db 32
  
