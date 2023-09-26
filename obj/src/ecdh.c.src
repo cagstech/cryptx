@@ -1,0 +1,721 @@
+	section	.text,"ax",@progbits
+	assume	adl = 1
+	section	.text,"ax",@progbits
+	public	_point_double
+_point_double:
+	ld	hl, -36
+	call	__frameset
+	ld	iy, (ix + 6)
+	lea	hl, iy + 30
+	ld	(ix - 36), hl
+	push	hl
+	call	_bigint_iszero
+	pop	hl
+	bit	0, a
+	jr	z, BB0_2
+	ld	hl, (ix + 6)
+	ld	(hl), 0
+	push	hl
+	pop	iy
+	inc	iy
+	ld	bc, 59
+	lea	de, iy
+	ldir
+	jp	BB0_3
+BB0_2:
+	lea	de, ix - 30
+	ld	(ix - 33), de
+	ld	hl, (ix + 6)
+	push	hl
+	push	de
+	call	_bigint_invert
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 36)
+	push	hl
+	ld	hl, (ix - 33)
+	push	hl
+	push	hl
+	call	_bigint_mul
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix + 6)
+	push	hl
+	ld	hl, (ix - 33)
+	push	hl
+	push	hl
+	call	_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix + 6)
+	push	hl
+	ld	hl, (ix - 36)
+	push	hl
+	call	_bigint_square
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 33)
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	call	_bigint_square
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 33)
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	push	hl
+	call	_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix + 6)
+	push	hl
+	ld	hl, (ix - 33)
+	push	hl
+	push	hl
+	call	_bigint_mul
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 33)
+	push	hl
+	ld	hl, (ix - 36)
+	push	hl
+	push	hl
+	call	_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix + 6)
+	push	hl
+	ld	hl, (ix - 36)
+	push	hl
+	push	hl
+	call	_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+BB0_3:
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_point_add
+_point_add:
+	ld	hl, -102
+	call	__frameset
+	ld	hl, (ix + 9)
+	push	hl
+	call	_point_iszero
+	pop	hl
+	bit	0, a
+	jp	nz, BB1_10
+	ld	hl, (ix + 6)
+	push	hl
+	call	_point_iszero
+	pop	hl
+	bit	0, a
+	jr	z, BB1_3
+	ld	bc, 60
+	ld	de, (ix + 6)
+	ld	hl, (ix + 9)
+	jr	BB1_7
+BB1_3:
+	ld	hl, (ix + 9)
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	call	_point_isequal
+	pop	hl
+	pop	hl
+	bit	0, a
+	jr	z, BB1_5
+	ld	hl, (ix + 6)
+	push	hl
+	call	_point_double
+	jp	BB1_9
+BB1_5:
+	ld	hl, (ix + 9)
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	call	_bigint_isequal
+	pop	hl
+	pop	hl
+	bit	0, a
+	jr	z, BB1_8
+	ld	hl, (ix + 6)
+	ld	(hl), 0
+	push	hl
+	pop	iy
+	inc	iy
+	ld	bc, 59
+	lea	de, iy
+BB1_7:
+	ldir
+	jp	BB1_10
+BB1_8:
+	lea	bc, ix - 30
+	ld	(ix - 99), bc
+	lea	hl, ix - 60
+	ld	(ix - 93), hl
+	lea	hl, ix - 90
+	ld	(ix - 96), hl
+	ld	hl, (ix + 6)
+	push	hl
+	pop	iy
+	lea	hl, iy + 30
+	ld	(ix - 102), hl
+	ld	de, (ix + 9)
+	push	de
+	pop	iy
+	pea	iy + 30
+	push	hl
+	push	bc
+	call	_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix + 9)
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	ld	hl, (ix - 93)
+	push	hl
+	call	_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 93)
+	push	hl
+	ld	hl, (ix - 96)
+	push	hl
+	call	_bigint_invert
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 96)
+	push	hl
+	ld	hl, (ix - 99)
+	push	hl
+	push	hl
+	call	_bigint_mul
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 99)
+	push	hl
+	ld	hl, (ix - 96)
+	push	hl
+	call	_bigint_square
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 93)
+	push	hl
+	ld	hl, (ix - 96)
+	push	hl
+	push	hl
+	call	_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 99)
+	push	hl
+	ld	hl, (ix - 96)
+	push	hl
+	push	hl
+	call	_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 96)
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	ld	hl, (ix - 93)
+	push	hl
+	call	_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	de, (ix + 6)
+	ld	hl, (ix - 96)
+	ld	bc, 30
+	ldir
+	ld	hl, (ix - 99)
+	push	hl
+	ld	hl, (ix - 93)
+	push	hl
+	push	hl
+	call	_bigint_mul
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 102)
+	push	hl
+	ld	hl, (ix - 93)
+	push	hl
+	push	hl
+	call	_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix + 6)
+	push	hl
+	ld	hl, (ix - 93)
+	push	hl
+	ld	hl, (ix - 102)
+	push	hl
+	call	_bigint_add
+	pop	hl
+	pop	hl
+BB1_9:
+	pop	hl
+BB1_10:
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_point_mul_scalar
+_point_mul_scalar:
+	ld	hl, -69
+	call	__frameset
+	ld	iy, (ix + 6)
+	ld	bc, 60
+	lea	de, ix - 60
+	ld	(ix - 69), de
+	lea	hl, iy
+	ldir
+	ld	(iy), 0
+	lea	hl, iy
+	inc	hl
+	ld	bc, 59
+	ex	de, hl
+	lea	hl, iy
+	ldir
+	ld	de, (ix + 12)
+BB2_1:
+	ld	bc, 1
+	push	de
+	pop	hl
+	or	a, a
+	sbc	hl, bc
+	call	pe, __setflag
+	jp	m, BB2_5
+	ld	(ix - 63), de
+	dec	de
+	ld	(ix - 66), de
+	ld	hl, (ix + 6)
+	push	hl
+	call	_point_double
+	pop	hl
+	ld	hl, (ix - 66)
+	ld	c, 3
+	call	__ishru
+	push	hl
+	pop	de
+	ld	hl, (ix + 9)
+	add	hl, de
+	ld	e, (hl)
+	ld	hl, (ix - 66)
+	ld	bc, 7
+	call	__iand
+	ld	a, 1
+	ld	b, l
+	call	__bshl
+	and	a, e
+	or	a, a
+	ld	hl, _ta_resist
+	jr	z, BB2_4
+	ld	hl, (ix - 69)
+BB2_4:
+	ld	de, (ix - 63)
+	dec	de
+	ld	(ix - 63), de
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	call	_point_add
+	ld	de, (ix - 63)
+	pop	hl
+	pop	hl
+	jr	BB2_1
+BB2_5:
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_point_isvalid
+_point_isvalid:
+	ld	hl, -69
+	call	__frameset
+	ld	hl, (ix + 6)
+	push	hl
+	call	_point_iszero
+	pop	hl
+	bit	0, a
+	jr	z, BB3_2
+	ld	a, 1
+	jr	BB3_3
+BB3_2:
+	lea	de, ix - 30
+	ld	(ix - 66), de
+	lea	hl, ix - 60
+	ld	(ix - 63), hl
+	ld	hl, (ix + 6)
+	push	hl
+	push	hl
+	push	de
+	call	_bigint_mul
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix + 6)
+	push	hl
+	ld	hl, (ix - 66)
+	push	hl
+	push	hl
+	call	_bigint_mul
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	a, (ix - 30)
+	xor	a, 1
+	ld	(ix - 30), a
+	ld	iy, (ix + 6)
+	lea	hl, iy + 30
+	ld	(ix - 69), hl
+	push	hl
+	push	hl
+	ld	hl, (ix - 63)
+	push	hl
+	call	_bigint_mul
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 63)
+	push	hl
+	ld	hl, (ix - 66)
+	push	hl
+	push	hl
+	call	_bigint_add
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 69)
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	ld	hl, (ix - 63)
+	push	hl
+	call	_bigint_mul
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 63)
+	push	hl
+	ld	hl, (ix - 66)
+	push	hl
+	call	_bigint_isequal
+	pop	hl
+	pop	hl
+BB3_3:
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_hexdump
+_hexdump:
+	ld	hl, -4
+	call	__frameset
+	ld	hl, (ix + 12)
+	ld	bc, -327680
+	ld	de, _.str.1
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	nz, BB4_2
+	push	de
+	push	bc
+	call	_sprintf
+	jr	BB4_3
+BB4_2:
+	ld	de, _.str
+	push	hl
+	push	de
+	push	bc
+	call	_sprintf
+	pop	hl
+BB4_3:
+	pop	hl
+	pop	hl
+	ld	iy, (ix + 6)
+	ld	de, (ix + 9)
+	ld	bc, -327680
+	or	a, a
+	sbc	hl, hl
+	ld	(ix - 3), hl
+	ex	de, hl
+BB4_4:
+	ld	de, (ix - 3)
+	ld	a, e
+	inc	a
+	or	a, a
+	sbc	hl, de
+	jr	z, BB4_6
+	lea	hl, iy
+	ld	de, (ix - 3)
+	add	hl, de
+	ld	de, 0
+	ld	e, (hl)
+	push	de
+	ld	hl, _.str.2
+	push	hl
+	push	bc
+	ld	(ix - 4), a
+	call	_sprintf
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	a, (ix - 4)
+	and	a, 15
+	or	a, a
+	ld	hl, _.str.1
+	push	hl
+	ld	hl, -327680
+	push	hl
+	call	z, _sprintf
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 3)
+	inc	hl
+	ld	(ix - 3), hl
+	ld	bc, -327680
+	ld	iy, (ix + 6)
+	ld	hl, (ix + 9)
+	jr	BB4_4
+BB4_6:
+	ld	hl, _.str.1
+	push	hl
+	push	bc
+	call	_sprintf
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_ec_keygen
+_ec_keygen:
+	call	__frameset0
+	ld	de, (ix + 6)
+	ld	bc, (ix + 9)
+	push	de
+	pop	hl
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	z, BB5_3
+	push	bc
+	pop	hl
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	z, BB5_3
+	ld	hl, 29
+	push	hl
+	push	de
+	call	_cryptx_csrand_fill
+	pop	hl
+	pop	hl
+	ld	hl, 30
+	push	hl
+	ld	hl, _sect233k1+30
+	push	hl
+	ld	hl, (ix + 9)
+	push	hl
+	call	_rmemcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 30
+	push	hl
+	ld	hl, _sect233k1+60
+	push	hl
+	ld	iy, (ix + 9)
+	pea	iy + 30
+	call	_rmemcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, 240
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	ld	hl, (ix + 9)
+	push	hl
+	call	_point_mul_scalar
+	ld	de, (ix + 6)
+	ld	bc, (ix + 9)
+	pop	hl
+	pop	hl
+	pop	hl
+BB5_3:
+	ex	de, hl
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	e, -1
+	ld	d, 0
+	ld	a, e
+	jr	nz, BB5_5
+	ld	a, d
+BB5_5:
+	push	bc
+	pop	hl
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	nz, BB5_7
+	ld	e, d
+BB5_7:
+	and	a, e
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_ecdh_secret
+_ecdh_secret:
+	ld	hl, -1
+	call	__frameset
+	ld	hl, (ix + 6)
+	ld	bc, 1
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	z, BB6_10
+	ld	iy, (ix + 9)
+	lea	hl, iy
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	z, BB6_10
+	ld	hl, (ix + 12)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	z, BB6_10
+	ld	bc, 60
+	ex	de, hl
+	lea	hl, iy
+	ldir
+	ld	a, (_sect233k1+90)
+	ld	(ix - 1), a
+	ld	hl, (ix + 12)
+	push	hl
+	call	_point_iszero
+	pop	hl
+	bit	0, a
+	jr	z, BB6_5
+	ld	bc, 3
+	jr	BB6_10
+BB6_5:
+	ld	hl, (ix + 12)
+	push	hl
+	call	_point_isvalid
+	pop	hl
+	bit	0, a
+	ld	de, (ix + 12)
+	ld	bc, 3
+	jr	z, BB6_10
+	ld	hl, 240
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	push	de
+	call	_point_mul_scalar
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	a, (ix - 1)
+BB6_7:
+	cp	a, 2
+	jr	c, BB6_9
+	ld	(ix - 1), a
+	ld	hl, (ix + 12)
+	push	hl
+	call	_point_double
+	pop	hl
+	ld	a, (ix - 1)
+	srl	a
+	jr	BB6_7
+BB6_9:
+	ld	bc, 0
+BB6_10:
+	push	bc
+	pop	hl
+	inc	sp
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.data,"aw",@progbits
+	public	_sect233k1
+_sect233k1:
+	db	"", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0, 0, 0, 0, 0, ""
+	db	"r2∫Ö:~s", 26, "Ò)Ú/Ùïc§¬kı", 10, "LùnÔ≠a&"
+	db	"€S}ÏË∑˜UZgƒ'®ÕõÒäÎõV‡¡V˙Ê£"
+	db	4
+
+	section	.bss,"aw",@nobits
+	public	_ta_resist
+_ta_resist:
+	rb	60
+
+	section	.rodata,"a",@progbits
+	private	_.str
+_.str:
+	db	10, "%s", 10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.1
+_.str.1:
+	db	10, 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.2
+_.str.2:
+	db	"%02X ", 0
+
+	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 6c61664110f888c0285ae4c48b150c9a7a4361bb)"
+	extern	_point_iszero
+	extern	__Unwind_SjLj_Register
+	extern	__frameset
+	extern	_sprintf
+	extern	_rmemcpy
+	extern	_bigint_add
+	extern	__ishru
+	extern	__setflag
+	extern	_cryptx_csrand_fill
+	extern	__Unwind_SjLj_Unregister
+	extern	_bigint_invert
+	extern	_bigint_iszero
+	extern	__iand
+	extern	_bigint_mul
+	extern	__bshl
+	extern	_bigint_isequal
+	extern	_point_isequal
+	extern	__frameset0
+	extern	_bigint_square
