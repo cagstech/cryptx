@@ -33,7 +33,7 @@ pkcs_error_t cryptx_pkcs8_import_publickey(struct cryptx_pkcs8_publickey *pkcs,
   uint8_t *pem_start = data;
   while(*pem_start++ != '\n');
   uint8_t *pem_end = data + len;
-  while(*pem_start-- != '\n');
+  while(*pem_end-- != '\n');
   size_t pem_size = pem_end - pem_start;
   
   // decode PEM/Base64
