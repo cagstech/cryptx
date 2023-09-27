@@ -576,14 +576,14 @@ size_t cryptx_base64_decode(void *dest, const void *src, size_t len);
 struct cryptx_pkcs8_pubkeyinfo {
   /** Stores root OBJECT IDENTIFIER. This will likely be the type of public key.  */
   struct _objectid {
-    uint8_t data[32];     /** OBJECT IDENTIFIER bytes.  */
-    size_t len;           /** OBJECT IDENTIFIER length. */
+    uint8_t data[32];     /// OBJECT IDENTIFIER bytes.
+    size_t len;           /// OBJECT IDENTIFIER length.
   } objectid;
   /** Stores public key raw data.  */
   struct _publickey {
-    uint8_t data[257];    /** Stores key data (public modulus for RSA or public key for ECC. */
-    size_t len;           /** Length of public modulus or public key. */
-    uint24_t exponent;    /** Public exponent for RSA. Unused for ECC. */
+    uint8_t data[257];    /// Stores key data (public modulus for RSA or public key for ECC. */
+    size_t len;           /// Length of public modulus or public key. */
+    uint24_t exponent;    /// Public exponent for RSA. Unused for ECC. */
   } publickey;
 };
 
@@ -591,9 +591,8 @@ struct cryptx_pkcs8_pubkeyinfo {
 typedef enum {
   PKCS_OK,
   PKCS_INVALID_ARG,
-  PKCS_INVALID_STRUCT,
+  PKCS_UNSUPPORTED,
   PKCS_INVALID_DATA,
-  PKCS_UNSUPPORTED
 } pkcs_error_t;
 
 /**

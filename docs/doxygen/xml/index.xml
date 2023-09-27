@@ -192,9 +192,8 @@
     <member refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4" kind="enum"><name>pkcs_error_t</name></member>
     <member refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4ae3e1b5568f600f599b65921673580a3b" kind="enumvalue"><name>PKCS_OK</name></member>
     <member refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4ad51855979f8e263227e0fba2132d462f" kind="enumvalue"><name>PKCS_INVALID_ARG</name></member>
-    <member refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4a11d48b098df8071ab0bfd7c3c8f38a6a" kind="enumvalue"><name>PKCS_INVALID_STRUCT</name></member>
-    <member refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4ad98753e06ce91e41e842d85a5c7b139b" kind="enumvalue"><name>PKCS_INVALID_DATA</name></member>
     <member refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4a31909947f498b908e7709718c2ddf96f" kind="enumvalue"><name>PKCS_UNSUPPORTED</name></member>
+    <member refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4ad98753e06ce91e41e842d85a5c7b139b" kind="enumvalue"><name>PKCS_INVALID_DATA</name></member>
     <member refid="cryptx_8h_1a791c9616d63340d5f3d55673abefd768" kind="variable"><name>x</name></member>
     <member refid="cryptx_8h_1a9671c45fbc76e3760ed5b891992cf94a" kind="variable"><name>y</name></member>
     <member refid="cryptx_8h_1a70b79d7bbba52b64700123ab77ab5a28" kind="function"><name>cryptx_hash_init</name></member>
