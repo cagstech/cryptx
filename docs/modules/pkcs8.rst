@@ -7,7 +7,7 @@ PKCS#8
 
   <p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides functions for the import of PKCS#8-encoded public and private keys that can be used with the RSA and EC modules of this library.</p>
 
-PKCS#8 stands for **Public Key Cryptography Standards** and specification #8 provides general key encoding guidelines for various forms of public and private keys compatible with this library. Because the API of this library tends to work on raw data (rather than on key structures like other libraries do), this module provides a way to deserialize PKCS#8 keyfiles such that you can access components of the key. You can also pass these public and private key structures directly to the TLS implementation (coming soon).
+PKCS stands for **Public Key Cryptography Standards** and specification #8 provides general key encoding guidelines for various forms of public and private keys. Because the API of this library tends to work on raw data (rather than on key structures like other libraries do), this module provides a way to deserialize PKCS#8 keyfiles such that you can access components of the key. You can also pass these public and private key structures directly to the TLS implementation (coming soon).
 
 PKCS#8 typically encodes keydata using the following workflow:
 
