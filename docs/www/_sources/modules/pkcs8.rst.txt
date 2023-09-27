@@ -111,9 +111,9 @@ You can import a keyfile and then access its data like so:
 Object Identifier Reference
 ___________________________
 
-This section lists algorithm object identifiers supported by this library. Developers should generally never need to use these as the library should handle it internally, but if you need them for other projects or even for custom implementations, here they are.
+This section lists object identifiers for algorithms supported by this library. Developers should generally never need to use these as the library should handle it internally, but if you need them for other projects or even for custom implementations, here they are.
 
-**Bear in mind that while this module can successfully import "objects" for most algorithm types, only the ones listed below can actually be USED by the library.**
+**Bear in mind that while this module can successfully import objects for most algorithm types, only the ones listed below can actually be USED by the library.**
 
 +---------------+--------------------------+---------------------------------------+
 | Algorithm     | Object Identifier        | Bytes                                 |

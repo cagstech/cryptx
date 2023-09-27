@@ -44,13 +44,15 @@ CryptX has a number of modules that implement various standards for data obfusca
 +----------------------+----------------------------------------------------------------+
 | Module               | Implements                                                     |
 +======================+================================================================+
-|:ref:`csrand <csrand>`| cryptographically-secure random number generator               |
-+----------------------+----------------------------------------------------------------+
-|:ref:`bytes <bytes>`  | bytearray comparison, string conversion, endianness reversal   |
+|:ref:`pkcs8 <pkcs8>`  | public key cryptographic standards #8                          |
 +----------------------+----------------------------------------------------------------+
 |:ref:`hash <hash>`    | secure hashing: SHA256, SHA1                                   |
 +----------------------+----------------------------------------------------------------+
 |:ref:`hmac <hmac>`    | hash-based message authentication code: SHA256, SHA1           |
++----------------------+----------------------------------------------------------------+
+|:ref:`csrand <csrand>`| cryptographically-secure random number generator               |
++----------------------+----------------------------------------------------------------+
+|:ref:`bytes <bytes>`  | bytearray comparison, string conversion, endianness reversal   |
 +----------------------+----------------------------------------------------------------+
 |:ref:`aes <aes>`      | advanced encryption standard (AES)                             |
 +----------------------+----------------------------------------------------------------+
@@ -61,8 +63,6 @@ CryptX has a number of modules that implement various standards for data obfusca
 |:ref:`asn1 <asn1>`    | DER/ASN.1 codex                                                |
 +----------------------+----------------------------------------------------------------+
 |:ref:`base64 <base64>`| PEM/Base64 codex                                               |
-+----------------------+----------------------------------------------------------------+
-|:ref:`pkcs8 <pkcs8>`  | public key cryptographic standards #8                          |
 +----------------------+----------------------------------------------------------------+
 |:ref:`hazmat <hazmat>`| hazardous materials/compatibility/custom construction layer    |
 +----------------------+----------------------------------------------------------------+
@@ -95,18 +95,33 @@ Check out the :ref:`analysis` for more technical implementation details includin
 .. toctree::
   :maxdepth: 1
   :hidden:
+  :caption: Recommended Usage
+  :name: recommended
   
-  modules/csrand
-  modules/bytes
+  modules/pkcs8
   modules/hash
   modules/hmac
+  modules/csrand
+  
+.. toctree::
+  :maxdepth: 1
+  :hidden:
+  :caption: Advanced Usage
+  :name: advanced
+  
+  modules/bytes
   modules/aes
   modules/rsa
   modules/ec
   modules/asn1
   modules/base64
-  modules/pkcs8
   modules/hazmat
+
+.. toctree::
+  :maxdepth: 1
+  :hidden:
+  :caption: Additional Info
+  :name: lowlevel
   
   static/analysis
   static/references
