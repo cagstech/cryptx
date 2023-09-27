@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.7" xml:lang="en-US">
+  <compounddef id="structcryptx__pkcs8__pubkeyinfo_1_1__publickey" kind="struct" language="C++" prot="public">
+    <compoundname>cryptx_pkcs8_pubkeyinfo::_publickey</compoundname>
+    <includes refid="cryptx_8h" local="no">cryptx.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcryptx__pkcs8__pubkeyinfo_1_1__publickey_1ab063e3e50ab4d8738a0a0dedfe1ceb3b" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t cryptx_pkcs8_pubkeyinfo::_publickey::data[257]</definition>
+        <argsstring>[257]</argsstring>
+        <name>data</name>
+        <qualifiedname>cryptx_pkcs8_pubkeyinfo::_publickey::data</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="584" column="13" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="584" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__pubkeyinfo_1_1__publickey_1a38564efc77984c28226fe6e269106437" prot="public" static="no" mutable="no">
+        <type>size_t</type>
+        <definition>size_t cryptx_pkcs8_pubkeyinfo::_publickey::len</definition>
+        <argsstring></argsstring>
+        <name>len</name>
+        <qualifiedname>cryptx_pkcs8_pubkeyinfo::_publickey::len</qualifiedname>
+        <briefdescription>
+<para>Stores key data (public modulus for RSA or public key for ECC. *<zwj/>/. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="585" column="12" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="585" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__pubkeyinfo_1_1__publickey_1a9d747359d62ae394b946892f68e8f832" prot="public" static="no" mutable="no">
+        <type>uint24_t</type>
+        <definition>uint24_t cryptx_pkcs8_pubkeyinfo::_publickey::exponent</definition>
+        <argsstring></argsstring>
+        <name>exponent</name>
+        <qualifiedname>cryptx_pkcs8_pubkeyinfo::_publickey::exponent</qualifiedname>
+        <briefdescription>
+<para>Length of public modulus or public key. *<zwj/>/. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="586" column="14" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="586" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Stores public key raw data. </para>
+    </briefdescription>
+    <detaileddescription>
+<para><linebreak/>
+ </para>
+    </detaileddescription>
+    <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="583" column="3" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="583" bodyend="587"/>
+    <listofallmembers>
+      <member refid="structcryptx__pkcs8__pubkeyinfo_1_1__publickey_1ab063e3e50ab4d8738a0a0dedfe1ceb3b" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_pubkeyinfo::_publickey</scope><name>data</name></member>
+      <member refid="structcryptx__pkcs8__pubkeyinfo_1_1__publickey_1a9d747359d62ae394b946892f68e8f832" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_pubkeyinfo::_publickey</scope><name>exponent</name></member>
+      <member refid="structcryptx__pkcs8__pubkeyinfo_1_1__publickey_1a38564efc77984c28226fe6e269106437" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_pubkeyinfo::_publickey</scope><name>len</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

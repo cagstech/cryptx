@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.7" xml:lang="en-US">
+  <compounddef id="structcryptx__pkcs8__pubkeyinfo" kind="struct" language="C++" prot="public">
+    <compoundname>cryptx_pkcs8_pubkeyinfo</compoundname>
+    <includes refid="cryptx_8h" local="no">cryptx.h</includes>
+    <innerclass refid="structcryptx__pkcs8__pubkeyinfo_1_1__objectid" prot="public">cryptx_pkcs8_pubkeyinfo::_objectid</innerclass>
+    <innerclass refid="structcryptx__pkcs8__pubkeyinfo_1_1__publickey" prot="public">cryptx_pkcs8_pubkeyinfo::_publickey</innerclass>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcryptx__pkcs8__pubkeyinfo_1af21d3c8cda1d420ef3106571cdc9c701" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__pkcs8__pubkeyinfo_1_1__objectid" kindref="compound">cryptx_pkcs8_pubkeyinfo::_objectid</ref></type>
+        <definition>struct cryptx_pkcs8_pubkeyinfo::_objectid cryptx_pkcs8_pubkeyinfo::objectid</definition>
+        <argsstring></argsstring>
+        <name>objectid</name>
+        <qualifiedname>cryptx_pkcs8_pubkeyinfo::objectid</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="581" column="12"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__pubkeyinfo_1ab38e9748d27cd47033be177bbda43997" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__pkcs8__pubkeyinfo_1_1__publickey" kindref="compound">cryptx_pkcs8_pubkeyinfo::_publickey</ref></type>
+        <definition>struct cryptx_pkcs8_pubkeyinfo::_publickey cryptx_pkcs8_pubkeyinfo::publickey</definition>
+        <argsstring></argsstring>
+        <name>publickey</name>
+        <qualifiedname>cryptx_pkcs8_pubkeyinfo::publickey</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="587" column="13"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Defines a structure for holding imported RSA or ECC public key data. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>cryptx_pkcs8_pubkeyinfo</label>
+        <link refid="structcryptx__pkcs8__pubkeyinfo"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>objectid</edgelabel>
+        </childnode>
+        <childnode refid="3" relation="usage">
+          <edgelabel>publickey</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>cryptx_pkcs8_pubkeyinfo::_objectid</label>
+        <link refid="structcryptx__pkcs8__pubkeyinfo_1_1__objectid"/>
+      </node>
+      <node id="3">
+        <label>cryptx_pkcs8_pubkeyinfo::_publickey</label>
+        <link refid="structcryptx__pkcs8__pubkeyinfo_1_1__publickey"/>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="576" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="576" bodyend="588"/>
+    <listofallmembers>
+      <member refid="structcryptx__pkcs8__pubkeyinfo_1af21d3c8cda1d420ef3106571cdc9c701" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_pubkeyinfo</scope><name>objectid</name></member>
+      <member refid="structcryptx__pkcs8__pubkeyinfo_1ab38e9748d27cd47033be177bbda43997" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_pubkeyinfo</scope><name>publickey</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

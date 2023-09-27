@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PKCS#8 &mdash; CryptX  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/proof.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Hazardous Materials" href="hazmat.html" />
+    <link rel="prev" title="Base64/PEM" href="base64.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> CryptX
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="csrand.html">Secure Random Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bytes.html">Bytearray Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hash.html">Secure Hashing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hmac.html">Hash-Based MAC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aes.html">Advanced Encryption Standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rsa.html">RSA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ec.html">Elliptic Curves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="asn1.html">ASN.1/DER</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base64.html">Base64/PEM</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">PKCS#8</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#structures">Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#response-codes">Response Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#object-identifier-reference">Object Identifier Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hazmat.html">Hazardous Materials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../static/analysis.html">Analysis &amp; Overview</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CryptX</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>PKCS#8</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="pkcs-8">
+<span id="pkcs8"></span><h1>PKCS#8<a class="headerlink" href="#pkcs-8" title="Permalink to this headline"></a></h1>
+<p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides functions for the import of PKCS#8-encoded public and private keys that can be used with the RSA and EC modules of this library.</p><p>PKCS#8 stands for <strong>Public Key Cryptography Standards</strong> and specification #8 provides general key encoding guidelines for various forms of public and private keys compatible with this library. Because the API of this library tends to work on raw data (rather than on key structures like other libraries do), this module provides a way to deserialize PKCS#8 keyfiles such that you can access components of the key. You can also pass these public and private key structures directly to the TLS implementation (coming soon).</p>
+<p>PKCS#8 typically encodes keydata using the following workflow:</p>
+<ol class="arabic simple">
+<li><p>The components of the key are encoding using ASN.1/DER.</p></li>
+<li><p>The ASN.1 structure is then encoded using Base64/PEM.</p></li>
+<li><p>The key data is wrapped in a header/footer banner indicating the type of key. These banners may be:</p></li>
+</ol>
+<blockquote>
+<div><div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="o">-----</span><span class="n">BEGIN</span><span class="w"> </span><span class="n">PUBLIC</span><span class="w"> </span><span class="n">KEY</span><span class="o">-----</span>
+<span class="n">base64</span><span class="o">-</span><span class="n">encoded</span><span class="w"> </span><span class="n">public</span><span class="w"> </span><span class="n">key</span>
+<span class="o">-----</span><span class="n">END</span><span class="w"> </span><span class="n">PUBLIC</span><span class="w"> </span><span class="n">KEY</span><span class="o">-----</span>
+
+<span class="o">-----</span><span class="n">BEGIN</span><span class="w"> </span><span class="n">PRIVATE</span><span class="w"> </span><span class="n">KEY</span><span class="o">-----</span>
+<span class="n">base64</span><span class="o">-</span><span class="n">encoded</span><span class="w"> </span><span class="n">private</span><span class="w"> </span><span class="n">key</span>
+<span class="o">-----</span><span class="n">END</span><span class="w"> </span><span class="n">PRIVATE</span><span class="w"> </span><span class="n">KEY</span><span class="o">-----</span>
+
+<span class="o">-----</span><span class="n">BEGIN</span><span class="w"> </span><span class="n">ENCRYPTED</span><span class="w"> </span><span class="n">PRIVATE</span><span class="w"> </span><span class="n">KEY</span><span class="o">-----</span>
+<span class="n">base64</span><span class="o">-</span><span class="n">encoded</span><span class="w"> </span><span class="n">encrypted</span><span class="w"> </span><span class="n">private</span><span class="w"> </span><span class="n">key</span>
+<span class="o">-----</span><span class="n">END</span><span class="w"> </span><span class="n">ENCRYPTED</span><span class="w"> </span><span class="n">PRIVATE</span><span class="w"> </span><span class="n">KEY</span><span class="o">-----</span>
+</pre></div>
+</div>
+</div></blockquote>
+<div class="section" id="structures">
+<h2>Structures<a class="headerlink" href="#structures" title="Permalink to this headline"></a></h2>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv423cryptx_pkcs8_pubkeyinfo">
+<span id="_CPPv323cryptx_pkcs8_pubkeyinfo"></span><span id="_CPPv223cryptx_pkcs8_pubkeyinfo"></span><span id="cryptx_pkcs8_pubkeyinfo"></span><span class="target" id="structcryptx__pkcs8__pubkeyinfo"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_pkcs8_pubkeyinfo</span></span></span><a class="headerlink" href="#_CPPv423cryptx_pkcs8_pubkeyinfo" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines a structure for holding imported RSA or ECC public key data. </p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N23cryptx_pkcs8_pubkeyinfo9_objectidE">
+<span id="_CPPv3N23cryptx_pkcs8_pubkeyinfo9_objectidE"></span><span id="_CPPv2N23cryptx_pkcs8_pubkeyinfo9_objectidE"></span><span id="cryptx_pkcs8_pubkeyinfo::_objectid"></span><span class="target" id="structcryptx__pkcs8__pubkeyinfo_1_1__objectid"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_objectid</span></span></span><a class="headerlink" href="#_CPPv4N23cryptx_pkcs8_pubkeyinfo9_objectidE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Stores root OBJECT IDENTIFIER. </p>
+<p>This will likely be the type of public key. </p>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N23cryptx_pkcs8_pubkeyinfo10_publickeyE">
+<span id="_CPPv3N23cryptx_pkcs8_pubkeyinfo10_publickeyE"></span><span id="_CPPv2N23cryptx_pkcs8_pubkeyinfo10_publickeyE"></span><span id="cryptx_pkcs8_pubkeyinfo::_publickey"></span><span class="target" id="structcryptx__pkcs8__pubkeyinfo_1_1__publickey"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_publickey</span></span></span><a class="headerlink" href="#_CPPv4N23cryptx_pkcs8_pubkeyinfo10_publickeyE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Stores public key raw data. </p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="response-codes">
+<h2>Response Codes<a class="headerlink" href="#response-codes" title="Permalink to this headline"></a></h2>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv412pkcs_error_t">
+<span id="_CPPv312pkcs_error_t"></span><span id="_CPPv212pkcs_error_t"></span><span class="target" id="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pkcs_error_t</span></span></span><a class="headerlink" href="#_CPPv412pkcs_error_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines response codes returned by the PKCS8 API. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12pkcs_error_t7PKCS_OKE">
+<span id="_CPPv3N12pkcs_error_t7PKCS_OKE"></span><span id="_CPPv2N12pkcs_error_t7PKCS_OKE"></span><span class="target" id="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4ae3e1b5568f600f599b65921673580a3b"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PKCS_OK</span></span></span><a class="headerlink" href="#_CPPv4N12pkcs_error_t7PKCS_OKE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12pkcs_error_t16PKCS_INVALID_ARGE">
+<span id="_CPPv3N12pkcs_error_t16PKCS_INVALID_ARGE"></span><span id="_CPPv2N12pkcs_error_t16PKCS_INVALID_ARGE"></span><span class="target" id="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4ad51855979f8e263227e0fba2132d462f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PKCS_INVALID_ARG</span></span></span><a class="headerlink" href="#_CPPv4N12pkcs_error_t16PKCS_INVALID_ARGE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12pkcs_error_t16PKCS_UNSUPPORTEDE">
+<span id="_CPPv3N12pkcs_error_t16PKCS_UNSUPPORTEDE"></span><span id="_CPPv2N12pkcs_error_t16PKCS_UNSUPPORTEDE"></span><span class="target" id="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4a31909947f498b908e7709718c2ddf96f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PKCS_UNSUPPORTED</span></span></span><a class="headerlink" href="#_CPPv4N12pkcs_error_t16PKCS_UNSUPPORTEDE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12pkcs_error_t17PKCS_INVALID_DATAE">
+<span id="_CPPv3N12pkcs_error_t17PKCS_INVALID_DATAE"></span><span id="_CPPv2N12pkcs_error_t17PKCS_INVALID_DATAE"></span><span class="target" id="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4ad98753e06ce91e41e842d85a5c7b139b"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PKCS_INVALID_DATA</span></span></span><a class="headerlink" href="#_CPPv4N12pkcs_error_t17PKCS_INVALID_DATAE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h2>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv429cryptx_pkcs8_import_publickeyPKv6size_tP23cryptx_pkcs8_pubkeyinfo">
+<span id="_CPPv329cryptx_pkcs8_import_publickeyPKv6size_tP23cryptx_pkcs8_pubkeyinfo"></span><span id="_CPPv229cryptx_pkcs8_import_publickeyPKv6size_tP23cryptx_pkcs8_pubkeyinfo"></span><span id="cryptx_pkcs8_import_publickey__voidCP.s.cryptx_pkcs8_pubkeyinfoP"></span><span class="target" id="cryptx_8h_1aaeb83227ffd725be2451cdf0a7748462"></span><a class="reference internal" href="#_CPPv412pkcs_error_t" title="pkcs_error_t"><span class="n"><span class="pre">pkcs_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_pkcs8_import_publickey</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv423cryptx_pkcs8_pubkeyinfo" title="cryptx_pkcs8_pubkeyinfo"><span class="n"><span class="pre">cryptx_pkcs8_pubkeyinfo</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">keyinfo</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429cryptx_pkcs8_import_publickeyPKv6size_tP23cryptx_pkcs8_pubkeyinfo" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Attempts to import a PKCS#8-encoded public key for RSA or ECC. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Pointer to PKCS#8-encoded key data. </p></li>
+<li><p><strong>len</strong> – Length of key data to import. </p></li>
+<li><p><strong>keyinfo</strong> – Pointer to a <strong><a class="reference internal" href="#structcryptx__pkcs8__pubkeyinfo"><span class="std std-ref">cryptx_pkcs8_pubkeyinfo</span></a></strong> context to deserialize keydata into. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>keyinfo</strong> populated with appropriate data from the keyfile. </p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A <strong>pkcs_error_t</strong> indicating the return status of the operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>You can import a keyfile and then access its data like so:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">fname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MyKey&quot;</span><span class="p">;</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">fp</span><span class="p">;</span>
+
+<span class="c1">// load the key from AppVar file</span>
+<span class="c1">// requires FILEIOC library</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">fp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_Open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">)))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w">   </span><span class="c1">// failed to open file</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">pkcs_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_GetDataPtr</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="n">pkcs_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_GetSize</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+<span class="n">ti_Close</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+
+<span class="n">pkcs_error_t</span><span class="w"> </span><span class="n">err</span><span class="p">;</span>
+<span class="n">cryptx_pkcs8_pubkeyinfo</span><span class="w"> </span><span class="n">key</span><span class="p">;</span>
+
+<span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cryptx_pkcs8_import_publickey</span><span class="p">(</span><span class="n">pkcs_data</span><span class="p">,</span><span class="w"> </span><span class="n">pkcs_len</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">key</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+
+<span class="n">key</span><span class="p">.</span><span class="n">objectid</span><span class="p">.</span><span class="n">data</span><span class="p">;</span><span class="w">       </span><span class="c1">// pointer to object id</span>
+<span class="n">key</span><span class="p">.</span><span class="n">objectid</span><span class="p">.</span><span class="n">len</span><span class="p">;</span><span class="w">        </span><span class="c1">// length of object id</span>
+<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">data</span><span class="p">;</span><span class="w">      </span><span class="c1">// pointer to key data (RSA public modulus or ECC pubkey)</span>
+<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">len</span><span class="p">;</span><span class="w">       </span><span class="c1">// pointer to length of key data</span>
+<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">exponent</span><span class="p">;</span><span class="w">  </span><span class="c1">// public exponent for RSA, unused for ECC</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="object-identifier-reference">
+<h2>Object Identifier Reference<a class="headerlink" href="#object-identifier-reference" title="Permalink to this headline"></a></h2>
+<p>This section lists algorithm object identifiers supported by this library. Developers should generally never need to use these as the library should handle it internally, but if you need them for other projects or even for custom implementations, here they are.</p>
+<p><strong>Bear in mind that while this module can successfully import “objects” for most algorithm types, only the ones listed below can actually be USED by the library.</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 33%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Algorithm</p></th>
+<th class="head"><p>Object Identifier</p></th>
+<th class="head"><p>Bytes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>RSA</p></td>
+<td><p>1.2.840.113549.1.1.1</p></td>
+<td><p>$2A,$86,$48,$86,$F7,$0D,$01,$01,$01</p></td>
+</tr>
+<tr class="row-odd"><td><p>EC_SECT233K1</p></td>
+<td><p>1.3.132.0.26</p></td>
+<td><p>??</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="base64.html" class="btn btn-neutral float-left" title="Base64/PEM" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hazmat.html" class="btn btn-neutral float-right" title="Hazardous Materials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

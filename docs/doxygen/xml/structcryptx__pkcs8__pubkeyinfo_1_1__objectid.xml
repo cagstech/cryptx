@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.7" xml:lang="en-US">
+  <compounddef id="structcryptx__pkcs8__pubkeyinfo_1_1__objectid" kind="struct" language="C++" prot="public">
+    <compoundname>cryptx_pkcs8_pubkeyinfo::_objectid</compoundname>
+    <includes refid="cryptx_8h" local="no">cryptx.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcryptx__pkcs8__pubkeyinfo_1_1__objectid_1aafb48ae19e57ac56110b923ed82e655f" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t cryptx_pkcs8_pubkeyinfo::_objectid::data[32]</definition>
+        <argsstring>[32]</argsstring>
+        <name>data</name>
+        <qualifiedname>cryptx_pkcs8_pubkeyinfo::_objectid::data</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="579" column="13" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="579" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__pubkeyinfo_1_1__objectid_1abb2e9c6eae04f3ee985af1ff83d5455c" prot="public" static="no" mutable="no">
+        <type>size_t</type>
+        <definition>size_t cryptx_pkcs8_pubkeyinfo::_objectid::len</definition>
+        <argsstring></argsstring>
+        <name>len</name>
+        <qualifiedname>cryptx_pkcs8_pubkeyinfo::_objectid::len</qualifiedname>
+        <briefdescription>
+<para>OBJECT IDENTIFIER bytes. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="580" column="12" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="580" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Stores root OBJECT IDENTIFIER. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>This will likely be the type of public key. <linebreak/>
+ </para>
+    </detaileddescription>
+    <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="578" column="3" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="578" bodyend="581"/>
+    <listofallmembers>
+      <member refid="structcryptx__pkcs8__pubkeyinfo_1_1__objectid_1aafb48ae19e57ac56110b923ed82e655f" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_pubkeyinfo::_objectid</scope><name>data</name></member>
+      <member refid="structcryptx__pkcs8__pubkeyinfo_1_1__objectid_1abb2e9c6eae04f3ee985af1ff83d5455c" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_pubkeyinfo::_objectid</scope><name>len</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>
