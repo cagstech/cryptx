@@ -574,14 +574,44 @@ size_t cryptx_base64_decode(void *dest, const void *src, size_t len);
 
 /// Defines a structure for holding imported RSA or ECC public key data.
 struct cryptx_pkcs8_pubkeyinfo {
-  struct  { uint8_t data[32]; size_t len; } objectid;
+  struct  { uint8_t bytes[16]; size_t len; } objectid;
   union {
-    struct { uint8_t data[257]; size_t len; uint24_t exponent; } rsa;
     struct {
-      struct { uint8_t data[32]; size_t len; } curveid;
-      uint8_t data[72]; size_t len;
+      struct { uint8_t bytes[257]; size_t len; } modulus;
+      uint24_t exponent;
+    } rsa;
+    struct {
+        struct { uint8_t bytes[16]; size_t len; } curveid;
+        uint8_t bytes[146]; size_t len;
     } ec;
   } publickey;
+};
+
+/// Defines a structure for holding imported RSA or ECC private key data.
+struct cryptx_pkcs8_privkeyinfo {
+  uint8_t version;
+  struct  { uint8_t bytes[16]; size_t len; } objectid;
+  union {
+    struct {
+      uint8_t version;
+      struct { uint8_t bytes[257]; size_t len; } modulus;
+      uint24_t public_exponent;
+      struct { uint8_t bytes[257]; size_t len; } exponent;
+      struct {
+        struct { uint8_t bytes[129]; size_t len; } p;
+        struct { uint8_t bytes[129]; size_t len; } q;
+        struct { uint8_t bytes[129]; size_t len; } exp1;
+        struct { uint8_t bytes[129]; size_t len; } exp2;
+        struct { uint8_t bytes[129]; size_t len; } coeff;
+      } parts;
+    } rsa;
+    struct {
+      uint8_t version;
+      struct { uint8_t bytes[16]; size_t len; } curveid;
+      struct { uint8_t bytes[73]; size_t len; } private;
+      struct { uint8_t bytes[146]; size_t len; } public;
+    } ec;
+  } privatekey;
 };
 
 /// Defines response codes returned by the PKCS8 API.
@@ -602,6 +632,17 @@ typedef enum {
  */
 pkcs_error_t cryptx_pkcs8_import_publickey(const void *data, size_t len,
                                            struct cryptx_pkcs8_pubkeyinfo *keyinfo);
+
+/**
+ * @brief Attempts to import a PKCS#8-encoded private key for RSA or ECC.
+ * @param data Pointer to PKCS#8-encoded key data.
+ * @param len   Length of key data to import.
+ * @param keyinfo     Pointer to a @b cryptx_pkcs8_privkeyinfo context to deserialize keydata into.
+ * @returns @b keyinfo populated with appropriate data from the keyfile.
+ * @returns A @b pkcs_error_t indicating the return status of the operation.
+ */
+pkcs_error_t cryptx_pkcs8_import_privatekey(const void *data, size_t len,
+                                           struct cryptx_pkcs8_privkeyinfo *keyinfo);
 
 
 

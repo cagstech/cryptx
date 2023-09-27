@@ -1,4 +1,4 @@
-	library	CRYPTX, 13
+	library	CRYPTX, 2
 
 	export	cryptx_hash_init
 	export	cryptx_hash_update

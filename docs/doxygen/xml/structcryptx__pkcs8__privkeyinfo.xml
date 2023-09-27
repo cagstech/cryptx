@@ -1,0 +1,302 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.7" xml:lang="en-US">
+  <compounddef id="structcryptx__pkcs8__privkeyinfo" kind="struct" language="C++" prot="public">
+    <compoundname>cryptx_pkcs8_privkeyinfo</compoundname>
+    <includes refid="cryptx_8h" local="no">cryptx.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1a0b805836df5beaeae35b69dadaad7c1e" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t cryptx_pkcs8_privkeyinfo::version</definition>
+        <argsstring></argsstring>
+        <name>version</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::version</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="592" column="11" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="592" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1a9a0497b1f5b387cf0c37948c5aa691ae" prot="public" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t cryptx_pkcs8_privkeyinfo::bytes[146]</definition>
+        <argsstring>[16]</argsstring>
+        <name>bytes</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::bytes</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="593" column="17" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="593" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1a24f0b3e500dbd899a7687abcb1d7b74a" prot="public" static="no" mutable="no">
+        <type>size_t</type>
+        <definition>size_t cryptx_pkcs8_privkeyinfo::len</definition>
+        <argsstring></argsstring>
+        <name>len</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::len</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="593" column="30" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="593" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1a9506fc4da8bdf227502e0dc935dd5403" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__pkcs8__privkeyinfo" kindref="compound">cryptx_pkcs8_privkeyinfo</ref></type>
+        <definition>struct cryptx_pkcs8_privkeyinfo cryptx_pkcs8_privkeyinfo::objectid</definition>
+        <argsstring></argsstring>
+        <name>objectid</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::objectid</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="593" column="18"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1a9897f5240b585f457893c67bb4f6669f" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__pkcs8__privkeyinfo" kindref="compound">cryptx_pkcs8_privkeyinfo</ref></type>
+        <definition>struct cryptx_pkcs8_privkeyinfo cryptx_pkcs8_privkeyinfo::modulus</definition>
+        <argsstring></argsstring>
+        <name>modulus</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::modulus</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="597" column="21"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1a0ad0673a5fe90b437a0511d68a2cdb8f" prot="public" static="no" mutable="no">
+        <type>uint24_t</type>
+        <definition>uint24_t cryptx_pkcs8_privkeyinfo::public_exponent</definition>
+        <argsstring></argsstring>
+        <name>public_exponent</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::public_exponent</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="598" column="16" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="598" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1aff4e660e5633a983b4e9c0da51e5022a" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__pkcs8__privkeyinfo" kindref="compound">cryptx_pkcs8_privkeyinfo</ref></type>
+        <definition>struct cryptx_pkcs8_privkeyinfo cryptx_pkcs8_privkeyinfo::exponent</definition>
+        <argsstring></argsstring>
+        <name>exponent</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::exponent</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="599" column="22"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1adc69d448a125e2b84c46a62db4fff31e" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__pkcs8__privkeyinfo" kindref="compound">cryptx_pkcs8_privkeyinfo</ref></type>
+        <definition>struct cryptx_pkcs8_privkeyinfo cryptx_pkcs8_privkeyinfo::p</definition>
+        <argsstring></argsstring>
+        <name>p</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::p</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="601" column="17"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1a1c5494cdb4c0b3733628c8a2a7c09396" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__pkcs8__privkeyinfo" kindref="compound">cryptx_pkcs8_privkeyinfo</ref></type>
+        <definition>struct cryptx_pkcs8_privkeyinfo cryptx_pkcs8_privkeyinfo::q</definition>
+        <argsstring></argsstring>
+        <name>q</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::q</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="602" column="17"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1a50256aadf43d8c2135dc7333e54d5d0e" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__pkcs8__privkeyinfo" kindref="compound">cryptx_pkcs8_privkeyinfo</ref></type>
+        <definition>struct cryptx_pkcs8_privkeyinfo cryptx_pkcs8_privkeyinfo::exp1</definition>
+        <argsstring></argsstring>
+        <name>exp1</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::exp1</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="603" column="20"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1a7544a29f2f6384ecfcf9a2cac863cd10" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__pkcs8__privkeyinfo" kindref="compound">cryptx_pkcs8_privkeyinfo</ref></type>
+        <definition>struct cryptx_pkcs8_privkeyinfo cryptx_pkcs8_privkeyinfo::exp2</definition>
+        <argsstring></argsstring>
+        <name>exp2</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::exp2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="604" column="20"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1adde60f49077afc49c994b8322421cd75" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__pkcs8__privkeyinfo" kindref="compound">cryptx_pkcs8_privkeyinfo</ref></type>
+        <definition>struct cryptx_pkcs8_privkeyinfo cryptx_pkcs8_privkeyinfo::coeff</definition>
+        <argsstring></argsstring>
+        <name>coeff</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::coeff</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="605" column="21"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1a9370eb11caccf5440bfe3c5735faf358" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__pkcs8__privkeyinfo" kindref="compound">cryptx_pkcs8_privkeyinfo</ref></type>
+        <definition>struct cryptx_pkcs8_privkeyinfo cryptx_pkcs8_privkeyinfo::parts</definition>
+        <argsstring></argsstring>
+        <name>parts</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::parts</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="606" column="13"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1a1a78aa66dd55e2114830d6a61c8ee5a2" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__pkcs8__privkeyinfo" kindref="compound">cryptx_pkcs8_privkeyinfo</ref></type>
+        <definition>struct cryptx_pkcs8_privkeyinfo cryptx_pkcs8_privkeyinfo::rsa</definition>
+        <argsstring></argsstring>
+        <name>rsa</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::rsa</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="607" column="9"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1a8ff17aa067c3f2ce8ab189f2ef06983f" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__pkcs8__privkeyinfo" kindref="compound">cryptx_pkcs8_privkeyinfo</ref></type>
+        <definition>struct cryptx_pkcs8_privkeyinfo cryptx_pkcs8_privkeyinfo::curveid</definition>
+        <argsstring></argsstring>
+        <name>curveid</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::curveid</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="610" column="21"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1a59674716d2290d0b3b5890a036ef0e66" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__pkcs8__privkeyinfo" kindref="compound">cryptx_pkcs8_privkeyinfo</ref></type>
+        <definition>struct cryptx_pkcs8_privkeyinfo cryptx_pkcs8_privkeyinfo::private</definition>
+        <argsstring></argsstring>
+        <name>private</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::private</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="611" column="21"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1ac1142f13a9d238790f6b504d50bbd51d" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__pkcs8__privkeyinfo" kindref="compound">cryptx_pkcs8_privkeyinfo</ref></type>
+        <definition>struct cryptx_pkcs8_privkeyinfo cryptx_pkcs8_privkeyinfo::public</definition>
+        <argsstring></argsstring>
+        <name>public</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::public</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="612" column="20"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1a7638a55e2e4660f6808a1781359e8043" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structcryptx__pkcs8__privkeyinfo" kindref="compound">cryptx_pkcs8_privkeyinfo</ref></type>
+        <definition>struct cryptx_pkcs8_privkeyinfo cryptx_pkcs8_privkeyinfo::ec</definition>
+        <argsstring></argsstring>
+        <name>ec</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::ec</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="613" column="8"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__privkeyinfo_1ab23b960497349441d3af88eeb9ee024d" prot="public" static="no" mutable="no">
+        <type>union <ref refid="structcryptx__pkcs8__privkeyinfo" kindref="compound">cryptx_pkcs8_privkeyinfo</ref></type>
+        <definition>union cryptx_pkcs8_privkeyinfo cryptx_pkcs8_privkeyinfo::privatekey</definition>
+        <argsstring></argsstring>
+        <name>privatekey</name>
+        <qualifiedname>cryptx_pkcs8_privkeyinfo::privatekey</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="614" column="14"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Defines a structure for holding imported RSA or ECC private key data. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="591" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="591" bodyend="615"/>
+    <listofallmembers>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1a9a0497b1f5b387cf0c37948c5aa691ae" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>bytes</name></member>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1adde60f49077afc49c994b8322421cd75" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>coeff</name></member>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1a8ff17aa067c3f2ce8ab189f2ef06983f" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>curveid</name></member>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1a7638a55e2e4660f6808a1781359e8043" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>ec</name></member>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1a50256aadf43d8c2135dc7333e54d5d0e" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>exp1</name></member>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1a7544a29f2f6384ecfcf9a2cac863cd10" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>exp2</name></member>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1aff4e660e5633a983b4e9c0da51e5022a" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>exponent</name></member>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1a24f0b3e500dbd899a7687abcb1d7b74a" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>len</name></member>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1a9897f5240b585f457893c67bb4f6669f" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>modulus</name></member>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1a9506fc4da8bdf227502e0dc935dd5403" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>objectid</name></member>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1adc69d448a125e2b84c46a62db4fff31e" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>p</name></member>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1a9370eb11caccf5440bfe3c5735faf358" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>parts</name></member>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1a59674716d2290d0b3b5890a036ef0e66" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>private</name></member>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1ab23b960497349441d3af88eeb9ee024d" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>privatekey</name></member>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1ac1142f13a9d238790f6b504d50bbd51d" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>public</name></member>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1a0ad0673a5fe90b437a0511d68a2cdb8f" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>public_exponent</name></member>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1a1c5494cdb4c0b3733628c8a2a7c09396" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>q</name></member>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1a1a78aa66dd55e2114830d6a61c8ee5a2" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>rsa</name></member>
+      <member refid="structcryptx__pkcs8__privkeyinfo_1a0b805836df5beaeae35b69dadaad7c1e" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_privkeyinfo</scope><name>version</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

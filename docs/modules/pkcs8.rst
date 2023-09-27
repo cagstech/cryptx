@@ -68,6 +68,13 @@ _____________
 .. doxygenstruct:: cryptx_pkcs8_pubkeyinfo
   :project: CryptX
   
+.. doxygenstruct:: cryptx_pkcs8_privkeyinfo
+  :project: CryptX
+  
+.. note::
+
+  These structures, particularly **cryptx_pkcs8_privkeyinfo**, take up a lot of memory. For the private key you're holding 257 bytes each for modulus and exponent and then 7 subfields of efficiency-oriented key metadata each taking 129 bytes plus associated size words, structure headers, and object IDs. It adds up. You may want to allocate these within the largest memory-space you can.
+  
 Response Codes
 _______________
  
@@ -78,6 +85,9 @@ Functions
 __________
 	
 .. doxygenfunction:: cryptx_pkcs8_import_publickey
+	:project: CryptX
+ 
+.. doxygenfunction:: cryptx_pkcs8_import_privatekey
 	:project: CryptX
 
 You can import a keyfile and then access its data like so:

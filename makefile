@@ -25,6 +25,7 @@ LIB_EXAMPLES	:= $(shell ls -d examples/*)
 all: $(LIB_8XV)
 
 $(LIB_8XV): $(LIB_SRC)
+	sed -i '' 's/BB.*_/\.lbl_/g' $(LIB_SRC)
 	$(Q)$(FASMG) $< $@
 
 clean:

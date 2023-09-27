@@ -153,6 +153,16 @@
 <dd><p>Defines a structure for holding imported RSA or ECC public key data. </p>
 </dd></dl>
 
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv424cryptx_pkcs8_privkeyinfo">
+<span id="_CPPv324cryptx_pkcs8_privkeyinfo"></span><span id="_CPPv224cryptx_pkcs8_privkeyinfo"></span><span id="cryptx_pkcs8_privkeyinfo"></span><span class="target" id="structcryptx__pkcs8__privkeyinfo"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_pkcs8_privkeyinfo</span></span></span><a class="headerlink" href="#_CPPv424cryptx_pkcs8_privkeyinfo" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Defines a structure for holding imported RSA or ECC private key data. </p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>These structures, particularly <strong>cryptx_pkcs8_privkeyinfo</strong>, take up a lot of memory. For the private key you’re holding 257 bytes each for modulus and exponent and then 7 subfields of efficiency-oriented key metadata each taking 129 bytes plus associated size words, structure headers, and object IDs. It adds up. You may want to allocate these within the largest memory-space you can.</p>
+</div>
 </div>
 <div class="section" id="response-codes">
 <h2>Response Codes<a class="headerlink" href="#response-codes" title="Permalink to this headline"></a></h2>
@@ -196,6 +206,27 @@
 <li><p><strong>data</strong> – Pointer to PKCS#8-encoded key data. </p></li>
 <li><p><strong>len</strong> – Length of key data to import. </p></li>
 <li><p><strong>keyinfo</strong> – Pointer to a <strong><a class="reference internal" href="#structcryptx__pkcs8__pubkeyinfo"><span class="std std-ref">cryptx_pkcs8_pubkeyinfo</span></a></strong> context to deserialize keydata into. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>keyinfo</strong> populated with appropriate data from the keyfile. </p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A <strong>pkcs_error_t</strong> indicating the return status of the operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv430cryptx_pkcs8_import_privatekeyPKv6size_tP24cryptx_pkcs8_privkeyinfo">
+<span id="_CPPv330cryptx_pkcs8_import_privatekeyPKv6size_tP24cryptx_pkcs8_privkeyinfo"></span><span id="_CPPv230cryptx_pkcs8_import_privatekeyPKv6size_tP24cryptx_pkcs8_privkeyinfo"></span><span id="cryptx_pkcs8_import_privatekey__voidCP.s.cryptx_pkcs8_privkeyinfoP"></span><span class="target" id="cryptx_8h_1a2dbbf13c5e7328b859b4b582546b428e"></span><a class="reference internal" href="#_CPPv412pkcs_error_t" title="pkcs_error_t"><span class="n"><span class="pre">pkcs_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_pkcs8_import_privatekey</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv424cryptx_pkcs8_privkeyinfo" title="cryptx_pkcs8_privkeyinfo"><span class="n"><span class="pre">cryptx_pkcs8_privkeyinfo</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">keyinfo</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv430cryptx_pkcs8_import_privatekeyPKv6size_tP24cryptx_pkcs8_privkeyinfo" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Attempts to import a PKCS#8-encoded private key for RSA or ECC. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Pointer to PKCS#8-encoded key data. </p></li>
+<li><p><strong>len</strong> – Length of key data to import. </p></li>
+<li><p><strong>keyinfo</strong> – Pointer to a <strong><a class="reference internal" href="#structcryptx__pkcs8__privkeyinfo"><span class="std std-ref">cryptx_pkcs8_privkeyinfo</span></a></strong> context to deserialize keydata into. </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
