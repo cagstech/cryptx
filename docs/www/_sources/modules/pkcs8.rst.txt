@@ -5,13 +5,44 @@ PKCS#8
 
 .. raw:: html
 
-  <p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides functions for the import of PKCS#8-encoded public and private keys that can be used with the RSA and EC modules of this library.</p>
+  <p style="color:red; font-weight:bold; font-size:120%;">Module under development. Check back for updates.</p><p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides functions for the import of PKCS#8-encoded public and private keys that can be used with the RSA and EC modules of this library.</p>
 
 PKCS stands for **Public Key Cryptography Standards** and specification #8 provides general key encoding guidelines for various forms of public and private keys. Because the API of this library tends to work on raw data (rather than on key structures like other libraries do), this module provides a way to deserialize PKCS#8 keyfiles such that you can access components of the key. You can also pass these public and private key structures directly to the TLS implementation (coming soon).
 
 PKCS#8 typically encodes keydata using the following workflow:
 
-(1) The components of the key are encoding using ASN.1/DER.
+(1) The components of the key are encoding using ASN.1/DER according to the following specifications:
+
+  .. code-block:: c
+  
+    // ASN.1/DER encoding of public key
+    PublicKeyInfo ::= SEQUENCE {
+      algorithm ::= SEQUENCE {
+        algorithm   OBJECT IDENTIFIER,
+        parameters  ANY DEFINED BY algorithm OPTIONAL
+      }
+      PublicKey   BIT STRING
+    } // for RSA only PublicKey encodes PKCS#1 `RSAPublicKey`
+    
+    // ASN.1/DER encoding of private key
+    PrivateKeyInfo ::= SEQUENCE {
+      version Version,
+      algorithm ::= SEQUENCE {
+        algorithm   OBJECT IDENTIFIER,
+        parameters  ANY DEFINED BY algorithm OPTIONAL
+      }
+      PrivateKey  BIT STRING
+    } // for RSA only, PrivateKey encodes PKCS#1 `RSAPrivateKey`
+    
+    // ASN.1/DER encoding of encrypted private key
+    EncryptedPrivateKeyInfo ::= SEQUENCE {
+      encryptionAlgorithm ::= SEQUENCE {
+        algorithm   OBJECT IDENTIFIER,
+        parameters  ANY DEFINED BY algorithm OPTIONAL
+      }
+      encryptedData ::= OCTET STRING (encrypts PrivateKeyInfo)
+    }
+  
 (2) The ASN.1 structure is then encoded using Base64/PEM.
 (3) The key data is wrapped in a header/footer banner indicating the type of key. These banners may be:
 
