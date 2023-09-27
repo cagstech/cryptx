@@ -100,12 +100,18 @@ You can import a keyfile and then access its data like so:
   err = cryptx_pkcs8_import_publickey(pkcs_data, pkcs_len, &key);
   if(err) return;
   
-  key.objectid.data;       // pointer to object id
+  key.objectid.data;       // pointer to object id (bytes)
   key.objectid.len;        // length of object id
-  key.publickey.data;      // pointer to key data (RSA public modulus or ECC pubkey)
-  key.publickey.len;       // pointer to length of key data
-  key.publickey.exponent;  // public exponent for RSA, unused for ECC
-
+  // For RSA
+  key.publickey.rsa.data;      // public modulus data (bytes)
+  key.publickey.rsa.len;       // length of rsa modulus (size_t)
+  key.publickey.rsa.exponent;  // public exponent (uint24_t)
+  // For EC
+  key.publickey.ec.curveid.data;  // pointer to curve id (bytes)
+  key.publickey.ec.curveid.len;   // length of curve id (size_t)
+  key.publickey.ec.data;          // public key (bytes)
+  key.publickey.ec.len;           // length of public key
+  
 
 Object Identifier Reference
 ___________________________

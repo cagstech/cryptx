@@ -224,11 +224,17 @@
 <span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cryptx_pkcs8_import_publickey</span><span class="p">(</span><span class="n">pkcs_data</span><span class="p">,</span><span class="w"> </span><span class="n">pkcs_len</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">key</span><span class="p">);</span>
 <span class="k">if</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
 
-<span class="n">key</span><span class="p">.</span><span class="n">objectid</span><span class="p">.</span><span class="n">data</span><span class="p">;</span><span class="w">       </span><span class="c1">// pointer to object id</span>
+<span class="n">key</span><span class="p">.</span><span class="n">objectid</span><span class="p">.</span><span class="n">data</span><span class="p">;</span><span class="w">       </span><span class="c1">// pointer to object id (bytes)</span>
 <span class="n">key</span><span class="p">.</span><span class="n">objectid</span><span class="p">.</span><span class="n">len</span><span class="p">;</span><span class="w">        </span><span class="c1">// length of object id</span>
-<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">data</span><span class="p">;</span><span class="w">      </span><span class="c1">// pointer to key data (RSA public modulus or ECC pubkey)</span>
-<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">len</span><span class="p">;</span><span class="w">       </span><span class="c1">// pointer to length of key data</span>
-<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">exponent</span><span class="p">;</span><span class="w">  </span><span class="c1">// public exponent for RSA, unused for ECC</span>
+<span class="c1">// For RSA</span>
+<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">rsa</span><span class="p">.</span><span class="n">data</span><span class="p">;</span><span class="w">      </span><span class="c1">// public modulus data (bytes)</span>
+<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">rsa</span><span class="p">.</span><span class="n">len</span><span class="p">;</span><span class="w">       </span><span class="c1">// length of rsa modulus (size_t)</span>
+<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">rsa</span><span class="p">.</span><span class="n">exponent</span><span class="p">;</span><span class="w">  </span><span class="c1">// public exponent (uint24_t)</span>
+<span class="c1">// For EC</span>
+<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">ec</span><span class="p">.</span><span class="n">curveid</span><span class="p">.</span><span class="n">data</span><span class="p">;</span><span class="w">  </span><span class="c1">// pointer to curve id (bytes)</span>
+<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">ec</span><span class="p">.</span><span class="n">curveid</span><span class="p">.</span><span class="n">len</span><span class="p">;</span><span class="w">   </span><span class="c1">// length of curve id (size_t)</span>
+<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">ec</span><span class="p">.</span><span class="n">data</span><span class="p">;</span><span class="w">          </span><span class="c1">// public key (bytes)</span>
+<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">ec</span><span class="p">.</span><span class="n">len</span><span class="p">;</span><span class="w">           </span><span class="c1">// length of public key</span>
 </pre></div>
 </div>
 </div>

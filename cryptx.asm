@@ -2,7 +2,7 @@
 include '../include/library.inc'
 
 ;------------------------------------------
-library CRYPTX, 13
+library CRYPTX, 2
 
 ;------------------------------------------
 
