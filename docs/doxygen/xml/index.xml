@@ -1,14 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.9.7" xml:lang="en-US">
-  <compound refid="structcryptx__pkcs8__pubkeyinfo_1_1__objectid" kind="struct"><name>cryptx_pkcs8_pubkeyinfo::_objectid</name>
-    <member refid="structcryptx__pkcs8__pubkeyinfo_1_1__objectid_1aafb48ae19e57ac56110b923ed82e655f" kind="variable"><name>data</name></member>
-    <member refid="structcryptx__pkcs8__pubkeyinfo_1_1__objectid_1abb2e9c6eae04f3ee985af1ff83d5455c" kind="variable"><name>len</name></member>
-  </compound>
-  <compound refid="structcryptx__pkcs8__pubkeyinfo_1_1__publickey" kind="struct"><name>cryptx_pkcs8_pubkeyinfo::_publickey</name>
-    <member refid="structcryptx__pkcs8__pubkeyinfo_1_1__publickey_1ab063e3e50ab4d8738a0a0dedfe1ceb3b" kind="variable"><name>data</name></member>
-    <member refid="structcryptx__pkcs8__pubkeyinfo_1_1__publickey_1a38564efc77984c28226fe6e269106437" kind="variable"><name>len</name></member>
-    <member refid="structcryptx__pkcs8__pubkeyinfo_1_1__publickey_1a9d747359d62ae394b946892f68e8f832" kind="variable"><name>exponent</name></member>
-  </compound>
   <compound refid="structCipher" kind="struct"><name>Cipher</name>
   </compound>
   <compound refid="structcryptx__aes__cbc__state" kind="struct"><name>cryptx_aes_cbc_state</name>
@@ -70,8 +61,14 @@
     <member refid="unioncryptx__hmac__private__h_1affa5ba199a186161ee892222e5e63331" kind="variable"><name>sha256</name></member>
   </compound>
   <compound refid="structcryptx__pkcs8__pubkeyinfo" kind="struct"><name>cryptx_pkcs8_pubkeyinfo</name>
-    <member refid="structcryptx__pkcs8__pubkeyinfo_1af21d3c8cda1d420ef3106571cdc9c701" kind="variable"><name>objectid</name></member>
-    <member refid="structcryptx__pkcs8__pubkeyinfo_1ab38e9748d27cd47033be177bbda43997" kind="variable"><name>publickey</name></member>
+    <member refid="structcryptx__pkcs8__pubkeyinfo_1af8ecc05f0f13f36b8efb70433c600cfc" kind="variable"><name>data</name></member>
+    <member refid="structcryptx__pkcs8__pubkeyinfo_1aa81b49c0be81e5ed03eb7b48e47f4e0d" kind="variable"><name>len</name></member>
+    <member refid="structcryptx__pkcs8__pubkeyinfo_1a053d8158e271003b13ef4fa9cb372dab" kind="variable"><name>objectid</name></member>
+    <member refid="structcryptx__pkcs8__pubkeyinfo_1a7c2e360f603268bc369d9aeca5e039e1" kind="variable"><name>exponent</name></member>
+    <member refid="structcryptx__pkcs8__pubkeyinfo_1aa2bfea80da29c8b891a76724848dee31" kind="variable"><name>rsa</name></member>
+    <member refid="structcryptx__pkcs8__pubkeyinfo_1a074f26333af08f128b03240102d74051" kind="variable"><name>curveid</name></member>
+    <member refid="structcryptx__pkcs8__pubkeyinfo_1a7d54d6cbd0f72e933f202848b83dab9d" kind="variable"><name>ec</name></member>
+    <member refid="structcryptx__pkcs8__pubkeyinfo_1a9990f2870686421fc2e8e22f9790e65d" kind="variable"><name>publickey</name></member>
   </compound>
   <compound refid="structcryptx__priv__hash__sha256__state" kind="struct"><name>cryptx_priv_hash_sha256_state</name>
     <member refid="structcryptx__priv__hash__sha256__state_1ace8bc5d62baf6635d34d334d676f70dc" kind="variable"><name>data</name></member>

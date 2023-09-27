@@ -574,16 +574,13 @@ size_t cryptx_base64_decode(void *dest, const void *src, size_t len);
 
 /// Defines a structure for holding imported RSA or ECC public key data.
 struct cryptx_pkcs8_pubkeyinfo {
-  /** Stores root OBJECT IDENTIFIER. This will likely be the type of public key.  */
-  struct _objectid {
-    uint8_t data[32];     /// OBJECT IDENTIFIER bytes.
-    size_t len;           /// OBJECT IDENTIFIER length.
-  } objectid;
-  /** Stores public key raw data.  */
-  struct _publickey {
-    uint8_t data[257];    /// Stores key data (public modulus for RSA or public key for ECC. */
-    size_t len;           /// Length of public modulus or public key. */
-    uint24_t exponent;    /// Public exponent for RSA. Unused for ECC. */
+  struct  { uint8_t data[32]; size_t len; } objectid;
+  union {
+    struct { uint8_t data[257]; size_t len; uint24_t exponent; } rsa;
+    struct {
+      struct { uint8_t data[32]; size_t len; } curveid;
+      uint8_t data[72]; size_t len;
+    } ec;
   } publickey;
 };
 

@@ -11373,17 +11373,17 @@ cryptx_pkcs8_import_publickey:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	z, BB0_13
+	jp	z, BB0_14
 	ld	hl, (ix + 9)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	z, BB0_13
+	jp	z, BB0_14
 	ld	hl, (ix + 12)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	z, BB0_13
+	jp	z, BB0_14
 	ld	(hl), 0
 	push	hl
 	pop	iy
@@ -11404,7 +11404,7 @@ cryptx_pkcs8_import_publickey:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	nz, BB0_12
+	jp	nz, BB0_13
 	lea	hl, ix - 6
 	ld	(ix - 33), hl
 	lea	hl, ix - 9
@@ -11501,7 +11501,7 @@ BB0_7:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	nz, BB0_12
+	jp	nz, BB0_13
 	ld	hl, (ix - 9)
 	ld	de, (ix - 18)
 	ld	(ix - 39), de
@@ -11527,7 +11527,7 @@ BB0_7:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	nz, BB0_14
+	jp	nz, BB0_15
 	ld	hl, (ix - 3)
 	ld	de, (ix - 12)
 	ld	bc, (ix - 33)
@@ -11575,7 +11575,6 @@ BB0_7:
 	push	bc
 	ld	bc, 0
 	push	bc
-	inc	bc
 	push	bc
 	push	de
 	push	hl
@@ -11593,19 +11592,25 @@ BB0_7:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	nz, BB0_12
-	ld	de, 295
-	ld	iy, (ix + 12)
-	add	iy, de
+	jr	nz, BB0_13
 	ld	hl, (ix - 9)
 	ld	de, (ix - 18)
+	ld	(ix - 33), de
 	push	de
 	push	hl
-	push	iy
-	call	_rmemcpy
+	ld	hl, (ix + 12)
+	push	hl
+	pop	iy
+	pea	iy + 35
+	call	ti._memcpy
 	pop	hl
 	pop	hl
 	pop	hl
+	ld	de, 292
+	ld	iy, (ix + 12)
+	add	iy, de
+	ld	hl, (ix - 33)
+	ld	(iy), hl
 	ld	hl, (ix - 21)
 	ld	de, (ix - 24)
 	ld	bc, (ix - 27)
@@ -11614,17 +11619,59 @@ BB0_7:
 	push	bc
 	ld	bc, 0
 	push	bc
-	jr	BB0_15
-BB0_12:
-	ld	de, 3
+	inc	bc
+	push	bc
+	push	de
+	push	hl
+	call	cryptx_asn1_decode
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	nz, BB0_13
+	ld	de, 295
+	ld	hl, (ix + 12)
+	add	hl, de
+	ld	bc, (ix - 9)
+	ld	de, (ix - 18)
+	push	de
+	push	bc
+	push	hl
+	call	_rmemcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	jp	BB0_18
 BB0_13:
+	ld	de, 3
+BB0_14:
 	ex	de, hl
 	ld	sp, ix
 	pop	ix
 	ret
-BB0_14:
-	ld	hl, (ix - 3)
-	ld	de, (ix - 12)
+BB0_15:
+	ld	iy, (ix + 12)
+	ld	hl, (iy + 32)
+	push	hl
+	ld	hl, __pkcs_ec_oid
+	push	hl
+	push	iy
+	call	ti._strncmp
+	pop	de
+	pop	de
+	pop	de
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	de, 2
+	jr	nz, BB0_14
+	ld	hl, (ix - 6)
+	ld	de, (ix - 15)
 	ld	bc, (ix - 27)
 	push	bc
 	ld	bc, (ix - 30)
@@ -11632,7 +11679,6 @@ BB0_14:
 	ld	bc, 0
 	push	bc
 	inc	bc
-BB0_15:
 	push	bc
 	push	de
 	push	hl
@@ -11647,10 +11693,10 @@ BB0_15:
 	or	a, a
 	sbc	hl, bc
 	ld	de, 3
-	jr	nz, BB0_13
+	jr	nz, BB0_14
 	ld	hl, (ix - 9)
 	ld	de, (ix - 18)
-	ld	(ix - 27), de
+	ld	(ix - 33), de
 	push	de
 	push	hl
 	ld	hl, (ix + 12)
@@ -11661,16 +11707,51 @@ BB0_15:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	de, 292
 	ld	iy, (ix + 12)
-	add	iy, de
-	ld	hl, (ix - 27)
-	ld	(iy), hl
+	ld	hl, (ix - 33)
+	ld	(iy + 67), hl
+	ld	hl, (ix - 3)
+	ld	de, (ix - 12)
+	ld	bc, (ix - 27)
+	push	bc
+	ld	bc, (ix - 30)
+	push	bc
+	ld	bc, 0
+	push	bc
+	inc	bc
+	push	bc
+	push	de
+	push	hl
+	call	cryptx_asn1_decode
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 9)
+	ld	de, (ix - 18)
+	ld	(ix - 27), de
+	push	de
+	push	hl
+	ld	iy, (ix + 12)
+	pea	iy + 70
+	call	ti._memcpy
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	de, 142
+	ld	hl, (ix + 12)
+	add	hl, de
+	ld	de, (ix - 27)
+	ld	(hl), de
+BB0_18:
 	ld	de, 0
-	jr	BB0_13
+	jp	BB0_14
  
  
  __pkcs_rsa_oid: db	$2A,$86,$48,$86,$F7,$0D,$01,$01,$01,0
+ __pkcs_ec_oid: db $2A,$86,$48,$CE,$3D,$02,$01,0
   
 	
 cryptx_pkcs8_import_privatekey:
