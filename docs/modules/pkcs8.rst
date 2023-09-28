@@ -11,37 +11,7 @@ PKCS stands for **Public Key Cryptography Standards** and specification #8 provi
 
 PKCS#8 typically encodes keydata using the following workflow:
 
-(1) The components of the key are encoding using ASN.1/DER according to the following specifications:
-
-  .. code-block:: c
-  
-    // ASN.1/DER encoding of public key
-    PublicKeyInfo ::= SEQUENCE {
-      algorithm ::= SEQUENCE {
-        algorithm   OBJECT IDENTIFIER,
-        parameters  ANY DEFINED BY algorithm OPTIONAL
-      }
-      PublicKey   BIT STRING
-    } // for RSA only PublicKey encodes PKCS#1 `RSAPublicKey`
-    
-    // ASN.1/DER encoding of private key
-    PrivateKeyInfo ::= SEQUENCE {
-      version Version,
-      algorithm ::= SEQUENCE {
-        algorithm   OBJECT IDENTIFIER,
-        parameters  ANY DEFINED BY algorithm OPTIONAL
-      }
-      PrivateKey  BIT STRING
-    } // for RSA only, PrivateKey encodes PKCS#1 `RSAPrivateKey`
-    
-    // ASN.1/DER encoding of encrypted private key
-    EncryptedPrivateKeyInfo ::= SEQUENCE {
-      encryptionAlgorithm ::= SEQUENCE {
-        algorithm   OBJECT IDENTIFIER,
-        parameters  ANY DEFINED BY algorithm OPTIONAL
-      }
-      encryptedData ::= OCTET STRING (encrypts PrivateKeyInfo)
-    }
+(1) The components of the key are encoded using ASN.1/DER. :ref:`Click here <spec>` for more details.
   
 (2) The ASN.1 structure is then encoded using Base64/PEM.
 (3) The key data is wrapped in a header/footer banner indicating the type of key. These banners may be:
@@ -122,6 +92,75 @@ You can import a keyfile and then access its data like so:
   key.publickey.ec.data;          // public key (bytes)
   key.publickey.ec.len;           // length of public key
   
+.. _spec:
+
+PKCS#8 Encoding Specification
+______________________________
+
+This section details the PKCS#8 encoding format for public and private key files.
+
+.. code-block:: asn1
+    
+  PublicKeyInfo ::= SEQUENCE {
+    algorithm ::= SEQUENCE {
+      algorithm   OBJECT IDENTIFIER,
+      parameters  ANY DEFINED BY algorithm OPTIONAL
+    }
+    PublicKey   BIT STRING
+  }
+
+  PrivateKeyInfo ::= SEQUENCE {
+    version Version,
+    algorithm ::= SEQUENCE {
+      algorithm   OBJECT IDENTIFIER,
+      parameters  ANY DEFINED BY algorithm OPTIONAL
+    }
+    PrivateKey  BIT STRING
+  }
+  
+  EncryptedPrivateKeyInfo ::= SEQUENCE {
+    encryptionAlgorithm ::= SEQUENCE {
+      algorithm   OBJECT IDENTIFIER,
+      parameters  ANY DEFINED BY algorithm OPTIONAL
+    }
+    encryptedData ::= OCTET STRING (encrypts PrivateKeyInfo)
+  }
+  
+For some key formats the *PublicKey* field further encodes a structure from a different standard. This is true for all CryptX use cases of these keys.
+
+.. code-block:: asn1
+      
+    -- from PKCS#1, src: rfc3447 A.1.1
+    RSAPublicKey ::= SEQUENCE {
+      modulus         INTEGER,    -- n
+      publicExponent  INTEGER,    -- e
+    }
+    
+    -- from PKCS#1, src: rfc3447 A.1.2
+    RSAPrivateKey ::= SEQUENCE {
+      version           Version,
+      modulus           INTEGER,  -- n
+      publicExponent    INTEGER,  -- e
+      privateExponent   INTEGER,  -- d
+      prime1            INTEGER,  -- p
+      prime2            INTEGER,  -- q
+      exponent1         INTEGER,  -- d mod (p-1)
+      exponent2         INTEGER,  -- d mod (q-1)
+      coefficient       INTEGER,  -- (inverse of q) mod p
+      otherPrimeInfos   OtherPrimeInfos OPTIONAL
+    }
+    
+    -- from SECG1, src: rfc5915 1.3
+    ECPrivateKey ::= SEQUENCE {
+      version     INTEGER { ecPrivkeyVer1(1) } (ecPrivkeyVer1),
+      privateKey  OCTET STRING,
+      parameters  [0] ECParameters {{ NamedCurve }} OPTIONAL,
+      publicKey   [1] BIT STRING OPTIONAL
+    }
+    
+    -- from SECG1, src: rfc5915 2.2
+    ECPublicKey ::= ECPoint ::= OCTET STRING
+    -- first octet of key is 0x04 for uncompressed or 0x03 or 0x02 for compressed
 
 Object Identifier Reference
 ___________________________

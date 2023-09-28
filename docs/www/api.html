@@ -35,15 +35,25 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules/aes.html">function documentation: AES</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/bytes.html">Bytearray Operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/csrand.html">Secure Random Number Generator</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/ecc.html">function documentation: Elliptic Curve Cryptography</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/encoding.html">function documentation: Encoding</a></li>
+              <p class="caption" role="heading"><span class="caption-text">Recommended Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules/pkcs8.html">PKCS#8</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/hash.html">Secure Hashing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/hmac.html">hmac</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/rsa.html">function documentation: RSA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/hmac.html">Hash-Based MAC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/csrand.html">Secure Random Number Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules/bytes.html">Bytearray Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/aes.html">Advanced Encryption Standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/rsa.html">RSA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/ec.html">Elliptic Curves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/asn1.html">ASN.1/DER</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/base64.html">Base64/PEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/hazmat.html">Hazardous Materials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Info</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="static/analysis.html">Analysis &amp; Overview</a></li>
 </ul>
 
@@ -362,7 +372,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><a class="reference internal" href="modules/ecc.html#ec"><span class="std std-ref">view elliptic curve documentation</span></a></p></li>
+<li><p><a class="reference internal" href="modules/ec.html#ec"><span class="std std-ref">view elliptic curve documentation</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="cryptographic-encoding-formats">
@@ -417,7 +427,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><a class="reference internal" href="modules/encoding.html#encoding"><span class="std std-ref">view ASN.1 documentation</span></a></p></li>
+<li><p><span class="xref std std-ref">view ASN.1 documentation</span></p></li>
 </ul>
 <p><strong>Base64 Encoding and Decoding</strong></p>
 <p>Base64 (sextet-encoding) is the second of two encoding formats common to cryptography, including keyfiles exported by cryptographic libraries. In fact, PEM-encoding usually has the key encoded first with ASN.1 and then into base64. In base64 a stream of octets (8 bits per byte) is parsed as a bit string in groups of six bits (hence sextet) which is then mapped to one of 64 printable characters.</p>
@@ -438,7 +448,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><a class="reference internal" href="modules/encoding.html#encoding"><span class="std std-ref">view Base64 documentation</span></a></p></li>
+<li><p><span class="xref std std-ref">view Base64 documentation</span></p></li>
 </ul>
 </div>
 <div class="section" id="hazardous-materials">

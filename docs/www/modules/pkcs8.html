@@ -43,6 +43,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#structures">Structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#response-codes">Response Codes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pkcs-8-encoding-specification">PKCS#8 Encoding Specification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#object-identifier-reference">Object Identifier Reference</a></li>
 </ul>
 </li>
@@ -93,40 +94,7 @@
 <p style="color:red; font-weight:bold; font-size:120%;">Module under development. Check back for updates.</p><p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides functions for the import of PKCS#8-encoded public and private keys that can be used with the RSA and EC modules of this library.</p><p>PKCS stands for <strong>Public Key Cryptography Standards</strong> and specification #8 provides general key encoding guidelines for various forms of public and private keys. Because the API of this library tends to work on raw data (rather than on key structures like other libraries do), this module provides a way to deserialize PKCS#8 keyfiles such that you can access components of the key. You can also pass these public and private key structures directly to the TLS implementation (coming soon).</p>
 <p>PKCS#8 typically encodes keydata using the following workflow:</p>
 <ol class="arabic simple">
-<li><p>The components of the key are encoding using ASN.1/DER according to the following specifications:</p></li>
-</ol>
-<blockquote>
-<div><div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// ASN.1/DER encoding of public key</span>
-<span class="n">PublicKeyInfo</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="n">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">algorithm</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="n">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">algorithm</span><span class="w">   </span><span class="n">OBJECT</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="p">,</span>
-<span class="w">    </span><span class="n">parameters</span><span class="w">  </span><span class="n">ANY</span><span class="w"> </span><span class="n">DEFINED</span><span class="w"> </span><span class="n">BY</span><span class="w"> </span><span class="n">algorithm</span><span class="w"> </span><span class="n">OPTIONAL</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="w">  </span><span class="n">PublicKey</span><span class="w">   </span><span class="n">BIT</span><span class="w"> </span><span class="n">STRING</span>
-<span class="p">}</span><span class="w"> </span><span class="c1">// for RSA only PublicKey encodes PKCS#1 `RSAPublicKey`</span>
-
-<span class="c1">// ASN.1/DER encoding of private key</span>
-<span class="n">PrivateKeyInfo</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="n">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">version</span><span class="w"> </span><span class="n">Version</span><span class="p">,</span>
-<span class="w">  </span><span class="n">algorithm</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="n">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">algorithm</span><span class="w">   </span><span class="n">OBJECT</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="p">,</span>
-<span class="w">    </span><span class="n">parameters</span><span class="w">  </span><span class="n">ANY</span><span class="w"> </span><span class="n">DEFINED</span><span class="w"> </span><span class="n">BY</span><span class="w"> </span><span class="n">algorithm</span><span class="w"> </span><span class="n">OPTIONAL</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="w">  </span><span class="n">PrivateKey</span><span class="w">  </span><span class="n">BIT</span><span class="w"> </span><span class="n">STRING</span>
-<span class="p">}</span><span class="w"> </span><span class="c1">// for RSA only, PrivateKey encodes PKCS#1 `RSAPrivateKey`</span>
-
-<span class="c1">// ASN.1/DER encoding of encrypted private key</span>
-<span class="n">EncryptedPrivateKeyInfo</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="n">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">encryptionAlgorithm</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="n">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">algorithm</span><span class="w">   </span><span class="n">OBJECT</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="p">,</span>
-<span class="w">    </span><span class="n">parameters</span><span class="w">  </span><span class="n">ANY</span><span class="w"> </span><span class="n">DEFINED</span><span class="w"> </span><span class="n">BY</span><span class="w"> </span><span class="n">algorithm</span><span class="w"> </span><span class="n">OPTIONAL</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="w">  </span><span class="n">encryptedData</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="n">OCTET</span><span class="w"> </span><span class="n">STRING</span><span class="w"> </span><span class="p">(</span><span class="n">encrypts</span><span class="w"> </span><span class="n">PrivateKeyInfo</span><span class="p">)</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</div></blockquote>
-<ol class="arabic simple" start="2">
+<li><p>The components of the key are encoded using ASN.1/DER. <a class="reference internal" href="#spec"><span class="std std-ref">Click here</span></a> for more details.</p></li>
 <li><p>The ASN.1 structure is then encoded using Base64/PEM.</p></li>
 <li><p>The key data is wrapped in a header/footer banner indicating the type of key. These banners may be:</p></li>
 </ol>
@@ -266,6 +234,70 @@
 <span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">ec</span><span class="p">.</span><span class="n">curveid</span><span class="p">.</span><span class="n">len</span><span class="p">;</span><span class="w">   </span><span class="c1">// length of curve id (size_t)</span>
 <span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">ec</span><span class="p">.</span><span class="n">data</span><span class="p">;</span><span class="w">          </span><span class="c1">// public key (bytes)</span>
 <span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">ec</span><span class="p">.</span><span class="n">len</span><span class="p">;</span><span class="w">           </span><span class="c1">// length of public key</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="pkcs-8-encoding-specification">
+<span id="spec"></span><h2>PKCS#8 Encoding Specification<a class="headerlink" href="#pkcs-8-encoding-specification" title="Permalink to this headline"></a></h2>
+<p>This section details the PKCS#8 encoding format for public and private key files.</p>
+<div class="highlight-asn1 notranslate"><div class="highlight"><pre><span></span><span class="n n-Type">PublicKeyInfo</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="kd">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">algorithm</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="kd">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nv">algorithm</span><span class="w">   </span><span class="kt">OBJECT IDENTIFIER</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">parameters</span><span class="w">  </span><span class="n n-Type">ANY</span><span class="w"> </span><span class="n n-Type">DEFINED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="nv">algorithm</span><span class="w"> </span><span class="kd">OPTIONAL</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n n-Type">PublicKey</span><span class="w">   </span><span class="kt">BIT STRING</span>
+<span class="p">}</span>
+
+<span class="n n-Type">PrivateKeyInfo</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="kd">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">version</span><span class="w"> </span><span class="n n-Type">Version</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">algorithm</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="kd">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nv">algorithm</span><span class="w">   </span><span class="kt">OBJECT IDENTIFIER</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">parameters</span><span class="w">  </span><span class="n n-Type">ANY</span><span class="w"> </span><span class="n n-Type">DEFINED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="nv">algorithm</span><span class="w"> </span><span class="kd">OPTIONAL</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n n-Type">PrivateKey</span><span class="w">  </span><span class="kt">BIT STRING</span>
+<span class="p">}</span>
+
+<span class="n n-Type">EncryptedPrivateKeyInfo</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="kd">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">encryptionAlgorithm</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="kd">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nv">algorithm</span><span class="w">   </span><span class="kt">OBJECT IDENTIFIER</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">parameters</span><span class="w">  </span><span class="n n-Type">ANY</span><span class="w"> </span><span class="n n-Type">DEFINED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="nv">algorithm</span><span class="w"> </span><span class="kd">OPTIONAL</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="nv">encryptedData</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="kt">OCTET STRING</span><span class="w"> </span><span class="p">(</span><span class="nv">encrypts</span><span class="w"> </span><span class="n n-Type">PrivateKeyInfo</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>For some key formats the <em>PublicKey</em> field further encodes a structure from a different standard. This is true for all CryptX use cases of these keys.</p>
+<div class="highlight-asn1 notranslate"><div class="highlight"><pre><span></span><span class="c1">-- from PKCS#1, src: rfc3447 A.1.1</span>
+<span class="n n-Type">RSAPublicKey</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="kd">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">modulus</span><span class="w">         </span><span class="kt">INTEGER</span><span class="p">,</span><span class="w">    </span><span class="c1">-- n</span>
+<span class="w">  </span><span class="nv">publicExponent</span><span class="w">  </span><span class="kt">INTEGER</span><span class="p">,</span><span class="w">    </span><span class="c1">-- e</span>
+<span class="p">}</span>
+
+<span class="c1">-- from PKCS#1, src: rfc3447 A.1.2</span>
+<span class="n n-Type">RSAPrivateKey</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="kd">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">version</span><span class="w">           </span><span class="n n-Type">Version</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">modulus</span><span class="w">           </span><span class="kt">INTEGER</span><span class="p">,</span><span class="w">  </span><span class="c1">-- n</span>
+<span class="w">  </span><span class="nv">publicExponent</span><span class="w">    </span><span class="kt">INTEGER</span><span class="p">,</span><span class="w">  </span><span class="c1">-- e</span>
+<span class="w">  </span><span class="nv">privateExponent</span><span class="w">   </span><span class="kt">INTEGER</span><span class="p">,</span><span class="w">  </span><span class="c1">-- d</span>
+<span class="w">  </span><span class="nv">prime1</span><span class="w">            </span><span class="kt">INTEGER</span><span class="p">,</span><span class="w">  </span><span class="c1">-- p</span>
+<span class="w">  </span><span class="nv">prime2</span><span class="w">            </span><span class="kt">INTEGER</span><span class="p">,</span><span class="w">  </span><span class="c1">-- q</span>
+<span class="w">  </span><span class="nv">exponent1</span><span class="w">         </span><span class="kt">INTEGER</span><span class="p">,</span><span class="w">  </span><span class="c1">-- d mod (p-1)</span>
+<span class="w">  </span><span class="nv">exponent2</span><span class="w">         </span><span class="kt">INTEGER</span><span class="p">,</span><span class="w">  </span><span class="c1">-- d mod (q-1)</span>
+<span class="w">  </span><span class="nv">coefficient</span><span class="w">       </span><span class="kt">INTEGER</span><span class="p">,</span><span class="w">  </span><span class="c1">-- (inverse of q) mod p</span>
+<span class="w">  </span><span class="nv">otherPrimeInfos</span><span class="w">   </span><span class="n n-Type">OtherPrimeInfos</span><span class="w"> </span><span class="kd">OPTIONAL</span>
+<span class="p">}</span>
+
+<span class="c1">-- from SECG1, src: rfc5915 1.3</span>
+<span class="n n-Type">ECPrivateKey</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="kd">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">version</span><span class="w">     </span><span class="kt">INTEGER</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">ecPrivkeyVer1</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">(</span><span class="nv">ecPrivkeyVer1</span><span class="p">),</span>
+<span class="w">  </span><span class="nv">privateKey</span><span class="w">  </span><span class="kt">OCTET STRING</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">parameters</span><span class="w">  </span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="n n-Type">ECParameters</span><span class="w"> </span><span class="p">{{</span><span class="w"> </span><span class="n n-Type">NamedCurve</span><span class="w"> </span><span class="p">}}</span><span class="w"> </span><span class="kd">OPTIONAL</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">publicKey</span><span class="w">   </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="kt">BIT STRING</span><span class="w"> </span><span class="kd">OPTIONAL</span>
+<span class="p">}</span>
+
+<span class="c1">-- from SECG1, src: rfc5915 1.3</span>
+<span class="n n-Type">ECPublicKey</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="n n-Type">ECPoint</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="kt">OCTET STRING</span>
+<span class="c1">-- first octet of key is 0x04 for uncompressed or 0x03 or 0x02 for compressed</span>
 </pre></div>
 </div>
 </div>

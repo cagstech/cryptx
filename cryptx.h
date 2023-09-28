@@ -581,8 +581,9 @@ struct cryptx_pkcs8_pubkeyinfo {
       uint24_t exponent;
     } rsa;
     struct {
-        struct { uint8_t bytes[16]; size_t len; } curveid;
-        uint8_t bytes[146]; size_t len;
+      struct { uint8_t bytes[16]; size_t len; } curveid;
+      bool compressed;
+      uint8_t bytes[146]; size_t len;
     } ec;
   } publickey;
 };
@@ -609,7 +610,7 @@ struct cryptx_pkcs8_privkeyinfo {
       uint8_t version;
       struct { uint8_t bytes[16]; size_t len; } curveid;
       struct { uint8_t bytes[73]; size_t len; } private;
-      struct { uint8_t bytes[146]; size_t len; } public;
+      struct { bool compressed; uint8_t bytes[146]; size_t len; } public;
     } ec;
   } privatekey;
 };

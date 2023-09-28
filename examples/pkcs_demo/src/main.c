@@ -82,6 +82,7 @@ int main(void){
     else {
       hexdump(pub.publickey.ec.curveid.bytes, pub.publickey.ec.curveid.len, "curve id");
       hexdump(pub.publickey.ec.bytes, pub.publickey.ec.len, "key data");
+      sprintf(CEMU_CONSOLE, "compressed: %u\n", pub.publickey.ec.compressed);
     }
   }
   
@@ -113,6 +114,7 @@ int main(void){
       hexdump(priv.privatekey.ec.curveid.bytes, priv.privatekey.ec.curveid.len, "curve id");
       hexdump(priv.privatekey.ec.private.bytes, priv.privatekey.ec.private.len, "private key");
       hexdump(priv.privatekey.ec.public.bytes, priv.privatekey.ec.public.len, "public key");
+      sprintf(CEMU_CONSOLE, "compressed: %u\n", priv.privatekey.ec.public.compressed);
       
     }
   }

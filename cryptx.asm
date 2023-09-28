@@ -11366,24 +11366,24 @@ base64_decode:
 	ret
 
 cryptx_pkcs8_import_publickey:
-	ld	hl, -42
+	ld	hl, -43
 	call	ti._frameset
 	ld	hl, (ix + 6)
-	ld	de, 1
+	ld	bc, 1
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	z, .lbl_14
+	jp	z, .lbl_26
 	ld	hl, (ix + 9)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	z, .lbl_14
+	jp	z, .lbl_26
 	ld	hl, (ix + 12)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	z, .lbl_14
+	jp	z, .lbl_26
 	ld	(hl), 0
 	push	hl
 	pop	iy
@@ -11404,7 +11404,9 @@ cryptx_pkcs8_import_publickey:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	nz, .lbl_13
+	jp	nz, .lbl_23
+	ld	a, 1
+	ld	(ix - 43), a
 	lea	hl, ix - 6
 	ld	(ix - 33), hl
 	lea	hl, ix - 9
@@ -11439,15 +11441,15 @@ cryptx_pkcs8_import_publickey:
 	pop	de
 	pop	de
 	pop	de
-	ld	bc, (_der_buf)
+	ld	de, (_der_buf)
 	pea	ix - 3
 	pea	ix - 12
-	ld	de, 0
-	push	de
-	push	de
+	ld	bc, 0
+	push	bc
+	push	bc
 	ld	(ix - 42), hl
 	push	hl
-	push	bc
+	push	de
 	call	cryptx_asn1_decode
 	ld	(ix - 39), hl
 	pop	hl
@@ -11502,7 +11504,7 @@ cryptx_pkcs8_import_publickey:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	nz, .lbl_13
+	jp	nz, .lbl_24
 	ld	hl, (ix - 9)
 	ld	de, (ix - 18)
 	ld	(ix - 39), de
@@ -11528,7 +11530,7 @@ cryptx_pkcs8_import_publickey:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	nz, .lbl_15
+	jp	nz, .lbl_13
 	ld	hl, (ix - 3)
 	ld	de, (ix - 12)
 	ld	bc, (ix - 33)
@@ -11593,7 +11595,7 @@ cryptx_pkcs8_import_publickey:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	nz, .lbl_13
+	jp	nz, .lbl_24
 	ld	hl, (ix - 9)
 	ld	de, (ix - 18)
 	ld	(ix - 33), de
@@ -11634,7 +11636,7 @@ cryptx_pkcs8_import_publickey:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	nz, .lbl_13
+	jp	nz, .lbl_24
 	ld	de, 279
 	ld	hl, (ix + 12)
 	add	hl, de
@@ -11647,15 +11649,8 @@ cryptx_pkcs8_import_publickey:
 	pop	hl
 	pop	hl
 	pop	hl
-	jp	.lbl_18
+	jp	.lbl_22
 .lbl_13:
-	ld	de, 3
-.lbl_14:
-	ex	de, hl
-	ld	sp, ix
-	pop	ix
-	ret
-.lbl_15:
 	ld	iy, (ix + 12)
 	ld	hl, (iy + 16)
 	push	hl
@@ -11669,8 +11664,8 @@ cryptx_pkcs8_import_publickey:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	ld	de, 2
-	jr	nz, .lbl_14
+	ld	bc, 2
+	jp	nz, .lbl_26
 	ld	hl, (ix - 6)
 	ld	de, (ix - 15)
 	ld	bc, (ix - 27)
@@ -11693,8 +11688,7 @@ cryptx_pkcs8_import_publickey:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	ld	de, 3
-	jr	nz, .lbl_14
+	jp	nz, .lbl_24
 	ld	hl, (ix - 9)
 	ld	de, (ix - 18)
 	ld	(ix - 33), de
@@ -11708,8 +11702,8 @@ cryptx_pkcs8_import_publickey:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	iy, (ix + 12)
 	ld	hl, (ix - 33)
+	ld	iy, (ix + 12)
 	ld	(iy + 35), hl
 	ld	hl, (ix - 3)
 	ld	de, (ix - 12)
@@ -11724,29 +11718,65 @@ cryptx_pkcs8_import_publickey:
 	push	de
 	push	hl
 	call	cryptx_asn1_decode
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 9)
-	ld	de, (ix - 18)
-	ld	(ix - 27), de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	pop	de
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	nz, .lbl_24
+	ld	bc, (ix - 18)
+	ld	de, (ix - 9)
+	inc	de
+.lbl_17:
 	push	de
+	pop	iy
+	dec	bc
+	ld	(ix - 18), bc
+	lea	hl, iy
+	ld	(ix - 9), hl
+	ld	(ix - 27), iy
+	ld	l, (iy - 1)
+	inc	de
+	ld	a, l
+	or	a, a
+	jr	z, .lbl_17
+	ld	a, l
+	add	a, -2
+	cp	a, 2
+	jr	c, .lbl_21
+	ld	a, l
+	cp	a, 4
+	jr	nz, .lbl_23
+	xor	a, a
+	ld	(ix - 43), a
+.lbl_21:
+	ld	hl, (ix + 12)
+	ld	a, (ix - 43)
 	push	hl
-	ld	iy, (ix + 12)
-	pea	iy + 38
+	pop	iy
+	ld	(iy + 38), a
+	ex	de, hl
+	push	bc
+	ld	hl, (ix - 27)
+	push	hl
+	push	de
+	pop	iy
+	pea	iy + 39
+	ld	(ix - 27), bc
 	call	ti._memcpy
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	de, 184
+	ld	de, 185
 	ld	hl, (ix + 12)
 	add	hl, de
 	ld	de, (ix - 27)
 	ld	(hl), de
-.lbl_18:
+.lbl_22:
 	ld	hl, (_der_buf)
 	ld	de, (ix - 42)
 	push	de
@@ -11757,12 +11787,27 @@ cryptx_pkcs8_import_publickey:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	de, 0
-	jp	.lbl_14
+	or	a, a
+	sbc	hl, hl
+	jr	.lbl_25
+.lbl_23:
+	ld	bc, 3
+	jr	.lbl_26
+.lbl_24:
+	ld	hl, 3
+.lbl_25:
+	push	hl
+	pop	bc
+.lbl_26:
+	push	bc
+	pop	hl
+	ld	sp, ix
+	pop	ix
+	ret
   
 	
 cryptx_pkcs8_import_privatekey:
-	ld	hl, -87
+	ld	hl, -88
 	call	ti._frameset
 	ld	iy, (ix + 6)
 	ld	de, 1
@@ -11801,6 +11846,8 @@ cryptx_pkcs8_import_privatekey:
 	or	a, a
 	sbc	hl, bc
 	jp	nz, .lbl_18
+	ld	a, 1
+	ld	(ix - 88), a
 	ld	l, 3
 	ld	(ix - 81), hl
 	lea	hl, ix - 6
@@ -11839,15 +11886,15 @@ cryptx_pkcs8_import_privatekey:
 	pop	de
 	pop	de
 	pop	de
-	ld	bc, (_der_buf)
+	ld	de, (_der_buf)
 	pea	ix - 3
 	pea	ix - 12
-	ld	de, 0
-	push	de
-	push	de
+	ld	bc, 0
+	push	bc
+	push	bc
 	ld	(ix - 84), hl
 	push	hl
-	push	bc
+	push	de
 	call	cryptx_asn1_decode
 	ld	(ix - 72), hl
 	pop	hl
@@ -12168,7 +12215,7 @@ cryptx_pkcs8_import_privatekey:
 	or	a, a
 	sbc	hl, de
 	ld	bc, 0
-	jp	z, .lbl_27
+	jp	z, .lbl_32
 	ld	(ix - 69), iy
 	ld	iy, (ix - 21)
 	ld	de, (ix - 24)
@@ -12446,28 +12493,53 @@ cryptx_pkcs8_import_privatekey:
 	or	a, a
 	sbc	hl, bc
 	jp	nz, .lbl_19
-	ld	hl, (ix - 9)
-	ld	de, (ix - 18)
-	ld	(ix - 63), de
+	ld	bc, (ix - 18)
+	ld	de, (ix - 9)
+	inc	de
+.lbl_27:
 	push	de
-	push	hl
-	ld	hl, (ix + 12)
-	push	hl
 	pop	iy
-	pea	iy + 116
+	dec	bc
+	ld	(ix - 18), bc
+	lea	hl, iy
+	ld	(ix - 9), hl
+	ld	l, (iy - 1)
+	inc	de
+	ld	a, l
+	or	a, a
+	jr	z, .lbl_27
+	lea	de, iy
+	ld	a, l
+	add	a, -2
+	cp	a, 2
+	jr	c, .lbl_31
+	ld	a, l
+	cp	a, 4
+	jp	nz, .lbl_19
+	xor	a, a
+	ld	(ix - 88), a
+.lbl_31:
+	ld	a, (ix - 88)
+	ld	iy, (ix + 12)
+	ld	(iy + 116), a
+	push	bc
+	push	de
+	ld	iy, (ix + 12)
+	pea	iy + 117
+	ld	(ix - 63), bc
 	call	ti._memcpy
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	de, 262
-	ld	iy, (ix + 12)
-	add	iy, de
-	ld	hl, (ix - 63)
-	ld	(iy), hl
-.lbl_27:
+	ld	de, 263
+	ld	hl, (ix + 12)
+	add	hl, de
+	ld	de, (ix - 63)
+	ld	(hl), de
+.lbl_32:
+	ld	de, (ix - 84)
 	ld	bc, 0
 	ld	hl, (_der_buf)
-	ld	de, (ix - 84)
 	push	de
 	push	bc
 	push	hl

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
 
-#sys.path.append('/opt/homebrew/lib/python3.11/site-packages')
+sys.path.append('/opt/homebrew/lib/python3.11/site-packages')
 import subprocess, os
 
 project = 'CryptX'
@@ -42,7 +42,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 language = None
 exclude_patterns = ['build', '_build', 'Thumbs.db', '.DS_Store', 'venv']
-pygments_style = None
+pygments_style = "sphinx"
 html_theme = 'sphinx_rtd_theme'
 html_show_sourcelink = False
 
