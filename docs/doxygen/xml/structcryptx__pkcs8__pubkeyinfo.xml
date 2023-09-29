@@ -100,7 +100,21 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="584" column="23"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="584" column="21"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcryptx__pkcs8__pubkeyinfo_1aedbb421fe79269c230a93728f805efa7" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool cryptx_pkcs8_pubkeyinfo::compressed</definition>
+        <argsstring></argsstring>
+        <name>compressed</name>
+        <qualifiedname>cryptx_pkcs8_pubkeyinfo::compressed</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="585" column="12" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="585" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structcryptx__pkcs8__pubkeyinfo_1a7d54d6cbd0f72e933f202848b83dab9d" prot="public" static="no" mutable="no">
         <type>struct <ref refid="structcryptx__pkcs8__pubkeyinfo" kindref="compound">cryptx_pkcs8_pubkeyinfo</ref></type>
@@ -114,7 +128,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="586" column="8"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="587" column="8"/>
       </memberdef>
       <memberdef kind="variable" id="structcryptx__pkcs8__pubkeyinfo_1a9990f2870686421fc2e8e22f9790e65d" prot="public" static="no" mutable="no">
         <type>union <ref refid="structcryptx__pkcs8__pubkeyinfo" kindref="compound">cryptx_pkcs8_pubkeyinfo</ref></type>
@@ -128,7 +142,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="587" column="13"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="588" column="13"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -136,9 +150,10 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="576" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="576" bodyend="588"/>
+    <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="576" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="576" bodyend="589"/>
     <listofallmembers>
       <member refid="structcryptx__pkcs8__pubkeyinfo_1a0e1c00600dfd4f60829534060ed0f163" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_pubkeyinfo</scope><name>bytes</name></member>
+      <member refid="structcryptx__pkcs8__pubkeyinfo_1aedbb421fe79269c230a93728f805efa7" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_pubkeyinfo</scope><name>compressed</name></member>
       <member refid="structcryptx__pkcs8__pubkeyinfo_1a62a828fdac5d4b36828cb93511b02224" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_pubkeyinfo</scope><name>curveid</name></member>
       <member refid="structcryptx__pkcs8__pubkeyinfo_1a7d54d6cbd0f72e933f202848b83dab9d" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_pubkeyinfo</scope><name>ec</name></member>
       <member refid="structcryptx__pkcs8__pubkeyinfo_1a7c2e360f603268bc369d9aeca5e039e1" prot="public" virt="non-virtual"><scope>cryptx_pkcs8_pubkeyinfo</scope><name>exponent</name></member>

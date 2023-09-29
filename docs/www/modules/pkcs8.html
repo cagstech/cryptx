@@ -43,8 +43,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#structures">Structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#response-codes">Response Codes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#pkcs-8-encoding-specification">PKCS#8 Encoding Specification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#object-identifier-reference">Object Identifier Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#additional-info">Additional Info</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pkcs-8-specification">PKCS#8 Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#object-identifier-reference">Object Identifier Reference</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="hash.html">Secure Hashing</a></li>
@@ -206,39 +209,41 @@
 </dl>
 </dd></dl>
 
-<p>You can import a keyfile and then access its data like so:</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">fname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MyKey&quot;</span><span class="p">;</span>
+<p>You can import your keyfiles like so:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">pubkey_fname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MyPub&quot;</span><span class="p">;</span>
+<span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">privkey_fname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MyPriv&quot;</span><span class="p">;</span>
 <span class="kt">uint8_t</span><span class="w"> </span><span class="n">fp</span><span class="p">;</span>
-
-<span class="c1">// load the key from AppVar file</span>
-<span class="c1">// requires FILEIOC library</span>
-<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">fp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_Open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">)))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w">   </span><span class="c1">// failed to open file</span>
-<span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">pkcs_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_GetDataPtr</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
-<span class="kt">size_t</span><span class="w"> </span><span class="n">pkcs_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_GetSize</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
-<span class="n">ti_Close</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
-
 <span class="n">pkcs_error_t</span><span class="w"> </span><span class="n">err</span><span class="p">;</span>
-<span class="n">cryptx_pkcs8_pubkeyinfo</span><span class="w"> </span><span class="n">key</span><span class="p">;</span>
+<span class="n">cryptx_pkcs8_pubkeyinfo</span><span class="w"> </span><span class="n">pubkey</span><span class="p">;</span>
+<span class="n">cryptx_pkcs8_privkeyinfo</span><span class="w"> </span><span class="n">privkey</span><span class="p">;</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">key_data</span><span class="p">;</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="n">key_len</span><span class="p">;</span>
 
-<span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cryptx_pkcs8_import_publickey</span><span class="p">(</span><span class="n">pkcs_data</span><span class="p">,</span><span class="w"> </span><span class="n">pkcs_len</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">key</span><span class="p">);</span>
+<span class="c1">// load pubkey from file (requires FILEIOC library)</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">fp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_Open</span><span class="p">(</span><span class="n">pubkey_fname</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">)))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w">   </span><span class="c1">// failed to open file</span>
+<span class="n">key_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_GetDataPtr</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+<span class="n">key_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_GetSize</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+<span class="n">ti_Close</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+<span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cryptx_pkcs8_import_publickey</span><span class="p">(</span><span class="n">key_data</span><span class="p">,</span><span class="w"> </span><span class="n">key_len</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">pubkey</span><span class="p">);</span>
 <span class="k">if</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
 
-<span class="n">key</span><span class="p">.</span><span class="n">objectid</span><span class="p">.</span><span class="n">data</span><span class="p">;</span><span class="w">       </span><span class="c1">// pointer to object id (bytes)</span>
-<span class="n">key</span><span class="p">.</span><span class="n">objectid</span><span class="p">.</span><span class="n">len</span><span class="p">;</span><span class="w">        </span><span class="c1">// length of object id</span>
-<span class="c1">// For RSA</span>
-<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">rsa</span><span class="p">.</span><span class="n">data</span><span class="p">;</span><span class="w">      </span><span class="c1">// public modulus data (bytes)</span>
-<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">rsa</span><span class="p">.</span><span class="n">len</span><span class="p">;</span><span class="w">       </span><span class="c1">// length of rsa modulus (size_t)</span>
-<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">rsa</span><span class="p">.</span><span class="n">exponent</span><span class="p">;</span><span class="w">  </span><span class="c1">// public exponent (uint24_t)</span>
-<span class="c1">// For EC</span>
-<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">ec</span><span class="p">.</span><span class="n">curveid</span><span class="p">.</span><span class="n">data</span><span class="p">;</span><span class="w">  </span><span class="c1">// pointer to curve id (bytes)</span>
-<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">ec</span><span class="p">.</span><span class="n">curveid</span><span class="p">.</span><span class="n">len</span><span class="p">;</span><span class="w">   </span><span class="c1">// length of curve id (size_t)</span>
-<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">ec</span><span class="p">.</span><span class="n">data</span><span class="p">;</span><span class="w">          </span><span class="c1">// public key (bytes)</span>
-<span class="n">key</span><span class="p">.</span><span class="n">publickey</span><span class="p">.</span><span class="n">ec</span><span class="p">.</span><span class="n">len</span><span class="p">;</span><span class="w">           </span><span class="c1">// length of public key</span>
+<span class="c1">// load pubkey from file (requires FILEIOC library)</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">fp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_Open</span><span class="p">(</span><span class="n">privkey_fname</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">)))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w">   </span><span class="c1">// failed to open file</span>
+<span class="n">key_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_GetDataPtr</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+<span class="n">key_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_GetSize</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+<span class="n">ti_Close</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+<span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cryptx_pkcs8_import_privatekey</span><span class="p">(</span><span class="n">key_data</span><span class="p">,</span><span class="w"> </span><span class="n">key_len</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">privkey</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+
+<span class="c1">// these structs can be passed directly to the TLS implementation (coming soon)</span>
+<span class="c1">// or the members can be accessed directly for advanced usage.</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="pkcs-8-encoding-specification">
-<span id="spec"></span><h2>PKCS#8 Encoding Specification<a class="headerlink" href="#pkcs-8-encoding-specification" title="Permalink to this headline"></a></h2>
+<div class="section" id="additional-info">
+<span id="spec"></span><h2>Additional Info<a class="headerlink" href="#additional-info" title="Permalink to this headline"></a></h2>
+<div class="section" id="pkcs-8-specification">
+<h3>PKCS#8 Specification<a class="headerlink" href="#pkcs-8-specification" title="Permalink to this headline"></a></h3>
 <p>This section details the PKCS#8 encoding format for public and private key files.</p>
 <div class="highlight-asn1 notranslate"><div class="highlight"><pre><span></span><span class="n n-Type">PublicKeyInfo</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="kd">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nv">algorithm</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="kd">SEQUENCE</span><span class="w"> </span><span class="p">{</span>
@@ -295,14 +300,14 @@
 <span class="w">  </span><span class="nv">publicKey</span><span class="w">   </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="kt">BIT STRING</span><span class="w"> </span><span class="kd">OPTIONAL</span>
 <span class="p">}</span>
 
-<span class="c1">-- from SECG1, src: rfc5915 1.3</span>
+<span class="c1">-- from SECG1, src: rfc5915 2.2</span>
 <span class="n n-Type">ECPublicKey</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="n n-Type">ECPoint</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="kt">OCTET STRING</span>
 <span class="c1">-- first octet of key is 0x04 for uncompressed or 0x03 or 0x02 for compressed</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="object-identifier-reference">
-<h2>Object Identifier Reference<a class="headerlink" href="#object-identifier-reference" title="Permalink to this headline"></a></h2>
+<h3>Object Identifier Reference<a class="headerlink" href="#object-identifier-reference" title="Permalink to this headline"></a></h3>
 <p>This section lists object identifiers for algorithms supported by this library. Developers should generally never need to use these as the library should handle it internally, but if you need them for other projects or even for custom implementations, here they are.</p>
 <p><strong>Bear in mind that while this module can successfully import objects for most algorithm types, only the ones listed below can actually be USED by the library.</strong></p>
 <table class="docutils align-default">
@@ -332,6 +337,7 @@
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 </div>
 

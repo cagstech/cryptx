@@ -63,12 +63,11 @@ int main(void){
   struct cryptx_pkcs8_privkeyinfo priv = {0};
   pkcs_error_t err;
   
-  sprintf(CEMU_CONSOLE, "\n\n__TESTING PUBLIC KEYS__\n");
+  sprintf(CEMU_CONSOLE, "\n---------TESTING PUBLIC KEYS--------\n");
   for(int i=0; i<2; i++) {
     err = 0;
     uint8_t *keystr = public_keys[i];
-    sprintf(CEMU_CONSOLE, "\n\npublic:\n");
-    sprintf(CEMU_CONSOLE, "%s\n", keystr);
+    sprintf(CEMU_CONSOLE, "\n%s\n", keystr);
     err = cryptx_pkcs8_import_publickey(keystr, strlen(keystr), &pub);
     if(err){
       sprintf(CEMU_CONSOLE, "error: %u\n", err);
@@ -86,12 +85,11 @@ int main(void){
     }
   }
   
-  sprintf(CEMU_CONSOLE, "\n\n__TESTING PRIVATE KEYS__\n");
+  sprintf(CEMU_CONSOLE, "\n--------TESTING PRIVATE KEYS--------\n");
   for(int i=0; i<2; i++) {
     err = 0;
     uint8_t *keystr = private_keys[i];
-    sprintf(CEMU_CONSOLE, "\n\nprivate:\n");
-    sprintf(CEMU_CONSOLE, "%s\n", keystr);
+    sprintf(CEMU_CONSOLE, "\n%s\n", keystr);
     err = cryptx_pkcs8_import_privatekey(keystr, strlen(keystr), &priv);
     if(err){
       sprintf(CEMU_CONSOLE, "error: %u\n", err);

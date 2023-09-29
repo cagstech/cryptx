@@ -60,42 +60,46 @@ __________
 .. doxygenfunction:: cryptx_pkcs8_import_privatekey
 	:project: CryptX
 
-You can import a keyfile and then access its data like so:
+You can import your keyfiles like so:
 
 .. code-block:: c
 
-  char *fname = "MyKey";
+  char *pubkey_fname = "MyPub";
+  char *privkey_fname = "MyPriv";
   uint8_t fp;
-  
-  // load the key from AppVar file
-  // requires FILEIOC library
-  if(!(fp = ti_Open(fname, "r"))) return;   // failed to open file
-  uint8_t *pkcs_data = ti_GetDataPtr(fp);
-  size_t pkcs_len = ti_GetSize(fp);
-  ti_Close(fp);
-  
   pkcs_error_t err;
-  cryptx_pkcs8_pubkeyinfo key;
+  cryptx_pkcs8_pubkeyinfo pubkey;
+  cryptx_pkcs8_privkeyinfo privkey;
+  uint8_t *key_data;
+  size_t key_len;
   
-  err = cryptx_pkcs8_import_publickey(pkcs_data, pkcs_len, &key);
+  // load pubkey from file (requires FILEIOC library)
+  if(!(fp = ti_Open(pubkey_fname, "r"))) return;   // failed to open file
+  key_data = ti_GetDataPtr(fp);
+  key_len = ti_GetSize(fp);
+  ti_Close(fp);
+  err = cryptx_pkcs8_import_publickey(key_data, key_len, &pubkey);
   if(err) return;
   
-  key.objectid.data;       // pointer to object id (bytes)
-  key.objectid.len;        // length of object id
-  // For RSA
-  key.publickey.rsa.data;      // public modulus data (bytes)
-  key.publickey.rsa.len;       // length of rsa modulus (size_t)
-  key.publickey.rsa.exponent;  // public exponent (uint24_t)
-  // For EC
-  key.publickey.ec.curveid.data;  // pointer to curve id (bytes)
-  key.publickey.ec.curveid.len;   // length of curve id (size_t)
-  key.publickey.ec.data;          // public key (bytes)
-  key.publickey.ec.len;           // length of public key
+  // load pubkey from file (requires FILEIOC library)
+  if(!(fp = ti_Open(privkey_fname, "r"))) return;   // failed to open file
+  key_data = ti_GetDataPtr(fp);
+  key_len = ti_GetSize(fp);
+  ti_Close(fp);
+  err = cryptx_pkcs8_import_privatekey(key_data, key_len, &privkey);
+  if(err) return;
+  
+  // these structs can be passed directly to the TLS implementation (coming soon)
+  // or the members can be accessed directly for advanced usage.
+  
   
 .. _spec:
 
-PKCS#8 Encoding Specification
-______________________________
+Additional Info
+________________
+
+PKCS#8 Specification
+^^^^^^^^^^^^^^^^^^^^^
 
 This section details the PKCS#8 encoding format for public and private key files.
 
@@ -163,7 +167,7 @@ For some key formats the *PublicKey* field further encodes a structure from a di
     -- first octet of key is 0x04 for uncompressed or 0x03 or 0x02 for compressed
 
 Object Identifier Reference
-___________________________
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This section lists object identifiers for algorithms supported by this library. Developers should generally never need to use these as the library should handle it internally, but if you need them for other projects or even for custom implementations, here they are.
 

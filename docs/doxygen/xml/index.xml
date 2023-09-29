@@ -77,6 +77,7 @@
     <member refid="structcryptx__pkcs8__privkeyinfo_1a1a78aa66dd55e2114830d6a61c8ee5a2" kind="variable"><name>rsa</name></member>
     <member refid="structcryptx__pkcs8__privkeyinfo_1a8ff17aa067c3f2ce8ab189f2ef06983f" kind="variable"><name>curveid</name></member>
     <member refid="structcryptx__pkcs8__privkeyinfo_1a59674716d2290d0b3b5890a036ef0e66" kind="variable"><name>private</name></member>
+    <member refid="structcryptx__pkcs8__privkeyinfo_1a8cd9baca23da0f4ce6fb5abad574f011" kind="variable"><name>compressed</name></member>
     <member refid="structcryptx__pkcs8__privkeyinfo_1ac1142f13a9d238790f6b504d50bbd51d" kind="variable"><name>public</name></member>
     <member refid="structcryptx__pkcs8__privkeyinfo_1a7638a55e2e4660f6808a1781359e8043" kind="variable"><name>ec</name></member>
     <member refid="structcryptx__pkcs8__privkeyinfo_1ab23b960497349441d3af88eeb9ee024d" kind="variable"><name>privatekey</name></member>
@@ -89,6 +90,7 @@
     <member refid="structcryptx__pkcs8__pubkeyinfo_1a7c2e360f603268bc369d9aeca5e039e1" kind="variable"><name>exponent</name></member>
     <member refid="structcryptx__pkcs8__pubkeyinfo_1aa2bfea80da29c8b891a76724848dee31" kind="variable"><name>rsa</name></member>
     <member refid="structcryptx__pkcs8__pubkeyinfo_1a62a828fdac5d4b36828cb93511b02224" kind="variable"><name>curveid</name></member>
+    <member refid="structcryptx__pkcs8__pubkeyinfo_1aedbb421fe79269c230a93728f805efa7" kind="variable"><name>compressed</name></member>
     <member refid="structcryptx__pkcs8__pubkeyinfo_1a7d54d6cbd0f72e933f202848b83dab9d" kind="variable"><name>ec</name></member>
     <member refid="structcryptx__pkcs8__pubkeyinfo_1a9990f2870686421fc2e8e22f9790e65d" kind="variable"><name>publickey</name></member>
   </compound>
