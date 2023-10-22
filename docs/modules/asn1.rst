@@ -94,8 +94,10 @@ Here is a simple example of how to loop each element in an ASN.1 structure and r
         if(cryptx_asn1_getform(obj.tag))  // is a constructed object
           decode_level(obj.data, obj.len);
       }
-      else
+      else {
         printf("error code: %u", err);
+        break;
+      }
     } while(err != ASN1_END_OF_FILE);
   }
 
