@@ -60,6 +60,12 @@ The ASN.1 tag is an octet consisting of three (3) parts, (1) A 5-bit tag value w
 	
 .. doxygendefine:: cryptx_asn1_getform
 	:project: CryptX
+ 
+Structures
+_______________
+
+.. doxygenstruct:: cryptx_asn1_object
+	:project: CryptX
 	
 Response Codes
 _______________

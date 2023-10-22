@@ -53,6 +53,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ASN.1/DER</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#enumerations">Enumerations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#macros">Macros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#structures">Structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#response-codes">Response Codes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a></li>
 </ul>
@@ -350,6 +351,15 @@
 </dd></dl>
 
 </div>
+<div class="section" id="structures">
+<h2>Structures<a class="headerlink" href="#structures" title="Permalink to this headline"></a></h2>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv418cryptx_asn1_object">
+<span id="_CPPv318cryptx_asn1_object"></span><span id="_CPPv218cryptx_asn1_object"></span><span id="cryptx_asn1_object"></span><span class="target" id="structcryptx__asn1__object"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_asn1_object</span></span></span><a class="headerlink" href="#_CPPv418cryptx_asn1_object" title="Permalink to this definition"></a><br /></dt>
+<dd><p>A struct into which <strong>cryptx_asn1_decode</strong> returns metadata. </p>
+</dd></dl>
+
+</div>
 <div class="section" id="response-codes">
 <h2>Response Codes<a class="headerlink" href="#response-codes" title="Permalink to this headline"></a></h2>
 <dl class="cpp enum">
@@ -389,13 +399,13 @@
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h2>
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv418cryptx_asn1_decodePv6size_t7uint8_tP11asn1_object">
-<span id="_CPPv318cryptx_asn1_decodePv6size_t7uint8_tP11asn1_object"></span><span id="_CPPv218cryptx_asn1_decodePv6size_t7uint8_tP11asn1_object"></span><span id="cryptx_asn1_decode__voidP.s.uint8_t.asn1_objectP"></span><span class="target" id="cryptx_8h_1a21fa7c9f43f8330b5ee4c2f3b57dbc5a"></span><a class="reference internal" href="#_CPPv412asn1_error_t" title="asn1_error_t"><span class="n"><span class="pre">asn1_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_asn1_decode</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">parse_begin</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">parse_len</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span>, <span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">asn1_object</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">object</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_asn1_decodePv6size_t7uint8_tP11asn1_object" title="Permalink to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv418cryptx_asn1_decodePv6size_t7uint8_tP18cryptx_asn1_object">
+<span id="_CPPv318cryptx_asn1_decodePv6size_t7uint8_tP18cryptx_asn1_object"></span><span id="_CPPv218cryptx_asn1_decodePv6size_t7uint8_tP18cryptx_asn1_object"></span><span id="cryptx_asn1_decode__voidP.s.uint8_t.cryptx_asn1_objectP"></span><span class="target" id="cryptx_8h_1a9186c5bce6ceb6062ce9c01355f4346e"></span><a class="reference internal" href="#_CPPv412asn1_error_t" title="asn1_error_t"><span class="n"><span class="pre">asn1_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_asn1_decode</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">parse_begin</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">parse_len</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span>, <span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418cryptx_asn1_object" title="cryptx_asn1_object"><span class="n"><span class="pre">cryptx_asn1_object</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">object</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_asn1_decodePv6size_t7uint8_tP18cryptx_asn1_object" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Decodes the ASN.1 data at the given address. </p>
 <p>Seeks to an element from the front of the data. </p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Function does not recurse the ASN.1 tree structure automatically. It parses all elements at the tree level determined by <strong>parse_begin</strong> and <strong>parse_len</strong>. You may recurse manually by checking the value of <strong><a class="reference internal" href="#cryptx_8h_1ab45e9d12f4f83f53441e72757c0717ea"><span class="std std-ref">cryptx_asn1_getform()</span></a></strong> on the last returned <strong>object-&gt;tag</strong> and then calling <strong><a class="reference internal" href="#cryptx_8h_1a21fa7c9f43f8330b5ee4c2f3b57dbc5a"><span class="std std-ref">cryptx_asn1_decode()</span></a></strong> with <strong>object-&gt;data</strong> as <strong>parse_begin</strong> and <strong>object-&gt;len</strong> as <strong>parse_len</strong>. </p>
+<p>Function does not recurse the ASN.1 tree structure automatically. It parses all elements at the tree level determined by <strong>parse_begin</strong> and <strong>parse_len</strong>. You may recurse manually by checking the value of <strong><a class="reference internal" href="#cryptx_8h_1ab45e9d12f4f83f53441e72757c0717ea"><span class="std std-ref">cryptx_asn1_getform()</span></a></strong> on the last returned <strong>object-&gt;tag</strong> and then calling <strong><a class="reference internal" href="#cryptx_8h_1a9186c5bce6ceb6062ce9c01355f4346e"><span class="std std-ref">cryptx_asn1_decode()</span></a></strong> with <strong>object-&gt;data</strong> as <strong>parse_begin</strong> and <strong>object-&gt;len</strong> as <strong>parse_len</strong>. </p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>

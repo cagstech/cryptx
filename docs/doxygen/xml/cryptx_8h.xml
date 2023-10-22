@@ -37,7 +37,7 @@
     <innerclass refid="structcryptx__hash__ctx" prot="public">cryptx_hash_ctx</innerclass>
     <innerclass refid="structcryptx__hmac__ctx" prot="public">cryptx_hmac_ctx</innerclass>
     <innerclass refid="structcryptx__aes__ctx" prot="public">cryptx_aes_ctx</innerclass>
-    <innerclass refid="structasn1__object" prot="public">asn1_object</innerclass>
+    <innerclass refid="structcryptx__asn1__object" prot="public">cryptx_asn1_object</innerclass>
     <innerclass refid="structcryptx__pkcs8__pubkeyinfo" prot="public">cryptx_pkcs8_pubkeyinfo</innerclass>
     <innerclass refid="structcryptx__pkcs8__privkeyinfo" prot="public">cryptx_pkcs8_privkeyinfo</innerclass>
     <innerclass refid="structcryptx__ecc__point" prot="public">cryptx_ecc_point</innerclass>
@@ -2368,10 +2368,10 @@
         </inbodydescription>
         <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="468" column="12" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="468" declcolumn="12"/>
       </memberdef>
-      <memberdef kind="function" id="cryptx_8h_1a21fa7c9f43f8330b5ee4c2f3b57dbc5a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="cryptx_8h_1a9186c5bce6ceb6062ce9c01355f4346e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33" kindref="member">asn1_error_t</ref></type>
         <definition>asn1_error_t cryptx_asn1_decode</definition>
-        <argsstring>(void *parse_begin, size_t parse_len, uint8_t index, struct asn1_object *object)</argsstring>
+        <argsstring>(void *parse_begin, size_t parse_len, uint8_t index, struct cryptx_asn1_object *object)</argsstring>
         <name>cryptx_asn1_decode</name>
         <param>
           <type>void *</type>
@@ -2386,7 +2386,7 @@
           <declname>index</declname>
         </param>
         <param>
-          <type>struct <ref refid="structasn1__object" kindref="compound">asn1_object</ref> *</type>
+          <type>struct <ref refid="structcryptx__asn1__object" kindref="compound">cryptx_asn1_object</ref> *</type>
           <declname>object</declname>
         </param>
         <briefdescription>
@@ -2422,13 +2422,13 @@
 <parametername>object</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Pointer to an <bold><ref refid="structasn1__object" kindref="compound">asn1_object</ref></bold> to populate. </para>
+<para>Pointer to an <bold>asn1_object</bold> to populate. </para>
 </parameterdescription>
 </parameteritem>
 </parameterlist>
 <simplesect kind="return"><para>An <bold>asn1_error_t</bold> indicating the status of the operation. If <bold>index</bold> is past the end of the data, <bold>ASN1_END_OF_FILE</bold> is returned. </para>
 </simplesect>
-<simplesect kind="note"><para>Function does not recurse the ASN.1 tree structure automatically. It parses all elements at the tree level determined by <bold>parse_begin</bold> and <bold>parse_len</bold>. You may recurse manually by checking the value of <bold><ref refid="cryptx_8h_1ab45e9d12f4f83f53441e72757c0717ea" kindref="member">cryptx_asn1_getform()</ref></bold> on the last returned <bold>object-&gt;tag</bold> and then calling <bold><ref refid="cryptx_8h_1a21fa7c9f43f8330b5ee4c2f3b57dbc5a" kindref="member">cryptx_asn1_decode()</ref></bold> with <bold>object-&gt;data</bold> as <bold>parse_begin</bold> and <bold>object-&gt;len</bold> as <bold>parse_len</bold>. </para>
+<simplesect kind="note"><para>Function does not recurse the ASN.1 tree structure automatically. It parses all elements at the tree level determined by <bold>parse_begin</bold> and <bold>parse_len</bold>. You may recurse manually by checking the value of <bold><ref refid="cryptx_8h_1ab45e9d12f4f83f53441e72757c0717ea" kindref="member">cryptx_asn1_getform()</ref></bold> on the last returned <bold>object-&gt;tag</bold> and then calling <bold><ref refid="cryptx_8h_1a9186c5bce6ceb6062ce9c01355f4346e" kindref="member">cryptx_asn1_decode()</ref></bold> with <bold>object-&gt;data</bold> as <bold>parse_begin</bold> and <bold>object-&gt;len</bold> as <bold>parse_len</bold>. </para>
 </simplesect>
 <simplesect kind="note"><para>If you are using this function to decode a PKCS#8 structure for use with this library, use the PKCS#8 wrapper module instead. </para>
 </simplesect>
@@ -3427,10 +3427,10 @@
 <codeline lineno="513" refid="cryptx_8h_1a19e2a0db96f6eed3d0d22fdf98e67b0cad03b2b41a6f3417a981a78ca887332e6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a19e2a0db96f6eed3d0d22fdf98e67b0cad03b2b41a6f3417a981a78ca887332e6" kindref="member">ASN1_CONSTRUCTED</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="514"><highlight class="normal">};</highlight></codeline>
 <codeline lineno="515"><highlight class="normal"></highlight></codeline>
-<codeline lineno="517" refid="structasn1__object" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structasn1__object" kindref="compound">asn1_object</ref><sp/>{</highlight></codeline>
-<codeline lineno="518" refid="structasn1__object_1a08eabab21898c7a0db50dda1b02e1cce" refkind="member"><highlight class="normal"><sp/><sp/>uint8_t<sp/><ref refid="structasn1__object_1a08eabab21898c7a0db50dda1b02e1cce" kindref="member">tag</ref>;<sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="519" refid="structasn1__object_1ae2d388b0c0d859a2c1d2d513a2900d9f" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="structasn1__object_1ae2d388b0c0d859a2c1d2d513a2900d9f" kindref="member">len</ref>;<sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="520" refid="structasn1__object_1a537f84c6ac7b45d1bb8b6c2aeaccb03d" refkind="member"><highlight class="normal"><sp/><sp/>uint8_t<sp/>*<ref refid="structasn1__object_1a537f84c6ac7b45d1bb8b6c2aeaccb03d" kindref="member">data</ref>;<sp/><sp/></highlight></codeline>
+<codeline lineno="517" refid="structcryptx__asn1__object" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__asn1__object" kindref="compound">cryptx_asn1_object</ref><sp/>{</highlight></codeline>
+<codeline lineno="518" refid="structcryptx__asn1__object_1a3674882b78676006b905c091fbe00742" refkind="member"><highlight class="normal"><sp/><sp/>uint8_t<sp/><ref refid="structcryptx__asn1__object_1a3674882b78676006b905c091fbe00742" kindref="member">tag</ref>;<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="519" refid="structcryptx__asn1__object_1a5501af47a59fe651c4259a50b2d8c7be" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="structcryptx__asn1__object_1a5501af47a59fe651c4259a50b2d8c7be" kindref="member">len</ref>;<sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="520" refid="structcryptx__asn1__object_1a83a03b4c814b7f437af6b7a032113380" refkind="member"><highlight class="normal"><sp/><sp/>uint8_t<sp/>*<ref refid="structcryptx__asn1__object_1a83a03b4c814b7f437af6b7a032113380" kindref="member">data</ref>;<sp/><sp/></highlight></codeline>
 <codeline lineno="521"><highlight class="normal">};</highlight></codeline>
 <codeline lineno="522"><highlight class="normal"></highlight></codeline>
 <codeline lineno="523"><highlight class="normal"></highlight></codeline>
@@ -3445,11 +3445,11 @@
 <codeline lineno="536" refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a0101185f2109f1ba75ea2c4833664474" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a0101185f2109f1ba75ea2c4833664474" kindref="member">ASN1_LEN_OVERFLOW</ref>,<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="537"><highlight class="normal">}<sp/><ref refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33" kindref="member">asn1_error_t</ref>;</highlight></codeline>
 <codeline lineno="538"><highlight class="normal"></highlight></codeline>
-<codeline lineno="553" refid="cryptx_8h_1a21fa7c9f43f8330b5ee4c2f3b57dbc5a" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33" kindref="member">asn1_error_t</ref><sp/><ref refid="cryptx_8h_1a21fa7c9f43f8330b5ee4c2f3b57dbc5a" kindref="member">cryptx_asn1_decode</ref>(</highlight></codeline>
+<codeline lineno="553" refid="cryptx_8h_1a9186c5bce6ceb6062ce9c01355f4346e" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33" kindref="member">asn1_error_t</ref><sp/><ref refid="cryptx_8h_1a9186c5bce6ceb6062ce9c01355f4346e" kindref="member">cryptx_asn1_decode</ref>(</highlight></codeline>
 <codeline lineno="554"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*parse_begin,</highlight></codeline>
 <codeline lineno="555"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>parse_len,</highlight></codeline>
 <codeline lineno="556"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>index,</highlight></codeline>
-<codeline lineno="557"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structasn1__object" kindref="compound">asn1_object</ref><sp/>*</highlight><highlight class="keywordtype">object</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="557"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__asn1__object" kindref="compound">cryptx_asn1_object</ref><sp/>*</highlight><highlight class="keywordtype">object</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="558"><highlight class="normal"></highlight></codeline>
 <codeline lineno="559"><highlight class="normal"></highlight></codeline>
 <codeline lineno="561" refid="cryptx_8h_1a9db7be56d66674980b5540cab9405cc7" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>cryptx_base64_get_encoded_len(len)<sp/><sp/><sp/><sp/><sp/><sp/>((len)<sp/>*<sp/>4<sp/>/<sp/>3)</highlight><highlight class="normal"></highlight></codeline>

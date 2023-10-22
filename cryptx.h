@@ -514,7 +514,7 @@ enum cryptx_asn1_forms {
 };
 
 /// A struct into which @b cryptx_asn1_decode returns metadata.
-struct asn1_object {
+struct cryptx_asn1_object {
   uint8_t tag;    /**< The masked tag value of the object. */
   size_t len;     /**< The length of raw data encoded by the object. */
   uint8_t *data;  /**< Pointer to the raw data encoded by the object. */
@@ -554,7 +554,7 @@ asn1_error_t cryptx_asn1_decode(
 					void *parse_begin,
 					size_t parse_len,
 					uint8_t index,
-					struct asn1_object *object);
+					struct cryptx_asn1_object *object);
 
 
 /** Defines a macro to return the expected base64-encoded data length, given octet-encoded @b len. This should be len \* 8 / 6. */
