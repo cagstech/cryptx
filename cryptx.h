@@ -513,6 +513,14 @@ enum cryptx_asn1_forms {
 	ASN1_CONSTRUCTED,		/**< this element contains nested elements. */
 };
 
+/// A struct into which @b cryptx_asn1_decode returns metadata.
+struct asn1_object {
+  uint8_t tag;    /**< The masked tag value of the object. */
+  size_t len;     /**< The length of raw data encoded by the object. */
+  uint8_t *data;  /**< Pointer to the raw data encoded by the object. */
+};
+
+
 /// Returns the unmasked tag. See @b cryptx_asn1_tags above.
 #define cryptx_asn1_gettag(tag)		((tag) & 0b111111)
 /// Returns the 2-bit tag class flag. See @b cryptx_asn1_classes above.
@@ -530,22 +538,23 @@ typedef enum {
 
 /**
  * @brief Decodes the ASN.1 data at the given address. Seeks to an element from the front of the data.
- * @param data_start	Pointer to a block of ASN.1-encoded data.
- * @param data_len		Length of ASN.1-encoded block.
- * @param index               Number of ASN.1 elements to skip before returning one.
- * @param element_tag	Full element tag octet, or NULL if not needed.
- * @param element_len	Length of the returned element or NULL if not needed.
- * @param element_data	Pointer to the data of the returned element or NULL if not needed.
+ * @param parse_begin	Pointer to a block of ASN.1-encoded data to parse.
+ * @param parse_len		Length of ASN.1-encoded block to parse.
+ * @param index               Return @b index-th encoded element of current tree level.
+ * @param object            Pointer to an @b asn1_object to populate.
  * @returns				An @b asn1_error_t indicating the status of the operation.
  *                If @b index is past the end of the data, @b ASN1_END_OF_FILE is returned.
+ * @note Function does not recurse the ASN.1 tree structure automatically. It parses all elements at the tree level
+ * determined by @b parse_begin and @b parse_len. You may recurse manually by checking the value of
+ * @b cryptx_asn1_getform() on the last returned @b object->tag and then calling @b cryptx_asn1_decode() with
+ * @b object->data as @b parse_begin and @b object->len as @b parse_len.
+ * @note If you are using this function to decode a PKCS#8 structure for use with this library, use the PKCS#8 wrapper module instead.
  */
 asn1_error_t cryptx_asn1_decode(
-					void *data_start,
-					size_t data_len,
+					void *parse_begin,
+					size_t parse_len,
 					uint8_t index,
-					uint8_t *element_tag,
-					size_t *element_len,
-					uint8_t **element_data);
+					struct asn1_object *object);
 
 
 /** Defines a macro to return the expected base64-encoded data length, given octet-encoded @b len. This should be len \* 8 / 6. */
