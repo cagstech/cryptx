@@ -79,20 +79,30 @@ __________
 .. doxygenfunction:: cryptx_asn1_decode
 	:project: CryptX
 
-Here is a simple example of how to loop each element in an ASN.1 structure and return its metadata. Note how a return value of ASN1_END_OF_FILE is used as a limiter. Also notice that this does not process any constructed objects (such as contents of SEQUENCE or SET objects). To add recursion, simply check the value of bit 5 and if it is set, call a function to process that tag's data using :code:`data` and :code:`data_len` as your *data_start* and *data_len* arguments, respectively.
+Here is a simple example of how to loop each element in an ASN.1 structure and return its metadata. Note how a return value of ASN1_END_OF_FILE is used as a limiter. Also notice how recursion is achieved.
 
 .. code-block:: c
+  
+  void decode_level(uint8_t *data, size_t len){
+    cryptx_asn1_object obj;
+    do {
+      err = cryptx_asn1_decode(data, len, index++, &obj);
+      if(err == ASN1_OK){
+        printf("element -- tag:%u, len:%u, data:%p\n", obj.tag, obj.len, obj.data);
+        if(cryptx_asn1_getform(obj.tag))  // is a constructed object
+          decode_level(obj.data, obj.len);
+      }
+      else
+        printf("error code: %u", err);
+    } while(err != ASN1_END_OF_FILE);
+  }
 
-  // assume `asn1_data` is some imported data encoded with ASN.1
+  int main(void){
+    // assume `asn1_data` is some imported data encoded with ASN.1
+    asn1_error_t err = ASN1_OK;
+    uint8_t index = 0, tag, *data;
+    size_t data_len;
+    decode_level(asn1_data, sizeof(asn1_data));
+  }
   
-  asn1_error_t err = ASN1_OK;
-  uint8_t index = 0, tag, *data;
-  size_t data_len;
   
-  do {
-    err = cryptx_asn1_decode(asn1_data, sizeof(asn1_data), index++, &tag, &data_len, &data);
-    if(err == ASN1_OK)
-      printf("element -- tag:%u, len:%u, data:%p\n", tag, data_len, data);
-    else
-      printf("error code: %u", err);
-  } while(err != ASN1_END_OF_FILE);
