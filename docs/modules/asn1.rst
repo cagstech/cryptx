@@ -85,6 +85,8 @@ Here is a simple example of how to loop each element in an ASN.1 structure and r
   
   void decode_level(uint8_t *data, size_t len){
     cryptx_asn1_object obj;
+    uint8_t index = 0
+    asn1_error_t err = ASN1_OK;
     do {
       err = cryptx_asn1_decode(data, len, index++, &obj);
       if(err == ASN1_OK){
@@ -99,9 +101,6 @@ Here is a simple example of how to loop each element in an ASN.1 structure and r
 
   int main(void){
     // assume `asn1_data` is some imported data encoded with ASN.1
-    asn1_error_t err = ASN1_OK;
-    uint8_t index = 0, tag, *data;
-    size_t data_len;
     decode_level(asn1_data, sizeof(asn1_data));
   }
   
