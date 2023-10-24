@@ -630,8 +630,10 @@ typedef enum {
 struct cryptx_pkcs8_pubkey {
   bool error;           /**< deserialization status, False if no error, True if failed. */
   struct cryptx_asn1_object objectid;   /**< reference to primary object ID of object. */
-  union {
+  union _publickey {
+    /** reserve EC fields */
     struct cryptx_asn1_object ec_fields[PKCS8_PUBLIC_EC_FIELDS];
+    /** reserve RSA fields */
     struct cryptx_asn1_object rsa_fields[PKCS8_PUBLIC_RSA_FIELDS];
   } publickey;      /**< expresses EC or RSA key data. */
   size_t len;       /**< length of raw data portion of structure. */
@@ -642,8 +644,10 @@ struct cryptx_pkcs8_pubkey {
 struct cryptx_pkcs8_privkey {
   bool error;             /**< deserialization status, False if no error, True if failed. */
   struct cryptx_asn1_object objectid;   /**< reference to primary object ID of object. */
-  union {
+  union _privatekey {
+    /** reserve RSA fields */
     struct cryptx_asn1_object rsa_fields[PKCS8_PRIVATE_RSA_FIELDS];
+    /** reserve EC fields */
     struct cryptx_asn1_object ec_fields[PKCS8_PRIVATE_EC_FIELDS];
   } privatekey;     /**< expresses EC or RSA key data. */
   size_t len;       /**< length of raw data portion of structure. */

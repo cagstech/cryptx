@@ -1,5 +1,13 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.9.7" xml:lang="en-US">
+  <compound refid="unioncryptx__pkcs8__privkey_1_1__privatekey" kind="union"><name>cryptx_pkcs8_privkey::_privatekey</name>
+    <member refid="unioncryptx__pkcs8__privkey_1_1__privatekey_1a90b4cca4f03bbf7a934c14666fd212e8" kind="variable"><name>rsa_fields</name></member>
+    <member refid="unioncryptx__pkcs8__privkey_1_1__privatekey_1a14453d0b657aba7f9efb8d9c087024ac" kind="variable"><name>ec_fields</name></member>
+  </compound>
+  <compound refid="unioncryptx__pkcs8__pubkey_1_1__publickey" kind="union"><name>cryptx_pkcs8_pubkey::_publickey</name>
+    <member refid="unioncryptx__pkcs8__pubkey_1_1__publickey_1aedc1ce2f0c5901915bc9b8bbac4f3c8f" kind="variable"><name>ec_fields</name></member>
+    <member refid="unioncryptx__pkcs8__pubkey_1_1__publickey_1a7c2b54e13cdc48bdfe5c0ef690c1ee2d" kind="variable"><name>rsa_fields</name></member>
+  </compound>
   <compound refid="structcryptx__aes__cbc__state" kind="struct"><name>cryptx_aes_cbc_state</name>
     <member refid="structcryptx__aes__cbc__state_1a5c0aaacd0621efeb0c31042eaf47fdd4" kind="variable"><name>padding_mode</name></member>
   </compound>
@@ -66,18 +74,14 @@
   <compound refid="structcryptx__pkcs8__privkey" kind="struct"><name>cryptx_pkcs8_privkey</name>
     <member refid="structcryptx__pkcs8__privkey_1ace700e3eda00fd25681c6bf5a305c8a0" kind="variable"><name>error</name></member>
     <member refid="structcryptx__pkcs8__privkey_1a56408e6d7e5c649e17147b5c8789a1f2" kind="variable"><name>objectid</name></member>
-    <member refid="structcryptx__pkcs8__privkey_1a5487847bc4d1530abef404f9674efc89" kind="variable"><name>rsa_fields</name></member>
-    <member refid="structcryptx__pkcs8__privkey_1a1990a44525d2f16a9d007d102225ff4b" kind="variable"><name>ec_fields</name></member>
-    <member refid="structcryptx__pkcs8__privkey_1aa1a2b1090103a0b4c287a446d383a175" kind="variable"><name>privatekey</name></member>
+    <member refid="structcryptx__pkcs8__privkey_1a07a9a8d40467b45f72cf5c0c64d62b39" kind="variable"><name>privatekey</name></member>
     <member refid="structcryptx__pkcs8__privkey_1a0d256e0957b8f30b1dd15e2b17b77ed2" kind="variable"><name>len</name></member>
     <member refid="structcryptx__pkcs8__privkey_1ad7aa3f5c6cea36dad67ff0d2a3dc076a" kind="variable"><name>raw</name></member>
   </compound>
   <compound refid="structcryptx__pkcs8__pubkey" kind="struct"><name>cryptx_pkcs8_pubkey</name>
     <member refid="structcryptx__pkcs8__pubkey_1a74803b2599c69d7084d2fd3dff518750" kind="variable"><name>error</name></member>
     <member refid="structcryptx__pkcs8__pubkey_1a215b479bc956ec6452b3d7304a1c3243" kind="variable"><name>objectid</name></member>
-    <member refid="structcryptx__pkcs8__pubkey_1a267d5c3a01a22432efd7607f2bb3c7bf" kind="variable"><name>ec_fields</name></member>
-    <member refid="structcryptx__pkcs8__pubkey_1a769dc1b2faf2f5f04e285fcff86fdd6e" kind="variable"><name>rsa_fields</name></member>
-    <member refid="structcryptx__pkcs8__pubkey_1ab4aae8eae36733aadb39c6f655ecd453" kind="variable"><name>publickey</name></member>
+    <member refid="structcryptx__pkcs8__pubkey_1a6ba1b2b21df78acc6bce8b4d7b3b2915" kind="variable"><name>publickey</name></member>
     <member refid="structcryptx__pkcs8__pubkey_1a7ee270392d5b048d62d1385552124920" kind="variable"><name>len</name></member>
     <member refid="structcryptx__pkcs8__pubkey_1ab6be42e76e2eaf5abac08796816f1c07" kind="variable"><name>raw</name></member>
   </compound>

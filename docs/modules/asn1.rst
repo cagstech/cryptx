@@ -65,7 +65,8 @@ Structures
 _______________
 
 .. doxygenstruct:: cryptx_asn1_object
-	:project: CryptX
+  :project: CryptX
+  :members:
 	
 Response Codes
 _______________
