@@ -80,7 +80,7 @@ typedef union {
 	struct cryptx_aes_ctr_state cbc;                    /**< metadata for cbc mode */
 } cryptx_aes_private_h;
 
-/// @struct Hash-State context
+/// Hash state context
 struct cryptx_hash_ctx {
 	bool (*init)(void* ctx);									/**< Pointer to function call for hash initialization */
 	void (*update)(void* ctx, const void* data, size_t len);	/**< Pointer to function call for hash update */
@@ -89,7 +89,7 @@ struct cryptx_hash_ctx {
 	cryptx_hash_private_h metadata;							/**< PRIVATE, INTERNAL */
 };
 
-/// @enum Supported hash algorithms
+/// Supported hash algorithms
 enum cryptx_hash_algorithms {
 	SHA256,             /**< algorithm type identifier for SHA-256 */
 	SHA1,               /**< algorithm type identifier for SHA-1 */
@@ -100,24 +100,24 @@ enum cryptx_hash_algorithms {
 #define CRYPTX_DIGESTLEN_SHA256  32    /**< digest length for SHA-256 hash */
 
 /**
- *	@brief Initializes a hash-state context for a specific hash algorithm.
- *	@param context	Pointer to a hash-state context.
+ *	@brief Initializes a context for a specific hash algorithm.
+ *	@param context	Pointer to a ontext.
  *  @param hash_alg	The numeric ID of the hashing algorithm to use. See @b cryptx_hash_algorithms.
  *  @return @b true if hash initialization succeeded, @b false if failed.
  */
 bool cryptx_hash_init(struct cryptx_hash_ctx* context, uint8_t hash_alg);
 
 /**
- *	@brief Updates the hash-state for a given block of data.
- *	@param context	Pointer to a hash-state context.
+ *	@brief Updates the context for a given block of data.
+ *	@param context	Pointer to a context.
  *	@param data		Pointer to a block of data to hash..
  *	@param len		Size of the @b data to hash.
  */
 void cryptx_hash_update(struct cryptx_hash_ctx* context, const void* data, size_t len);
 
 /**
- *	@brief Output digest for current hash-state (preserves state).
- *	@param context	Pointer to a hash-state context.
+ *	@brief Output digest for current context (preserves state).
+ *	@param context	Pointer to a context.
  *	@param	digest	Pointer to a buffer to write digest to.
  */
 void cryptx_hash_digest(struct cryptx_hash_ctx* context, void* digest);
@@ -139,7 +139,7 @@ void cryptx_hash_mgf1(const void* data,
 
 /// ### HASH-BASED MESSAGE AUTHENTICATION CODE (HMAC) -- Use to verify data integrity and authenticity. ###
 
-/// @struct HMAC-state context
+/// HMAC state context
 struct cryptx_hmac_ctx {
 	bool (*init)(void* ctx, const void* key, size_t keylen);		/**< Pointer to function call for hmac initialization */
 	void (*update)(void* ctx, const void* data, size_t len);		/**< Pointer to function call for hmac update */
@@ -149,8 +149,8 @@ struct cryptx_hmac_ctx {
 };
 
 /**
- *	@brief Initializes an HMAC-state context for a specific hash algorithm.
- *	@param context	Pointer to an HMAC-state context.
+ *	@brief Initializes a context for a specific HMAC algorithm.
+ *	@param context	Pointer to a context.
  *	@param key		Pointer to a key used to initialize the HMAC state.
  *	@param keylen	Length of the @b key.
  *  @param hash_alg	The numeric ID of the hashing algorithm to use. See @b cryptx_hash_algorithms.
@@ -161,7 +161,7 @@ bool cryptx_hmac_init(struct cryptx_hmac_ctx* context,
 					  uint8_t hash_alg);
 
 /**
- *	@brief Updates the hash-state for a given block of data.
+ *	@brief Updates the context for a given block of data.
  *	@param context	Pointer to an HMAC-state context.
  *	@param data		Pointer to a block of data to hash..
  *	@param len		Size of the @b data to hash.
@@ -169,8 +169,8 @@ bool cryptx_hmac_init(struct cryptx_hmac_ctx* context,
 void cryptx_hmac_update(struct cryptx_hmac_ctx* context, const void* data, size_t len);
 
 /**
- *	@brief Output digest for current HMAC-state (preserves state).
- *	@param context	Pointer to an HMAC-state context.
+ *	@brief Output digest for current context (preserves state).
+ *	@param context	Pointer to a context.
  *	@param digest	Pointer to a buffer to write digest to.
  */
 void cryptx_hmac_digest(struct cryptx_hmac_ctx* context, void* digest);
@@ -248,7 +248,7 @@ uint32_t cryptx_csrand_get(void);
 bool cryptx_csrand_fill(void* buffer, size_t size);
 
 /// ### ADVANCED ENCRYPTION STANARD ###
-/// @struct Cipher state context for AES
+/// Cipher state context for AES
 struct cryptx_aes_ctx {
 	uint24_t keysize;                       /**< the size of the key, in bits */
 	uint32_t round_keys[60];                /**< round keys */
@@ -581,40 +581,41 @@ size_t cryptx_base64_encode(void *dest, const void *src, size_t len);
  */
 size_t cryptx_base64_decode(void *dest, const void *src, size_t len);
 
-enum _pkcs8_pubkey_fields {
-  PKCS8_PUBLIC_OBJECTID = 0,
-  
-  // RSA field enumeration
-  PKCS8_PUBLIC_RSA_MODULUS = 0,
-  PKCS8_PUBLIC_RSA_EXPONENT,
-  PKCS8_PUBLIC_RSA_FIELDS,
-  
-  // EC field enumeration
-  PKCS8_PUBLIC_EC_CURVEID = 0,
-  PKCS8_PUBLIC_EC_PUBKEY,
-  PKCS8_PUBLIC_EC_FIELDS
+
+/// ### PUBLIC KEY CRYPTOGRAPHY STANDARDS 8 (PKCS#8) ###
+/// Abstraction for importing of PKCS-encoded keyfiles compatible with TLS (and raw input).
+
+enum _pkcs8_pubkey_rsa_fields {
+  PKCS8_PUBLIC_RSA_MODULUS = 0,   /**< reference to public modulus in @b cryptx_pkcs8_pubkey */
+  PKCS8_PUBLIC_RSA_EXPONENT,      /**< reference to public exponent in @b cryptx_pkcs8_pubkey */
+  PKCS8_PUBLIC_RSA_FIELDS,      /**< number of RSA fields in structure (for enumeration) */
 };
 
-enum _pkcs8_privkey_fields {
-  PKCS8_PRIVATE_OBJECTID = 0,
-  
-  // RSA field enumeration
-  PKCS8_PRIVATE_RSA_VERSION = 0,
-  PKCS8_PRIVATE_RSA_MODULUS,
-  PKCS8_PRIVATE_RSA_PUBEXPONENT,
-  PKCS8_PRIVATE_RSA_EXPONENT,
-  PKCS8_PRIVATE_RSA_P,
-  PKCS8_PRIVATE_RSA_Q,
-  PKCS8_PRIVATE_RSA_EXP1,
-  PKCS8_PRIVATE_RSA_EXP2,
-  PKCS8_PRIVATE_RSA_COEFF,
-  PKCS8_PRIVATE_RSA_FIELDS,
-  
-  PKCS8_PRIVATE_EC_CURVEID = 0,
-  PKCS8_PRIVATE_EC_VERSION,
-  PKCS8_PRIVATE_EC_PRIVKEY,
-  PKCS8_PRIVATE_EC_PUBKEY,
-  PKCS8_PRIVATE_EC_FIELDS
+enum _pkcs8_pubkey_ec_fields {
+  PKCS8_PUBLIC_EC_CURVEID = 0,    /**< reference to EC Curve ID in @b cryptx_pkcs8_pubkey */
+  PKCS8_PUBLIC_EC_PUBKEY,         /**< reference to ECPoint public key in @b cryptx_pkcs8_pubkey */
+  PKCS8_PUBLIC_EC_FIELDS      /**< number of EC fields in structure (for enumeration) */
+};
+
+enum _pkcs8_privkey_rsa_fields {
+  PKCS8_PRIVATE_RSA_VERSION = 0,  /**< reference to RSA version in @b cryptx_pkcs8_privkey */
+  PKCS8_PRIVATE_RSA_MODULUS,      /**< reference to private modulus in @b cryptx_pkcs8_privkey */
+  PKCS8_PRIVATE_RSA_PUBEXPONENT,  /**< reference to public exponent in @b cryptx_pkcs8_privkey */
+  PKCS8_PRIVATE_RSA_EXPONENT,     /**< reference to private exponent in @b cryptx_pkcs8_privkey */
+  PKCS8_PRIVATE_RSA_P,        /**< reference to P in @b cryptx_pkcs8_privkey */
+  PKCS8_PRIVATE_RSA_Q,        /**< reference to Q in @b cryptx_pkcs8_privkey */
+  PKCS8_PRIVATE_RSA_EXP1,     /**< reference to Exp1 in @b cryptx_pkcs8_privkey */
+  PKCS8_PRIVATE_RSA_EXP2,     /**< reference to Exp2 in @b cryptx_pkcs8_privkey */
+  PKCS8_PRIVATE_RSA_COEFF,    /**< reference to Coefficient in @b cryptx_pkcs8_privkey */
+  PKCS8_PRIVATE_RSA_FIELDS    /**< number of RSA fields in structure (for enumeration) */
+};
+
+enum _pkcs8_privkey_ec_fields {
+  PKCS8_PRIVATE_EC_CURVEID = 0,   /**< reference to EC Curve ID in @b cryptx_pkcs8_privkey */
+  PKCS8_PRIVATE_EC_VERSION,     /**< reference to EC version in @b cryptx_pkcs8_privkey */
+  PKCS8_PRIVATE_EC_PRIVKEY,     /**< reference to private key in @b cryptx_pkcs8_privkey */
+  PKCS8_PRIVATE_EC_PUBKEY,      /**< reference to public key in @b cryptx_pkcs8_privkey */
+  PKCS8_PRIVATE_EC_FIELDS       /**< number of EC fields in structure (for enumeration) */
 };
 
 /// Defines response codes returned by the PKCS8 API.
@@ -627,26 +628,26 @@ typedef enum {
 
 /// Defines a structure for holding imported RSA or ECC public key data.
 struct cryptx_pkcs8_pubkey {
-  bool error;
-  struct cryptx_asn1_object objectid;
+  bool error;           /**< deserialization status, False if no error, True if failed. */
+  struct cryptx_asn1_object objectid;   /**< reference to primary object ID of object. */
   union {
     struct cryptx_asn1_object ec_fields[PKCS8_PUBLIC_EC_FIELDS];
     struct cryptx_asn1_object rsa_fields[PKCS8_PUBLIC_RSA_FIELDS];
-  } publickey;
-  size_t len;
-  uint8_t raw[];
+  } publickey;      /**< expresses EC or RSA key data. */
+  size_t len;       /**< length of raw data portion of structure. */
+  uint8_t raw[];    /**< contains dump of raw data from deserialized key. */
 };
 
 /// Defines a structure for holding imported RSA or ECC private key data.
 struct cryptx_pkcs8_privkey {
-  bool error;
-  struct cryptx_asn1_object objectid;
+  bool error;             /**< deserialization status, False if no error, True if failed. */
+  struct cryptx_asn1_object objectid;   /**< reference to primary object ID of object. */
   union {
     struct cryptx_asn1_object rsa_fields[PKCS8_PRIVATE_RSA_FIELDS];
     struct cryptx_asn1_object ec_fields[PKCS8_PRIVATE_EC_FIELDS];
-  } privatekey;
-  size_t len;
-  uint8_t raw[];
+  } privatekey;     /**< expresses EC or RSA key data. */
+  size_t len;       /**< length of raw data portion of structure. */
+  uint8_t raw[];    /**< contains dump of raw data from deserialized key. */
 };
 
 /// Encoded Object Identifier for RSA

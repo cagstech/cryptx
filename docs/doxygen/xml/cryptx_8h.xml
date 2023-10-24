@@ -275,7 +275,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="770" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="770" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="771" column="9" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="771" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="enum">
@@ -299,6 +299,7 @@
           </detaileddescription>
         </enumvalue>
         <briefdescription>
+<para>Supported hash algorithms. </para>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
@@ -925,57 +926,70 @@
         </inbodydescription>
         <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="532" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="532" bodyend="537"/>
       </memberdef>
-      <memberdef kind="enum" id="cryptx_8h_1a546f3d021fd1921cf505406af767d411" prot="public" static="no" strong="no">
+      <memberdef kind="enum" id="cryptx_8h_1ad7f8765e037450556596efeb6c19ca6c" prot="public" static="no" strong="no">
         <type></type>
-        <name>_pkcs8_pubkey_fields</name>
-        <enumvalue id="cryptx_8h_1a546f3d021fd1921cf505406af767d411a93b540a1f33ad8f9dee3a73db2d4bb3f" prot="public">
-          <name>PKCS8_PUBLIC_OBJECTID</name>
-          <initializer>= 0</initializer>
-          <briefdescription>
-          </briefdescription>
-          <detaileddescription>
-          </detaileddescription>
-        </enumvalue>
-        <enumvalue id="cryptx_8h_1a546f3d021fd1921cf505406af767d411a7320cdcf509bae5c2495a374a3cde7a6" prot="public">
+        <name>_pkcs8_pubkey_rsa_fields</name>
+        <enumvalue id="cryptx_8h_1ad7f8765e037450556596efeb6c19ca6ca7320cdcf509bae5c2495a374a3cde7a6" prot="public">
           <name>PKCS8_PUBLIC_RSA_MODULUS</name>
           <initializer>= 0</initializer>
           <briefdescription>
+<para>reference to public modulus in <bold><ref refid="structcryptx__pkcs8__pubkey" kindref="compound">cryptx_pkcs8_pubkey</ref></bold> </para>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
         </enumvalue>
-        <enumvalue id="cryptx_8h_1a546f3d021fd1921cf505406af767d411aca4c231faa043d396f93573484c97f06" prot="public">
+        <enumvalue id="cryptx_8h_1ad7f8765e037450556596efeb6c19ca6caca4c231faa043d396f93573484c97f06" prot="public">
           <name>PKCS8_PUBLIC_RSA_EXPONENT</name>
           <briefdescription>
+<para>reference to public exponent in <bold><ref refid="structcryptx__pkcs8__pubkey" kindref="compound">cryptx_pkcs8_pubkey</ref></bold> </para>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
         </enumvalue>
-        <enumvalue id="cryptx_8h_1a546f3d021fd1921cf505406af767d411a45f3dfda11cb8657f506aafa1132c539" prot="public">
+        <enumvalue id="cryptx_8h_1ad7f8765e037450556596efeb6c19ca6ca45f3dfda11cb8657f506aafa1132c539" prot="public">
           <name>PKCS8_PUBLIC_RSA_FIELDS</name>
           <briefdescription>
+<para>number of RSA fields in structure (for enumeration) </para>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
         </enumvalue>
-        <enumvalue id="cryptx_8h_1a546f3d021fd1921cf505406af767d411a9dd496e2006a74ddb91514be72956d58" prot="public">
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<sect3 id="cryptx_8h_1autotoc_md5">
+<title>PUBLIC KEY CRYPTOGRAPHY STANDARDS 8 (PKCS#8)</title>
+<para>Abstraction for importing of PKCS-encoded keyfiles compatible with TLS (and raw input). </para>
+</sect3>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="588" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="588" bodyend="592"/>
+      </memberdef>
+      <memberdef kind="enum" id="cryptx_8h_1a013b9acd1ec2148f8bd159dbdf783713" prot="public" static="no" strong="no">
+        <type></type>
+        <name>_pkcs8_pubkey_ec_fields</name>
+        <enumvalue id="cryptx_8h_1a013b9acd1ec2148f8bd159dbdf783713a9dd496e2006a74ddb91514be72956d58" prot="public">
           <name>PKCS8_PUBLIC_EC_CURVEID</name>
           <initializer>= 0</initializer>
           <briefdescription>
+<para>reference to EC Curve ID in <bold><ref refid="structcryptx__pkcs8__pubkey" kindref="compound">cryptx_pkcs8_pubkey</ref></bold> </para>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
         </enumvalue>
-        <enumvalue id="cryptx_8h_1a546f3d021fd1921cf505406af767d411a9e93917030064537caebab410d031b61" prot="public">
+        <enumvalue id="cryptx_8h_1a013b9acd1ec2148f8bd159dbdf783713a9e93917030064537caebab410d031b61" prot="public">
           <name>PKCS8_PUBLIC_EC_PUBKEY</name>
           <briefdescription>
+<para>reference to ECPoint public key in <bold><ref refid="structcryptx__pkcs8__pubkey" kindref="compound">cryptx_pkcs8_pubkey</ref></bold> </para>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
         </enumvalue>
-        <enumvalue id="cryptx_8h_1a546f3d021fd1921cf505406af767d411a28b860237672a83cd9752fb68b2405c1" prot="public">
+        <enumvalue id="cryptx_8h_1a013b9acd1ec2148f8bd159dbdf783713a28b860237672a83cd9752fb68b2405c1" prot="public">
           <name>PKCS8_PUBLIC_EC_FIELDS</name>
           <briefdescription>
+<para>number of EC fields in structure (for enumeration) </para>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
@@ -986,122 +1000,88 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="584" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="584" bodyend="596"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="594" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="594" bodyend="598"/>
       </memberdef>
-      <memberdef kind="enum" id="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2" prot="public" static="no" strong="no">
+      <memberdef kind="enum" id="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0a" prot="public" static="no" strong="no">
         <type></type>
-        <name>_pkcs8_privkey_fields</name>
-        <enumvalue id="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a9b5d004117c850d1db6539295ef50af3" prot="public">
-          <name>PKCS8_PRIVATE_OBJECTID</name>
-          <initializer>= 0</initializer>
-          <briefdescription>
-          </briefdescription>
-          <detaileddescription>
-          </detaileddescription>
-        </enumvalue>
-        <enumvalue id="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a5584b1029e0bc1af75363cb9d63e3c4a" prot="public">
+        <name>_pkcs8_privkey_rsa_fields</name>
+        <enumvalue id="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa5584b1029e0bc1af75363cb9d63e3c4a" prot="public">
           <name>PKCS8_PRIVATE_RSA_VERSION</name>
           <initializer>= 0</initializer>
           <briefdescription>
+<para>reference to RSA version in <bold><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref></bold> </para>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
         </enumvalue>
-        <enumvalue id="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a1686e70a66edcd9b031141224fd4781a" prot="public">
+        <enumvalue id="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa1686e70a66edcd9b031141224fd4781a" prot="public">
           <name>PKCS8_PRIVATE_RSA_MODULUS</name>
           <briefdescription>
+<para>reference to private modulus in <bold><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref></bold> </para>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
         </enumvalue>
-        <enumvalue id="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2adfd61e7eb3644df96f0b622b54d2f56f" prot="public">
+        <enumvalue id="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aadfd61e7eb3644df96f0b622b54d2f56f" prot="public">
           <name>PKCS8_PRIVATE_RSA_PUBEXPONENT</name>
           <briefdescription>
+<para>reference to public exponent in <bold><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref></bold> </para>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
         </enumvalue>
-        <enumvalue id="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2ad13c0c49850208fc68787d9d772ae24d" prot="public">
+        <enumvalue id="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aad13c0c49850208fc68787d9d772ae24d" prot="public">
           <name>PKCS8_PRIVATE_RSA_EXPONENT</name>
           <briefdescription>
+<para>reference to private exponent in <bold><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref></bold> </para>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
         </enumvalue>
-        <enumvalue id="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a9e9e55db2d9f5cb138a6b92b7815e4af" prot="public">
+        <enumvalue id="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa9e9e55db2d9f5cb138a6b92b7815e4af" prot="public">
           <name>PKCS8_PRIVATE_RSA_P</name>
           <briefdescription>
+<para>reference to P in <bold><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref></bold> </para>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
         </enumvalue>
-        <enumvalue id="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a791398b293713cc97345586e6de4d19e" prot="public">
+        <enumvalue id="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa791398b293713cc97345586e6de4d19e" prot="public">
           <name>PKCS8_PRIVATE_RSA_Q</name>
           <briefdescription>
+<para>reference to Q in <bold><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref></bold> </para>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
         </enumvalue>
-        <enumvalue id="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a295070fec0c4abed358a0c345e5beb8e" prot="public">
+        <enumvalue id="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa295070fec0c4abed358a0c345e5beb8e" prot="public">
           <name>PKCS8_PRIVATE_RSA_EXP1</name>
           <briefdescription>
+<para>reference to Exp1 in <bold><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref></bold> </para>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
         </enumvalue>
-        <enumvalue id="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a4cc42d0a99e3cd6bdea2490362d3e43a" prot="public">
+        <enumvalue id="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa4cc42d0a99e3cd6bdea2490362d3e43a" prot="public">
           <name>PKCS8_PRIVATE_RSA_EXP2</name>
           <briefdescription>
+<para>reference to Exp2 in <bold><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref></bold> </para>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
         </enumvalue>
-        <enumvalue id="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a511494ca2148567f6a536083051c3dec" prot="public">
+        <enumvalue id="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa511494ca2148567f6a536083051c3dec" prot="public">
           <name>PKCS8_PRIVATE_RSA_COEFF</name>
           <briefdescription>
+<para>reference to Coefficient in <bold><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref></bold> </para>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
         </enumvalue>
-        <enumvalue id="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a6d75b466f683aa54745b97230a37af45" prot="public">
+        <enumvalue id="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa6d75b466f683aa54745b97230a37af45" prot="public">
           <name>PKCS8_PRIVATE_RSA_FIELDS</name>
           <briefdescription>
-          </briefdescription>
-          <detaileddescription>
-          </detaileddescription>
-        </enumvalue>
-        <enumvalue id="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a0c38c9582cd6895f0b51f2d9804772ba" prot="public">
-          <name>PKCS8_PRIVATE_EC_CURVEID</name>
-          <initializer>= 0</initializer>
-          <briefdescription>
-          </briefdescription>
-          <detaileddescription>
-          </detaileddescription>
-        </enumvalue>
-        <enumvalue id="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a58dab3856acea3ad7c102e9894632991" prot="public">
-          <name>PKCS8_PRIVATE_EC_VERSION</name>
-          <briefdescription>
-          </briefdescription>
-          <detaileddescription>
-          </detaileddescription>
-        </enumvalue>
-        <enumvalue id="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2ad6fc732dbd3a40cbbee17b0e0b5d9f71" prot="public">
-          <name>PKCS8_PRIVATE_EC_PRIVKEY</name>
-          <briefdescription>
-          </briefdescription>
-          <detaileddescription>
-          </detaileddescription>
-        </enumvalue>
-        <enumvalue id="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a6bd25359cadd26de1d0d03ffb5aa79af" prot="public">
-          <name>PKCS8_PRIVATE_EC_PUBKEY</name>
-          <briefdescription>
-          </briefdescription>
-          <detaileddescription>
-          </detaileddescription>
-        </enumvalue>
-        <enumvalue id="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a9790db7a5e3d888caa4b576d6a79c1c1" prot="public">
-          <name>PKCS8_PRIVATE_EC_FIELDS</name>
-          <briefdescription>
+<para>number of RSA fields in structure (for enumeration) </para>
           </briefdescription>
           <detaileddescription>
           </detaileddescription>
@@ -1112,7 +1092,59 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="598" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="598" bodyend="618"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="600" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="600" bodyend="611"/>
+      </memberdef>
+      <memberdef kind="enum" id="cryptx_8h_1a5d7e076a5245635513053f3b31780c4e" prot="public" static="no" strong="no">
+        <type></type>
+        <name>_pkcs8_privkey_ec_fields</name>
+        <enumvalue id="cryptx_8h_1a5d7e076a5245635513053f3b31780c4ea0c38c9582cd6895f0b51f2d9804772ba" prot="public">
+          <name>PKCS8_PRIVATE_EC_CURVEID</name>
+          <initializer>= 0</initializer>
+          <briefdescription>
+<para>reference to EC Curve ID in <bold><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref></bold> </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="cryptx_8h_1a5d7e076a5245635513053f3b31780c4ea58dab3856acea3ad7c102e9894632991" prot="public">
+          <name>PKCS8_PRIVATE_EC_VERSION</name>
+          <briefdescription>
+<para>reference to EC version in <bold><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref></bold> </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="cryptx_8h_1a5d7e076a5245635513053f3b31780c4ead6fc732dbd3a40cbbee17b0e0b5d9f71" prot="public">
+          <name>PKCS8_PRIVATE_EC_PRIVKEY</name>
+          <briefdescription>
+<para>reference to private key in <bold><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref></bold> </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="cryptx_8h_1a5d7e076a5245635513053f3b31780c4ea6bd25359cadd26de1d0d03ffb5aa79af" prot="public">
+          <name>PKCS8_PRIVATE_EC_PUBKEY</name>
+          <briefdescription>
+<para>reference to public key in <bold><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref></bold> </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="cryptx_8h_1a5d7e076a5245635513053f3b31780c4ea9790db7a5e3d888caa4b576d6a79c1c1" prot="public">
+          <name>PKCS8_PRIVATE_EC_FIELDS</name>
+          <briefdescription>
+<para>number of EC fields in structure (for enumeration) </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="613" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="613" bodyend="619"/>
       </memberdef>
       <memberdef kind="enum" id="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4" prot="public" static="no" strong="no">
         <type></type>
@@ -1152,7 +1184,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="621" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="621" bodyend="626"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="622" column="1" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="622" bodyend="627"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="var">
@@ -1168,7 +1200,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="653" column="22" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="653" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="654" column="22" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="654" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="cryptx_8h_1aeb9b47848c145dee3966d1ecf595f4c6" prot="public" static="yes" mutable="no">
         <type>const uint8_t</type>
@@ -1182,7 +1214,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="655" column="22" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="655" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="656" column="22" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="656" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="cryptx_8h_1a3d28abd7e3f95b204709ff90f1329f86" prot="public" static="yes" mutable="no">
         <type>const uint8_t</type>
@@ -1196,7 +1228,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="657" column="22" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="657" bodyend="-1"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="658" column="22" bodyfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" bodystart="658" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="cryptx_8h_1a791c9616d63340d5f3d55673abefd768" prot="public" static="no" mutable="no">
         <type>uint8_t</type>
@@ -1232,7 +1264,7 @@
         <argsstring>(struct cryptx_hash_ctx *context, uint8_t hash_alg)</argsstring>
         <name>cryptx_hash_init</name>
         <param>
-          <type>struct cryptx_hash_ctx *</type>
+          <type>struct <ref refid="structcryptx__hash__ctx" kindref="compound">cryptx_hash_ctx</ref> *</type>
           <declname>context</declname>
         </param>
         <param>
@@ -1240,7 +1272,7 @@
           <declname>hash_alg</declname>
         </param>
         <briefdescription>
-<para>Initializes a hash-state context for a specific hash algorithm. </para>
+<para>Initializes a context for a specific hash algorithm. </para>
         </briefdescription>
         <detaileddescription>
 <para><parameterlist kind="param"><parameteritem>
@@ -1248,7 +1280,7 @@
 <parametername>context</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Pointer to a hash-state context. </para>
+<para>Pointer to a ontext. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -1274,7 +1306,7 @@
         <argsstring>(struct cryptx_hash_ctx *context, const void *data, size_t len)</argsstring>
         <name>cryptx_hash_update</name>
         <param>
-          <type>struct cryptx_hash_ctx *</type>
+          <type>struct <ref refid="structcryptx__hash__ctx" kindref="compound">cryptx_hash_ctx</ref> *</type>
           <declname>context</declname>
         </param>
         <param>
@@ -1286,7 +1318,7 @@
           <declname>len</declname>
         </param>
         <briefdescription>
-<para>Updates the hash-state for a given block of data. </para>
+<para>Updates the context for a given block of data. </para>
         </briefdescription>
         <detaileddescription>
 <para><parameterlist kind="param"><parameteritem>
@@ -1294,7 +1326,7 @@
 <parametername>context</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Pointer to a hash-state context. </para>
+<para>Pointer to a context. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -1326,7 +1358,7 @@
         <argsstring>(struct cryptx_hash_ctx *context, void *digest)</argsstring>
         <name>cryptx_hash_digest</name>
         <param>
-          <type>struct cryptx_hash_ctx *</type>
+          <type>struct <ref refid="structcryptx__hash__ctx" kindref="compound">cryptx_hash_ctx</ref> *</type>
           <declname>context</declname>
         </param>
         <param>
@@ -1334,7 +1366,7 @@
           <declname>digest</declname>
         </param>
         <briefdescription>
-<para>Output digest for current hash-state (preserves state). </para>
+<para>Output digest for current context (preserves state). </para>
         </briefdescription>
         <detaileddescription>
 <para><parameterlist kind="param"><parameteritem>
@@ -1342,7 +1374,7 @@
 <parametername>context</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Pointer to a hash-state context. </para>
+<para>Pointer to a context. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -1442,7 +1474,7 @@
         <argsstring>(struct cryptx_hmac_ctx *context, const void *key, size_t keylen, uint8_t hash_alg)</argsstring>
         <name>cryptx_hmac_init</name>
         <param>
-          <type>struct cryptx_hmac_ctx *</type>
+          <type>struct <ref refid="structcryptx__hmac__ctx" kindref="compound">cryptx_hmac_ctx</ref> *</type>
           <declname>context</declname>
         </param>
         <param>
@@ -1458,7 +1490,7 @@
           <declname>hash_alg</declname>
         </param>
         <briefdescription>
-<para>Initializes an HMAC-state context for a specific hash algorithm. </para>
+<para>Initializes a context for a specific HMAC algorithm. </para>
         </briefdescription>
         <detaileddescription>
 <para><parameterlist kind="param"><parameteritem>
@@ -1466,7 +1498,7 @@
 <parametername>context</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Pointer to an HMAC-state context. </para>
+<para>Pointer to a context. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -1474,7 +1506,7 @@
 <parametername>key</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Pointer to a key used to initialize the <ref refid="structHMAC" kindref="compound">HMAC</ref> state. </para>
+<para>Pointer to a key used to initialize the HMAC state. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -1508,7 +1540,7 @@
         <argsstring>(struct cryptx_hmac_ctx *context, const void *data, size_t len)</argsstring>
         <name>cryptx_hmac_update</name>
         <param>
-          <type>struct cryptx_hmac_ctx *</type>
+          <type>struct <ref refid="structcryptx__hmac__ctx" kindref="compound">cryptx_hmac_ctx</ref> *</type>
           <declname>context</declname>
         </param>
         <param>
@@ -1520,7 +1552,7 @@
           <declname>len</declname>
         </param>
         <briefdescription>
-<para>Updates the hash-state for a given block of data. </para>
+<para>Updates the context for a given block of data. </para>
         </briefdescription>
         <detaileddescription>
 <para><parameterlist kind="param"><parameteritem>
@@ -1560,7 +1592,7 @@
         <argsstring>(struct cryptx_hmac_ctx *context, void *digest)</argsstring>
         <name>cryptx_hmac_digest</name>
         <param>
-          <type>struct cryptx_hmac_ctx *</type>
+          <type>struct <ref refid="structcryptx__hmac__ctx" kindref="compound">cryptx_hmac_ctx</ref> *</type>
           <declname>context</declname>
         </param>
         <param>
@@ -1568,7 +1600,7 @@
           <declname>digest</declname>
         </param>
         <briefdescription>
-<para>Output digest for current HMAC-state (preserves state). </para>
+<para>Output digest for current context (preserves state). </para>
         </briefdescription>
         <detaileddescription>
 <para><parameterlist kind="param"><parameteritem>
@@ -1576,7 +1608,7 @@
 <parametername>context</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>Pointer to an HMAC-state context. </para>
+<para>Pointer to a context. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -1672,7 +1704,7 @@
 <parametername>rounds</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>The number of times to iterate the <ref refid="structHMAC" kindref="compound">HMAC</ref> function per block of <bold>keylen</bold>. </para>
+<para>The number of times to iterate the HMAC function per block of <bold>keylen</bold>. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -1995,7 +2027,7 @@
         <argsstring>(struct cryptx_aes_ctx *context, const void *key, size_t keylen, const void *iv, size_t ivlen, uint8_t cipher_mode, uint24_t flags)</argsstring>
         <name>cryptx_aes_init</name>
         <param>
-          <type>struct cryptx_aes_ctx *</type>
+          <type>struct <ref refid="structcryptx__aes__ctx" kindref="compound">cryptx_aes_ctx</ref> *</type>
           <declname>context</declname>
         </param>
         <param>
@@ -2097,7 +2129,7 @@
         <argsstring>(const struct cryptx_aes_ctx *context, const void *plaintext, size_t len, void *ciphertext)</argsstring>
         <name>cryptx_aes_encrypt</name>
         <param>
-          <type>const struct cryptx_aes_ctx *</type>
+          <type>const struct <ref refid="structcryptx__aes__ctx" kindref="compound">cryptx_aes_ctx</ref> *</type>
           <declname>context</declname>
         </param>
         <param>
@@ -2163,7 +2195,7 @@
         <argsstring>(const struct cryptx_aes_ctx *context, const void *ciphertext, size_t len, void *plaintext)</argsstring>
         <name>cryptx_aes_decrypt</name>
         <param>
-          <type>const struct cryptx_aes_ctx *</type>
+          <type>const struct <ref refid="structcryptx__aes__ctx" kindref="compound">cryptx_aes_ctx</ref> *</type>
           <declname>context</declname>
         </param>
         <param>
@@ -2229,7 +2261,7 @@
         <argsstring>(struct cryptx_aes_ctx *context, const void *aad, size_t aad_len)</argsstring>
         <name>cryptx_aes_update_aad</name>
         <param>
-          <type>struct cryptx_aes_ctx *</type>
+          <type>struct <ref refid="structcryptx__aes__ctx" kindref="compound">cryptx_aes_ctx</ref> *</type>
           <declname>context</declname>
         </param>
         <param>
@@ -2283,7 +2315,7 @@
         <argsstring>(struct cryptx_aes_ctx *context, uint8_t *digest)</argsstring>
         <name>cryptx_aes_digest</name>
         <param>
-          <type>struct cryptx_aes_ctx *</type>
+          <type>struct <ref refid="structcryptx__aes__ctx" kindref="compound">cryptx_aes_ctx</ref> *</type>
           <declname>context</declname>
         </param>
         <param>
@@ -2325,7 +2357,7 @@
         <argsstring>(const struct cryptx_aes_ctx *context, const void *aad, size_t aad_len, const void *ciphertext, size_t ciphertext_len, uint8_t *tag)</argsstring>
         <name>cryptx_aes_verify</name>
         <param>
-          <type>const struct cryptx_aes_ctx *</type>
+          <type>const struct <ref refid="structcryptx__aes__ctx" kindref="compound">cryptx_aes_ctx</ref> *</type>
           <declname>context</declname>
         </param>
         <param>
@@ -2833,7 +2865,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="668" column="26" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="668" declcolumn="26"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="669" column="26" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="669" declcolumn="26"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a1d8ba96af68c8fe00b1aed438fff3495" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>struct <ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref> *</type>
@@ -2891,7 +2923,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="680" column="27" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="680" declcolumn="27"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="681" column="27" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="681" declcolumn="27"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a78fb5286dbb1dd4443ca8fbc33005750" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -2931,7 +2963,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="688" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="688" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="689" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="689" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a793f8cb12a267c4c2cff1bcc494f2de3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -2971,7 +3003,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="695" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="695" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="696" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="696" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1aa26dcd5f7c0f1f679c91268bc5b69455" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -2987,7 +3019,7 @@
           <declname>block_out</declname>
         </param>
         <param>
-          <type>struct cryptx_aes_ctx *</type>
+          <type>struct <ref refid="structcryptx__aes__ctx" kindref="compound">cryptx_aes_ctx</ref> *</type>
           <declname>ks</declname>
         </param>
         <briefdescription>
@@ -3025,7 +3057,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="707" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="707" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="708" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="708" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a705b398f84e2020d762a0ce03c90bd90" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -3041,7 +3073,7 @@
           <declname>block_out</declname>
         </param>
         <param>
-          <type>struct cryptx_aes_ctx *</type>
+          <type>struct <ref refid="structcryptx__aes__ctx" kindref="compound">cryptx_aes_ctx</ref> *</type>
           <declname>ks</declname>
         </param>
         <briefdescription>
@@ -3079,7 +3111,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="718" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="718" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="719" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="719" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a686d9781ff0de6cf06424df197ce6e1e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -3171,7 +3203,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="735" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="735" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="736" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="736" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1ab367fc9a33e00bee5e9a9f8df5f2a697" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -3251,7 +3283,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="753" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="753" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="754" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="754" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a70bc16d6ac300e87e3fc9c9847254bd1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -3317,7 +3349,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="767" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="767" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="768" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="768" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1a71ea61142ac4e58af9d8b8c9d2d17685" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>struct <ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref></type>
@@ -3359,7 +3391,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="767" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="767" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="768" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="768" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1ae4b37d491cbd4d5a16e0fb84d87b9270" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -3389,7 +3421,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="791" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="791" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="792" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="792" declcolumn="6"/>
       </memberdef>
       <memberdef kind="function" id="cryptx_8h_1adf9bad66ca13288b71d9306d9c0a55e0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -3443,7 +3475,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="800" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="800" declcolumn="6"/>
+        <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" line="801" column="6" declfile="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h" declline="801" declcolumn="6"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -3508,12 +3540,12 @@
 <codeline lineno="80" refid="unioncryptx__aes__private__h_1ae1fc34b70eb382df03714488d599dfab" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__aes__ctr__state" kindref="compound">cryptx_aes_ctr_state</ref><sp/>cbc;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="81"><highlight class="normal">}<sp/><ref refid="unioncryptx__aes__private__h" kindref="compound">cryptx_aes_private_h</ref>;</highlight></codeline>
 <codeline lineno="82"><highlight class="normal"></highlight></codeline>
-<codeline lineno="84"><highlight class="keyword">struct<sp/></highlight><highlight class="normal">cryptx_hash_ctx<sp/>{</highlight></codeline>
-<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/>bool<sp/>(*init)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ctx);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*update)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ctx,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>data,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len);<sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*digest)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ctx,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>output);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>digest_len;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="unioncryptx__hash__private__h" kindref="compound">cryptx_hash_private_h</ref><sp/>metadata;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="84" refid="structcryptx__hash__ctx" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__hash__ctx" kindref="compound">cryptx_hash_ctx</ref><sp/>{</highlight></codeline>
+<codeline lineno="85" refid="structcryptx__hash__ctx_1ae1cc61f269fa5bbf1e8a36b9526c138a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>bool<sp/>(*<ref refid="structcryptx__hash__ctx_1ae1cc61f269fa5bbf1e8a36b9526c138a" kindref="member">init</ref>)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ctx);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="86" refid="structcryptx__hash__ctx_1abcba976dfec24f43bbd0af1f3c4abfeb" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*<ref refid="structcryptx__hash__ctx_1abcba976dfec24f43bbd0af1f3c4abfeb" kindref="member">update</ref>)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ctx,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>data,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len);<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="87" refid="structcryptx__hash__ctx_1a1bc11de9717a516b5c0d053121e9851d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*<ref refid="structcryptx__hash__ctx_1a1bc11de9717a516b5c0d053121e9851d" kindref="member">digest</ref>)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ctx,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>output);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="88" refid="structcryptx__hash__ctx_1a6bceb7d80541e569377e5d3684fd1721" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/><ref refid="structcryptx__hash__ctx_1a6bceb7d80541e569377e5d3684fd1721" kindref="member">digest_len</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="89" refid="structcryptx__hash__ctx_1a7ef6076b4878b27aea27fa71fc929a60" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="unioncryptx__hash__private__h" kindref="compound">cryptx_hash_private_h</ref><sp/><ref refid="structcryptx__hash__ctx_1a7ef6076b4878b27aea27fa71fc929a60" kindref="member">metadata</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="90"><highlight class="normal">};</highlight></codeline>
 <codeline lineno="91"><highlight class="normal"></highlight></codeline>
 <codeline lineno="93" refid="cryptx_8h_1a57f2f69b5ad395749c8604ca9f43f93b" refkind="member"><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a57f2f69b5ad395749c8604ca9f43f93b" kindref="member">cryptx_hash_algorithms</ref><sp/>{</highlight></codeline>
@@ -3524,11 +3556,11 @@
 <codeline lineno="98"><highlight class="normal"></highlight></codeline>
 <codeline lineno="99" refid="cryptx_8h_1a4f1536bc045d8c6c6b1fd7502922c85a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_DIGESTLEN_SHA1<sp/><sp/><sp/><sp/>20<sp/><sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="100" refid="cryptx_8h_1a36616e8d1ed1e6270deadd0f8a4f096d" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CRYPTX_DIGESTLEN_SHA256<sp/><sp/>32<sp/><sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="108" refid="cryptx_8h_1a70b79d7bbba52b64700123ab77ab5a28" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a70b79d7bbba52b64700123ab77ab5a28" kindref="member">cryptx_hash_init</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_hash_ctx*<sp/>context,<sp/>uint8_t<sp/>hash_alg);</highlight></codeline>
+<codeline lineno="108" refid="cryptx_8h_1a70b79d7bbba52b64700123ab77ab5a28" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a70b79d7bbba52b64700123ab77ab5a28" kindref="member">cryptx_hash_init</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__hash__ctx" kindref="compound">cryptx_hash_ctx</ref>*<sp/>context,<sp/>uint8_t<sp/>hash_alg);</highlight></codeline>
 <codeline lineno="109"><highlight class="normal"></highlight></codeline>
-<codeline lineno="116" refid="cryptx_8h_1a0df23ee0aff04b31db05f5175bfe63a2" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a0df23ee0aff04b31db05f5175bfe63a2" kindref="member">cryptx_hash_update</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_hash_ctx*<sp/>context,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>data,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len);</highlight></codeline>
+<codeline lineno="116" refid="cryptx_8h_1a0df23ee0aff04b31db05f5175bfe63a2" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a0df23ee0aff04b31db05f5175bfe63a2" kindref="member">cryptx_hash_update</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__hash__ctx" kindref="compound">cryptx_hash_ctx</ref>*<sp/>context,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>data,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len);</highlight></codeline>
 <codeline lineno="117"><highlight class="normal"></highlight></codeline>
-<codeline lineno="123" refid="cryptx_8h_1a1444bb4124409dbae8088ffbc9830ee3" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a1444bb4124409dbae8088ffbc9830ee3" kindref="member">cryptx_hash_digest</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_hash_ctx*<sp/>context,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>digest);</highlight></codeline>
+<codeline lineno="123" refid="cryptx_8h_1a1444bb4124409dbae8088ffbc9830ee3" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a1444bb4124409dbae8088ffbc9830ee3" kindref="member">cryptx_hash_digest</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__hash__ctx" kindref="compound">cryptx_hash_ctx</ref>*<sp/>context,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>digest);</highlight></codeline>
 <codeline lineno="124"><highlight class="normal"></highlight></codeline>
 <codeline lineno="133" refid="cryptx_8h_1a661281f90257c5e21dbb53654ba505e7" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a661281f90257c5e21dbb53654ba505e7" kindref="member">cryptx_hash_mgf1</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>data,</highlight></codeline>
 <codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>datalen,</highlight></codeline>
@@ -3538,21 +3570,21 @@
 <codeline lineno="138"><highlight class="normal"></highlight></codeline>
 <codeline lineno="139"><highlight class="normal"></highlight></codeline>
 <codeline lineno="141"></codeline>
-<codeline lineno="143"><highlight class="keyword">struct<sp/></highlight><highlight class="normal">cryptx_hmac_ctx<sp/>{</highlight></codeline>
-<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/>bool<sp/>(*init)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ctx,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>key,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>keylen);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*update)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ctx,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>data,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*digest)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ctx,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>output);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>digest_len;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="unioncryptx__hmac__private__h" kindref="compound">cryptx_hmac_private_h</ref><sp/>metadata;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="143" refid="structcryptx__hmac__ctx" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__hmac__ctx" kindref="compound">cryptx_hmac_ctx</ref><sp/>{</highlight></codeline>
+<codeline lineno="144" refid="structcryptx__hmac__ctx_1ad94b42907c9265c29e78b4438fcbeb30" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>bool<sp/>(*<ref refid="structcryptx__hmac__ctx_1ad94b42907c9265c29e78b4438fcbeb30" kindref="member">init</ref>)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ctx,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>key,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>keylen);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="145" refid="structcryptx__hmac__ctx_1a02b8fb3b5fc0ba3c3e401cb8878b6b3b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*<ref refid="structcryptx__hmac__ctx_1a02b8fb3b5fc0ba3c3e401cb8878b6b3b" kindref="member">update</ref>)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ctx,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>data,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="146" refid="structcryptx__hmac__ctx_1ab65e64eac18efc47f8753e659d5f4d3d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*<ref refid="structcryptx__hmac__ctx_1ab65e64eac18efc47f8753e659d5f4d3d" kindref="member">digest</ref>)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ctx,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>output);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="147" refid="structcryptx__hmac__ctx_1ae379877c49e2e682861a975d9640607d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/><ref refid="structcryptx__hmac__ctx_1ae379877c49e2e682861a975d9640607d" kindref="member">digest_len</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="148" refid="structcryptx__hmac__ctx_1a005cd807fe6ffe5f87c41ea296457270" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="unioncryptx__hmac__private__h" kindref="compound">cryptx_hmac_private_h</ref><sp/><ref refid="structcryptx__hmac__ctx_1a005cd807fe6ffe5f87c41ea296457270" kindref="member">metadata</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="149"><highlight class="normal">};</highlight></codeline>
 <codeline lineno="150"><highlight class="normal"></highlight></codeline>
-<codeline lineno="159" refid="cryptx_8h_1a21c854c0bcb6f7497516847e080c27c3" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a21c854c0bcb6f7497516847e080c27c3" kindref="member">cryptx_hmac_init</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_hmac_ctx*<sp/>context,</highlight></codeline>
+<codeline lineno="159" refid="cryptx_8h_1a21c854c0bcb6f7497516847e080c27c3" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a21c854c0bcb6f7497516847e080c27c3" kindref="member">cryptx_hmac_init</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__hmac__ctx" kindref="compound">cryptx_hmac_ctx</ref>*<sp/>context,</highlight></codeline>
 <codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>key,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>keylen,</highlight></codeline>
 <codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>hash_alg);</highlight></codeline>
 <codeline lineno="162"><highlight class="normal"></highlight></codeline>
-<codeline lineno="169" refid="cryptx_8h_1a1ab7dcd49b5df0f9e697a5e14939d186" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a1ab7dcd49b5df0f9e697a5e14939d186" kindref="member">cryptx_hmac_update</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_hmac_ctx*<sp/>context,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>data,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len);</highlight></codeline>
+<codeline lineno="169" refid="cryptx_8h_1a1ab7dcd49b5df0f9e697a5e14939d186" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a1ab7dcd49b5df0f9e697a5e14939d186" kindref="member">cryptx_hmac_update</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__hmac__ctx" kindref="compound">cryptx_hmac_ctx</ref>*<sp/>context,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>data,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len);</highlight></codeline>
 <codeline lineno="170"><highlight class="normal"></highlight></codeline>
-<codeline lineno="176" refid="cryptx_8h_1a710f6c433fa3e6d07c602a0fca5952d7" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a710f6c433fa3e6d07c602a0fca5952d7" kindref="member">cryptx_hmac_digest</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_hmac_ctx*<sp/>context,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>digest);</highlight></codeline>
+<codeline lineno="176" refid="cryptx_8h_1a710f6c433fa3e6d07c602a0fca5952d7" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a710f6c433fa3e6d07c602a0fca5952d7" kindref="member">cryptx_hmac_digest</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__hmac__ctx" kindref="compound">cryptx_hmac_ctx</ref>*<sp/>context,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>digest);</highlight></codeline>
 <codeline lineno="177"><highlight class="normal"></highlight></codeline>
 <codeline lineno="189" refid="cryptx_8h_1a428a5da208ae3b55b73f4e05242148e8" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a428a5da208ae3b55b73f4e05242148e8" kindref="member">cryptx_hmac_pbkdf2</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>password,</highlight></codeline>
 <codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>passlen,</highlight></codeline>
@@ -3580,13 +3612,13 @@
 <codeline lineno="240"><highlight class="normal"></highlight></codeline>
 <codeline lineno="248" refid="cryptx_8h_1a8c550bae2fddbf8a04655325ba2c9e8f" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a8c550bae2fddbf8a04655325ba2c9e8f" kindref="member">cryptx_csrand_fill</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buffer,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>size);</highlight></codeline>
 <codeline lineno="249"><highlight class="normal"></highlight></codeline>
-<codeline lineno="252"><highlight class="keyword">struct<sp/></highlight><highlight class="normal">cryptx_aes_ctx<sp/>{</highlight></codeline>
-<codeline lineno="253"><highlight class="normal"><sp/><sp/><sp/><sp/>uint24_t<sp/>keysize;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/>uint32_t<sp/>round_keys[60];<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>iv[16];<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>ciphermode;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>op_assoc;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="unioncryptx__aes__private__h" kindref="compound">cryptx_aes_private_h</ref><sp/>metadata;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="252" refid="structcryptx__aes__ctx" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__aes__ctx" kindref="compound">cryptx_aes_ctx</ref><sp/>{</highlight></codeline>
+<codeline lineno="253" refid="structcryptx__aes__ctx_1aed50e8b9a653c1d20a0f324789ba8f84" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>uint24_t<sp/><ref refid="structcryptx__aes__ctx_1aed50e8b9a653c1d20a0f324789ba8f84" kindref="member">keysize</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="254" refid="structcryptx__aes__ctx_1ab7564e0e5d2e1bd96b083f913eda1382" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>uint32_t<sp/><ref refid="structcryptx__aes__ctx_1ab7564e0e5d2e1bd96b083f913eda1382" kindref="member">round_keys</ref>[60];<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="255" refid="structcryptx__aes__ctx_1a3cc495f40d5a578c335fd03fe2772e4a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/><ref refid="structcryptx__aes__ctx_1a3cc495f40d5a578c335fd03fe2772e4a" kindref="member">iv</ref>[16];<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="256" refid="structcryptx__aes__ctx_1a46d05a8ea39c183bd6f09d5fa95bfe25" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/><ref refid="structcryptx__aes__ctx_1a46d05a8ea39c183bd6f09d5fa95bfe25" kindref="member">ciphermode</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="257" refid="structcryptx__aes__ctx_1af6a8c176ebacf1d1fc6a25b1ec2ec6d8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/><ref refid="structcryptx__aes__ctx_1af6a8c176ebacf1d1fc6a25b1ec2ec6d8" kindref="member">op_assoc</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="258" refid="structcryptx__aes__ctx_1a019c3bf1d587684ca720951dc0f390c3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="unioncryptx__aes__private__h" kindref="compound">cryptx_aes_private_h</ref><sp/><ref refid="structcryptx__aes__ctx_1a019c3bf1d587684ca720951dc0f390c3" kindref="member">metadata</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="259"><highlight class="normal">};</highlight></codeline>
 <codeline lineno="260"><highlight class="normal"></highlight></codeline>
 <codeline lineno="261" refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a59334db45c5435de6ded4492dec34735" kindref="member">cryptx_aes_cipher_modes</ref><sp/>{</highlight></codeline>
@@ -3632,7 +3664,7 @@
 <codeline lineno="311"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfda95a9dcbf64347e3c6f2c50d05e8937f5" kindref="member">AES_INVALID_OPERATION</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="312" refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfda95a9dcbf64347e3c6f2c50d05e8937f5" refkind="member"><highlight class="normal">}<sp/><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref>;</highlight></codeline>
 <codeline lineno="313"><highlight class="normal"></highlight></codeline>
-<codeline lineno="326" refid="cryptx_8h_1ab96be7c9efe78883e6b81bb7d66c7e45" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1ab96be7c9efe78883e6b81bb7d66c7e45" kindref="member">cryptx_aes_init</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>context,</highlight></codeline>
+<codeline lineno="326" refid="cryptx_8h_1ab96be7c9efe78883e6b81bb7d66c7e45" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1ab96be7c9efe78883e6b81bb7d66c7e45" kindref="member">cryptx_aes_init</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__aes__ctx" kindref="compound">cryptx_aes_ctx</ref>*<sp/>context,</highlight></codeline>
 <codeline lineno="327"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>key,</highlight></codeline>
 <codeline lineno="328"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>keylen,</highlight></codeline>
 <codeline lineno="329"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>iv,</highlight></codeline>
@@ -3640,22 +3672,22 @@
 <codeline lineno="331"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>cipher_mode,</highlight></codeline>
 <codeline lineno="332"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint24_t<sp/>flags);</highlight></codeline>
 <codeline lineno="333"><highlight class="normal"></highlight></codeline>
-<codeline lineno="342" refid="cryptx_8h_1a571d4b9eb0fe3d069b10492025e47fe0" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1a571d4b9eb0fe3d069b10492025e47fe0" kindref="member">cryptx_aes_encrypt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>context,</highlight></codeline>
+<codeline lineno="342" refid="cryptx_8h_1a571d4b9eb0fe3d069b10492025e47fe0" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1a571d4b9eb0fe3d069b10492025e47fe0" kindref="member">cryptx_aes_encrypt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__aes__ctx" kindref="compound">cryptx_aes_ctx</ref>*<sp/>context,</highlight></codeline>
 <codeline lineno="343"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>plaintext,</highlight></codeline>
 <codeline lineno="344"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,</highlight></codeline>
 <codeline lineno="345"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ciphertext);</highlight></codeline>
 <codeline lineno="346"><highlight class="normal"></highlight></codeline>
-<codeline lineno="355" refid="cryptx_8h_1ab5cf162f80d83c86c9dbba9aa866b289" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1ab5cf162f80d83c86c9dbba9aa866b289" kindref="member">cryptx_aes_decrypt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>context,</highlight></codeline>
+<codeline lineno="355" refid="cryptx_8h_1ab5cf162f80d83c86c9dbba9aa866b289" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1ab5cf162f80d83c86c9dbba9aa866b289" kindref="member">cryptx_aes_decrypt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__aes__ctx" kindref="compound">cryptx_aes_ctx</ref>*<sp/>context,</highlight></codeline>
 <codeline lineno="356"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ciphertext,</highlight></codeline>
 <codeline lineno="357"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,</highlight></codeline>
 <codeline lineno="358"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>plaintext);</highlight></codeline>
 <codeline lineno="359"><highlight class="normal"></highlight></codeline>
-<codeline lineno="368" refid="cryptx_8h_1a3d55233d4178e3f6c6b96272fda56ae0" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1a3d55233d4178e3f6c6b96272fda56ae0" kindref="member">cryptx_aes_update_aad</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>context,</highlight></codeline>
+<codeline lineno="368" refid="cryptx_8h_1a3d55233d4178e3f6c6b96272fda56ae0" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1a3d55233d4178e3f6c6b96272fda56ae0" kindref="member">cryptx_aes_update_aad</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__aes__ctx" kindref="compound">cryptx_aes_ctx</ref>*<sp/>context,</highlight></codeline>
 <codeline lineno="369"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>aad,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>aad_len);</highlight></codeline>
 <codeline lineno="370"><highlight class="normal"></highlight></codeline>
-<codeline lineno="377" refid="cryptx_8h_1a7aaae6b33efe97c579d24729680eda79" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1a7aaae6b33efe97c579d24729680eda79" kindref="member">cryptx_aes_digest</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>context,<sp/>uint8_t<sp/>*digest);</highlight></codeline>
+<codeline lineno="377" refid="cryptx_8h_1a7aaae6b33efe97c579d24729680eda79" refkind="member"><highlight class="normal"><ref refid="cryptx_8h_1aeb2e64abcc4317e3143fb820f21c3bfd" kindref="member">aes_error_t</ref><sp/><ref refid="cryptx_8h_1a7aaae6b33efe97c579d24729680eda79" kindref="member">cryptx_aes_digest</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__aes__ctx" kindref="compound">cryptx_aes_ctx</ref>*<sp/>context,<sp/>uint8_t<sp/>*digest);</highlight></codeline>
 <codeline lineno="378"><highlight class="normal"></highlight></codeline>
-<codeline lineno="391" refid="cryptx_8h_1a69437bd1ca1d4fe40dc50d91da7c1be4" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a69437bd1ca1d4fe40dc50d91da7c1be4" kindref="member">cryptx_aes_verify</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>context,</highlight></codeline>
+<codeline lineno="391" refid="cryptx_8h_1a69437bd1ca1d4fe40dc50d91da7c1be4" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a69437bd1ca1d4fe40dc50d91da7c1be4" kindref="member">cryptx_aes_verify</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__aes__ctx" kindref="compound">cryptx_aes_ctx</ref>*<sp/>context,</highlight></codeline>
 <codeline lineno="392"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>aad,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>aad_len,</highlight></codeline>
 <codeline lineno="393"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ciphertext,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>ciphertext_len,</highlight></codeline>
 <codeline lineno="394"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>*tag);</highlight></codeline>
@@ -3775,129 +3807,128 @@
 <codeline lineno="574"><highlight class="normal"></highlight></codeline>
 <codeline lineno="582" refid="cryptx_8h_1a28db41653bf7ba5ef8bfcef425343722" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a28db41653bf7ba5ef8bfcef425343722" kindref="member">cryptx_base64_decode</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*dest,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*src,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len);</highlight></codeline>
 <codeline lineno="583"><highlight class="normal"></highlight></codeline>
-<codeline lineno="584"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>_pkcs8_pubkey_fields<sp/>{</highlight></codeline>
-<codeline lineno="585"><highlight class="normal"><sp/><sp/>PKCS8_PUBLIC_OBJECTID<sp/>=<sp/>0,</highlight></codeline>
-<codeline lineno="586"><highlight class="normal"><sp/><sp/></highlight></codeline>
-<codeline lineno="587"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>RSA<sp/>field<sp/>enumeration</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="588"><highlight class="normal"><sp/><sp/>PKCS8_PUBLIC_RSA_MODULUS<sp/>=<sp/>0,</highlight></codeline>
-<codeline lineno="589"><highlight class="normal"><sp/><sp/>PKCS8_PUBLIC_RSA_EXPONENT,</highlight></codeline>
-<codeline lineno="590"><highlight class="normal"><sp/><sp/>PKCS8_PUBLIC_RSA_FIELDS,</highlight></codeline>
-<codeline lineno="591"><highlight class="normal"><sp/><sp/></highlight></codeline>
-<codeline lineno="592"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>EC<sp/>field<sp/>enumeration</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="593"><highlight class="normal"><sp/><sp/>PKCS8_PUBLIC_EC_CURVEID<sp/>=<sp/>0,</highlight></codeline>
-<codeline lineno="594"><highlight class="normal"><sp/><sp/>PKCS8_PUBLIC_EC_PUBKEY,</highlight></codeline>
-<codeline lineno="595"><highlight class="normal"><sp/><sp/>PKCS8_PUBLIC_EC_FIELDS</highlight></codeline>
-<codeline lineno="596"><highlight class="normal">};</highlight></codeline>
-<codeline lineno="597"><highlight class="normal"></highlight></codeline>
-<codeline lineno="598"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>_pkcs8_privkey_fields<sp/>{</highlight></codeline>
-<codeline lineno="599"><highlight class="normal"><sp/><sp/>PKCS8_PRIVATE_OBJECTID<sp/>=<sp/>0,</highlight></codeline>
-<codeline lineno="600"><highlight class="normal"><sp/><sp/></highlight></codeline>
-<codeline lineno="601"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>RSA<sp/>field<sp/>enumeration</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="602"><highlight class="normal"><sp/><sp/>PKCS8_PRIVATE_RSA_VERSION<sp/>=<sp/>0,</highlight></codeline>
-<codeline lineno="603"><highlight class="normal"><sp/><sp/>PKCS8_PRIVATE_RSA_MODULUS,</highlight></codeline>
-<codeline lineno="604"><highlight class="normal"><sp/><sp/>PKCS8_PRIVATE_RSA_PUBEXPONENT,</highlight></codeline>
-<codeline lineno="605"><highlight class="normal"><sp/><sp/>PKCS8_PRIVATE_RSA_EXPONENT,</highlight></codeline>
-<codeline lineno="606"><highlight class="normal"><sp/><sp/>PKCS8_PRIVATE_RSA_P,</highlight></codeline>
-<codeline lineno="607"><highlight class="normal"><sp/><sp/>PKCS8_PRIVATE_RSA_Q,</highlight></codeline>
-<codeline lineno="608"><highlight class="normal"><sp/><sp/>PKCS8_PRIVATE_RSA_EXP1,</highlight></codeline>
-<codeline lineno="609"><highlight class="normal"><sp/><sp/>PKCS8_PRIVATE_RSA_EXP2,</highlight></codeline>
-<codeline lineno="610"><highlight class="normal"><sp/><sp/>PKCS8_PRIVATE_RSA_COEFF,</highlight></codeline>
-<codeline lineno="611"><highlight class="normal"><sp/><sp/>PKCS8_PRIVATE_RSA_FIELDS,</highlight></codeline>
-<codeline lineno="612"><highlight class="normal"><sp/><sp/></highlight></codeline>
-<codeline lineno="613"><highlight class="normal"><sp/><sp/>PKCS8_PRIVATE_EC_CURVEID<sp/>=<sp/>0,</highlight></codeline>
-<codeline lineno="614"><highlight class="normal"><sp/><sp/>PKCS8_PRIVATE_EC_VERSION,</highlight></codeline>
-<codeline lineno="615"><highlight class="normal"><sp/><sp/>PKCS8_PRIVATE_EC_PRIVKEY,</highlight></codeline>
-<codeline lineno="616"><highlight class="normal"><sp/><sp/>PKCS8_PRIVATE_EC_PUBKEY,</highlight></codeline>
-<codeline lineno="617"><highlight class="normal"><sp/><sp/>PKCS8_PRIVATE_EC_FIELDS</highlight></codeline>
-<codeline lineno="618"><highlight class="normal">};</highlight></codeline>
-<codeline lineno="619"><highlight class="normal"></highlight></codeline>
-<codeline lineno="621" refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4" refkind="member"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>{</highlight></codeline>
-<codeline lineno="622"><highlight class="normal"><sp/><sp/>PKCS_OK,</highlight></codeline>
-<codeline lineno="623"><highlight class="normal"><sp/><sp/>PKCS_INVALID_ARG,</highlight></codeline>
-<codeline lineno="624"><highlight class="normal"><sp/><sp/>PKCS_UNSUPPORTED,</highlight></codeline>
-<codeline lineno="625"><highlight class="normal"><sp/><sp/>PKCS_INVALID_DATA,</highlight></codeline>
-<codeline lineno="626"><highlight class="normal">}<sp/><ref refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4" kindref="member">pkcs_error_t</ref>;</highlight></codeline>
-<codeline lineno="627"><highlight class="normal"></highlight></codeline>
-<codeline lineno="629" refid="structcryptx__pkcs8__pubkey" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__pkcs8__pubkey" kindref="compound">cryptx_pkcs8_pubkey</ref><sp/>{</highlight></codeline>
-<codeline lineno="630"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>error;</highlight></codeline>
-<codeline lineno="631"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__asn1__object" kindref="compound">cryptx_asn1_object</ref><sp/>objectid;</highlight></codeline>
-<codeline lineno="632"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">union<sp/></highlight><highlight class="normal">{</highlight></codeline>
-<codeline lineno="633"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__asn1__object" kindref="compound">cryptx_asn1_object</ref><sp/>ec_fields[PKCS8_PUBLIC_EC_FIELDS];</highlight></codeline>
-<codeline lineno="634"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__asn1__object" kindref="compound">cryptx_asn1_object</ref><sp/>rsa_fields[PKCS8_PUBLIC_RSA_FIELDS];</highlight></codeline>
-<codeline lineno="635"><highlight class="normal"><sp/><sp/>}<sp/>publickey;</highlight></codeline>
-<codeline lineno="636"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len;</highlight></codeline>
-<codeline lineno="637"><highlight class="normal"><sp/><sp/>uint8_t<sp/>raw[];</highlight></codeline>
-<codeline lineno="638"><highlight class="normal">};</highlight></codeline>
-<codeline lineno="639"><highlight class="normal"></highlight></codeline>
-<codeline lineno="641" refid="structcryptx__pkcs8__privkey" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref><sp/>{</highlight></codeline>
-<codeline lineno="642"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>error;</highlight></codeline>
-<codeline lineno="643"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__asn1__object" kindref="compound">cryptx_asn1_object</ref><sp/>objectid;</highlight></codeline>
-<codeline lineno="644"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">union<sp/></highlight><highlight class="normal">{</highlight></codeline>
-<codeline lineno="645"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__asn1__object" kindref="compound">cryptx_asn1_object</ref><sp/>rsa_fields[PKCS8_PRIVATE_RSA_FIELDS];</highlight></codeline>
-<codeline lineno="646"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__asn1__object" kindref="compound">cryptx_asn1_object</ref><sp/>ec_fields[PKCS8_PRIVATE_EC_FIELDS];</highlight></codeline>
-<codeline lineno="647"><highlight class="normal"><sp/><sp/>}<sp/>privatekey;</highlight></codeline>
-<codeline lineno="648"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len;</highlight></codeline>
-<codeline lineno="649"><highlight class="normal"><sp/><sp/>uint8_t<sp/>raw[];</highlight></codeline>
-<codeline lineno="650"><highlight class="normal">};</highlight></codeline>
-<codeline lineno="651"><highlight class="normal"></highlight></codeline>
-<codeline lineno="653"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>cryptx_pkcs8_objectid_rsa[]<sp/>=<sp/>{0x2A,0x86,0x48,0x86,0xF7,0x0D,0x01,0x01,0x01,0};</highlight></codeline>
-<codeline lineno="655"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>cryptx_pkcs8_objectid_ec[]<sp/>=<sp/>{0x2A,0x86,0x48,0xCE,0x3D,0x02,0x01,0};</highlight></codeline>
-<codeline lineno="657"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>cryptx_pkcs8_curveid_sect233k1[]<sp/>=<sp/>{0x2B,0x81,0x04,0x00,0x1A};</highlight></codeline>
-<codeline lineno="658"><highlight class="normal"></highlight></codeline>
-<codeline lineno="668" refid="cryptx_8h_1aa187a2f43e4b3524082b0e8b649ae767" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__pkcs8__pubkey" kindref="compound">cryptx_pkcs8_pubkey</ref><sp/>*<ref refid="cryptx_8h_1aa187a2f43e4b3524082b0e8b649ae767" kindref="member">cryptx_pkcs8_import_publickey</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*data,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,</highlight></codeline>
-<codeline lineno="669"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>(*malloc)(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">));</highlight></codeline>
-<codeline lineno="670"><highlight class="normal"></highlight></codeline>
-<codeline lineno="680" refid="cryptx_8h_1a1d8ba96af68c8fe00b1aed438fff3495" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref><sp/>*<ref refid="cryptx_8h_1a1d8ba96af68c8fe00b1aed438fff3495" kindref="member">cryptx_pkcs8_import_privatekey</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*data,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,</highlight></codeline>
-<codeline lineno="681"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>(*malloc)(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">));</highlight></codeline>
-<codeline lineno="682"><highlight class="normal"></highlight></codeline>
-<codeline lineno="688" refid="cryptx_8h_1a78fb5286dbb1dd4443ca8fbc33005750" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a78fb5286dbb1dd4443ca8fbc33005750" kindref="member">cryptx_pkcs8_free_publickey</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__pkcs8__pubkey" kindref="compound">cryptx_pkcs8_pubkey</ref><sp/>*pk,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>(*free)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*));</highlight></codeline>
-<codeline lineno="689"><highlight class="normal"></highlight></codeline>
-<codeline lineno="695" refid="cryptx_8h_1a793f8cb12a267c4c2cff1bcc494f2de3" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a793f8cb12a267c4c2cff1bcc494f2de3" kindref="member">cryptx_pkcs8_free_privatekey</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref><sp/>*pk,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>(*free)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*));</highlight></codeline>
-<codeline lineno="696"><highlight class="normal"></highlight></codeline>
+<codeline lineno="584"><highlight class="normal"></highlight></codeline>
+<codeline lineno="587"><highlight class="normal"></highlight></codeline>
+<codeline lineno="588" refid="cryptx_8h_1ad7f8765e037450556596efeb6c19ca6c" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1ad7f8765e037450556596efeb6c19ca6c" kindref="member">_pkcs8_pubkey_rsa_fields</ref><sp/>{</highlight></codeline>
+<codeline lineno="589" refid="cryptx_8h_1ad7f8765e037450556596efeb6c19ca6ca7320cdcf509bae5c2495a374a3cde7a6" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1ad7f8765e037450556596efeb6c19ca6ca7320cdcf509bae5c2495a374a3cde7a6" kindref="member">PKCS8_PUBLIC_RSA_MODULUS</ref><sp/>=<sp/>0,<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="590" refid="cryptx_8h_1ad7f8765e037450556596efeb6c19ca6caca4c231faa043d396f93573484c97f06" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1ad7f8765e037450556596efeb6c19ca6caca4c231faa043d396f93573484c97f06" kindref="member">PKCS8_PUBLIC_RSA_EXPONENT</ref>,<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="591" refid="cryptx_8h_1ad7f8765e037450556596efeb6c19ca6ca45f3dfda11cb8657f506aafa1132c539" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1ad7f8765e037450556596efeb6c19ca6ca45f3dfda11cb8657f506aafa1132c539" kindref="member">PKCS8_PUBLIC_RSA_FIELDS</ref>,<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="592"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="593"><highlight class="normal"></highlight></codeline>
+<codeline lineno="594" refid="cryptx_8h_1a013b9acd1ec2148f8bd159dbdf783713" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a013b9acd1ec2148f8bd159dbdf783713" kindref="member">_pkcs8_pubkey_ec_fields</ref><sp/>{</highlight></codeline>
+<codeline lineno="595" refid="cryptx_8h_1a013b9acd1ec2148f8bd159dbdf783713a9dd496e2006a74ddb91514be72956d58" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1a013b9acd1ec2148f8bd159dbdf783713a9dd496e2006a74ddb91514be72956d58" kindref="member">PKCS8_PUBLIC_EC_CURVEID</ref><sp/>=<sp/>0,<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="596" refid="cryptx_8h_1a013b9acd1ec2148f8bd159dbdf783713a9e93917030064537caebab410d031b61" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1a013b9acd1ec2148f8bd159dbdf783713a9e93917030064537caebab410d031b61" kindref="member">PKCS8_PUBLIC_EC_PUBKEY</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="597"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1a013b9acd1ec2148f8bd159dbdf783713a28b860237672a83cd9752fb68b2405c1" kindref="member">PKCS8_PUBLIC_EC_FIELDS</ref><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="598" refid="cryptx_8h_1a013b9acd1ec2148f8bd159dbdf783713a28b860237672a83cd9752fb68b2405c1" refkind="member"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="599"><highlight class="normal"></highlight></codeline>
+<codeline lineno="600" refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0a" kindref="member">_pkcs8_privkey_rsa_fields</ref><sp/>{</highlight></codeline>
+<codeline lineno="601" refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa5584b1029e0bc1af75363cb9d63e3c4a" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa5584b1029e0bc1af75363cb9d63e3c4a" kindref="member">PKCS8_PRIVATE_RSA_VERSION</ref><sp/>=<sp/>0,<sp/><sp/></highlight></codeline>
+<codeline lineno="602" refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa1686e70a66edcd9b031141224fd4781a" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa1686e70a66edcd9b031141224fd4781a" kindref="member">PKCS8_PRIVATE_RSA_MODULUS</ref>,<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="603" refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aadfd61e7eb3644df96f0b622b54d2f56f" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aadfd61e7eb3644df96f0b622b54d2f56f" kindref="member">PKCS8_PRIVATE_RSA_PUBEXPONENT</ref>,<sp/><sp/></highlight></codeline>
+<codeline lineno="604" refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aad13c0c49850208fc68787d9d772ae24d" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aad13c0c49850208fc68787d9d772ae24d" kindref="member">PKCS8_PRIVATE_RSA_EXPONENT</ref>,<sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="605" refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa9e9e55db2d9f5cb138a6b92b7815e4af" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa9e9e55db2d9f5cb138a6b92b7815e4af" kindref="member">PKCS8_PRIVATE_RSA_P</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="606" refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa791398b293713cc97345586e6de4d19e" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa791398b293713cc97345586e6de4d19e" kindref="member">PKCS8_PRIVATE_RSA_Q</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="607" refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa295070fec0c4abed358a0c345e5beb8e" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa295070fec0c4abed358a0c345e5beb8e" kindref="member">PKCS8_PRIVATE_RSA_EXP1</ref>,<sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="608" refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa4cc42d0a99e3cd6bdea2490362d3e43a" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa4cc42d0a99e3cd6bdea2490362d3e43a" kindref="member">PKCS8_PRIVATE_RSA_EXP2</ref>,<sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="609" refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa511494ca2148567f6a536083051c3dec" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa511494ca2148567f6a536083051c3dec" kindref="member">PKCS8_PRIVATE_RSA_COEFF</ref>,<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="610"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa6d75b466f683aa54745b97230a37af45" kindref="member">PKCS8_PRIVATE_RSA_FIELDS</ref><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="611" refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa6d75b466f683aa54745b97230a37af45" refkind="member"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="612"><highlight class="normal"></highlight></codeline>
+<codeline lineno="613" refid="cryptx_8h_1a5d7e076a5245635513053f3b31780c4e" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a5d7e076a5245635513053f3b31780c4e" kindref="member">_pkcs8_privkey_ec_fields</ref><sp/>{</highlight></codeline>
+<codeline lineno="614" refid="cryptx_8h_1a5d7e076a5245635513053f3b31780c4ea0c38c9582cd6895f0b51f2d9804772ba" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1a5d7e076a5245635513053f3b31780c4ea0c38c9582cd6895f0b51f2d9804772ba" kindref="member">PKCS8_PRIVATE_EC_CURVEID</ref><sp/>=<sp/>0,<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="615" refid="cryptx_8h_1a5d7e076a5245635513053f3b31780c4ea58dab3856acea3ad7c102e9894632991" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1a5d7e076a5245635513053f3b31780c4ea58dab3856acea3ad7c102e9894632991" kindref="member">PKCS8_PRIVATE_EC_VERSION</ref>,<sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="616" refid="cryptx_8h_1a5d7e076a5245635513053f3b31780c4ead6fc732dbd3a40cbbee17b0e0b5d9f71" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1a5d7e076a5245635513053f3b31780c4ead6fc732dbd3a40cbbee17b0e0b5d9f71" kindref="member">PKCS8_PRIVATE_EC_PRIVKEY</ref>,<sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="617" refid="cryptx_8h_1a5d7e076a5245635513053f3b31780c4ea6bd25359cadd26de1d0d03ffb5aa79af" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1a5d7e076a5245635513053f3b31780c4ea6bd25359cadd26de1d0d03ffb5aa79af" kindref="member">PKCS8_PRIVATE_EC_PUBKEY</ref>,<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="618"><highlight class="normal"><sp/><sp/><ref refid="cryptx_8h_1a5d7e076a5245635513053f3b31780c4ea9790db7a5e3d888caa4b576d6a79c1c1" kindref="member">PKCS8_PRIVATE_EC_FIELDS</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="619" refid="cryptx_8h_1a5d7e076a5245635513053f3b31780c4ea9790db7a5e3d888caa4b576d6a79c1c1" refkind="member"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="620"><highlight class="normal"></highlight></codeline>
+<codeline lineno="622" refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4" refkind="member"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="623"><highlight class="normal"><sp/><sp/>PKCS_OK,</highlight></codeline>
+<codeline lineno="624"><highlight class="normal"><sp/><sp/>PKCS_INVALID_ARG,</highlight></codeline>
+<codeline lineno="625"><highlight class="normal"><sp/><sp/>PKCS_UNSUPPORTED,</highlight></codeline>
+<codeline lineno="626"><highlight class="normal"><sp/><sp/>PKCS_INVALID_DATA,</highlight></codeline>
+<codeline lineno="627"><highlight class="normal">}<sp/><ref refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4" kindref="member">pkcs_error_t</ref>;</highlight></codeline>
+<codeline lineno="628"><highlight class="normal"></highlight></codeline>
+<codeline lineno="630" refid="structcryptx__pkcs8__pubkey" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__pkcs8__pubkey" kindref="compound">cryptx_pkcs8_pubkey</ref><sp/>{</highlight></codeline>
+<codeline lineno="631" refid="structcryptx__pkcs8__pubkey_1a74803b2599c69d7084d2fd3dff518750" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="structcryptx__pkcs8__pubkey_1a74803b2599c69d7084d2fd3dff518750" kindref="member">error</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="632" refid="structcryptx__pkcs8__pubkey_1a215b479bc956ec6452b3d7304a1c3243" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__asn1__object" kindref="compound">cryptx_asn1_object</ref><sp/><ref refid="structcryptx__pkcs8__pubkey_1a215b479bc956ec6452b3d7304a1c3243" kindref="member">objectid</ref>;<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="633"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">union<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="634"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__asn1__object" kindref="compound">cryptx_asn1_object</ref><sp/>ec_fields[<ref refid="cryptx_8h_1a013b9acd1ec2148f8bd159dbdf783713a28b860237672a83cd9752fb68b2405c1" kindref="member">PKCS8_PUBLIC_EC_FIELDS</ref>];</highlight></codeline>
+<codeline lineno="635"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__asn1__object" kindref="compound">cryptx_asn1_object</ref><sp/>rsa_fields[<ref refid="cryptx_8h_1ad7f8765e037450556596efeb6c19ca6ca45f3dfda11cb8657f506aafa1132c539" kindref="member">PKCS8_PUBLIC_RSA_FIELDS</ref>];</highlight></codeline>
+<codeline lineno="636" refid="structcryptx__pkcs8__pubkey_1ab4aae8eae36733aadb39c6f655ecd453" refkind="member"><highlight class="normal"><sp/><sp/>}<sp/><ref refid="structcryptx__pkcs8__pubkey_1ab4aae8eae36733aadb39c6f655ecd453" kindref="member">publickey</ref>;<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="637" refid="structcryptx__pkcs8__pubkey_1a7ee270392d5b048d62d1385552124920" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="structcryptx__pkcs8__pubkey_1a7ee270392d5b048d62d1385552124920" kindref="member">len</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="638" refid="structcryptx__pkcs8__pubkey_1ab6be42e76e2eaf5abac08796816f1c07" refkind="member"><highlight class="normal"><sp/><sp/>uint8_t<sp/><ref refid="structcryptx__pkcs8__pubkey_1ab6be42e76e2eaf5abac08796816f1c07" kindref="member">raw</ref>[];<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="639"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="640"><highlight class="normal"></highlight></codeline>
+<codeline lineno="642" refid="structcryptx__pkcs8__privkey" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref><sp/>{</highlight></codeline>
+<codeline lineno="643" refid="structcryptx__pkcs8__privkey_1ace700e3eda00fd25681c6bf5a305c8a0" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="structcryptx__pkcs8__privkey_1ace700e3eda00fd25681c6bf5a305c8a0" kindref="member">error</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="644" refid="structcryptx__pkcs8__privkey_1a56408e6d7e5c649e17147b5c8789a1f2" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__asn1__object" kindref="compound">cryptx_asn1_object</ref><sp/><ref refid="structcryptx__pkcs8__privkey_1a56408e6d7e5c649e17147b5c8789a1f2" kindref="member">objectid</ref>;<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="645"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">union<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="646"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__asn1__object" kindref="compound">cryptx_asn1_object</ref><sp/>rsa_fields[<ref refid="cryptx_8h_1abb9a88dda2a31903b66341fcdf928c0aa6d75b466f683aa54745b97230a37af45" kindref="member">PKCS8_PRIVATE_RSA_FIELDS</ref>];</highlight></codeline>
+<codeline lineno="647"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__asn1__object" kindref="compound">cryptx_asn1_object</ref><sp/>ec_fields[<ref refid="cryptx_8h_1a5d7e076a5245635513053f3b31780c4ea9790db7a5e3d888caa4b576d6a79c1c1" kindref="member">PKCS8_PRIVATE_EC_FIELDS</ref>];</highlight></codeline>
+<codeline lineno="648" refid="structcryptx__pkcs8__privkey_1aa1a2b1090103a0b4c287a446d383a175" refkind="member"><highlight class="normal"><sp/><sp/>}<sp/><ref refid="structcryptx__pkcs8__privkey_1aa1a2b1090103a0b4c287a446d383a175" kindref="member">privatekey</ref>;<sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="649" refid="structcryptx__pkcs8__privkey_1a0d256e0957b8f30b1dd15e2b17b77ed2" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="structcryptx__pkcs8__privkey_1a0d256e0957b8f30b1dd15e2b17b77ed2" kindref="member">len</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="650" refid="structcryptx__pkcs8__privkey_1ad7aa3f5c6cea36dad67ff0d2a3dc076a" refkind="member"><highlight class="normal"><sp/><sp/>uint8_t<sp/><ref refid="structcryptx__pkcs8__privkey_1ad7aa3f5c6cea36dad67ff0d2a3dc076a" kindref="member">raw</ref>[];<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="651"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="652"><highlight class="normal"></highlight></codeline>
+<codeline lineno="654"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>cryptx_pkcs8_objectid_rsa[]<sp/>=<sp/>{0x2A,0x86,0x48,0x86,0xF7,0x0D,0x01,0x01,0x01,0};</highlight></codeline>
+<codeline lineno="656"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>cryptx_pkcs8_objectid_ec[]<sp/>=<sp/>{0x2A,0x86,0x48,0xCE,0x3D,0x02,0x01,0};</highlight></codeline>
+<codeline lineno="658"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>cryptx_pkcs8_curveid_sect233k1[]<sp/>=<sp/>{0x2B,0x81,0x04,0x00,0x1A};</highlight></codeline>
+<codeline lineno="659"><highlight class="normal"></highlight></codeline>
+<codeline lineno="669" refid="cryptx_8h_1aa187a2f43e4b3524082b0e8b649ae767" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__pkcs8__pubkey" kindref="compound">cryptx_pkcs8_pubkey</ref><sp/>*<ref refid="cryptx_8h_1aa187a2f43e4b3524082b0e8b649ae767" kindref="member">cryptx_pkcs8_import_publickey</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*data,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="structcryptx__pkcs8__pubkey_1a7ee270392d5b048d62d1385552124920" kindref="member">len</ref>,</highlight></codeline>
+<codeline lineno="670"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>(*malloc)(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">));</highlight></codeline>
+<codeline lineno="671"><highlight class="normal"></highlight></codeline>
+<codeline lineno="681" refid="cryptx_8h_1a1d8ba96af68c8fe00b1aed438fff3495" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref><sp/>*<ref refid="cryptx_8h_1a1d8ba96af68c8fe00b1aed438fff3495" kindref="member">cryptx_pkcs8_import_privatekey</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*data,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="structcryptx__pkcs8__privkey_1a0d256e0957b8f30b1dd15e2b17b77ed2" kindref="member">len</ref>,</highlight></codeline>
+<codeline lineno="682"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>(*malloc)(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">));</highlight></codeline>
+<codeline lineno="683"><highlight class="normal"></highlight></codeline>
+<codeline lineno="689" refid="cryptx_8h_1a78fb5286dbb1dd4443ca8fbc33005750" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a78fb5286dbb1dd4443ca8fbc33005750" kindref="member">cryptx_pkcs8_free_publickey</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__pkcs8__pubkey" kindref="compound">cryptx_pkcs8_pubkey</ref><sp/>*pk,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>(*free)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*));</highlight></codeline>
+<codeline lineno="690"><highlight class="normal"></highlight></codeline>
+<codeline lineno="696" refid="cryptx_8h_1a793f8cb12a267c4c2cff1bcc494f2de3" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a793f8cb12a267c4c2cff1bcc494f2de3" kindref="member">cryptx_pkcs8_free_privatekey</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__pkcs8__privkey" kindref="compound">cryptx_pkcs8_privkey</ref><sp/>*pk,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>(*free)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*));</highlight></codeline>
 <codeline lineno="697"><highlight class="normal"></highlight></codeline>
-<codeline lineno="698"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>CRYPTX_ENABLE_HAZMAT</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="699"><highlight class="normal"></highlight></codeline>
-<codeline lineno="707" refid="cryptx_8h_1aa26dcd5f7c0f1f679c91268bc5b69455" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1aa26dcd5f7c0f1f679c91268bc5b69455" kindref="member">cryptx_hazmat_aes_ecb_encrypt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*block_in,</highlight></codeline>
-<codeline lineno="708"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*block_out,</highlight></codeline>
-<codeline lineno="709"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>ks);</highlight></codeline>
-<codeline lineno="710"><highlight class="normal"></highlight></codeline>
-<codeline lineno="718" refid="cryptx_8h_1a705b398f84e2020d762a0ce03c90bd90" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a705b398f84e2020d762a0ce03c90bd90" kindref="member">cryptx_hazmat_aes_ecb_decrypt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*block_in,</highlight></codeline>
-<codeline lineno="719"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*block_out,</highlight></codeline>
-<codeline lineno="720"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>cryptx_aes_ctx*<sp/>ks);</highlight></codeline>
-<codeline lineno="721"><highlight class="normal"></highlight></codeline>
-<codeline lineno="735" refid="cryptx_8h_1a686d9781ff0de6cf06424df197ce6e1e" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a686d9781ff0de6cf06424df197ce6e1e" kindref="member">cryptx_hazmat_rsa_oaep_encode</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*plaintext,</highlight></codeline>
-<codeline lineno="736"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,</highlight></codeline>
-<codeline lineno="737"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*encoded,</highlight></codeline>
-<codeline lineno="738"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>modulus_len,</highlight></codeline>
-<codeline lineno="739"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>*auth,</highlight></codeline>
-<codeline lineno="740"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>hash_alg);</highlight></codeline>
-<codeline lineno="741"><highlight class="normal"></highlight></codeline>
-<codeline lineno="753" refid="cryptx_8h_1ab367fc9a33e00bee5e9a9f8df5f2a697" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1ab367fc9a33e00bee5e9a9f8df5f2a697" kindref="member">cryptx_hazmat_rsa_oaep_decode</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*encoded,</highlight></codeline>
-<codeline lineno="754"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,</highlight></codeline>
-<codeline lineno="755"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*plaintext,</highlight></codeline>
-<codeline lineno="756"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>*auth,</highlight></codeline>
-<codeline lineno="757"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>hash_alg);</highlight></codeline>
-<codeline lineno="758"><highlight class="normal"></highlight></codeline>
-<codeline lineno="767" refid="cryptx_8h_1a71ea61142ac4e58af9d8b8c9d2d17685" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a70bc16d6ac300e87e3fc9c9847254bd1" kindref="member">cryptx_hazmat_powmod</ref>(uint8_t<sp/>size,<sp/>uint8_t<sp/>*restrict<sp/>base,<sp/>uint24_t<sp/>exp,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>*restrict<sp/>mod);</highlight></codeline>
-<codeline lineno="768"><highlight class="normal"></highlight></codeline>
-<codeline lineno="770" refid="cryptx_8h_1ad0e904358b21cab26ad541d594184a89" refkind="member"><highlight class="preprocessor">#define<sp/>CRYPTX_GF2_INTLEN<sp/>30</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="771"><highlight class="normal"></highlight></codeline>
-<codeline lineno="773" refid="structcryptx__ecc__point" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref><sp/>{</highlight></codeline>
-<codeline lineno="774"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>x[<ref refid="cryptx_8h_1ad0e904358b21cab26ad541d594184a89" kindref="member">CRYPTX_GF2_INTLEN</ref>];</highlight></codeline>
-<codeline lineno="775"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>y[<ref refid="cryptx_8h_1ad0e904358b21cab26ad541d594184a89" kindref="member">CRYPTX_GF2_INTLEN</ref>];</highlight></codeline>
-<codeline lineno="776"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="777"><highlight class="normal"></highlight></codeline>
-<codeline lineno="784"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a71ea61142ac4e58af9d8b8c9d2d17685" kindref="member">cryptx_hazmat_ecc_point_add</ref>(<ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref>*<sp/>p,<sp/><ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref>*<sp/>q);</highlight></codeline>
-<codeline lineno="785"><highlight class="normal"></highlight></codeline>
-<codeline lineno="791" refid="cryptx_8h_1ae4b37d491cbd4d5a16e0fb84d87b9270" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1ae4b37d491cbd4d5a16e0fb84d87b9270" kindref="member">cryptx_hazmat_ecc_point_double</ref>(<ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref>*<sp/>p);</highlight></codeline>
-<codeline lineno="792"><highlight class="normal"></highlight></codeline>
-<codeline lineno="800" refid="cryptx_8h_1adf9bad66ca13288b71d9306d9c0a55e0" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1adf9bad66ca13288b71d9306d9c0a55e0" kindref="member">cryptx_hazmat_ecc_point_mul_scalar</ref>(<ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref>*<sp/>p,</highlight></codeline>
-<codeline lineno="801"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t*<sp/>scalar,</highlight></codeline>
-<codeline lineno="802"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>scalar_bit_width);</highlight></codeline>
-<codeline lineno="803"><highlight class="normal"></highlight></codeline>
-<codeline lineno="804"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="805"><highlight class="normal"></highlight></codeline>
-<codeline lineno="806"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+<codeline lineno="698"><highlight class="normal"></highlight></codeline>
+<codeline lineno="699"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>CRYPTX_ENABLE_HAZMAT</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="700"><highlight class="normal"></highlight></codeline>
+<codeline lineno="708" refid="cryptx_8h_1aa26dcd5f7c0f1f679c91268bc5b69455" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1aa26dcd5f7c0f1f679c91268bc5b69455" kindref="member">cryptx_hazmat_aes_ecb_encrypt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*block_in,</highlight></codeline>
+<codeline lineno="709"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*block_out,</highlight></codeline>
+<codeline lineno="710"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__aes__ctx" kindref="compound">cryptx_aes_ctx</ref>*<sp/>ks);</highlight></codeline>
+<codeline lineno="711"><highlight class="normal"></highlight></codeline>
+<codeline lineno="719" refid="cryptx_8h_1a705b398f84e2020d762a0ce03c90bd90" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a705b398f84e2020d762a0ce03c90bd90" kindref="member">cryptx_hazmat_aes_ecb_decrypt</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*block_in,</highlight></codeline>
+<codeline lineno="720"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*block_out,</highlight></codeline>
+<codeline lineno="721"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structcryptx__aes__ctx" kindref="compound">cryptx_aes_ctx</ref>*<sp/>ks);</highlight></codeline>
+<codeline lineno="722"><highlight class="normal"></highlight></codeline>
+<codeline lineno="736" refid="cryptx_8h_1a686d9781ff0de6cf06424df197ce6e1e" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a686d9781ff0de6cf06424df197ce6e1e" kindref="member">cryptx_hazmat_rsa_oaep_encode</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*plaintext,</highlight></codeline>
+<codeline lineno="737"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="structcryptx__pkcs8__privkey_1a0d256e0957b8f30b1dd15e2b17b77ed2" kindref="member">len</ref>,</highlight></codeline>
+<codeline lineno="738"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*encoded,</highlight></codeline>
+<codeline lineno="739"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>modulus_len,</highlight></codeline>
+<codeline lineno="740"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>*auth,</highlight></codeline>
+<codeline lineno="741"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>hash_alg);</highlight></codeline>
+<codeline lineno="742"><highlight class="normal"></highlight></codeline>
+<codeline lineno="754" refid="cryptx_8h_1ab367fc9a33e00bee5e9a9f8df5f2a697" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1ab367fc9a33e00bee5e9a9f8df5f2a697" kindref="member">cryptx_hazmat_rsa_oaep_decode</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*encoded,</highlight></codeline>
+<codeline lineno="755"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="structcryptx__pkcs8__privkey_1a0d256e0957b8f30b1dd15e2b17b77ed2" kindref="member">len</ref>,</highlight></codeline>
+<codeline lineno="756"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*plaintext,</highlight></codeline>
+<codeline lineno="757"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>*auth,</highlight></codeline>
+<codeline lineno="758"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint8_t<sp/>hash_alg);</highlight></codeline>
+<codeline lineno="759"><highlight class="normal"></highlight></codeline>
+<codeline lineno="768" refid="cryptx_8h_1a71ea61142ac4e58af9d8b8c9d2d17685" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a70bc16d6ac300e87e3fc9c9847254bd1" kindref="member">cryptx_hazmat_powmod</ref>(uint8_t<sp/>size,<sp/>uint8_t<sp/>*restrict<sp/>base,<sp/>uint24_t<sp/>exp,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t<sp/>*restrict<sp/>mod);</highlight></codeline>
+<codeline lineno="769"><highlight class="normal"></highlight></codeline>
+<codeline lineno="771" refid="cryptx_8h_1ad0e904358b21cab26ad541d594184a89" refkind="member"><highlight class="preprocessor">#define<sp/>CRYPTX_GF2_INTLEN<sp/>30</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="772"><highlight class="normal"></highlight></codeline>
+<codeline lineno="774" refid="structcryptx__ecc__point" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref><sp/>{</highlight></codeline>
+<codeline lineno="775"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>x[<ref refid="cryptx_8h_1ad0e904358b21cab26ad541d594184a89" kindref="member">CRYPTX_GF2_INTLEN</ref>];</highlight></codeline>
+<codeline lineno="776"><highlight class="normal"><sp/><sp/><sp/><sp/>uint8_t<sp/>y[<ref refid="cryptx_8h_1ad0e904358b21cab26ad541d594184a89" kindref="member">CRYPTX_GF2_INTLEN</ref>];</highlight></codeline>
+<codeline lineno="777"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="778"><highlight class="normal"></highlight></codeline>
+<codeline lineno="785"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1a71ea61142ac4e58af9d8b8c9d2d17685" kindref="member">cryptx_hazmat_ecc_point_add</ref>(<ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref>*<sp/>p,<sp/><ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref>*<sp/>q);</highlight></codeline>
+<codeline lineno="786"><highlight class="normal"></highlight></codeline>
+<codeline lineno="792" refid="cryptx_8h_1ae4b37d491cbd4d5a16e0fb84d87b9270" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1ae4b37d491cbd4d5a16e0fb84d87b9270" kindref="member">cryptx_hazmat_ecc_point_double</ref>(<ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref>*<sp/>p);</highlight></codeline>
+<codeline lineno="793"><highlight class="normal"></highlight></codeline>
+<codeline lineno="801" refid="cryptx_8h_1adf9bad66ca13288b71d9306d9c0a55e0" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="cryptx_8h_1adf9bad66ca13288b71d9306d9c0a55e0" kindref="member">cryptx_hazmat_ecc_point_mul_scalar</ref>(<ref refid="structcryptx__ecc__point" kindref="compound">cryptx_ecc_point</ref>*<sp/>p,</highlight></codeline>
+<codeline lineno="802"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>uint8_t*<sp/>scalar,</highlight></codeline>
+<codeline lineno="803"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>scalar_bit_width);</highlight></codeline>
+<codeline lineno="804"><highlight class="normal"></highlight></codeline>
+<codeline lineno="805"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="806"><highlight class="normal"></highlight></codeline>
+<codeline lineno="807"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
     </programlisting>
     <location file="/Users/acagliano/Library/Mobile Documents/com~apple~CloudDocs/Repositories/toolchain/src/cryptx/cryptx.h"/>
   </compounddef>

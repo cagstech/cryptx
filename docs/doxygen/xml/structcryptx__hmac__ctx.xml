@@ -2,6 +2,7 @@
 <doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.7" xml:lang="en-US">
   <compounddef id="structcryptx__hmac__ctx" kind="struct" language="C++" prot="public">
     <compoundname>cryptx_hmac_ctx</compoundname>
+    <includes refid="cryptx_8h" local="no">cryptx.h</includes>
       <sectiondef kind="public-attrib">
       <memberdef kind="variable" id="structcryptx__hmac__ctx_1ad94b42907c9265c29e78b4438fcbeb30" prot="public" static="no" mutable="no">
         <type>bool(*</type>
@@ -80,12 +81,17 @@
       </memberdef>
       </sectiondef>
     <briefdescription>
+<para>HMAC state context. </para>
     </briefdescription>
     <detaileddescription>
+<sect3 id="structcryptx__hmac__ctx_1autotoc_md0">
+<title>HASH-BASED MESSAGE AUTHENTICATION CODE (HMAC) – Use to verify data integrity and authenticity.</title>
+</sect3>
     </detaileddescription>
     <collaborationgraph>
       <node id="1">
         <label>cryptx_hmac_ctx</label>
+        <link refid="structcryptx__hmac__ctx"/>
         <childnode refid="2" relation="usage">
           <edgelabel>metadata</edgelabel>
         </childnode>

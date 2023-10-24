@@ -2,6 +2,7 @@
 <doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.7" xml:lang="en-US">
   <compounddef id="structcryptx__hash__ctx" kind="struct" language="C++" prot="public">
     <compoundname>cryptx_hash_ctx</compoundname>
+    <includes refid="cryptx_8h" local="no">cryptx.h</includes>
       <sectiondef kind="public-attrib">
       <memberdef kind="variable" id="structcryptx__hash__ctx_1ae1cc61f269fa5bbf1e8a36b9526c138a" prot="public" static="no" mutable="no">
         <type>bool(*</type>
@@ -80,12 +81,14 @@
       </memberdef>
       </sectiondef>
     <briefdescription>
+<para>Hash state context. </para>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
       <node id="1">
         <label>cryptx_hash_ctx</label>
+        <link refid="structcryptx__hash__ctx"/>
         <childnode refid="2" relation="usage">
           <edgelabel>metadata</edgelabel>
         </childnode>

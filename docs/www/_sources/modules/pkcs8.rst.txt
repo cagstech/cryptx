@@ -30,16 +30,27 @@ PKCS#8 typically encodes keydata using the following workflow:
     base64-encoded encrypted private key
     -----END ENCRYPTED PRIVATE KEY-----
   
+Enumerations
+_____________
   
+.. doxygenenum:: _pkcs8_pubkey_rsa_fields
+
+.. doxygenenum:: _pkcs8_pubkey_ec_fields
+
+.. doxygenenum:: _pkcs8_privkey_rsa_fields
+
+.. doxygenenum:: _pkcs8_privkey_ec_fields
 
 Structures
 _____________
 
 .. doxygenstruct:: cryptx_pkcs8_pubkey
   :project: CryptX
+  :members:
   
 .. doxygenstruct:: cryptx_pkcs8_privkey
   :project: CryptX
+  :members:
   
 .. note::
 

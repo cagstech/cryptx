@@ -94,7 +94,8 @@
 <dl class="cpp enum">
 <dt class="sig sig-object cpp" id="_CPPv422cryptx_hash_algorithms">
 <span id="_CPPv322cryptx_hash_algorithms"></span><span id="_CPPv222cryptx_hash_algorithms"></span><span class="target" id="cryptx_8h_1a57f2f69b5ad395749c8604ca9f43f93b"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hash_algorithms</span></span></span><a class="headerlink" href="#_CPPv422cryptx_hash_algorithms" title="Permalink to this definition"></a><br /></dt>
-<dd><p><em>Values:</em></p>
+<dd><p>Supported hash algorithms. </p>
+<p><em>Values:</em></p>
 <dl class="cpp enumerator">
 <dt class="sig sig-object cpp" id="_CPPv4N22cryptx_hash_algorithms6SHA256E">
 <span id="_CPPv3N22cryptx_hash_algorithms6SHA256E"></span><span id="_CPPv2N22cryptx_hash_algorithms6SHA256E"></span><span class="target" id="cryptx_8h_1a57f2f69b5ad395749c8604ca9f43f93bac7716785728694693ec29eccd5ffa0e1"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SHA256</span></span></span><a class="headerlink" href="#_CPPv4N22cryptx_hash_algorithms6SHA256E" title="Permalink to this definition"></a><br /></dt>
@@ -130,11 +131,11 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv416cryptx_hash_initP15cryptx_hash_ctx7uint8_t">
 <span id="_CPPv316cryptx_hash_initP15cryptx_hash_ctx7uint8_t"></span><span id="_CPPv216cryptx_hash_initP15cryptx_hash_ctx7uint8_t"></span><span id="cryptx_hash_init__cryptx_hash_ctxP.uint8_t"></span><span class="target" id="cryptx_8h_1a70b79d7bbba52b64700123ab77ab5a28"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hash_init</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_hash_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">hash_alg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416cryptx_hash_initP15cryptx_hash_ctx7uint8_t" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Initializes a hash-state context for a specific hash algorithm. </p>
+<dd><p>Initializes a context for a specific hash algorithm. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>context</strong> – Pointer to a hash-state context. </p></li>
+<li><p><strong>context</strong> – Pointer to a ontext. </p></li>
 <li><p><strong>hash_alg</strong> – The numeric ID of the hashing algorithm to use. See <strong>cryptx_hash_algorithms</strong>. </p></li>
 </ul>
 </dd>
@@ -147,11 +148,11 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv418cryptx_hash_updateP15cryptx_hash_ctxPKv6size_t">
 <span id="_CPPv318cryptx_hash_updateP15cryptx_hash_ctxPKv6size_t"></span><span id="_CPPv218cryptx_hash_updateP15cryptx_hash_ctxPKv6size_t"></span><span id="cryptx_hash_update__cryptx_hash_ctxP.voidCP.s"></span><span class="target" id="cryptx_8h_1a0df23ee0aff04b31db05f5175bfe63a2"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hash_update</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_hash_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_hash_updateP15cryptx_hash_ctxPKv6size_t" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Updates the hash-state for a given block of data. </p>
+<dd><p>Updates the context for a given block of data. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>context</strong> – Pointer to a hash-state context. </p></li>
+<li><p><strong>context</strong> – Pointer to a context. </p></li>
 <li><p><strong>data</strong> – Pointer to a block of data to hash.. </p></li>
 <li><p><strong>len</strong> – Size of the <strong>data</strong> to hash. </p></li>
 </ul>
@@ -162,11 +163,11 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv418cryptx_hash_digestP15cryptx_hash_ctxPv">
 <span id="_CPPv318cryptx_hash_digestP15cryptx_hash_ctxPv"></span><span id="_CPPv218cryptx_hash_digestP15cryptx_hash_ctxPv"></span><span id="cryptx_hash_digest__cryptx_hash_ctxP.voidP"></span><span class="target" id="cryptx_8h_1a1444bb4124409dbae8088ffbc9830ee3"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_hash_digest</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">cryptx_hash_ctx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">digest</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418cryptx_hash_digestP15cryptx_hash_ctxPv" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Output digest for current hash-state (preserves state). </p>
+<dd><p>Output digest for current context (preserves state). </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>context</strong> – Pointer to a hash-state context. </p></li>
+<li><p><strong>context</strong> – Pointer to a context. </p></li>
 <li><p><strong>digest</strong> – Pointer to a buffer to write digest to. </p></li>
 </ul>
 </dd>

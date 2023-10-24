@@ -2,6 +2,7 @@
 <doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.7" xml:lang="en-US">
   <compounddef id="structcryptx__aes__ctx" kind="struct" language="C++" prot="public">
     <compoundname>cryptx_aes_ctx</compoundname>
+    <includes refid="cryptx_8h" local="no">cryptx.h</includes>
       <sectiondef kind="public-attrib">
       <memberdef kind="variable" id="structcryptx__aes__ctx_1aed50e8b9a653c1d20a0f324789ba8f84" prot="public" static="no" mutable="no">
         <type>uint24_t</type>
@@ -97,6 +98,10 @@
     <briefdescription>
     </briefdescription>
     <detaileddescription>
+<sect3 id="structcryptx__aes__ctx_1autotoc_md1">
+<title>ADVANCED ENCRYPTION STANARD</title>
+<para>Cipher state context for AES </para>
+</sect3>
     </detaileddescription>
     <collaborationgraph>
       <node id="4">
@@ -109,6 +114,7 @@
       </node>
       <node id="1">
         <label>cryptx_aes_ctx</label>
+        <link refid="structcryptx__aes__ctx"/>
         <childnode refid="2" relation="usage">
           <edgelabel>metadata</edgelabel>
         </childnode>
