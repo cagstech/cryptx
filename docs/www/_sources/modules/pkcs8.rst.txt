@@ -59,6 +59,12 @@ __________
  
 .. doxygenfunction:: cryptx_pkcs8_free_privatekey
 	:project: CryptX
+ 
+.. note::
+
+  Remember to call the corresponding *free* method for any structure allocated with the module or you may wind up with memory leaks.
+
+----
 
 You can import your keyfiles like so:
 
@@ -190,12 +196,11 @@ This section lists object identifiers for algorithms supported by this library. 
 
 **Bear in mind that while this module can successfully import objects for most algorithm types, only the ones listed below can actually be USED by the library.**
 
-+----------------+--------------------------+---------------------------------------+
-| Algorithm      | Object Identifier        | Bytes                                 |
-+================+==========================+=======================================+
-| RSA            | 1.2.840.113549.1.1.1     | $2A,$86,$48,$86,$F7,$0D,$01,$01,$01   |
-+----------------+--------------------------+---------------------------------------+
-| Elliptic Curve | 1.2.840.10045.2.1        | $2A,$86,$48,$CE,$3D,$02,$01           |
-+----------------+--------------------------+---------------------------------------+
-| EC_SECT233K1   | 1.3.132.0.26             | $2B,$81,$04,$00,$1A                   |
-+----------------+--------------------------+---------------------------------------+
+.. doxygenvariable:: cryptx_pkcs8_objectid_rsa
+  :project: CryptX
+
+.. doxygenvariable:: cryptx_pkcs8_objectid_ec
+  :project: CryptX
+
+.. doxygenvariable:: cryptx_pkcs8_curveid_sect233k1
+  :project: CryptX
