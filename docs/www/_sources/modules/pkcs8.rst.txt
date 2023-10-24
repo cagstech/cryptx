@@ -81,6 +81,9 @@ You can import your keyfiles like so:
 
 .. code-block:: c
 
+  // assume that you have generated a keypair using openssl or some similar software
+  // then converted to appvars 'MyPub' and 'MyPriv' using convbin,
+  // then transferred both to your calculator
   char *pubkey_fname = "MyPub";
   char *privkey_fname = "MyPriv";
   uint8_t fp;

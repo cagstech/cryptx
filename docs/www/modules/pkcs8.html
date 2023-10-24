@@ -478,7 +478,10 @@
 </div>
 <hr class="docutils" />
 <p>You can import your keyfiles like so:</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">pubkey_fname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MyPub&quot;</span><span class="p">;</span>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// assume that you have generated a keypair using openssl or some similar software</span>
+<span class="c1">// then converted to appvars &#39;MyPub&#39; and &#39;MyPriv&#39; using convbin,</span>
+<span class="c1">// then transferred both to your calculator</span>
+<span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">pubkey_fname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MyPub&quot;</span><span class="p">;</span>
 <span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">privkey_fname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MyPriv&quot;</span><span class="p">;</span>
 <span class="kt">uint8_t</span><span class="w"> </span><span class="n">fp</span><span class="p">;</span>
 <span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">key_data</span><span class="p">;</span>
