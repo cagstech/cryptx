@@ -662,7 +662,8 @@ static const uint8_t cryptx_pkcs8_curveid_sect233k1[] = {0x2B,0x81,0x04,0x00,0x1
  * @param len   Length of key data to import.
  * @param malloc     Pointer to toolchain @b malloc function.
  * @returns A malloc'd @b cryptx_pkcs8_pubkey structure populated with key metadata.
- * @returns The @b error field of the structure set to @b True if an internal error occured.
+ * @returns NULL if arguments invalid or allocation failure.
+ * @returns The @b error field of the structure set to @b True if a deserialization error occurred.
  */
 struct cryptx_pkcs8_pubkey *cryptx_pkcs8_import_publickey(void *data, size_t len,
                                                           void* (*malloc)(size_t));
@@ -673,7 +674,8 @@ struct cryptx_pkcs8_pubkey *cryptx_pkcs8_import_publickey(void *data, size_t len
  * @param len   Length of key data to import.
  * @param malloc     Pointer to toolchain @b malloc function.
  * @returns A malloc'd @b cryptx_pkcs8_privkey structure populated with key metadata.
- * @returns The @b error field of the structure set to @b True if an internal error occured.
+ * @returns NULL if arguments invalid or allocation failure.
+ * @returns The @b error field of the structure set to @b True if a deserialization error occurred.
  */
 struct cryptx_pkcs8_privkey *cryptx_pkcs8_import_privatekey(void *data, size_t len,
                                                             void* (*malloc)(size_t));
