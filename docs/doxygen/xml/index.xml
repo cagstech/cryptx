@@ -65,39 +65,23 @@
   <compound refid="unioncryptx__hmac__private__h" kind="union"><name>cryptx_hmac_private_h</name>
     <member refid="unioncryptx__hmac__private__h_1affa5ba199a186161ee892222e5e63331" kind="variable"><name>sha256</name></member>
   </compound>
-  <compound refid="structcryptx__pkcs8__privkeyinfo" kind="struct"><name>cryptx_pkcs8_privkeyinfo</name>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1a0b805836df5beaeae35b69dadaad7c1e" kind="variable"><name>version</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1a9a0497b1f5b387cf0c37948c5aa691ae" kind="variable"><name>bytes</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1a24f0b3e500dbd899a7687abcb1d7b74a" kind="variable"><name>len</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1a9506fc4da8bdf227502e0dc935dd5403" kind="variable"><name>objectid</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1a9897f5240b585f457893c67bb4f6669f" kind="variable"><name>modulus</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1a0ad0673a5fe90b437a0511d68a2cdb8f" kind="variable"><name>public_exponent</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1aff4e660e5633a983b4e9c0da51e5022a" kind="variable"><name>exponent</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1adc69d448a125e2b84c46a62db4fff31e" kind="variable"><name>p</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1a1c5494cdb4c0b3733628c8a2a7c09396" kind="variable"><name>q</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1a50256aadf43d8c2135dc7333e54d5d0e" kind="variable"><name>exp1</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1a7544a29f2f6384ecfcf9a2cac863cd10" kind="variable"><name>exp2</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1adde60f49077afc49c994b8322421cd75" kind="variable"><name>coeff</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1a9370eb11caccf5440bfe3c5735faf358" kind="variable"><name>parts</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1a1a78aa66dd55e2114830d6a61c8ee5a2" kind="variable"><name>rsa</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1a8ff17aa067c3f2ce8ab189f2ef06983f" kind="variable"><name>curveid</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1a59674716d2290d0b3b5890a036ef0e66" kind="variable"><name>private</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1a8cd9baca23da0f4ce6fb5abad574f011" kind="variable"><name>compressed</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1ac1142f13a9d238790f6b504d50bbd51d" kind="variable"><name>public</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1a7638a55e2e4660f6808a1781359e8043" kind="variable"><name>ec</name></member>
-    <member refid="structcryptx__pkcs8__privkeyinfo_1ab23b960497349441d3af88eeb9ee024d" kind="variable"><name>privatekey</name></member>
+  <compound refid="structcryptx__pkcs8__privkey" kind="struct"><name>cryptx_pkcs8_privkey</name>
+    <member refid="structcryptx__pkcs8__privkey_1ace700e3eda00fd25681c6bf5a305c8a0" kind="variable"><name>error</name></member>
+    <member refid="structcryptx__pkcs8__privkey_1a56408e6d7e5c649e17147b5c8789a1f2" kind="variable"><name>objectid</name></member>
+    <member refid="structcryptx__pkcs8__privkey_1a5487847bc4d1530abef404f9674efc89" kind="variable"><name>rsa_fields</name></member>
+    <member refid="structcryptx__pkcs8__privkey_1a1990a44525d2f16a9d007d102225ff4b" kind="variable"><name>ec_fields</name></member>
+    <member refid="structcryptx__pkcs8__privkey_1aa1a2b1090103a0b4c287a446d383a175" kind="variable"><name>privatekey</name></member>
+    <member refid="structcryptx__pkcs8__privkey_1a0d256e0957b8f30b1dd15e2b17b77ed2" kind="variable"><name>len</name></member>
+    <member refid="structcryptx__pkcs8__privkey_1ad7aa3f5c6cea36dad67ff0d2a3dc076a" kind="variable"><name>raw</name></member>
   </compound>
-  <compound refid="structcryptx__pkcs8__pubkeyinfo" kind="struct"><name>cryptx_pkcs8_pubkeyinfo</name>
-    <member refid="structcryptx__pkcs8__pubkeyinfo_1a0e1c00600dfd4f60829534060ed0f163" kind="variable"><name>bytes</name></member>
-    <member refid="structcryptx__pkcs8__pubkeyinfo_1aa81b49c0be81e5ed03eb7b48e47f4e0d" kind="variable"><name>len</name></member>
-    <member refid="structcryptx__pkcs8__pubkeyinfo_1a053d8158e271003b13ef4fa9cb372dab" kind="variable"><name>objectid</name></member>
-    <member refid="structcryptx__pkcs8__pubkeyinfo_1a7706b8c8387021c27092f1853b063d57" kind="variable"><name>modulus</name></member>
-    <member refid="structcryptx__pkcs8__pubkeyinfo_1a7c2e360f603268bc369d9aeca5e039e1" kind="variable"><name>exponent</name></member>
-    <member refid="structcryptx__pkcs8__pubkeyinfo_1aa2bfea80da29c8b891a76724848dee31" kind="variable"><name>rsa</name></member>
-    <member refid="structcryptx__pkcs8__pubkeyinfo_1a62a828fdac5d4b36828cb93511b02224" kind="variable"><name>curveid</name></member>
-    <member refid="structcryptx__pkcs8__pubkeyinfo_1aedbb421fe79269c230a93728f805efa7" kind="variable"><name>compressed</name></member>
-    <member refid="structcryptx__pkcs8__pubkeyinfo_1a7d54d6cbd0f72e933f202848b83dab9d" kind="variable"><name>ec</name></member>
-    <member refid="structcryptx__pkcs8__pubkeyinfo_1a9990f2870686421fc2e8e22f9790e65d" kind="variable"><name>publickey</name></member>
+  <compound refid="structcryptx__pkcs8__pubkey" kind="struct"><name>cryptx_pkcs8_pubkey</name>
+    <member refid="structcryptx__pkcs8__pubkey_1a74803b2599c69d7084d2fd3dff518750" kind="variable"><name>error</name></member>
+    <member refid="structcryptx__pkcs8__pubkey_1a215b479bc956ec6452b3d7304a1c3243" kind="variable"><name>objectid</name></member>
+    <member refid="structcryptx__pkcs8__pubkey_1a267d5c3a01a22432efd7607f2bb3c7bf" kind="variable"><name>ec_fields</name></member>
+    <member refid="structcryptx__pkcs8__pubkey_1a769dc1b2faf2f5f04e285fcff86fdd6e" kind="variable"><name>rsa_fields</name></member>
+    <member refid="structcryptx__pkcs8__pubkey_1ab4aae8eae36733aadb39c6f655ecd453" kind="variable"><name>publickey</name></member>
+    <member refid="structcryptx__pkcs8__pubkey_1a7ee270392d5b048d62d1385552124920" kind="variable"><name>len</name></member>
+    <member refid="structcryptx__pkcs8__pubkey_1ab6be42e76e2eaf5abac08796816f1c07" kind="variable"><name>raw</name></member>
   </compound>
   <compound refid="structcryptx__priv__hash__sha256__state" kind="struct"><name>cryptx_priv_hash_sha256_state</name>
     <member refid="structcryptx__priv__hash__sha256__state_1ace8bc5d62baf6635d34d334d676f70dc" kind="variable"><name>data</name></member>
@@ -215,11 +199,39 @@
     <member refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a434628c70562f3ab468d94e8eae7784d" kind="enumvalue"><name>ASN1_END_OF_FILE</name></member>
     <member refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33aa13d20ad819d43693d26c77b80fb4952" kind="enumvalue"><name>ASN1_INVALID_ARG</name></member>
     <member refid="cryptx_8h_1a5a51cc1578f5502b17c42f16edb3fb33a0101185f2109f1ba75ea2c4833664474" kind="enumvalue"><name>ASN1_LEN_OVERFLOW</name></member>
+    <member refid="cryptx_8h_1a546f3d021fd1921cf505406af767d411" kind="enum"><name>_pkcs8_pubkey_fields</name></member>
+    <member refid="cryptx_8h_1a546f3d021fd1921cf505406af767d411a93b540a1f33ad8f9dee3a73db2d4bb3f" kind="enumvalue"><name>PKCS8_PUBLIC_OBJECTID</name></member>
+    <member refid="cryptx_8h_1a546f3d021fd1921cf505406af767d411a7320cdcf509bae5c2495a374a3cde7a6" kind="enumvalue"><name>PKCS8_PUBLIC_RSA_MODULUS</name></member>
+    <member refid="cryptx_8h_1a546f3d021fd1921cf505406af767d411aca4c231faa043d396f93573484c97f06" kind="enumvalue"><name>PKCS8_PUBLIC_RSA_EXPONENT</name></member>
+    <member refid="cryptx_8h_1a546f3d021fd1921cf505406af767d411a45f3dfda11cb8657f506aafa1132c539" kind="enumvalue"><name>PKCS8_PUBLIC_RSA_FIELDS</name></member>
+    <member refid="cryptx_8h_1a546f3d021fd1921cf505406af767d411a9dd496e2006a74ddb91514be72956d58" kind="enumvalue"><name>PKCS8_PUBLIC_EC_CURVEID</name></member>
+    <member refid="cryptx_8h_1a546f3d021fd1921cf505406af767d411a9e93917030064537caebab410d031b61" kind="enumvalue"><name>PKCS8_PUBLIC_EC_PUBKEY</name></member>
+    <member refid="cryptx_8h_1a546f3d021fd1921cf505406af767d411a28b860237672a83cd9752fb68b2405c1" kind="enumvalue"><name>PKCS8_PUBLIC_EC_FIELDS</name></member>
+    <member refid="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2" kind="enum"><name>_pkcs8_privkey_fields</name></member>
+    <member refid="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a9b5d004117c850d1db6539295ef50af3" kind="enumvalue"><name>PKCS8_PRIVATE_OBJECTID</name></member>
+    <member refid="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a5584b1029e0bc1af75363cb9d63e3c4a" kind="enumvalue"><name>PKCS8_PRIVATE_RSA_VERSION</name></member>
+    <member refid="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a1686e70a66edcd9b031141224fd4781a" kind="enumvalue"><name>PKCS8_PRIVATE_RSA_MODULUS</name></member>
+    <member refid="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2adfd61e7eb3644df96f0b622b54d2f56f" kind="enumvalue"><name>PKCS8_PRIVATE_RSA_PUBEXPONENT</name></member>
+    <member refid="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2ad13c0c49850208fc68787d9d772ae24d" kind="enumvalue"><name>PKCS8_PRIVATE_RSA_EXPONENT</name></member>
+    <member refid="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a9e9e55db2d9f5cb138a6b92b7815e4af" kind="enumvalue"><name>PKCS8_PRIVATE_RSA_P</name></member>
+    <member refid="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a791398b293713cc97345586e6de4d19e" kind="enumvalue"><name>PKCS8_PRIVATE_RSA_Q</name></member>
+    <member refid="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a295070fec0c4abed358a0c345e5beb8e" kind="enumvalue"><name>PKCS8_PRIVATE_RSA_EXP1</name></member>
+    <member refid="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a4cc42d0a99e3cd6bdea2490362d3e43a" kind="enumvalue"><name>PKCS8_PRIVATE_RSA_EXP2</name></member>
+    <member refid="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a511494ca2148567f6a536083051c3dec" kind="enumvalue"><name>PKCS8_PRIVATE_RSA_COEFF</name></member>
+    <member refid="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a6d75b466f683aa54745b97230a37af45" kind="enumvalue"><name>PKCS8_PRIVATE_RSA_FIELDS</name></member>
+    <member refid="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a0c38c9582cd6895f0b51f2d9804772ba" kind="enumvalue"><name>PKCS8_PRIVATE_EC_CURVEID</name></member>
+    <member refid="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a58dab3856acea3ad7c102e9894632991" kind="enumvalue"><name>PKCS8_PRIVATE_EC_VERSION</name></member>
+    <member refid="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2ad6fc732dbd3a40cbbee17b0e0b5d9f71" kind="enumvalue"><name>PKCS8_PRIVATE_EC_PRIVKEY</name></member>
+    <member refid="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a6bd25359cadd26de1d0d03ffb5aa79af" kind="enumvalue"><name>PKCS8_PRIVATE_EC_PUBKEY</name></member>
+    <member refid="cryptx_8h_1aa2b7f0060af055d1f476beb00ca191a2a9790db7a5e3d888caa4b576d6a79c1c1" kind="enumvalue"><name>PKCS8_PRIVATE_EC_FIELDS</name></member>
     <member refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4" kind="enum"><name>pkcs_error_t</name></member>
     <member refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4ae3e1b5568f600f599b65921673580a3b" kind="enumvalue"><name>PKCS_OK</name></member>
     <member refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4ad51855979f8e263227e0fba2132d462f" kind="enumvalue"><name>PKCS_INVALID_ARG</name></member>
     <member refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4a31909947f498b908e7709718c2ddf96f" kind="enumvalue"><name>PKCS_UNSUPPORTED</name></member>
     <member refid="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4ad98753e06ce91e41e842d85a5c7b139b" kind="enumvalue"><name>PKCS_INVALID_DATA</name></member>
+    <member refid="cryptx_8h_1aab2d5399c85cf36a966ac2a7005e5a43" kind="variable"><name>cryptx_pkcs8_objectid_rsa</name></member>
+    <member refid="cryptx_8h_1aeb9b47848c145dee3966d1ecf595f4c6" kind="variable"><name>cryptx_pkcs8_objectid_ec</name></member>
+    <member refid="cryptx_8h_1a3d28abd7e3f95b204709ff90f1329f86" kind="variable"><name>cryptx_pkcs8_curveid_sect233k1</name></member>
     <member refid="cryptx_8h_1a791c9616d63340d5f3d55673abefd768" kind="variable"><name>x</name></member>
     <member refid="cryptx_8h_1a9671c45fbc76e3760ed5b891992cf94a" kind="variable"><name>y</name></member>
     <member refid="cryptx_8h_1a70b79d7bbba52b64700123ab77ab5a28" kind="function"><name>cryptx_hash_init</name></member>
@@ -249,8 +261,10 @@
     <member refid="cryptx_8h_1a9186c5bce6ceb6062ce9c01355f4346e" kind="function"><name>cryptx_asn1_decode</name></member>
     <member refid="cryptx_8h_1a3e216a54646a3f7d04c37102905ef850" kind="function"><name>cryptx_base64_encode</name></member>
     <member refid="cryptx_8h_1a28db41653bf7ba5ef8bfcef425343722" kind="function"><name>cryptx_base64_decode</name></member>
-    <member refid="cryptx_8h_1aaeb83227ffd725be2451cdf0a7748462" kind="function"><name>cryptx_pkcs8_import_publickey</name></member>
-    <member refid="cryptx_8h_1a2dbbf13c5e7328b859b4b582546b428e" kind="function"><name>cryptx_pkcs8_import_privatekey</name></member>
+    <member refid="cryptx_8h_1aa187a2f43e4b3524082b0e8b649ae767" kind="function"><name>cryptx_pkcs8_import_publickey</name></member>
+    <member refid="cryptx_8h_1a1d8ba96af68c8fe00b1aed438fff3495" kind="function"><name>cryptx_pkcs8_import_privatekey</name></member>
+    <member refid="cryptx_8h_1a78fb5286dbb1dd4443ca8fbc33005750" kind="function"><name>cryptx_pkcs8_free_publickey</name></member>
+    <member refid="cryptx_8h_1a793f8cb12a267c4c2cff1bcc494f2de3" kind="function"><name>cryptx_pkcs8_free_privatekey</name></member>
     <member refid="cryptx_8h_1aa26dcd5f7c0f1f679c91268bc5b69455" kind="function"><name>cryptx_hazmat_aes_ecb_encrypt</name></member>
     <member refid="cryptx_8h_1a705b398f84e2020d762a0ce03c90bd90" kind="function"><name>cryptx_hazmat_aes_ecb_decrypt</name></member>
     <member refid="cryptx_8h_1a686d9781ff0de6cf06424df197ce6e1e" kind="function"><name>cryptx_hazmat_rsa_oaep_encode</name></member>

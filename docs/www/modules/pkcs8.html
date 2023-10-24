@@ -41,7 +41,6 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">PKCS#8</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#structures">Structures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#response-codes">Response Codes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#additional-info">Additional Info</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#pkcs-8-specification">PKCS#8 Specification</a></li>
@@ -119,92 +118,90 @@
 <div class="section" id="structures">
 <h2>Structures<a class="headerlink" href="#structures" title="Permalink to this headline"></a></h2>
 <dl class="cpp struct">
-<dt class="sig sig-object cpp" id="_CPPv423cryptx_pkcs8_pubkeyinfo">
-<span id="_CPPv323cryptx_pkcs8_pubkeyinfo"></span><span id="_CPPv223cryptx_pkcs8_pubkeyinfo"></span><span id="cryptx_pkcs8_pubkeyinfo"></span><span class="target" id="structcryptx__pkcs8__pubkeyinfo"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_pkcs8_pubkeyinfo</span></span></span><a class="headerlink" href="#_CPPv423cryptx_pkcs8_pubkeyinfo" title="Permalink to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv419cryptx_pkcs8_pubkey">
+<span id="_CPPv319cryptx_pkcs8_pubkey"></span><span id="_CPPv219cryptx_pkcs8_pubkey"></span><span id="cryptx_pkcs8_pubkey"></span><span class="target" id="structcryptx__pkcs8__pubkey"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_pkcs8_pubkey</span></span></span><a class="headerlink" href="#_CPPv419cryptx_pkcs8_pubkey" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Defines a structure for holding imported RSA or ECC public key data. </p>
 </dd></dl>
 
 <dl class="cpp struct">
-<dt class="sig sig-object cpp" id="_CPPv424cryptx_pkcs8_privkeyinfo">
-<span id="_CPPv324cryptx_pkcs8_privkeyinfo"></span><span id="_CPPv224cryptx_pkcs8_privkeyinfo"></span><span id="cryptx_pkcs8_privkeyinfo"></span><span class="target" id="structcryptx__pkcs8__privkeyinfo"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_pkcs8_privkeyinfo</span></span></span><a class="headerlink" href="#_CPPv424cryptx_pkcs8_privkeyinfo" title="Permalink to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv420cryptx_pkcs8_privkey">
+<span id="_CPPv320cryptx_pkcs8_privkey"></span><span id="_CPPv220cryptx_pkcs8_privkey"></span><span id="cryptx_pkcs8_privkey"></span><span class="target" id="structcryptx__pkcs8__privkey"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_pkcs8_privkey</span></span></span><a class="headerlink" href="#_CPPv420cryptx_pkcs8_privkey" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Defines a structure for holding imported RSA or ECC private key data. </p>
 </dd></dl>
 
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>These structures, particularly <strong>cryptx_pkcs8_privkeyinfo</strong>, take up a lot of memory. For the private key you’re holding 257 bytes each for modulus and exponent and then 7 subfields of efficiency-oriented key metadata each taking 129 bytes plus associated size words, structure headers, and object IDs. It adds up. You may want to allocate these within the largest memory-space you can.</p>
+<p>These structures, particularly <strong>cryptx_pkcs8_privkey</strong>, take up a lot of memory. This module uses dynamic allocation to optimize storage requirements for these structures to the best extent possible. Each structure contains a static portion which contains references to a dump of the raw data of the key and the dump section is of variable size depending on the size of the key.</p>
 </div>
-</div>
-<div class="section" id="response-codes">
-<h2>Response Codes<a class="headerlink" href="#response-codes" title="Permalink to this headline"></a></h2>
-<dl class="cpp enum">
-<dt class="sig sig-object cpp" id="_CPPv412pkcs_error_t">
-<span id="_CPPv312pkcs_error_t"></span><span id="_CPPv212pkcs_error_t"></span><span class="target" id="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pkcs_error_t</span></span></span><a class="headerlink" href="#_CPPv412pkcs_error_t" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Defines response codes returned by the PKCS8 API. </p>
-<p><em>Values:</em></p>
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N12pkcs_error_t7PKCS_OKE">
-<span id="_CPPv3N12pkcs_error_t7PKCS_OKE"></span><span id="_CPPv2N12pkcs_error_t7PKCS_OKE"></span><span class="target" id="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4ae3e1b5568f600f599b65921673580a3b"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PKCS_OK</span></span></span><a class="headerlink" href="#_CPPv4N12pkcs_error_t7PKCS_OKE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N12pkcs_error_t16PKCS_INVALID_ARGE">
-<span id="_CPPv3N12pkcs_error_t16PKCS_INVALID_ARGE"></span><span id="_CPPv2N12pkcs_error_t16PKCS_INVALID_ARGE"></span><span class="target" id="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4ad51855979f8e263227e0fba2132d462f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PKCS_INVALID_ARG</span></span></span><a class="headerlink" href="#_CPPv4N12pkcs_error_t16PKCS_INVALID_ARGE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N12pkcs_error_t16PKCS_UNSUPPORTEDE">
-<span id="_CPPv3N12pkcs_error_t16PKCS_UNSUPPORTEDE"></span><span id="_CPPv2N12pkcs_error_t16PKCS_UNSUPPORTEDE"></span><span class="target" id="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4a31909947f498b908e7709718c2ddf96f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PKCS_UNSUPPORTED</span></span></span><a class="headerlink" href="#_CPPv4N12pkcs_error_t16PKCS_UNSUPPORTEDE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N12pkcs_error_t17PKCS_INVALID_DATAE">
-<span id="_CPPv3N12pkcs_error_t17PKCS_INVALID_DATAE"></span><span id="_CPPv2N12pkcs_error_t17PKCS_INVALID_DATAE"></span><span class="target" id="cryptx_8h_1a18ac3fbeea8ba7f7931796bd253131a4ad98753e06ce91e41e842d85a5c7b139b"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PKCS_INVALID_DATA</span></span></span><a class="headerlink" href="#_CPPv4N12pkcs_error_t17PKCS_INVALID_DATAE" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h2>
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv429cryptx_pkcs8_import_publickeyPKv6size_tP23cryptx_pkcs8_pubkeyinfo">
-<span id="_CPPv329cryptx_pkcs8_import_publickeyPKv6size_tP23cryptx_pkcs8_pubkeyinfo"></span><span id="_CPPv229cryptx_pkcs8_import_publickeyPKv6size_tP23cryptx_pkcs8_pubkeyinfo"></span><span id="cryptx_pkcs8_import_publickey__voidCP.s.cryptx_pkcs8_pubkeyinfoP"></span><span class="target" id="cryptx_8h_1aaeb83227ffd725be2451cdf0a7748462"></span><a class="reference internal" href="#_CPPv412pkcs_error_t" title="pkcs_error_t"><span class="n"><span class="pre">pkcs_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_pkcs8_import_publickey</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv423cryptx_pkcs8_pubkeyinfo" title="cryptx_pkcs8_pubkeyinfo"><span class="n"><span class="pre">cryptx_pkcs8_pubkeyinfo</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">keyinfo</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429cryptx_pkcs8_import_publickeyPKv6size_tP23cryptx_pkcs8_pubkeyinfo" title="Permalink to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv429cryptx_pkcs8_import_publickeyPv6size_tPFPv6size_tE">
+<span id="_CPPv329cryptx_pkcs8_import_publickeyPv6size_tPFPv6size_tE"></span><span id="_CPPv229cryptx_pkcs8_import_publickeyPv6size_tPFPv6size_tE"></span><span class="target" id="cryptx_8h_1aa187a2f43e4b3524082b0e8b649ae767"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv419cryptx_pkcs8_pubkey" title="cryptx_pkcs8_pubkey"><span class="n"><span class="pre">cryptx_pkcs8_pubkey</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_pkcs8_import_publickey</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">malloc</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">size_t</span></span><span class="p"><span class="pre">)</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429cryptx_pkcs8_import_publickeyPv6size_tPFPv6size_tE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Attempts to import a PKCS#8-encoded public key for RSA or ECC. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> – Pointer to PKCS#8-encoded key data. </p></li>
 <li><p><strong>len</strong> – Length of key data to import. </p></li>
-<li><p><strong>keyinfo</strong> – Pointer to a <strong><a class="reference internal" href="#structcryptx__pkcs8__pubkeyinfo"><span class="std std-ref">cryptx_pkcs8_pubkeyinfo</span></a></strong> context to deserialize keydata into. </p></li>
+<li><p><strong>malloc</strong> – Pointer to toolchain <strong>malloc</strong> function. </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>keyinfo</strong> populated with appropriate data from the keyfile. </p>
+<dd class="field-even"><p>A malloc’d <strong><a class="reference internal" href="#structcryptx__pkcs8__pubkey"><span class="std std-ref">cryptx_pkcs8_pubkey</span></a></strong> structure populated with key metadata. </p>
 </dd>
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A <strong>pkcs_error_t</strong> indicating the return status of the operation. </p>
+<dd class="field-odd"><p>The <strong>error</strong> field of the structure set to <strong>True</strong> if an internal error occured. </p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv430cryptx_pkcs8_import_privatekeyPKv6size_tP24cryptx_pkcs8_privkeyinfo">
-<span id="_CPPv330cryptx_pkcs8_import_privatekeyPKv6size_tP24cryptx_pkcs8_privkeyinfo"></span><span id="_CPPv230cryptx_pkcs8_import_privatekeyPKv6size_tP24cryptx_pkcs8_privkeyinfo"></span><span id="cryptx_pkcs8_import_privatekey__voidCP.s.cryptx_pkcs8_privkeyinfoP"></span><span class="target" id="cryptx_8h_1a2dbbf13c5e7328b859b4b582546b428e"></span><a class="reference internal" href="#_CPPv412pkcs_error_t" title="pkcs_error_t"><span class="n"><span class="pre">pkcs_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_pkcs8_import_privatekey</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv424cryptx_pkcs8_privkeyinfo" title="cryptx_pkcs8_privkeyinfo"><span class="n"><span class="pre">cryptx_pkcs8_privkeyinfo</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">keyinfo</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv430cryptx_pkcs8_import_privatekeyPKv6size_tP24cryptx_pkcs8_privkeyinfo" title="Permalink to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv430cryptx_pkcs8_import_privatekeyPv6size_tPFPv6size_tE">
+<span id="_CPPv330cryptx_pkcs8_import_privatekeyPv6size_tPFPv6size_tE"></span><span id="_CPPv230cryptx_pkcs8_import_privatekeyPv6size_tPFPv6size_tE"></span><span class="target" id="cryptx_8h_1a1d8ba96af68c8fe00b1aed438fff3495"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv420cryptx_pkcs8_privkey" title="cryptx_pkcs8_privkey"><span class="n"><span class="pre">cryptx_pkcs8_privkey</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_pkcs8_import_privatekey</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">malloc</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">size_t</span></span><span class="p"><span class="pre">)</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv430cryptx_pkcs8_import_privatekeyPv6size_tPFPv6size_tE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Attempts to import a PKCS#8-encoded private key for RSA or ECC. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> – Pointer to PKCS#8-encoded key data. </p></li>
 <li><p><strong>len</strong> – Length of key data to import. </p></li>
-<li><p><strong>keyinfo</strong> – Pointer to a <strong><a class="reference internal" href="#structcryptx__pkcs8__privkeyinfo"><span class="std std-ref">cryptx_pkcs8_privkeyinfo</span></a></strong> context to deserialize keydata into. </p></li>
+<li><p><strong>malloc</strong> – Pointer to toolchain <strong>malloc</strong> function. </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>keyinfo</strong> populated with appropriate data from the keyfile. </p>
+<dd class="field-even"><p>A malloc’d <strong><a class="reference internal" href="#structcryptx__pkcs8__privkey"><span class="std std-ref">cryptx_pkcs8_privkey</span></a></strong> structure populated with key metadata. </p>
 </dd>
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A <strong>pkcs_error_t</strong> indicating the return status of the operation. </p>
+<dd class="field-odd"><p>The <strong>error</strong> field of the structure set to <strong>True</strong> if an internal error occured. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv427cryptx_pkcs8_free_publickeyP19cryptx_pkcs8_pubkeyPFvPvE">
+<span id="_CPPv327cryptx_pkcs8_free_publickeyP19cryptx_pkcs8_pubkeyPFvPvE"></span><span id="_CPPv227cryptx_pkcs8_free_publickeyP19cryptx_pkcs8_pubkeyPFvPvE"></span><span class="target" id="cryptx_8h_1a78fb5286dbb1dd4443ca8fbc33005750"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_pkcs8_free_publickey</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv419cryptx_pkcs8_pubkey" title="cryptx_pkcs8_pubkey"><span class="n"><span class="pre">cryptx_pkcs8_pubkey</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pk</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">free</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">)</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv427cryptx_pkcs8_free_publickeyP19cryptx_pkcs8_pubkeyPFvPvE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Erases a PKCS#8 public key structure returned by <strong>cryptx_pkcs8_import_publickey</strong> and then frees the allocated memory. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pk</strong> – Pointer to a PKCS#8 public key structure. </p></li>
+<li><p><strong>free</strong> – Pointer to toolchain <strong>free</strong> function. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv428cryptx_pkcs8_free_privatekeyP20cryptx_pkcs8_privkeyPFvPvE">
+<span id="_CPPv328cryptx_pkcs8_free_privatekeyP20cryptx_pkcs8_privkeyPFvPvE"></span><span id="_CPPv228cryptx_pkcs8_free_privatekeyP20cryptx_pkcs8_privkeyPFvPvE"></span><span class="target" id="cryptx_8h_1a793f8cb12a267c4c2cff1bcc494f2de3"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cryptx_pkcs8_free_privatekey</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv420cryptx_pkcs8_privkey" title="cryptx_pkcs8_privkey"><span class="n"><span class="pre">cryptx_pkcs8_privkey</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pk</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">free</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">)</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv428cryptx_pkcs8_free_privatekeyP20cryptx_pkcs8_privkeyPFvPvE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Erases a PKCS#8 private key structure returned by <strong>cryptx_pkcs8_import_privatekey</strong> and then frees the allocated memory. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pk</strong> – Pointer to a PKCS#8 private key structure. </p></li>
+<li><p><strong>free</strong> – Pointer to toolchain <strong>free</strong> function. </p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -213,27 +210,44 @@
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">pubkey_fname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MyPub&quot;</span><span class="p">;</span>
 <span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">privkey_fname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MyPriv&quot;</span><span class="p">;</span>
 <span class="kt">uint8_t</span><span class="w"> </span><span class="n">fp</span><span class="p">;</span>
-<span class="n">pkcs_error_t</span><span class="w"> </span><span class="n">err</span><span class="p">;</span>
-<span class="n">cryptx_pkcs8_pubkeyinfo</span><span class="w"> </span><span class="n">pubkey</span><span class="p">;</span>
-<span class="n">cryptx_pkcs8_privkeyinfo</span><span class="w"> </span><span class="n">privkey</span><span class="p">;</span>
 <span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">key_data</span><span class="p">;</span>
 <span class="kt">size_t</span><span class="w"> </span><span class="n">key_len</span><span class="p">;</span>
 
 <span class="c1">// load pubkey from file (requires FILEIOC library)</span>
-<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">fp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_Open</span><span class="p">(</span><span class="n">pubkey_fname</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">)))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w">   </span><span class="c1">// failed to open file</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">fp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_Open</span><span class="p">(</span><span class="n">pubkey_fname</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;File IO Error&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
 <span class="n">key_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_GetDataPtr</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
 <span class="n">key_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_GetSize</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
 <span class="n">ti_Close</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
-<span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cryptx_pkcs8_import_publickey</span><span class="p">(</span><span class="n">key_data</span><span class="p">,</span><span class="w"> </span><span class="n">key_len</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">pubkey</span><span class="p">);</span>
-<span class="k">if</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="n">cryptx_pkcs8_pubkey</span><span class="w"> </span><span class="o">*</span><span class="n">pub</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cryptx_pkcs8_import_publickey</span><span class="p">(</span><span class="n">key_data</span><span class="p">,</span><span class="w"> </span><span class="n">key_len</span><span class="p">,</span><span class="w"> </span><span class="n">malloc</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">pub</span><span class="p">){</span>
+<span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Alloc error!&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">exit</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">if</span><span class="p">(</span><span class="n">pub</span><span class="o">-&gt;</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Deserialization error!&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">exit</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="p">}</span>
 
 <span class="c1">// load pubkey from file (requires FILEIOC library)</span>
-<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">fp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_Open</span><span class="p">(</span><span class="n">privkey_fname</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">)))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w">   </span><span class="c1">// failed to open file</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">fp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_Open</span><span class="p">(</span><span class="n">privkey_fname</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;File IO Error&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
 <span class="n">key_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_GetDataPtr</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
 <span class="n">key_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ti_GetSize</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
 <span class="n">ti_Close</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
-<span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cryptx_pkcs8_import_privatekey</span><span class="p">(</span><span class="n">key_data</span><span class="p">,</span><span class="w"> </span><span class="n">key_len</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">privkey</span><span class="p">);</span>
-<span class="k">if</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="n">cryptx_pkcs8_privkey</span><span class="w"> </span><span class="o">*</span><span class="n">priv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cryptx_pkcs8_import_privatekey</span><span class="p">(</span><span class="n">key_data</span><span class="p">,</span><span class="w"> </span><span class="n">key_len</span><span class="p">,</span><span class="w"> </span><span class="n">malloc</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">priv</span><span class="p">){</span>
+<span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Alloc error!&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">exit</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">if</span><span class="p">(</span><span class="n">priv</span><span class="o">-&gt;</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Deserialization error!&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">exit</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="p">}</span>
 
 <span class="c1">// these structs can be passed directly to the TLS implementation (coming soon)</span>
 <span class="c1">// or the members can be accessed directly for advanced usage.</span>

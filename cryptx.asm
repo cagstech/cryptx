@@ -54,6 +54,8 @@ library CRYPTX, 2
 ; pkcs
   export cryptx_pkcs8_import_publickey
   export cryptx_pkcs8_import_privatekey
+  export cryptx_pkcs8_free_publickey
+  export cryptx_pkcs8_free_privatekey
 	
 
 ; hazardous materials
@@ -11335,37 +11337,31 @@ base64_decode:
 	ret
 
 cryptx_pkcs8_import_publickey:
-	ld	hl, -43
+	ld	hl, -37
 	call	ti._frameset
-	ld	hl, (ix + 6)
-	ld	bc, 1
+	ld	bc, (ix + 6)
+	ld	de, 0
+	push	bc
+	pop	hl
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	z, .lbl_26
+	jp	z, .lbl_13
 	ld	hl, (ix + 9)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	z, .lbl_26
+	jp	z, .lbl_13
 	ld	hl, (ix + 12)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	z, .lbl_26
-	ld	(hl), 0
-	push	hl
-	pop	iy
-	inc	iy
-	ld	bc, 281
-	lea	de, iy
-	ldir
-	ld	hl, 26
-	push	hl
+	jp	z, .lbl_13
 	ld	hl, __pkcs_bannerstr_public
+	ld	de, 26
+	push	de
 	push	hl
-	ld	hl, (ix + 6)
-	push	hl
+	push	bc
 	call	ti._strncmp
 	pop	de
 	pop	de
@@ -11373,27 +11369,19 @@ cryptx_pkcs8_import_publickey:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	nz, .lbl_23
-	ld	a, 1
-	ld	(ix - 43), a
-	lea	hl, ix - 6
-	ld	(ix - 33), hl
-	lea	hl, ix - 9
-	ld	(ix - 27), hl
-	lea	hl, ix - 15
-	ld	(ix - 36), hl
-	lea	bc, ix - 18
-	ld	de, (ix + 9)
-	ld	iy, (ix + 6)
+	jp	nz, .lbl_12
+	ld	bc, (ix + 9)
+	push	bc
+	pop	de
+	ld	hl, (ix + 6)
+	push	hl
+	pop	iy
 .lbl_5:
 	dec	de
 	ld	a, (iy)
 	inc	iy
 	cp	a, 10
 	jr	nz, .lbl_5
-	ld	(ix - 30), bc
-	ld	hl, (ix + 6)
-	ld	bc, (ix + 9)
 	add	hl, bc
 	dec	hl
 .lbl_7:
@@ -11410,89 +11398,397 @@ cryptx_pkcs8_import_publickey:
 	pop	de
 	pop	de
 	pop	de
-	ld	de, (_der_buf)
-	pea	ix - 3
-	pea	ix - 12
-	ld	bc, 0
-	push	bc
-	push	bc
-	ld	(ix - 42), hl
-	push	hl
+	ld	bc, (_der_buf)
+	pea	ix - 7
+	ld	de, 0
 	push	de
-	call	cryptx_asn1_decode
-	ld	(ix - 39), hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 3)
-	ld	de, (ix - 12)
-	ld	bc, (ix - 33)
-	push	bc
-	ld	bc, (ix - 36)
-	push	bc
-	ld	bc, 0
-	push	bc
-	push	bc
-	push	de
+	ld	(ix - 34), hl
 	push	hl
+	push	bc
 	call	cryptx_asn1_decode
 	pop	de
 	pop	de
 	pop	de
 	pop	de
-	pop	de
-	pop	de
-	ld	bc, (ix - 39)
-	call	ti._ior
-	ld	(ix - 39), hl
-	ld	hl, (ix - 6)
-	ld	de, (ix - 15)
-	ld	bc, (ix - 27)
-	push	bc
-	ld	bc, (ix - 30)
-	push	bc
-	ld	bc, 0
-	push	bc
-	push	bc
-	push	de
-	push	hl
-	call	cryptx_asn1_decode
-	push	hl
-	pop	bc
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 39)
-	call	ti._ior
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	nz, .lbl_24
-	ld	hl, (ix - 9)
-	ld	de, (ix - 18)
-	ld	(ix - 39), de
-	push	de
+	jp	nz, .lbl_12
+	ld	hl, (ix - 6)
+	ld	de, 25
+	add	hl, de
 	push	hl
 	ld	hl, (ix + 12)
+	call	_indcallhl
 	push	hl
+	pop	iy
+	pop	hl
+	lea	hl, iy
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	de, 0
+	jp	z, .lbl_13
+	ld	hl, (ix - 6)
+	ld	(iy + 22), hl
+	lea	bc, iy + 25
+	ld	(ix - 37), bc
+	ld	de, (ix - 3)
+	push	hl
+	push	de
+	push	bc
+	ld	(ix - 31), iy
 	call	ti._memcpy
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 39)
-	ld	iy, (ix + 12)
-	ld	(iy + 16), hl
+	ld	hl, (_der_buf)
+	ld	de, (ix - 34)
+	push	de
+	ld	de, 0
+	push	de
 	push	hl
-	ld	hl, __pkcs_rsa_oid
+	call	ti._memset
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	iy, (ix - 31)
+	ld	hl, (iy + 22)
+	pea	ix - 14
+	ld	de, 0
+	push	de
 	push	hl
+	ld	hl, (ix - 37)
+	push	hl
+	call	cryptx_asn1_decode
+	ld	(ix - 34), hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 10)
+	ld	de, (ix - 13)
+	ld	iy, (ix - 31)
+	inc	iy
 	push	iy
+	ld	bc, 0
+	push	bc
+	push	de
+	push	hl
+	call	cryptx_asn1_decode
+	push	hl
+	pop	de
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 34)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	nz, .lbl_14
+	ld	bc, 0
+	jr	.lbl_15
+.lbl_12:
+	ld	de, 0
+.lbl_13:
+	ex	de, hl
+	ld	sp, ix
+	pop	ix
+	ret
+.lbl_14:
+	ld	bc, 1
+.lbl_15:
+	ld	iy, (ix - 31)
+	ex	de, hl
+	call	ti._ior
+	ld	(ix - 34), hl
+	ld	hl, (iy + 5)
+	ld	de, (iy + 2)
+	push	de
+	ld	de, _test_rsa
+	push	de
+	push	hl
+	call	ti._memcmp
+	pop	de
+	pop	de
+	pop	de
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	nz, .lbl_26
+	ld	iy, (ix - 31)
+	ld	hl, (iy + 22)
+	pea	ix - 21
+	ld	de, 1
+	push	de
+	push	hl
+	ld	hl, (ix - 37)
+	push	hl
+	call	cryptx_asn1_decode
+	push	hl
+	pop	de
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 34)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	bc, 1
+	jr	nz, .lbl_18
+	ld	bc, 0
+.lbl_18:
+	ex	de, hl
+	call	ti._ior
+	ld	(ix - 34), hl
+	ld	hl, (ix - 17)
+	ld	de, (ix - 20)
+	pea	ix - 28
+	ld	bc, 0
+	push	bc
+	push	de
+	push	hl
+	call	cryptx_asn1_decode
+	push	hl
+	pop	de
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 34)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	bc, 1
+	jr	nz, .lbl_20
+	ld	bc, 0
+.lbl_20:
+	ex	de, hl
+	call	ti._ior
+	ld	(ix - 34), hl
+	ld	hl, (ix - 24)
+	ld	de, (ix - 27)
+	ld	iy, (ix - 31)
+	pea	iy + 8
+	ld	bc, 0
+	push	bc
+	push	de
+	push	hl
+	call	cryptx_asn1_decode
+	push	hl
+	pop	de
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 34)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	bc, 1
+	jr	nz, .lbl_22
+	ld	bc, 0
+.lbl_22:
+	ex	de, hl
+	call  ti._ior
+	ld	(ix - 34), hl
+	ld	hl, (ix - 24)
+	ld	de, (ix - 27)
+	ld	iy, (ix - 31)
+	pea	iy + 15
+	ld	bc, 1
+	push	bc
+	push	de
+	push	hl
+	call	cryptx_asn1_decode
+	push	hl
+	pop	de
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 34)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	bc, 1
+	jr	nz, .lbl_24
+	ld	bc, 0
+.lbl_24:
+	ex	de, hl
+	call	ti._ior
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	nz, .lbl_33
+	ld	a, 0
+	jp	.lbl_34
+.lbl_26:
+	ld	iy, (ix - 31)
+	ld	hl, (iy + 5)
+	ld	de, (iy + 2)
+	push	de
+	ld	de, _test_ec
+	push	de
+	push	hl
+	call	ti._memcmp
+	pop	de
+	pop	de
+	pop	de
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	iy, (ix - 31)
+	ld	a, 1
+	jr	nz, .lbl_36
+	ld	hl, (ix - 10)
+	ld	de, (ix - 13)
+	pea	iy + 8
+	ld	bc, 1
+	push	bc
+	push	de
+	push	hl
+	call	cryptx_asn1_decode
+	push	hl
+	pop	de
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 34)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	bc, 1
+	ld	hl, 0
+	jr	nz, .lbl_29
+	push	hl
+	pop	bc
+.lbl_29:
+	ex	de, hl
+	call	ti._ior
+	ld	(ix - 34), hl
+	ld	iy, (ix - 31)
+	ld	hl, (iy + 22)
+	pea	iy + 15
+	ld	de, 1
+	push	de
+	push	hl
+	ld	hl, (ix - 37)
+	push	hl
+	call	cryptx_asn1_decode
+	push	hl
+	pop	de
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 34)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	bc, 1
+	jr	nz, .lbl_31
+	ld	bc, 0
+.lbl_31:
+	ex	de, hl
+	call	ti._ior
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	iy, (ix - 31)
+	jr	nz, .lbl_35
+	ld	a, 0
+	jr	.lbl_36
+.lbl_33:
+	ld	a, -1
+.lbl_34:
+	ld	iy, (ix - 31)
+	jr	.lbl_36
+.lbl_35:
+	ld	a, -1
+.lbl_36:
+	and	a, 1
+	ld	(iy), a
+	lea	de, iy
+	jp	.lbl_13
+  
+	
+cryptx_pkcs8_import_privatekey:
+  ld	hl, -47
+	call	ti._frameset
+	ld	de, (ix + 6)
+	ld	bc, 0
+	ld	iyl, b
+	push	de
+	pop	hl
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	z, .lbl_14
+	ld	hl, (ix + 9)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	z, .lbl_14
+	ld	hl, (ix + 12)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	z, .lbl_14
+	ld	(ix - 38), iy
+	ld	hl, __pkcs_bannerstr_private
+	ld	bc, 27
+	push	bc
+	push	hl
+	push	de
 	call	ti._strncmp
+	pop	de
+	pop	de
+	pop	de
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	nz, .lbl_12
+	ld	bc, (ix + 9)
+	push	bc
+	pop	de
+	ld	hl, (ix + 6)
+	push	hl
+	pop	iy
+.lbl_5:
+	dec	de
+	ld	a, (iy)
+	inc	iy
+	cp	a, 10
+	jr	nz, .lbl_5
+	add	hl, bc
+	dec	hl
+.lbl_7:
+	dec	de
+	ld	a, (hl)
+	dec	hl
+	cp	a, 10
+	jr	nz, .lbl_7
+	ld	bc, (_der_buf)
+	push	de
+	push	iy
+	push	bc
+	call	cryptx_base64_decode
+	pop	de
+	pop	de
+	pop	de
+	ld	bc, (_der_buf)
+	pea	ix - 7
+	ld	de, 0
+	push	de
+	ld	(ix - 44), hl
+	push	hl
+	push	bc
+	call	cryptx_asn1_decode
+	pop	de
 	pop	de
 	pop	de
 	pop	de
@@ -11500,254 +11796,36 @@ cryptx_pkcs8_import_publickey:
 	or	a, a
 	sbc	hl, bc
 	jp	nz, .lbl_13
-	ld	hl, (ix - 3)
-	ld	de, (ix - 12)
-	ld	bc, (ix - 33)
-	push	bc
-	ld	bc, (ix - 36)
-	push	bc
-	ld	bc, 0
-	push	bc
-	inc	bc
-	push	bc
-	push	de
-	push	hl
-	call	cryptx_asn1_decode
-	ld	(ix - 33), hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
 	ld	hl, (ix - 6)
-	ld	de, (ix - 15)
-	pea	ix - 21
-	pea	ix - 24
-	ld	bc, 0
-	push	bc
-	push	bc
-	push	de
-	push	hl
-	call	cryptx_asn1_decode
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	ld	bc, (ix - 33)
-	call	ti._ior
-	ld	(ix - 33), hl
-	ld	hl, (ix - 21)
-	ld	de, (ix - 24)
-	ld	bc, (ix - 27)
-	push	bc
-	ld	bc, (ix - 30)
-	push	bc
-	ld	bc, 0
-	push	bc
-	push	bc
-	push	de
-	push	hl
-	call	cryptx_asn1_decode
-	push	hl
-	pop	bc
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 33)
-	call	ti._ior
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jp	nz, .lbl_24
-	ld	hl, (ix - 9)
-	ld	de, (ix - 18)
-	ld	(ix - 33), de
-	push	de
-	push	hl
-	ld	hl, (ix + 12)
-	push	hl
-	pop	iy
-	pea	iy + 19
-	call	ti._memcpy
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	de, 276
-	ld	iy, (ix + 12)
-	add	iy, de
-	ld	hl, (ix - 33)
-	ld	(iy), hl
-	ld	hl, (ix - 21)
-	ld	de, (ix - 24)
-	ld	bc, (ix - 27)
-	push	bc
-	ld	bc, (ix - 30)
-	push	bc
-	ld	bc, 0
-	push	bc
-	inc	bc
-	push	bc
-	push	de
-	push	hl
-	call	cryptx_asn1_decode
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jp	nz, .lbl_24
-	ld	de, 279
-	ld	hl, (ix + 12)
+	ld	de, 74
 	add	hl, de
-	ld	bc, (ix - 9)
-	ld	de, (ix - 18)
-	push	de
-	push	bc
-	push	hl
-	call	_rmemcpy
-	pop	hl
-	pop	hl
-	pop	hl
-	jp	.lbl_22
-.lbl_13:
-	ld	iy, (ix + 12)
-	ld	hl, (iy + 16)
-	push	hl
-	ld	hl, __pkcs_ec_oid
-	push	hl
-	push	iy
-	call	ti._strncmp
-	pop	de
-	pop	de
-	pop	de
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	ld	bc, 2
-	jp	nz, .lbl_26
-	ld	hl, (ix - 6)
-	ld	de, (ix - 15)
-	ld	bc, (ix - 27)
-	push	bc
-	ld	bc, (ix - 30)
-	push	bc
-	ld	bc, 0
-	push	bc
-	inc	bc
-	push	bc
-	push	de
-	push	hl
-	call	cryptx_asn1_decode
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jp	nz, .lbl_24
-	ld	hl, (ix - 9)
-	ld	de, (ix - 18)
-	ld	(ix - 33), de
-	push	de
 	push	hl
 	ld	hl, (ix + 12)
+	call	_indcallhl
 	push	hl
 	pop	iy
-	pea	iy + 19
-	call	ti._memcpy
 	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 33)
-	ld	iy, (ix + 12)
-	ld	(iy + 35), hl
-	ld	hl, (ix - 3)
-	ld	de, (ix - 12)
-	ld	bc, (ix - 27)
-	push	bc
-	ld	bc, (ix - 30)
-	push	bc
-	ld	bc, 0
-	push	bc
-	inc	bc
-	push	bc
-	push	de
-	push	hl
-	call	cryptx_asn1_decode
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jr	nz, .lbl_24
-	ld	bc, (ix - 18)
-	ld	de, (ix - 9)
-	inc	de
-.lbl_17:
-	push	de
-	pop	iy
-	dec	bc
-	ld	(ix - 18), bc
 	lea	hl, iy
-	ld	(ix - 9), hl
-	ld	(ix - 27), iy
-	ld	l, (iy - 1)
-	inc	de
-	ld	a, l
+	add	hl, bc
 	or	a, a
-	jr	z, .lbl_17
-	ld	a, l
-	add	a, -2
-	cp	a, 2
-	jr	c, .lbl_21
-	ld	a, l
-	cp	a, 4
-	jr	nz, .lbl_23
-	xor	a, a
-	ld	(ix - 43), a
-.lbl_21:
-	ld	hl, (ix + 12)
-	ld	a, (ix - 43)
-	push	hl
-	pop	iy
-	ld	(iy + 38), a
-	ex	de, hl
-	push	bc
-	ld	hl, (ix - 27)
+	sbc	hl, bc
+	ld	bc, 0
+	jp	z, .lbl_14
+	ld	hl, (ix - 6)
+	ld	(iy + 71), hl
+	lea	bc, iy + 74
+	ld	(ix - 47), bc
+	ld	de, (ix - 3)
 	push	hl
 	push	de
-	pop	iy
-	pea	iy + 39
-	ld	(ix - 27), bc
+	push	bc
+	ld	(ix - 41), iy
 	call	ti._memcpy
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	de, 185
-	ld	hl, (ix + 12)
-	add	hl, de
-	ld	de, (ix - 27)
-	ld	(hl), de
-.lbl_22:
 	ld	hl, (_der_buf)
-	ld	de, (ix - 42)
+	ld	de, (ix - 44)
 	push	de
 	ld	de, 0
 	push	de
@@ -11756,487 +11834,44 @@ cryptx_pkcs8_import_publickey:
 	pop	hl
 	pop	hl
 	pop	hl
-	or	a, a
-	sbc	hl, hl
-	jr	.lbl_25
-.lbl_23:
-	ld	bc, 3
-	jr	.lbl_26
-.lbl_24:
-	ld	hl, 3
-.lbl_25:
-	push	hl
-	pop	bc
-.lbl_26:
-	push	bc
-	pop	hl
-	ld	sp, ix
-	pop	ix
-	ret
-  
-	
-cryptx_pkcs8_import_privatekey:
-	ld	hl, -88
-	call	ti._frameset
-	ld	iy, (ix + 6)
+	ld	iy, (ix - 41)
+	ld	hl, (iy + 71)
+	pea	ix - 14
 	ld	de, 1
-	lea	hl, iy
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jp	z, .lbl_20
-	ld	hl, (ix + 9)
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jp	z, .lbl_20
-	ld	hl, (ix + 12)
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jp	z, .lbl_20
-	ld	(hl), 0
+	push	de
 	push	hl
-	pop	de
-	inc	de
-	ld	bc, 1203
-	ld	(ix - 69), de
-	ldir
-	ld	hl, 27
+	ld	hl, (ix - 47)
 	push	hl
-	ld	hl, __pkcs_bannerstr_private
-	push	hl
-	push	iy
-	call	ti._strncmp
-	pop	de
-	pop	de
-	pop	de
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jp	nz, .lbl_18
-	ld	a, 1
-	ld	(ix - 88), a
-	ld	l, 3
-	ld	(ix - 81), hl
-	lea	hl, ix - 6
-	ld	(ix - 75), hl
-	lea	hl, ix - 9
-	ld	(ix - 63), hl
-	lea	hl, ix - 15
-	ld	(ix - 78), hl
-	lea	bc, ix - 18
-	lea	hl, ix - 60
-	ld	(ix - 87), hl
-	ld	de, (ix + 9)
-	ld	iy, (ix + 6)
-.lbl_5:
-	dec	de
-	ld	a, (iy)
+	call	cryptx_asn1_decode
+	ld	(ix - 44), hl
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 10)
+	ld	de, (ix - 13)
+	ld	iy, (ix - 41)
 	inc	iy
-	cp	a, 10
-	jr	nz, .lbl_5
-	ld	(ix - 66), bc
-	ld	hl, (ix + 6)
-	ld	bc, (ix + 9)
-	add	hl, bc
-	dec	hl
-.lbl_7:
-	dec	de
-	ld	a, (hl)
-	dec	hl
-	cp	a, 10
-	jr	nz, .lbl_7
-	ld	bc, (_der_buf)
-	push	de
 	push	iy
-	push	bc
-	call	cryptx_base64_decode
-	pop	de
-	pop	de
-	pop	de
-	ld	de, (_der_buf)
-	pea	ix - 3
-	pea	ix - 12
 	ld	bc, 0
-	push	bc
-	push	bc
-	ld	(ix - 84), hl
-	push	hl
-	push	de
-	call	cryptx_asn1_decode
-	ld	(ix - 72), hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 3)
-	ld	de, (ix - 12)
-	ld	bc, (ix - 63)
-	push	bc
-	ld	bc, (ix - 66)
-	push	bc
-	ld	bc, 0
-	push	bc
 	push	bc
 	push	de
 	push	hl
 	call	cryptx_asn1_decode
+	push	hl
 	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	ld	bc, (ix - 72)
-	call	ti._ior
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 44)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	nz, .lbl_19
-	ld	hl, (ix - 9)
-	ld	a, (hl)
-	ld	hl, (ix + 12)
-	ld	(hl), a
-	ld	hl, (ix - 3)
-	ld	de, (ix - 12)
-	ld	bc, (ix - 75)
-	push	bc
-	ld	bc, (ix - 78)
-	push	bc
+	jr	nz, .lbl_15
 	ld	bc, 0
-	push	bc
-	inc	bc
-	push	bc
-	push	de
-	push	hl
-	call	cryptx_asn1_decode
-	ld	(ix - 72), hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 6)
-	ld	de, (ix - 15)
-	ld	bc, (ix - 63)
-	push	bc
-	ld	bc, (ix - 66)
-	push	bc
-	ld	bc, 0
-	push	bc
-	push	bc
-	push	de
-	push	hl
-	call	cryptx_asn1_decode
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	ld	bc, (ix - 72)
-	call	ti._ior
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jp	nz, .lbl_19
-	ld	hl, (ix - 9)
-	ld	de, (ix - 18)
-	ld	(ix - 72), de
-	push	de
-	push	hl
-	ld	hl, (ix - 69)
-	push	hl
-	call	ti._memcpy
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	iy, (ix + 12)
-	ld	hl, (ix - 72)
-	ld	(iy + 17), hl
-	push	hl
-	ld	hl, __pkcs_rsa_oid
-	push	hl
-	ld	hl, (ix - 69)
-	push	hl
-	call	ti._strncmp
-	pop	de
-	pop	de
-	pop	de
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jp	nz, .lbl_21
-	ld	hl, (ix - 3)
-	ld	de, (ix - 12)
-	ld	bc, (ix - 75)
-	push	bc
-	ld	bc, (ix - 78)
-	push	bc
-	ld	bc, 0
-	push	bc
-	ld	bc, 2
-	push	bc
-	push	de
-	push	hl
-	call	cryptx_asn1_decode
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 6)
-	ld	de, (ix - 15)
-	pea	ix - 21
-	pea	ix - 24
-	ld	bc, 0
-	push	bc
-	push	bc
-	push	de
-	push	hl
-	call	cryptx_asn1_decode
-	ld	(ix - 69), hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 21)
-	ld	de, (ix - 24)
-	ld	bc, (ix - 63)
-	push	bc
-	ld	bc, (ix - 66)
-	push	bc
-	ld	bc, 0
-	push	bc
-	push	bc
-	push	de
-	push	hl
-	call	cryptx_asn1_decode
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	ld	bc, (ix - 69)
-	call	ti._ior
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jp	nz, .lbl_19
-	ld	hl, (ix - 9)
-	ld	a, (hl)
-	ld	iy, (ix + 12)
-	ld	(iy + 20), a
-	ld	hl, (ix - 21)
-	ld	de, (ix - 24)
-	ld	bc, (ix - 63)
-	push	bc
-	ld	bc, (ix - 66)
-	push	bc
-	ld	bc, 0
-	push	bc
-	inc	bc
-	push	bc
-	push	de
-	push	hl
-	call	cryptx_asn1_decode
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jp	nz, .lbl_19
-	ld	hl, (ix - 9)
-	ld	de, (ix - 18)
-	ld	(ix - 69), de
-	push	de
-	push	hl
-	ld	hl, (ix + 12)
-	push	hl
-	pop	iy
-	pea	iy + 21
-	call	ti._memcpy
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	de, 278
-	ld	iy, (ix + 12)
-	add	iy, de
-	ld	hl, (ix - 69)
-	ld	(iy), hl
-	ld	hl, (ix - 21)
-	ld	de, (ix - 24)
-	ld	bc, (ix - 63)
-	push	bc
-	ld	bc, (ix - 66)
-	push	bc
-	ld	bc, 0
-	push	bc
-	ld	bc, 2
-	push	bc
-	push	de
-	push	hl
-	call	cryptx_asn1_decode
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jp	nz, .lbl_19
-	ld	de, 281
-	ld	hl, (ix + 12)
-	push	hl
-	pop	iy
-	add	iy, de
-	ld	hl, (ix - 9)
-	ld	de, (ix - 18)
-	push	de
-	push	hl
-	push	iy
-	call	_rmemcpy
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	de, 284
-	ld	bc, (ix + 12)
-	push	bc
-	pop	hl
-	add	hl, de
-	ld	(ix - 60), hl
-	ld	de, 541
-	push	bc
-	pop	hl
-	add	hl, de
-	ld	(ix - 57), hl
-	ld	de, 544
-	push	bc
-	pop	hl
-	add	hl, de
-	ld	(ix - 54), hl
-	ld	de, 673
-	push	bc
-	pop	hl
-	add	hl, de
-	ld	(ix - 51), hl
-	ld	de, 676
-	push	bc
-	pop	hl
-	add	hl, de
-	ld	(ix - 48), hl
-	ld	de, 805
-	push	bc
-	pop	hl
-	add	hl, de
-	ld	(ix - 45), hl
-	ld	de, 808
-	push	bc
-	pop	hl
-	add	hl, de
-	ld	(ix - 42), hl
-	ld	de, 937
-	push	bc
-	pop	hl
-	add	hl, de
-	ld	(ix - 39), hl
-	ld	de, 940
-	push	bc
-	pop	hl
-	add	hl, de
-	ld	(ix - 36), hl
-	ld	de, 1069
-	push	bc
-	pop	hl
-	add	hl, de
-	ld	(ix - 33), hl
-	ld	de, 1072
-	push	bc
-	pop	hl
-	add	hl, de
-	ld	(ix - 30), hl
-	ld	de, 1201
-	push	bc
-	pop	hl
-	add	hl, de
-	ld	(ix - 27), hl
-	ld	de, 36
-	or	a, a
-	sbc	hl, hl
-	push	hl
-	pop	iy
-.lbl_15:
-	lea	hl, iy
-	or	a, a
-	sbc	hl, de
-	ld	bc, 0
-	jp	z, .lbl_32
-	ld	(ix - 69), iy
-	ld	iy, (ix - 21)
-	ld	de, (ix - 24)
-	ld	hl, (ix - 63)
-	push	hl
-	ld	hl, (ix - 66)
-	push	hl
-	push	bc
-	ld	hl, (ix - 81)
-	push	hl
-	push	de
-	push	iy
-	call	cryptx_asn1_decode
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jr	nz, .lbl_19
-	ld	de, (ix - 69)
-	ld	hl, (ix - 87)
-	add	hl, de
-	ld	(ix - 72), hl
-	ld	iy, (hl)
-	ld	de, (ix - 9)
-	ld	bc, (ix - 18)
-	push	bc
-	push	de
-	push	iy
-	call	ti._memcpy
-	ld	bc, (ix - 69)
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	de, (ix - 18)
-	ld	iy, (ix - 72)
-	ld	hl, (iy + 3)
-	ld	(hl), de
-	ld	de, 6
-	push	bc
-	pop	iy
-	add	iy, de
-	ld	hl, (ix - 81)
-	inc	l
-	ld	(ix - 81), hl
-	ld	de, 36
-	jr	.lbl_15
-.lbl_18:
+	jr	.lbl_16
+.lbl_12:
 	ld	hl, __pkcs_bannerstr_encrypted
 	ld	de, 37
 	push	de
@@ -12244,285 +11879,421 @@ cryptx_pkcs8_import_privatekey:
 	ld	hl, (ix + 6)
 	push	hl
 	call	ti._strncmp
-	pop	de
-	pop	de
-	pop	de
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	ld	de, 2
-	jr	z, .lbl_20
-.lbl_19:
-	ld	de, 3
-.lbl_20:
-	ex	de, hl
+	pop	hl
+	pop	hl
+	pop	hl
+.lbl_13:
+	ld	bc, 0
+.lbl_14:
+	push	bc
+	pop	hl
 	ld	sp, ix
 	pop	ix
 	ret
-.lbl_21:
-	ld	iy, (ix + 12)
-	ld	hl, (iy + 17)
+.lbl_15:
+	ld	bc, 1
+.lbl_16:
+	ld	iy, (ix - 41)
+	ex	de, hl
+	call	ti._ior
+	ld	(ix - 44), hl
+	ld	hl, (iy + 5)
+	ld	de, (iy + 2)
+	push	de
+	ld	de, _test_rsa
+	push	de
 	push	hl
-	ld	hl, __pkcs_ec_oid
-	push	hl
-	ld	hl, (ix - 69)
-	push	hl
-	call	ti._strncmp
+	call	ti._memcmp
 	pop	de
 	pop	de
 	pop	de
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	ld	de, 2
-	jr	nz, .lbl_20
-	ld	hl, (ix - 6)
-	ld	de, (ix - 15)
-	ld	bc, (ix - 63)
-	push	bc
-	ld	bc, (ix - 66)
-	push	bc
-	ld	bc, 0
-	push	bc
-	inc	bc
-	push	bc
-	push	de
-	push	hl
-	call	cryptx_asn1_decode
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jr	nz, .lbl_19
-	ld	hl, (ix - 9)
-	ld	de, (ix - 18)
-	ld	(ix - 69), de
-	push	de
-	push	hl
-	ld	hl, (ix + 12)
-	push	hl
-	pop	iy
-	pea	iy + 21
-	call	ti._memcpy
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 69)
-	ld	iy, (ix + 12)
-	ld	(iy + 37), hl
-	ld	hl, (ix - 3)
-	ld	de, (ix - 12)
-	ld	bc, (ix - 75)
-	push	bc
-	ld	bc, (ix - 78)
-	push	bc
-	ld	bc, 0
-	push	bc
-	ld	bc, 2
-	push	bc
-	push	de
-	push	hl
-	call	cryptx_asn1_decode
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 6)
-	ld	de, (ix - 15)
-	pea	ix - 60
+	jp	nz, .lbl_26
+	ld	iy, (ix - 41)
+	ld	hl, (iy + 71)
 	pea	ix - 21
-	ld	bc, 0
-	push	bc
-	push	bc
+	ld	de, 2
 	push	de
 	push	hl
-	call	cryptx_asn1_decode
-	ld	(ix - 69), hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 60)
-	ld	de, (ix - 21)
-	ld	bc, (ix - 63)
-	push	bc
-	ld	bc, (ix - 66)
-	push	bc
-	ld	bc, 0
-	push	bc
-	push	bc
-	push	de
+	ld	hl, (ix - 47)
 	push	hl
 	call	cryptx_asn1_decode
+	push	hl
 	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	ld	bc, (ix - 69)
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 44)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	bc, 1
+	jr	nz, .lbl_19
+	ld	bc, 0
+.lbl_19:
+	ex	de, hl
 	call	ti._ior
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jp	nz, .lbl_19
-	ld	hl, (ix - 9)
-	ld	a, (hl)
-	ld	iy, (ix + 12)
-	ld	(iy + 20), a
-	ld	hl, (ix - 60)
-	ld	de, (ix - 21)
-	ld	bc, (ix - 63)
-	push	bc
-	ld	bc, (ix - 66)
-	push	bc
+	ld	(ix - 44), hl
+	ld	hl, (ix - 17)
+	ld	de, (ix - 20)
+	pea	ix - 28
 	ld	bc, 0
-	push	bc
-	inc	bc
 	push	bc
 	push	de
 	push	hl
 	call	cryptx_asn1_decode
+	push	hl
 	pop	de
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 44)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	bc, 1
+	jr	nz, .lbl_21
+	ld	bc, 0
+.lbl_21:
+	ex	de, hl
+	call	ti._ior
+	push	hl
+	pop	bc
+	ld	de, 63
+	ld	iy, (ix - 41)
+	or	a, a
+	sbc	hl, hl
+.lbl_22:
+	ld	(ix - 44), hl
+	or	a, a
+	sbc	hl, de
+	jp	z, .lbl_43
+	ld	hl, (ix - 24)
+	ld	de, (ix - 27)
+	ld	(ix - 47), bc
+	ld	bc, (ix - 44)
+	add	iy, bc
+	pea	iy + 8
+	ld	bc, (ix - 38)
+	push	bc
+	push	de
+	push	hl
+	call	cryptx_asn1_decode
+	push	hl
 	pop	de
-	pop	de
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 47)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	bc, 1
+	jr	nz, .lbl_25
+	ld	bc, 0
+.lbl_25:
+	ex	de, hl
+	call	ti._ior
+	push	hl
+	pop	bc
+	ld	de, 7
+	ld	hl, (ix - 44)
+	add	hl, de
+	ld	de, (ix - 38)
+	inc	e
+	ld	(ix - 38), de
+	ld	iy, (ix - 41)
+	ld	de, 63
+	jr	.lbl_22
+.lbl_26:
+	ld	iy, (ix - 41)
+	ld	hl, (iy + 5)
+	ld	de, (iy + 2)
+	push	de
+	ld	de, _test_ec
+	push	de
+	push	hl
+	call	ti._memcmp
 	pop	de
 	pop	de
 	pop	de
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	nz, .lbl_19
-	ld	hl, (ix - 9)
-	ld	de, (ix - 18)
-	ld	(ix - 69), de
+	ld	iy, (ix - 41)
+	ld	a, 1
+	jp	nz, .lbl_45
+	ld	hl, (ix - 10)
+	ld	de, (ix - 13)
+	pea	iy + 8
+	ld	bc, 1
+	push	bc
 	push	de
 	push	hl
-	ld	hl, (ix + 12)
+	call	cryptx_asn1_decode
 	push	hl
-	pop	iy
-	pea	iy + 40
-	call	ti._memcpy
+	pop	de
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, (ix - 69)
-	ld	iy, (ix + 12)
-	ld	(iy + 113), hl
-	ld	hl, (ix - 60)
-	ld	de, (ix - 21)
-	ld	bc, (ix - 75)
-	push	bc
-	ld	bc, (ix - 78)
-	push	bc
+	pop	hl
+	ld	hl, (ix - 44)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	bc, 1
+	ld	hl, 0
+	ld	(ix - 38), bc
+	jr	nz, .lbl_29
+	push	hl
+	pop	bc
+.lbl_29:
+	ex	de, hl
+	call	ti._ior
+	ld	(ix - 44), hl
+	ld	iy, (ix - 41)
+	ld	hl, (iy + 71)
+	pea	ix - 21
+	ld	de, 2
+	push	de
+	push	hl
+	ld	hl, (ix - 47)
+	push	hl
+	call	cryptx_asn1_decode
+	push	hl
+	pop	de
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 44)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	bc, 1
+	jr	nz, .lbl_31
+	ld	bc, 0
+.lbl_31:
+	ex	de, hl
+	call	ti._ior
+	ld	(ix - 44), hl
+	ld	hl, (ix - 17)
+	ld	de, (ix - 20)
+	pea	ix - 28
 	ld	bc, 0
 	push	bc
+	push	de
+	push	hl
+	call	cryptx_asn1_decode
+	push	hl
+	pop	de
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 44)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	bc, 1
+	jr	nz, .lbl_33
+	ld	bc, 0
+.lbl_33:
+	ex	de, hl
+	call	ti._ior
+	ld	(ix - 44), hl
+	ld	hl, (ix - 24)
+	ld	de, (ix - 27)
+	ld	iy, (ix - 41)
+	pea	iy + 15
+	ld	bc, 0
+	push	bc
+	push	de
+	push	hl
+	call	cryptx_asn1_decode
+	push	hl
+	pop	de
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 44)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	bc, 1
+	jr	nz, .lbl_35
+	ld	bc, 0
+.lbl_35:
+	ex	de, hl
+	call	ti._ior
+	ld	(ix - 44), hl
+	ld	hl, (ix - 24)
+	ld	de, (ix - 27)
+	ld	iy, (ix - 41)
+	pea	iy + 22
+	ld	bc, 1
+	push	bc
+	push	de
+	push	hl
+	call	cryptx_asn1_decode
+	push	hl
+	pop	de
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 44)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	bc, 1
+	jr	nz, .lbl_37
+	ld	bc, 0
+.lbl_37:
+	ex	de, hl
+	call	ti._ior
+	ld	(ix - 44), hl
+	ld	hl, (ix - 24)
+	ld	de, (ix - 27)
+	pea	ix - 35
 	ld	bc, 2
 	push	bc
 	push	de
 	push	hl
 	call	cryptx_asn1_decode
-	ld	(ix - 69), hl
+	push	hl
+	pop	de
 	pop	hl
 	pop	hl
 	pop	hl
 	pop	hl
-	pop	hl
-	pop	hl
-	ld	hl, (ix - 6)
-	ld	de, (ix - 15)
-	ld	bc, (ix - 63)
-	push	bc
-	ld	bc, (ix - 66)
-	push	bc
+	ld	hl, (ix - 44)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	bc, 1
+	jr	nz, .lbl_39
 	ld	bc, 0
-	push	bc
+.lbl_39:
+	ex	de, hl
+	call	ti._ior
+	ld	(ix - 44), hl
+	ld	hl, (ix - 31)
+	ld	de, (ix - 34)
+	ld	iy, (ix - 41)
+	pea	iy + 29
+	ld	bc, 0
 	push	bc
 	push	de
 	push	hl
 	call	cryptx_asn1_decode
+	push	hl
 	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	pop	de
-	ld	bc, (ix - 69)
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 44)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jr	nz, .lbl_41
+	ld	hl, 0
+	ld	(ix - 38), hl
+.lbl_41:
+	ex	de, hl
+	ld	bc, (ix - 38)
 	call	ti._ior
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	nz, .lbl_19
-	ld	bc, (ix - 18)
-	ld	de, (ix - 9)
-	inc	de
-.lbl_27:
-	push	de
-	pop	iy
-	dec	bc
-	ld	(ix - 18), bc
-	lea	hl, iy
-	ld	(ix - 9), hl
-	ld	l, (iy - 1)
-	inc	de
-	ld	a, l
+	ld	iy, (ix - 41)
+	jr	z, .lbl_44
+.lbl_42:
+	ld	a, -1
+	jr	.lbl_45
+.lbl_43:
+	push	bc
+	pop	hl
+	add	hl, bc
 	or	a, a
-	jr	z, .lbl_27
-	lea	de, iy
-	ld	a, l
-	add	a, -2
-	cp	a, 2
-	jr	c, .lbl_31
-	ld	a, l
-	cp	a, 4
-	jp	nz, .lbl_19
-	xor	a, a
-	ld	(ix - 88), a
-.lbl_31:
-	ld	a, (ix - 88)
-	ld	iy, (ix + 12)
-	ld	(iy + 116), a
+	sbc	hl, bc
+	jr	nz, .lbl_42
+.lbl_44:
+	ld	a, 0
+.lbl_45:
+	and	a, 1
+	ld	(iy), a
+	lea	bc, iy
+	jp	.lbl_14
+ 
+cryptx_pkcs8_free_publickey:
+	ld	hl, -6
+	call	ti._frameset
+	ld	bc, (ix + 6)
+	ld	(ix - 6), bc
+	ld	hl, (ix + 9)
+	ld	(ix - 3), hl
+	ld	de, 3
 	push	bc
-	push	de
-	ld	iy, (ix + 12)
-	pea	iy + 117
-	ld	(ix - 63), bc
-	call	ti._memcpy
-	pop	hl
-	pop	hl
-	pop	hl
-	ld	de, 263
-	ld	hl, (ix + 12)
+	pop	iy
+	ld	hl, (iy + 22)
 	add	hl, de
-	ld	de, (ix - 63)
-	ld	(hl), de
-.lbl_32:
-	ld	de, (ix - 84)
-	ld	bc, 0
-	ld	hl, (_der_buf)
-	push	de
-	push	bc
 	push	hl
+	or	a, a
+	sbc	hl, hl
+	push	hl
+	push	bc
 	call	ti._memset
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	de, 0
-	jp	.lbl_20
-
+	ld	hl, (ix - 6)
+	ld	(ix + 6), hl
+	ld	hl, (ix - 3)
+	ld	sp, ix
+	pop	ix
+	jp	(hl)
+ 
+ cryptx_pkcs8_free_privatekey:
+	ld	hl, -6
+	call	ti._frameset
+	ld	bc, (ix + 6)
+	ld	(ix - 6), bc
+	ld	hl, (ix + 9)
+	ld	(ix - 3), hl
+	ld	de, 3
+	push	bc
+	pop	iy
+	ld	hl, (iy + 71)
+	add	hl, de
+	push	hl
+	or	a, a
+	sbc	hl, hl
+	push	hl
+	push	bc
+	call	ti._memset
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	hl, (ix - 6)
+	ld	(ix + 6), hl
+	ld	hl, (ix - 3)
+	ld	sp, ix
+	pop	ix
+	jp	(hl)
+  
+ 
 _der_buf: dl	13644278    ; pixelShadow
 
-__pkcs_rsa_oid: db	$2A,$86,$48,$86,$F7,$0D,$01,$01,$01,0
-__pkcs_ec_oid: db $2A,$86,$48,$CE,$3D,$02,$01,0
+_test_rsa: db	$2A,$86,$48,$86,$F7,$0D,$01,$01,$01,0
+_test_ec: db $2A,$86,$48,$CE,$3D,$02,$01,0
  
 __pkcs_bannerstr_public: db	"-----BEGIN PUBLIC KEY-----", 0
 __pkcs_bannerstr_private: db	"-----BEGIN PRIVATE KEY-----", 0

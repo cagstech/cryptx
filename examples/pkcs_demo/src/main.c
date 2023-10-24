@@ -56,68 +56,73 @@ void hexdump(uint8_t *addr, size_t len, char *label){
   sprintf(CEMU_CONSOLE, "\n");
 }
 
-uint8_t test_rsa[] = {0x2A,0x86,0x48,0x86,0xF7,0x0D,0x01,0x01,0x01,0};
+char ec_privkey_fields[][10] = {
+  "curveid",
+  "version",
+  "privkey",
+  "pubkey"
+};
+char rsa_privkey_fields[][12] = {
+  "version",
+  "modulus",
+  "public exp",
+  "exponent",
+  "p",
+  "q",
+  "exp1",
+  "exp2",
+  "coeff"
+};
+char ec_pubkey_fields[][12] = {
+  "curveid",
+  "pubkey"
+};
+char rsa_pubkey_fields[][12] = {
+  "modulus",
+  "exponent",
+};
 
 int main(void){
-  struct cryptx_pkcs8_pubkeyinfo pub = {0};
-  struct cryptx_pkcs8_privkeyinfo priv = {0};
-  pkcs_error_t err;
+  struct cryptx_pkcs8_pubkey *pub;
+  struct cryptx_pkcs8_privkey *priv;
   
   sprintf(CEMU_CONSOLE, "\n---------TESTING PUBLIC KEYS--------\n");
   for(int i=0; i<2; i++) {
-    err = 0;
     uint8_t *keystr = public_keys[i];
     sprintf(CEMU_CONSOLE, "\n%s\n", keystr);
-    err = cryptx_pkcs8_import_publickey(keystr, strlen(keystr), &pub);
-    if(err){
-      sprintf(CEMU_CONSOLE, "error: %u\n", err);
-      continue;
+    pub = cryptx_pkcs8_import_publickey(keystr, strlen(keystr), malloc);
+    if(pub && !pub->error){
+      hexdump(pub->objectid.data, pub->objectid.len, "object id");
+      if(memcmp(pub->objectid.data, cryptx_pkcs8_objectid_rsa, pub->objectid.len)==0){
+        for(int i=0; i<PKCS8_PUBLIC_RSA_FIELDS; i++)
+          hexdump(pub->publickey.rsa_fields[i].data, pub->publickey.rsa_fields[i].len, rsa_pubkey_fields[i]);
+      }
+      else if(memcmp(pub->objectid.data, cryptx_pkcs8_objectid_ec, pub->objectid.len)==0){
+        for(int i=0; i<PKCS8_PUBLIC_EC_FIELDS; i++)
+          hexdump(pub->publickey.ec_fields[i].data, pub->publickey.ec_fields[i].len, ec_pubkey_fields[i]);
+      }
     }
-    hexdump(pub.objectid.bytes, pub.objectid.len, "object id");
-    if(memcmp(pub.objectid.bytes, test_rsa, pub.objectid.len)==0){
-      hexdump(pub.publickey.rsa.modulus.bytes, pub.publickey.rsa.modulus.len, "key data");
-      sprintf(CEMU_CONSOLE, "public exponent: %u\n", pub.publickey.rsa.exponent);
-    }
-    else {
-      hexdump(pub.publickey.ec.curveid.bytes, pub.publickey.ec.curveid.len, "curve id");
-      hexdump(pub.publickey.ec.bytes, pub.publickey.ec.len, "key data");
-      sprintf(CEMU_CONSOLE, "compressed: %u\n", pub.publickey.ec.compressed);
-    }
+    cryptx_pkcs8_free_publickey(pub, free);
   }
   
   sprintf(CEMU_CONSOLE, "\n--------TESTING PRIVATE KEYS--------\n");
   for(int i=0; i<2; i++) {
-    err = 0;
     uint8_t *keystr = private_keys[i];
     sprintf(CEMU_CONSOLE, "\n%s\n", keystr);
-    err = cryptx_pkcs8_import_privatekey(keystr, strlen(keystr), &priv);
-    if(err){
-      sprintf(CEMU_CONSOLE, "error: %u\n", err);
-      continue;
+    priv = cryptx_pkcs8_import_privatekey(keystr, strlen(keystr), malloc);
+    if(priv && !priv->error){
+      hexdump(priv->objectid.data, priv->objectid.len, "object id");
+      if(memcmp(priv->objectid.data, cryptx_pkcs8_objectid_rsa, priv->objectid.len)==0){
+        for(int i=0; i<PKCS8_PRIVATE_RSA_FIELDS; i++)
+          hexdump(priv->privatekey.rsa_fields[i].data, priv->privatekey.rsa_fields[i].len, rsa_privkey_fields[i]);
+      }
+      else if(memcmp(priv->objectid.data, cryptx_pkcs8_objectid_ec, priv->objectid.len)==0){
+        for(int i=0; i<PKCS8_PRIVATE_EC_FIELDS; i++)
+          hexdump(priv->privatekey.ec_fields[i].data, priv->privatekey.ec_fields[i].len, ec_privkey_fields[i]);
+      }
     }
-    hexdump(priv.objectid.bytes, priv.objectid.len, "object id");
-    if(memcmp(priv.objectid.bytes, test_rsa, priv.objectid.len)==0){
-      hexdump(priv.privatekey.rsa.modulus.bytes, priv.privatekey.rsa.modulus.len, "modulus");
-      sprintf(CEMU_CONSOLE, "public exponent: %u\n", priv.privatekey.rsa.public_exponent);
-      hexdump(priv.privatekey.rsa.exponent.bytes, priv.privatekey.rsa.exponent.len, "private exponent");
-      
-      // additional
-      hexdump(priv.privatekey.rsa.parts.p.bytes, priv.privatekey.rsa.parts.p.len, "P");
-      hexdump(priv.privatekey.rsa.parts.q.bytes, priv.privatekey.rsa.parts.q.len, "Q");
-      hexdump(priv.privatekey.rsa.parts.exp1.bytes, priv.privatekey.rsa.parts.exp1.len, "Exponent1");
-      hexdump(priv.privatekey.rsa.parts.exp2.bytes, priv.privatekey.rsa.parts.exp2.len, "Exponent2");
-      hexdump(priv.privatekey.rsa.parts.coeff.bytes, priv.privatekey.rsa.parts.coeff.len, "Coefficient");
-    }
-    else {
-      hexdump(priv.privatekey.ec.curveid.bytes, priv.privatekey.ec.curveid.len, "curve id");
-      hexdump(priv.privatekey.ec.private.bytes, priv.privatekey.ec.private.len, "private key");
-      hexdump(priv.privatekey.ec.public.bytes, priv.privatekey.ec.public.len, "public key");
-      sprintf(CEMU_CONSOLE, "compressed: %u\n", priv.privatekey.ec.public.compressed);
-      
-    }
+    cryptx_pkcs8_free_publickey(priv, free);
   }
-  
- 
 }
 
 

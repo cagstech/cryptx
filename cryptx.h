@@ -581,47 +581,40 @@ size_t cryptx_base64_encode(void *dest, const void *src, size_t len);
  */
 size_t cryptx_base64_decode(void *dest, const void *src, size_t len);
 
-/// Defines a structure for holding imported RSA or ECC public key data.
-struct cryptx_pkcs8_pubkeyinfo {
-  struct  { uint8_t bytes[16]; size_t len; } objectid;
-  union {
-    struct {
-      struct { uint8_t bytes[257]; size_t len; } modulus;
-      uint24_t exponent;
-    } rsa;
-    struct {
-      struct { uint8_t bytes[16]; size_t len; } curveid;
-      bool compressed;
-      uint8_t bytes[146]; size_t len;
-    } ec;
-  } publickey;
+enum _pkcs8_pubkey_fields {
+  PKCS8_PUBLIC_OBJECTID = 0,
+  
+  // RSA field enumeration
+  PKCS8_PUBLIC_RSA_MODULUS = 0,
+  PKCS8_PUBLIC_RSA_EXPONENT,
+  PKCS8_PUBLIC_RSA_FIELDS,
+  
+  // EC field enumeration
+  PKCS8_PUBLIC_EC_CURVEID = 0,
+  PKCS8_PUBLIC_EC_PUBKEY,
+  PKCS8_PUBLIC_EC_FIELDS
 };
 
-/// Defines a structure for holding imported RSA or ECC private key data.
-struct cryptx_pkcs8_privkeyinfo {
-  uint8_t version;
-  struct  { uint8_t bytes[16]; size_t len; } objectid;
-  union {
-    struct {
-      uint8_t version;
-      struct { uint8_t bytes[257]; size_t len; } modulus;
-      uint24_t public_exponent;
-      struct { uint8_t bytes[257]; size_t len; } exponent;
-      struct {
-        struct { uint8_t bytes[129]; size_t len; } p;
-        struct { uint8_t bytes[129]; size_t len; } q;
-        struct { uint8_t bytes[129]; size_t len; } exp1;
-        struct { uint8_t bytes[129]; size_t len; } exp2;
-        struct { uint8_t bytes[129]; size_t len; } coeff;
-      } parts;
-    } rsa;
-    struct {
-      uint8_t version;
-      struct { uint8_t bytes[16]; size_t len; } curveid;
-      struct { uint8_t bytes[73]; size_t len; } private;
-      struct { bool compressed; uint8_t bytes[146]; size_t len; } public;
-    } ec;
-  } privatekey;
+enum _pkcs8_privkey_fields {
+  PKCS8_PRIVATE_OBJECTID = 0,
+  
+  // RSA field enumeration
+  PKCS8_PRIVATE_RSA_VERSION = 0,
+  PKCS8_PRIVATE_RSA_MODULUS,
+  PKCS8_PRIVATE_RSA_PUBEXPONENT,
+  PKCS8_PRIVATE_RSA_EXPONENT,
+  PKCS8_PRIVATE_RSA_P,
+  PKCS8_PRIVATE_RSA_Q,
+  PKCS8_PRIVATE_RSA_EXP1,
+  PKCS8_PRIVATE_RSA_EXP2,
+  PKCS8_PRIVATE_RSA_COEFF,
+  PKCS8_PRIVATE_RSA_FIELDS,
+  
+  PKCS8_PRIVATE_EC_CURVEID = 0,
+  PKCS8_PRIVATE_EC_VERSION,
+  PKCS8_PRIVATE_EC_PRIVKEY,
+  PKCS8_PRIVATE_EC_PUBKEY,
+  PKCS8_PRIVATE_EC_FIELDS
 };
 
 /// Defines response codes returned by the PKCS8 API.
@@ -632,28 +625,72 @@ typedef enum {
   PKCS_INVALID_DATA,
 } pkcs_error_t;
 
+/// Defines a structure for holding imported RSA or ECC public key data.
+struct cryptx_pkcs8_pubkey {
+  bool error;
+  struct cryptx_asn1_object objectid;
+  union {
+    struct cryptx_asn1_object ec_fields[PKCS8_PUBLIC_EC_FIELDS];
+    struct cryptx_asn1_object rsa_fields[PKCS8_PUBLIC_RSA_FIELDS];
+  } publickey;
+  size_t len;
+  uint8_t raw[];
+};
+
+/// Defines a structure for holding imported RSA or ECC private key data.
+struct cryptx_pkcs8_privkey {
+  bool error;
+  struct cryptx_asn1_object objectid;
+  union {
+    struct cryptx_asn1_object rsa_fields[PKCS8_PRIVATE_RSA_FIELDS];
+    struct cryptx_asn1_object ec_fields[PKCS8_PRIVATE_EC_FIELDS];
+  } privatekey;
+  size_t len;
+  uint8_t raw[];
+};
+
+/// Encoded Object Identifier for RSA
+static const uint8_t cryptx_pkcs8_objectid_rsa[] = {0x2A,0x86,0x48,0x86,0xF7,0x0D,0x01,0x01,0x01,0};
+/// Encoded Object Identifier for ECC
+static const uint8_t cryptx_pkcs8_objectid_ec[] = {0x2A,0x86,0x48,0xCE,0x3D,0x02,0x01,0};
+/// Encoded Object Identifier for SECT233k1
+static const uint8_t cryptx_pkcs8_curveid_sect233k1[] = {0x2B,0x81,0x04,0x00,0x1A};
+
 /**
  * @brief Attempts to import a PKCS#8-encoded public key for RSA or ECC.
  * @param data Pointer to PKCS#8-encoded key data.
  * @param len   Length of key data to import.
- * @param keyinfo     Pointer to a @b cryptx_pkcs8_pubkeyinfo context to deserialize keydata into.
- * @returns @b keyinfo populated with appropriate data from the keyfile.
- * @returns A @b pkcs_error_t indicating the return status of the operation.
+ * @param malloc     Pointer to toolchain @b malloc function.
+ * @returns A malloc'd @b cryptx_pkcs8_pubkey structure populated with key metadata.
+ * @returns The @b error field of the structure set to @b True if an internal error occured.
  */
-pkcs_error_t cryptx_pkcs8_import_publickey(const void *data, size_t len,
-                                           struct cryptx_pkcs8_pubkeyinfo *keyinfo);
+struct cryptx_pkcs8_pubkey *cryptx_pkcs8_import_publickey(void *data, size_t len,
+                                                          void* (*malloc)(size_t));
 
 /**
  * @brief Attempts to import a PKCS#8-encoded private key for RSA or ECC.
  * @param data Pointer to PKCS#8-encoded key data.
  * @param len   Length of key data to import.
- * @param keyinfo     Pointer to a @b cryptx_pkcs8_privkeyinfo context to deserialize keydata into.
- * @returns @b keyinfo populated with appropriate data from the keyfile.
- * @returns A @b pkcs_error_t indicating the return status of the operation.
+ * @param malloc     Pointer to toolchain @b malloc function.
+ * @returns A malloc'd @b cryptx_pkcs8_privkey structure populated with key metadata.
+ * @returns The @b error field of the structure set to @b True if an internal error occured.
  */
-pkcs_error_t cryptx_pkcs8_import_privatekey(const void *data, size_t len,
-                                           struct cryptx_pkcs8_privkeyinfo *keyinfo);
+struct cryptx_pkcs8_privkey *cryptx_pkcs8_import_privatekey(void *data, size_t len,
+                                                            void* (*malloc)(size_t));
 
+/**
+ * @brief Erases a PKCS#8 public key structure returned by @b cryptx_pkcs8_import_publickey and then frees the allocated memory.
+ * @param pk        Pointer to a PKCS#8 public key structure.
+ * @param free    Pointer to toolchain @b free function.
+ */
+void cryptx_pkcs8_free_publickey(struct cryptx_pkcs8_pubkey *pk, void (*free)(void*));
+
+/**
+ * @brief Erases a PKCS#8 private key structure returned by @b cryptx_pkcs8_import_privatekey and then frees the allocated memory.
+ * @param pk        Pointer to a PKCS#8 private key structure.
+ * @param free    Pointer to toolchain @b free function.
+ */
+void cryptx_pkcs8_free_privatekey(struct cryptx_pkcs8_privkey *pk, void (*free)(void*));
 
 
 #ifdef CRYPTX_ENABLE_HAZMAT

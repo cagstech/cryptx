@@ -35,21 +35,15 @@ PKCS#8 typically encodes keydata using the following workflow:
 Structures
 _____________
 
-.. doxygenstruct:: cryptx_pkcs8_pubkeyinfo
+.. doxygenstruct:: cryptx_pkcs8_pubkey
   :project: CryptX
   
-.. doxygenstruct:: cryptx_pkcs8_privkeyinfo
+.. doxygenstruct:: cryptx_pkcs8_privkey
   :project: CryptX
   
 .. note::
 
-  These structures, particularly **cryptx_pkcs8_privkeyinfo**, take up a lot of memory. For the private key you're holding 257 bytes each for modulus and exponent and then 7 subfields of efficiency-oriented key metadata each taking 129 bytes plus associated size words, structure headers, and object IDs. It adds up. You may want to allocate these within the largest memory-space you can.
-  
-Response Codes
-_______________
- 
-.. doxygenenum:: pkcs_error_t
-	:project: CryptX
+  These structures, particularly **cryptx_pkcs8_privkey**, take up a lot of memory. This module uses dynamic allocation to optimize storage requirements for these structures to the best extent possible. Each structure contains a static portion which contains references to a dump of the raw data of the key and the dump section is of variable size depending on the size of the key.
  
 Functions
 __________
@@ -59,6 +53,12 @@ __________
  
 .. doxygenfunction:: cryptx_pkcs8_import_privatekey
 	:project: CryptX
+ 
+.. doxygenfunction:: cryptx_pkcs8_free_publickey
+	:project: CryptX
+ 
+.. doxygenfunction:: cryptx_pkcs8_free_privatekey
+	:project: CryptX
 
 You can import your keyfiles like so:
 
@@ -67,27 +67,44 @@ You can import your keyfiles like so:
   char *pubkey_fname = "MyPub";
   char *privkey_fname = "MyPriv";
   uint8_t fp;
-  pkcs_error_t err;
-  cryptx_pkcs8_pubkeyinfo pubkey;
-  cryptx_pkcs8_privkeyinfo privkey;
   uint8_t *key_data;
   size_t key_len;
   
   // load pubkey from file (requires FILEIOC library)
-  if(!(fp = ti_Open(pubkey_fname, "r"))) return;   // failed to open file
+  if(!(fp = ti_Open(pubkey_fname, "r"))) {
+    printf("File IO Error");
+    exit(1);
+  }
   key_data = ti_GetDataPtr(fp);
   key_len = ti_GetSize(fp);
   ti_Close(fp);
-  err = cryptx_pkcs8_import_publickey(key_data, key_len, &pubkey);
-  if(err) return;
+  cryptx_pkcs8_pubkey *pub = cryptx_pkcs8_import_publickey(key_data, key_len, malloc);
+  if(!pub){
+    printf("Alloc error!");
+    exit(2);
+  }
+  if(pub->error) {
+    printf("Deserialization error!");
+    exit(3);
+  }
   
   // load pubkey from file (requires FILEIOC library)
-  if(!(fp = ti_Open(privkey_fname, "r"))) return;   // failed to open file
+  if(!(fp = ti_Open(privkey_fname, "r"))) {
+    printf("File IO Error");
+    exit(1);
+  }
   key_data = ti_GetDataPtr(fp);
   key_len = ti_GetSize(fp);
   ti_Close(fp);
-  err = cryptx_pkcs8_import_privatekey(key_data, key_len, &privkey);
-  if(err) return;
+  cryptx_pkcs8_privkey *priv = cryptx_pkcs8_import_privatekey(key_data, key_len, malloc);
+  if(!priv){
+    printf("Alloc error!");
+    exit(2);
+  }
+  if(priv->error) {
+    printf("Deserialization error!");
+    exit(3);
+  }
   
   // these structs can be passed directly to the TLS implementation (coming soon)
   // or the members can be accessed directly for advanced usage.
