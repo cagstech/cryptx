@@ -1,6 +1,7 @@
 CryptX Library
 ================
-**Industry-Standard Cryptography for the Texas Instruments TI-84+ CE Graphing Calculator**
+| **Industry-Standard Cryptography for the Texas Instruments TI-84+ CE Graphing Calculator**
+| Latest Release: `download <https://github.com/acagliano/cryptx/releases/latest>`_
 
 .. raw:: html
 
