@@ -7,7 +7,7 @@ RSA
 
   <p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides an encryption-only implemention of the Rivest-Shamir Adleman (RSA) public key encrytion system. RSA is still widely used at the start of an encrypted connection to negotiate a secret for a faster encryption algorithm like AES.</p>
   <br />
-  <p style="background:rgba(128,128,128,.25); padding:10px; font-family:Arial; font-style:italic; font-size:14px;"><span style="font-weight:bold;">@cryptxdevquotes:</span>&emsp;<span style="font-style:italic;">That&apos;s not how RSA works, you idiot.</span><br /> -MateoConLechuga</p>
+  <p style="background:rgba(128,128,128,.25); padding:10px; font-family:Arial; font-style:italic; font-size:14px;"><span style="font-weight:bold;">#cryptxdevquotes:</span>&emsp;<span style="font-style:italic;">That&apos;s not how RSA works, you idiot.</span><br /> -MateoConLechuga</p>
   
 Macros
 _________
