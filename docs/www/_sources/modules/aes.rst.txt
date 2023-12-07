@@ -8,7 +8,7 @@ Advanced Encryption Standard
 
   <p style="background:rgba(176,196,222,.5); padding:10px; font-family:Arial; margin:20px 0;"><span style="font-weight:bold;">Module Functionality</span><br />Provides a fast, secure algorithm for two parties to exchange information privately using a single key for encryption and decryption. Advanced Encryption Standard is currently the gold standard for encryption and is one of the most widely-used encryption algorithms.</p>
   <br />
-  <p style="background:rgba(128,128,128,.25); padding:10px; font-family:Arial; font-size:14px;"><span style="font-weight:bold;">#cryptxdevquotes:</span>&emsp;<span style="font-style:italic;">AE-fucking-S. On a goddamn calculator.</span><br /> -Adam Beckingham</p>
+  <p style="background:rgba(128,128,128,.25); padding:10px; font-family:Arial; font-size:14px;"><span style="font-weight:bold;">#cryptxdevquotes:</span> <span style="font-style:italic;">AE-fucking-S. On a goddamn calculator.</span>&emsp;- Adam Beckingham</p>
   
 Cipher Modes
 ________________
