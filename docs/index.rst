@@ -73,8 +73,6 @@ CryptX has a number of modules that implement various standards for data obfusca
 +=============+===========================================================+
 | ecdsa       | implements elliptic curve digital signing algoritm        |
 +-------------+-----------------------------------------------------------+
-| tls         | implements TLS protocol                                   |
-+-------------+-----------------------------------------------------------+
 
 To avoid text overload, the entire library documentation will not be dumped onto a single page. You may click on the links in the table above if you wish to view more detailed documentation for a particular module.
 

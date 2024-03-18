@@ -21,7 +21,7 @@ library CRYPTX, 2
 ; bytes module
 	export cryptx_bytes_compare
 	export cryptx_bytes_tostring
-;  export cryptx_bytes_fromstring
+  ;export cryptx_bytes_fromstring
   export cryptx_bytes_rcopy
   export cryptx_bytes_reverse
 	
