@@ -6,3 +6,4 @@ Jinja2==3.1.2
 hawkmoth>=0.12
 clang>=6
 sphinx-proof
+urllib3>=2.2.2 # not directly required, pinned by Snyk to avoid a vulnerability
